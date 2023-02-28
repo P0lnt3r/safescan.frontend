@@ -1,69 +1,71 @@
 
-import { Card, Table, Typography  } from 'antd';
+import { Card, Table, Typography, notification , Progress  } from 'antd';
+import { PaginationProps } from 'antd/es/pagination';
 import type { ColumnsType } from 'antd/es/table';
+import { useEffect, useState } from 'react';
+import { BlockVO } from '../../services';
+import { fetchBlocks } from '../../services/block';
+import { useTranslation } from 'react-i18next';
+import { DateFormat } from '../../utils/DateUtil';
+import AddressTag from '../../components/AddressTag';
+import NumberFormat from '../../utils/NumberFormat';
 
-const { Title } = Typography;
+const { Title , Link , Text } = Typography;
 
-/*
-{
-      block: '10002',
-      age: '2022-10-21 12:12:12',
-      txn: 32,
-      miner: '0x61dd481a114a2e761c554b641742c973867899d3',
-      gasUsed:'250,000',
-      gasLimit:'300,000',
-      reward:"0.01006"
-    },
-*/
-interface DataType {
-    key         : React.Key;
-    block       : string;
-    age         : string;
-    txn         : number;
-    miner       : string,
-    gasUsed     : string,
-    gasLimit    : string,
-    reward      : string
-}
-  
-  const columns: ColumnsType<DataType> = [
+export default function () {
+
+  const { t } = useTranslation();
+  const columns: ColumnsType<BlockVO> = [
     {
-      title: 'Block',
-      dataIndex: 'block',
-      key: 'block',
-      render: text => <a>{text}</a>,
-      width: 80,
+      title: <>{t('block')}</>,
+      dataIndex: 'number',
+      key: 'number',
+      render: text => <Link href={`/block/${text}`}>{text}</Link>,
+      width: 120,
       fixed: 'left',
     },
     {
-        title: 'Age',
-        dataIndex: 'age',
-        key: 'age',
-        width: 200,
+      title: 'Date Time',
+      dataIndex: 'timestamp',
+      key: 'timestamp',
+      width: 180,
+      render: val => DateFormat(Number(val) * 1000)
     },
     {
-        title: 'Txn',
-        dataIndex: 'txn',
-        key: 'txn',
-        width: 100,
+      title: 'Txns',
+      dataIndex: 'txns',
+      key: 'txns',
+      width: 70,
+      render: val => <Link>{val}</Link>
     },
     {
-        title: 'Miner',
-        dataIndex: 'miner',
-        key: 'miner',
-        ellipsis: true,
+      title: 'Miner',
+      dataIndex: 'miner',
+      key: 'miner',
+      width: 450,
+      render: address => <AddressTag address={address} sub={0}></AddressTag>
     },
     {
       title: 'Gas Used',
       dataIndex: 'gasUsed',
       key: 'gasUsed',
       width: 200,
+      render: (gasUsed , blockVO) => {
+        const gasLimit = blockVO.gasLimit;
+        const rate = Math.round(gasUsed / gasLimit * 10000) / 100;
+        return <>
+          <Text>{NumberFormat(gasUsed)}</Text>
+          <Text type='secondary' style={{marginLeft:"6px",fontSize:"12px"}}>({rate}%)</Text>
+          <Progress percent={rate} showInfo={false} />
+        </>
+      }
     },
     {
       title: 'Gas Limit',
       dataIndex: 'gasLimit',
       key: 'gasLimit',
-      width: 200,
+      width: 150,
+      render: ( gasLimit ) => <Text>{NumberFormat(gasLimit)}</Text> 
     },
     {
       title: 'Reward',
@@ -72,31 +74,42 @@ interface DataType {
       width: 200,
     },
   ];
-  
-  const template:DataType = {
-        key:1,
-        block: '10002',
-        age: '2022-10-21 12:12:12',
-        txn: 32,
-        miner: '0x61dd481a114a2e761c554b641742c973867899d3',
-        gasUsed:'250,000',
-        gasLimit:'300,000',
-        reward:"0.01006 SAFE"
-  }
-  let data : DataType[] = [];
-  for( let i = 1;i<30;i++ ){
-    const element = {...template};
-    element.key = i;
-    data.push(element)
+
+  const doFetchBlocks = async () => {
+    fetchBlocks( {current : pagination.current , pageSize : pagination.pageSize} ).then((data) => {
+      setTableData(data.records);
+      setPagination({
+        current : data.current,
+        pageSize : data.pageSize,
+        total : data.total,
+        ...pagination
+      })
+    })
   }
 
-export default function(){
-    return (
-        <>
-          <Title level={3}>Blocks</Title>
-          <Card>
-            <Table columns={columns} dataSource={data} scroll={{ x: 800 }}/>
-          </Card>
-        </>
-    )
+  const [pagination , setPagination] = useState<PaginationProps>({
+    current : 1,
+    pageSize : 10,
+    showTotal: (total) => <>Total : {total}</>,
+    onChange:(page,pageSize) => {
+        pagination.current = page;
+        doFetchBlocks();
+    }
+  });
+  const [tableData , setTableData] = useState<BlockVO[]>([]); 
+
+  useEffect(() => {
+    doFetchBlocks();
+  }, []);
+
+  return (
+    <>
+      <Title level={3}>Blocks</Title>
+      <Card>
+        <Table columns={columns} dataSource={tableData} scroll={{x: 800}}
+              pagination={pagination}
+        />
+      </Card>
+    </>
+  )
 }

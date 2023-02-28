@@ -17,9 +17,7 @@ function App() {
   return (
     <Layout className="layout">
       <Content style={{ padding: '0 0%' }}>
-
         <BrowserRouter>
-
           <Header />
           <div className="site-layout-content">
             <Routes>
@@ -32,10 +30,7 @@ function App() {
               <Route path="/tx/:txHash" index element={<TxDetail />} />
             </Routes>
           </div>
-
         </BrowserRouter>
-
-
       </Content>
       <Footer />
     </Layout>

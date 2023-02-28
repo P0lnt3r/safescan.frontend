@@ -4,5 +4,8 @@ export default
     home:"Home",
     blockchain:"Block Chain",
     masternode: "Master Node",
-    assets:"Assets"
+    assets:"Assets",
+
+    block:"Block",
+
 }
