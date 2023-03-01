@@ -91,7 +91,7 @@ export default function () {
                         <Text strong style={{ marginLeft: "5px" }}>Transactions:</Text>
                     </Col>
                     <Col xl={16} xs={24} style={{ marginTop: '14px' }}>
-                        <Link>
+                        <Link href={`/txs?block=${blockVO?.number}`}>
                             <Text code>{blockVO?.txns} transactions</Text>
                         </Link>
                         in this block

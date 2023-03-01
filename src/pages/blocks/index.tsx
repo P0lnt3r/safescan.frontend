@@ -36,7 +36,7 @@ export default function () {
       dataIndex: 'txns',
       key: 'txns',
       width: 70,
-      render: val => <Link>{val}</Link>
+      render: (txns ,blockVO) => <Link href={`/txs?block=${blockVO.number}`}>{txns}</Link>
     },
     {
       title: 'Miner',

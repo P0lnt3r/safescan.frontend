@@ -29,6 +29,7 @@ export interface PageResponseVO<VO> {
 export interface PageQueryDTO {
     current: number | undefined,
     pageSize: number | undefined,
+    blockNumber?: number
 }
 
 export interface BlockVO {

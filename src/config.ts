@@ -2,7 +2,7 @@
 const config = {
     "dev":{
         native_label: "SAFE",
-        api_host:"http://192.168.3.92:8080",
+        api_host:"http://10.0.0.249:8080",
     }
 }
 
