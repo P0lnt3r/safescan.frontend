@@ -1,6 +1,6 @@
 import { Topics } from "../utils/decode/config";
 
-export const POST = async function (url: string, params: any): Promise<ApiResponse<any>> {
+export const POST = async function (url: string, params?: any): Promise<ApiResponse<any>> {
     const response = await fetch(url, {
         method: 'post',
         headers: {
@@ -77,5 +77,14 @@ export interface EventLogVO {
     topicsArr: string
     transactionHash: string
     transactionIndex: integer
+}
+
+export interface AddressPropVO {
+    address: string
+    type: string
+    subType: string
+    tag: string
+    prop: string | null
+    remark: string | null
 }
 

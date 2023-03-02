@@ -1,5 +1,6 @@
 
 import { Typography, Tooltip } from 'antd';
+import { useAddressProp } from '../state/application/hooks';
 import { BothSub } from '../utils/0xHashUtil';
 const { Link } = Typography;
 
@@ -8,11 +9,13 @@ export default (
         address: string,
         sub: number
     }) => {
-    let tag = BothSub(address, sub);
+    const addressProp = useAddressProp(address);    
+    const tag = addressProp?.tag    
+    const subAddress = BothSub(address, sub);
     return (<>
         <Tooltip title={address}>
             <Link href={`/address/${address}`} target="_blank">
-                {tag}
+                {tag ? tag : subAddress}
             </Link>
         </Tooltip>
     </>)

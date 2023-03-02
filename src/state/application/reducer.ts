@@ -1,10 +1,12 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { Application_Notification, NotificationType } from './action';
+import { AddressPropVO } from '../../services';
+import { Application_Notification, Application_Update_AddressPropMap, NotificationType } from './action';
 
 
 export interface IApplicationState {
     blockNumber : number,
     methodSignature : Map<string , string>,
+    addressPropMap  : Map<string|undefined , AddressPropVO>
     notification? : {
         type : NotificationType , 
         title : string , 
@@ -28,11 +30,18 @@ methodSignature.set(
 
 const initialState: IApplicationState = {
     blockNumber : 0 ,
-    methodSignature
+    methodSignature,
+    addressPropMap: new Map()
 }
 
 export default createReducer( initialState , (builder) => {
     builder.addCase( Application_Notification , ( state , { payload } ) => {
         state.notification = payload;
+    })
+    .addCase( Application_Update_AddressPropMap , ( state , { payload } ) => {
+        payload.forEach( addressPropVO => {
+            const { address } = addressPropVO;
+            state.addressPropMap.set( address , addressPropVO );
+        });
     })
 });

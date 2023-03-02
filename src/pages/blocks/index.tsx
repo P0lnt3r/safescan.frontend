@@ -17,9 +17,9 @@ export default function () {
   const { t } = useTranslation();
   const columns: ColumnsType<BlockVO> = [
     {
+      key: 'number',
       title: <>{t('block')}</>,
       dataIndex: 'number',
-      key: 'number',
       render: text => <Link href={`/block/${text}`}>{text}</Link>,
       width: 120,
       fixed: 'left',
@@ -27,28 +27,25 @@ export default function () {
     {
       title: 'Date Time',
       dataIndex: 'timestamp',
-      key: 'timestamp',
       width: 180,
       render: val => DateFormat(Number(val) * 1000)
     },
     {
       title: 'Txns',
       dataIndex: 'txns',
-      key: 'txns',
       width: 70,
       render: (txns ,blockVO) => <Link href={`/txs?block=${blockVO.number}`}>{txns}</Link>
     },
     {
       title: 'Miner',
       dataIndex: 'miner',
-      key: 'miner',
       width: 450,
-      render: address => <AddressTag address={address} sub={0}></AddressTag>
+      ellipsis: true,
+      render: address => <AddressTag address={address} sub={8}></AddressTag>
     },
     {
       title: 'Gas Used',
       dataIndex: 'gasUsed',
-      key: 'gasUsed',
       width: 200,
       render: (gasUsed , blockVO) => {
         const gasLimit = blockVO.gasLimit;
@@ -63,14 +60,12 @@ export default function () {
     {
       title: 'Gas Limit',
       dataIndex: 'gasLimit',
-      key: 'gasLimit',
       width: 150,
       render: ( gasLimit ) => <Text>{NumberFormat(gasLimit)}</Text> 
     },
     {
       title: 'Reward',
       dataIndex: 'reward',
-      key: 'reward',
       width: 200,
     },
   ];
@@ -108,6 +103,7 @@ export default function () {
       <Card>
         <Table columns={columns} dataSource={tableData} scroll={{x: 800}}
               pagination={pagination}
+              rowKey={blockVO => blockVO.number}
         />
       </Card>
     </>
