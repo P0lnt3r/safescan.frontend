@@ -16,3 +16,8 @@ export async function fetchEventLogs( txHash : string ) : Promise<EventLogVO[]> 
     const serverResponse = await POST( `${API_HOST}/tx/eventlogs` , { transactionHash : txHash } );
     return serverResponse.data;
 }
+
+export async function fetchAddressTransactions(params : { address : string } | PageQueryDTO) : Promise<PageResponseVO<TransactionVO>> {
+    const serverResponse = await POST( `${API_HOST}/txs/address` , { ...params } );
+    return serverResponse.data;
+}

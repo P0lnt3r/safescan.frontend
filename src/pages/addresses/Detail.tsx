@@ -7,6 +7,7 @@ import { isMobile } from 'react-device-detect'
 import type { TabsProps } from 'antd';
 import QRCode from 'qrcode.react';
 import { useState } from "react";
+import Transactions from "./Transactions";
 
 const { Title, Text, Paragraph, Link } = Typography;
 
@@ -16,8 +17,8 @@ export default function () {
     const items: TabsProps['items'] = [
         {
             key: 'transactions',
-            label: <Text strong>Transactions</Text>,
-            children: `Content of Tab Pane 1`,
+            label: "Transactions",
+            children: address && <Transactions address={address} ></Transactions>,
         },
         {
             key: 'erc20-transactions',
@@ -30,7 +31,6 @@ export default function () {
             children: `Content of Tab Pane 3`,
         },
     ];
-
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
@@ -73,11 +73,7 @@ export default function () {
 
             <Row>
                 <Col style={{ marginTop: "15px", padding: "5px" }} xl={12} xs={24} >
-                    <Card style={{
-                        boxShadow: "0 .5rem 1.2rem rgba(189,197,209,.2)",
-                        border: "1px solid #e7eaf3",
-                        borderRadius: "0.5em"
-                    }} size="small" title={<Title level={5}>Overview</Title>}>
+                    <Card size="small" title={<Title level={5}>Overview</Title>}>
                         <Row>
                             <Col xl={10} xs={24}><Text strong>Balance:</Text></Col>
                             <Col xl={14} xs={24}><Text strong>5433.21 SAFE</Text></Col>
@@ -85,11 +81,7 @@ export default function () {
                     </Card>
                 </Col>
                 <Col style={{ marginTop: "15px", padding: "5px" }} xl={12} xs={24} >
-                    <Card style={{
-                        boxShadow: "0 .5rem 1.2rem rgba(189,197,209,.2)",
-                        border: "1px solid #e7eaf3",
-                        borderRadius: "0.5em"
-                    }} size="small" title={<Title level={5}>More Informations</Title>}>
+                    <Card size="small" title={<Title level={5}>More Informations</Title>}>
                         <Row>
                             <Col xl={10} xs={24}><Text strong>Name Tag:</Text></Col>
                             <Col xl={14} xs={24}><Text ></Text></Col>
@@ -100,11 +92,7 @@ export default function () {
 
             <Divider style={{ marginTop: "20px" }} />
 
-            <Card style={{
-                boxShadow: "0 .5rem 1.2rem rgba(189,197,209,.2)",
-                border: "1px solid #e7eaf3",
-                borderRadius: "0.5em"
-            }}>
+            <Card>
                 <Tabs defaultActiveKey="1" items={items} />
             </Card>
 
