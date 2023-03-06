@@ -103,7 +103,11 @@ export default ({ address }: { address: string }) => {
             title: 'To',
             dataIndex: 'to',
             width: 180,
-            render: (val) => <><AddressTag address={val} sub={8}></AddressTag></>
+            render: (val) => <>{
+                address === val 
+                    ? <AddressTag address={val} sub={8} showStyle={ShowStyle.NO_LINK} />
+                    : <AddressTag address={val} sub={8} />
+            }</>
         },
         {
             title: 'Value',
