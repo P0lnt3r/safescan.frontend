@@ -2,6 +2,7 @@
 import { Typography, Tooltip } from 'antd';
 import { useAddressProp } from '../state/application/hooks';
 import { BothSub } from '../utils/0xHashUtil';
+import NavigateLink from './NavigateLink';
 const { Link } = Typography;
 
 export enum ShowStyle {
@@ -19,16 +20,14 @@ export default (
     const tag = addressProp?.tag
     const subAddress = BothSub(address, sub);
     showStyle = showStyle ? showStyle : ShowStyle.DEFAULT;
-    
-        console.log(showStyle);
 
     return (<>
         {
             showStyle === ShowStyle.DEFAULT &&
             <Tooltip title={address}>
-                <Link href={`/address/${address}`}>
+                <NavigateLink path={`/address/${address}`}>
                     {tag ? tag : subAddress}
-                </Link>
+                </NavigateLink>
             </Tooltip>
         }
         {

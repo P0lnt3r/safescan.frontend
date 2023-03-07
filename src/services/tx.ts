@@ -1,4 +1,4 @@
-import { TransactionVO, PageQueryDTO, PageResponseVO, POST, EventLogVO } from "./index.d";
+import { TransactionVO, PageQueryDTO, PageResponseVO, POST, EventLogVO, ERC20TransferVO } from "./index.d";
 import config from "../config";
 const API_HOST = config.api_host;
 
@@ -19,5 +19,10 @@ export async function fetchEventLogs( txHash : string ) : Promise<EventLogVO[]> 
 
 export async function fetchAddressTransactions(params : { address : string } | PageQueryDTO) : Promise<PageResponseVO<TransactionVO>> {
     const serverResponse = await POST( `${API_HOST}/txs/address` , { ...params } );
+    return serverResponse.data;
+}
+
+export async function fetchAddressERC20Transfers( params : { address : string } | PageQueryDTO ) : Promise<PageResponseVO<ERC20TransferVO>> {
+    const serverResponse = await POST( `${API_HOST}/txs/erc20` , { ...params } );
     return serverResponse.data;
 }

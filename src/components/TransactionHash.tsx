@@ -1,7 +1,8 @@
 
 import { Typography, Tooltip } from 'antd';
 import { BothSub } from '../utils/0xHashUtil';
-import { CheckCircleTwoTone,ExclamationCircleTwoTone } from '@ant-design/icons';
+import { CheckCircleTwoTone, ExclamationCircleTwoTone } from '@ant-design/icons';
+import NavigateLink from './NavigateLink';
 const { Link } = Typography;
 
 export default (
@@ -11,10 +12,10 @@ export default (
         sub: number
     }) => {
     let tag = BothSub(txhash, sub);
-    const tipIcon = (status?:number) => {
-        if ( status == 1 ){
+    const tipIcon = (status?: number) => {
+        if (status == 1) {
             return <CheckCircleTwoTone twoToneColor="#52c41a" />
-        }else if ( status == 0 ){
+        } else if (status == 0) {
             return <ExclamationCircleTwoTone twoToneColor="#52c41a" />
         }
         return <></>
@@ -22,13 +23,13 @@ export default (
     return (<>
         <Tooltip>
             {
-               tipIcon(status)
+                tipIcon(status)
             }
         </Tooltip>
         <Tooltip title={txhash}>
-            <Link style={{marginLeft:'5px'}} href={`/tx/${txhash}`}>
+            <NavigateLink path={`/tx/${txhash}`}>
                 {tag}
-            </Link>
+            </NavigateLink>
         </Tooltip>
     </>)
 }

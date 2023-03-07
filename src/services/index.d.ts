@@ -50,21 +50,21 @@ export interface BlockVO {
 }
 
 export interface TransactionVO {
-    blockHash?: string
-    blockNumber?: integer
-    from?: string
-    gas?: number
-    gasPrice?: number
-    gasUsed?: number
-    hash?: string
-    input?: string
-    methodId?: string
-    nonce?: number
-    status?: number
-    timestamp?: number
-    to?: number
-    transactionIndex?: number
-    value?: number
+    blockHash: string
+    blockNumber: integer
+    from: string
+    gas: number
+    gasPrice: number
+    gasUsed: number
+    hash: string
+    input: string
+    methodId: string
+    nonce: number
+    status: number
+    timestamp: number
+    to: string
+    transactionIndex: number
+    value: number
 }
 
 export interface EventLogVO {
@@ -86,5 +86,28 @@ export interface AddressPropVO {
     tag: string
     prop: string | null
     remark: string | null
+}
+
+export interface ERC20TransferVO {
+    from: string
+    timestamp: integer
+    to: string
+    token: string
+    transactionHash: string
+    value: string
+}
+
+export interface BlockchainContextVO {
+
+    latestBlockNumber : number , 
+    latestTransactions : TransactionVO[],
+    latestBlocks : BlockVO[]
+
+}
+
+export interface AbiMethodSignatureVO {
+    method : string 
+    signature : string 
+    hex : string
 }
 

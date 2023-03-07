@@ -1,7 +1,7 @@
 import { PaginationProps , Tag  } from "antd";
 import { useEffect, useState } from "react"
-import { TransactionVO } from "../../services";
-import { fetchAddressTransactions } from "../../services/tx";
+import { ERC20TransferVO, TransactionVO } from "../../services";
+import { fetchAddressERC20Transfers } from "../../services/tx";
 import { Card, Table, Typography, Row, Col } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { fetchTransactions } from '../../services/tx';
@@ -19,7 +19,7 @@ const { Title, Text, Link } = Typography;
 export default ({ address }: { address: string }) => {
     const { t } = useTranslation();
     async function doFetchAddressTransactions() {
-        fetchAddressTransactions({
+        fetchAddressERC20Transfers({
             current: pagination.current,
             pageSize: pagination.pageSize,
             address: address
@@ -42,31 +42,19 @@ export default ({ address }: { address: string }) => {
             doFetchAddressTransactions();
         }
     });
-    const [tableData, setTableData] = useState<TransactionVO[]>([]);
+    const [tableData, setTableData] = useState<ERC20TransferVO[]>([]);
 
     useEffect(() => {
         doFetchAddressTransactions();
     }, []);
 
-    const columns: ColumnsType<TransactionVO> = [
+    const columns: ColumnsType<ERC20TransferVO> = [
         {
             title: <>{t('Txn Hash')}</>,
-            dataIndex: 'hash',
-            key: 'hash',
-            render: (val, txVO) => <><TransactionHash txhash={val} sub={8} status={txVO.status}></TransactionHash></>,
+            dataIndex: 'transactionHash',
+            render: (val, txVO) => <><TransactionHash txhash={val} sub={8} status={1}></TransactionHash></>,
             width: 180,
             fixed: 'left',
-        },
-        {
-            title: 'Method',
-            dataIndex: 'methodId',
-            width: 100,
-        },
-        {
-            title: 'Block',
-            dataIndex: 'blockNumber',
-            width: 80,
-            render: blockNumber => <Link href={`/block/${blockNumber}`}>{blockNumber}</Link>
         },
         {
             title: 'Date Time',
@@ -113,17 +101,12 @@ export default ({ address }: { address: string }) => {
             width: 100,
             render: (value) => < div style={{ fontSize: '14px' }} ><EtherAmount raw={value}></EtherAmount></div>
         },
-        {
-            title: 'Txn Fee',
-            dataIndex: 'txFee',
-            width: 100,
-        },
     ];
 
     return <>
 
         <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
-            pagination={pagination}
+            pagination={pagination} rowKey={ (vo) => vo.transactionHash }
         />
 
     </>

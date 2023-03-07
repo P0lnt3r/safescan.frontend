@@ -1,12 +1,15 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { AddressPropVO } from '../../services';
-import { Application_Notification, Application_Update_AddressPropMap, NotificationType } from './action';
+import { AddressPropVO, BlockVO, TransactionVO } from '../../services';
+import { Application_Notification, Application_Update_AddressPropMap, Application_Update_BlockchainContext, NotificationType } from './action';
 
 
 export interface IApplicationState {
     blockNumber : number,
     methodSignature : Map<string , string>,
     addressPropMap  : Map<string|undefined , AddressPropVO>
+    latestBlocks    : BlockVO[]
+    latestTransactions : TransactionVO[]
+
     notification? : {
         type : NotificationType , 
         title : string , 
@@ -27,11 +30,17 @@ methodSignature.set(
     "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822",
     "Swap (index_topic_1 address sender, uint256 amount0In, uint256 amount1In, uint256 amount0Out, uint256 amount1Out, index_topic_2 address to)"
 );
+methodSignature.set(
+    "0x627059660ea01c4733a328effb2294d2f86905bf806da763a89cee254de8bee5",
+    "feeBurned (uint256 amount)"
+);
 
 const initialState: IApplicationState = {
     blockNumber : 0 ,
     methodSignature,
-    addressPropMap: new Map()
+    addressPropMap: new Map(),
+    latestBlocks: [],
+    latestTransactions: []
 }
 
 export default createReducer( initialState , (builder) => {
@@ -44,4 +53,12 @@ export default createReducer( initialState , (builder) => {
             state.addressPropMap.set( address , addressPropVO );
         });
     })
+    .addCase( Application_Update_BlockchainContext , ( state , {payload} ) => {
+        const { latestBlockNumber , latestBlocks , latestTransactions } = payload;
+        return { ...state , 
+            blockNumber:latestBlockNumber , 
+            latestBlocks , 
+            latestTransactions 
+        }
+    } )
 });

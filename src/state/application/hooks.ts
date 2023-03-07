@@ -1,6 +1,6 @@
 
 import { useSelector, useDispatch } from 'react-redux'
-import { AddressPropVO } from '../../services';
+import { AddressPropVO, BlockVO, TransactionVO } from '../../services';
 import { Abi_Method_Define } from '../../utils/decode';
 import ParseABIDefine from '../../utils/decode/ParseABIDefine';
 import { AppState } from '../index'
@@ -16,3 +16,17 @@ export function useMethodSignature(methodHex: string): Abi_Method_Define | undef
 export function useAddressProp(address: string | undefined): AddressPropVO | undefined {
     return useSelector((state: AppState) => state.application.addressPropMap.get(address));
 }
+
+export function useBlockNumber() : number {
+    return useSelector( (state:AppState) => state.application.blockNumber );
+}
+
+export function useLatestBlocks() : BlockVO[] {
+    return useSelector( (state:AppState) => state.application.latestBlocks );
+}
+
+export function useLatestTransactions() : TransactionVO[] {
+    return useSelector( (state:AppState) => state.application.latestTransactions);
+}
+
+

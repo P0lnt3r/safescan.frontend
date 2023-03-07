@@ -33,7 +33,7 @@ export default function () {
         {
             key: 'overview',
             label: `Overview`,
-            children: <TxOverview {...txVO}></TxOverview>,
+            children: txVO && <TxOverview {...txVO}></TxOverview>,
         },
         {
             key: 'eventlogs',

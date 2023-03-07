@@ -8,12 +8,13 @@ import type { TabsProps } from 'antd';
 import QRCode from 'qrcode.react';
 import { useState } from "react";
 import Transactions from "./Transactions";
+import ERC20Transfers from "./ERC20Transfers";
 
 const { Title, Text, Paragraph, Link } = Typography;
 
 export default function () {
-    const { address } = useParams();
 
+    const { address } = useParams();
     const items: TabsProps['items'] = [
         {
             key: 'transactions',
@@ -23,13 +24,8 @@ export default function () {
         {
             key: 'erc20-transactions',
             label: `ERC20 Transactions`,
-            children: `Content of Tab Pane 2`,
-        },
-        {
-            key: '3',
-            label: `Tab 3`,
-            children: `Content of Tab Pane 3`,
-        },
+            children: address && <ERC20Transfers address={address}></ERC20Transfers>,
+        }
     ];
     const [isModalOpen, setIsModalOpen] = useState(false);
 
