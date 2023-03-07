@@ -12,6 +12,8 @@ import { DateFormat } from '../../utils/DateUtil';
 import EtherAmount from '../../components/EtherAmount';
 import JSBI from 'jsbi';
 import NumberFormat from '../../utils/NumberFormat';
+import { useMethodSignature } from '../../state/application/hooks';
+import { defaultAbiCoder } from 'ethers/lib/utils';
 
 const { TextArea } = Input;
 const { Title, Text, Paragraph, Link } = Typography;
@@ -58,6 +60,13 @@ export default ({
         return "";
     }, [gasUsed, gas])
 
+    const abiMethodDefine = useMethodSignature(methodId);
+    console.log(abiMethodDefine);
+    const types: string[] | undefined = abiMethodDefine && abiMethodDefine.params.map(p => p.type);
+    if (types) {
+        const decodeResult = defaultAbiCoder.decode(types, `0x${input.substring(10)}`)
+        console.log(decodeResult);
+    }
     return <>
 
         <Row>

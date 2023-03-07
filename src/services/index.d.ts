@@ -12,6 +12,34 @@ export const POST = async function (url: string, params?: any): Promise<ApiRespo
     return json as ApiResponse<any>;
 }
 
+export const GET = async function( url : string , params?:any ) : Promise<any> {
+    const URI_params = params ? "?" + obj2URIParams( params ) : undefined;
+    const response = await fetch( URI_params ? url + URI_params : url  , {
+        method: 'get',
+        headers: {
+            'Content-Type': "application/json"
+        }
+    })
+    const json = await response.json();
+    return json as any;
+}
+
+function obj2URIParams(data : any){
+    var _result = [];
+    for (var key in data) {
+      var value = data[key];
+      if (value.constructor == Array) {
+        value.forEach(function(_value) {
+          _result.push(key + "=" + _value);
+        });
+      } else {
+        _result.push(key + '=' + value);
+      }
+    }
+    return _result.join('&');
+}
+
+
 export interface ApiResponse<VO> {
     code: string,
     msg: string,

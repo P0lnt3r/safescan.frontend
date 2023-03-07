@@ -2,12 +2,13 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { AddressPropVO, BlockchainContextVO, BlockVO, TransactionVO } from "../services";
 import { fectAllAddressProp } from "../services/address";
-import { Application_Update_AddressPropMap, Application_Update_BlockchainContext } from "../state/application/action";
+import { fetchAbiMethodSignature } from "../services/utils";
+import { Application_Update_AbiMethodSignature, Application_Update_AddressPropMap, Application_Update_BlockchainContext } from "../state/application/action";
 
 export default () => {
     const dispatch =  useDispatch();
     useEffect( ()=>{
-        const ws = new WebSocket("ws://10.0.0.249:8080/socket.io/blockchain");
+        const ws = new WebSocket("ws://127.0.0.1:8080/socket.io/blockchain");
         ws.onopen = function (e) {
 
         }
@@ -22,6 +23,11 @@ export default () => {
         fectAllAddressProp().then( (arr : AddressPropVO[]) => {
             dispatch( Application_Update_AddressPropMap(arr) );
         })
+
+        fetchAbiMethodSignature().then( (arr) => {
+            dispatch( Application_Update_AbiMethodSignature(arr) )
+        });
+
     } , []);
     return (<></>);
 }

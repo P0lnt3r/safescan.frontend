@@ -35,8 +35,8 @@ export default ({
         </>
     }
 
-    function EventLogTopic(index: number, hex: string, indexed: Abi_Method_Param[]) {
-        const abiMethodParam = indexed[index - 1];
+    function EventLogTopic(index: number, hex: string, indexed: Abi_Method_Param[], data:Abi_Method_Param[]) {
+        const abiMethodParam = index <= indexed.length ? indexed[index - 1] : data[index - 1 - indexed.length];
         const decodeResult = defaultAbiCoder.decode([abiMethodParam.type], hex);
         return <>
             <Col xl={2} xs={6}>
@@ -58,9 +58,9 @@ export default ({
     function EventLogData(hex: string, data: Abi_Method_Param[]) {
         const abiTypes: string[] = [];
         data.forEach(abiMetohdParam => abiTypes.push(abiMetohdParam.type))
-        const decodeResult = defaultAbiCoder.decode(abiTypes, hex);
+        const decodeResult = hex != "0x" ? defaultAbiCoder.decode(abiTypes, hex) : undefined;
         return <>
-            {decodeResult.map((result, index) => {
+            {decodeResult && decodeResult.map((result, index) => {
                 return <>
                     <Col xl={2} xs={24}>
                         <Text type="secondary" strong>{data[index].name}:</Text>
@@ -77,6 +77,7 @@ export default ({
     function EventLog(eventLog: EventLogVO) {
         const topic = eventLog.topic0;
         const abiMethodDefine = useMethodSignature(topic);
+        console.log(abiMethodDefine);
         return (
             <Row key={eventLog.logIndex}>
                 <Col xl={2} xs={24} style={{ marginTop: '14px' }}>
@@ -110,7 +111,7 @@ export default ({
                                 JSON.parse(eventLog.topicsArr).map((val: any, index: any) => {
                                     return (<Row key={index}>
                                         {
-                                            abiMethodDefine && index > 0 ? EventLogTopic(index, val, abiMethodDefine.indexed)
+                                            abiMethodDefine && index > 0 ? EventLogTopic(index, val, abiMethodDefine.indexed,abiMethodDefine.data)
                                                 : <>
                                                     <Col xl={2} xs={24}><Text code>{index}</Text></Col>
                                                     <Col xl={22} xs={24}>
