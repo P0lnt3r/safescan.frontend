@@ -4,11 +4,13 @@ import { AddressPropVO, BlockchainContextVO, BlockVO, TransactionVO } from "../s
 import { fectAllAddressProp } from "../services/address";
 import { fetchAbiMethodSignature } from "../services/utils";
 import { Application_Update_AbiMethodSignature, Application_Update_AddressPropMap, Application_Update_BlockchainContext } from "../state/application/action";
+import config from '../config'
 
+const WS_HOST = config.ws_host;
 export default () => {
     const dispatch =  useDispatch();
     useEffect( ()=>{
-        const ws = new WebSocket("ws://127.0.0.1:8080/socket.io/blockchain");
+        const ws = new WebSocket(`${WS_HOST}/blockchain`);
         ws.onopen = function (e) {
 
         }

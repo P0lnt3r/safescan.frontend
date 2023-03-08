@@ -14,6 +14,8 @@ import JSBI from 'jsbi';
 import NumberFormat from '../../utils/NumberFormat';
 import { useMethodSignature } from '../../state/application/hooks';
 import { defaultAbiCoder } from 'ethers/lib/utils';
+import BUSD from "../../abi/BUSD.json"
+import { Interface } from '@ethersproject/abi'
 
 const { TextArea } = Input;
 const { Title, Text, Paragraph, Link } = Typography;
@@ -60,13 +62,22 @@ export default ({
         return "";
     }, [gasUsed, gas])
 
-    const abiMethodDefine = useMethodSignature(methodId);
-    console.log(abiMethodDefine);
-    const types: string[] | undefined = abiMethodDefine && abiMethodDefine.params.map(p => p.type);
-    if (types) {
-        const decodeResult = defaultAbiCoder.decode(types, `0x${input.substring(10)}`)
-        console.log(decodeResult);
-    }
+
+    const abi = new Interface(BUSD);
+    console.log(abi.getFunction("transfer"));
+    const result = abi.decodeFunctionData( abi.getFunction("0xa9059cbb") , input )
+    console.log(result);
+    /////////////////////////////////////////////////////////////////
+    // const abiMethodDefine = useMethodSignature(methodId);
+    // console.log(abiMethodDefine);
+    // const types: string[] | undefined = abiMethodDefine && abiMethodDefine.params.map(p => p.type);
+    // if (types) {
+    //     const decodeResult = defaultAbiCoder.decode(types, `0x${input.substring(10)}`)
+    //     console.log(decodeResult);
+    // }
+    /////////////////////////////////////////////////////////////////
+    
+
     return <>
 
         <Row>

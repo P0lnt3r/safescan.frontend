@@ -14,7 +14,11 @@ export function useMethodSignature(methodHex: string): Abi_Method_Define | undef
 }
 
 export function useAddressProp(address: string | undefined): AddressPropVO | undefined {
-    return useSelector((state: AppState) => state.application.addressPropMap.get(address));
+    console.log('useAddressProp >' , address);
+    return useSelector((state: AppState) => {
+        console.log('useAddressProp >' , state.application.addressPropMap);
+        return state.application.addressPropMap.get(address);
+    });
 }
 
 export function useBlockNumber() : number {
