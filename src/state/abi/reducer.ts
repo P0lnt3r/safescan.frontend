@@ -17,17 +17,20 @@ const initialState : AbiState = {
     ]
 }
 
-
-
 export default createReducer( initialState , (builder) => {
-    
-    builder.addCase( Abi_Init_Map , () => {
-        
-    } )
-
+    builder.addCase( Abi_Init_Map , ( state , { payload } ) => {
+        const map = new Map<string , string>();
+        state.abis.forEach( ( {address , abi} ) => {
+            map.set(address,abi)
+        });
+        state.abiMap = map;
+        return state;
+    })
     builder.addCase( Abi_Save  , ( state , { payload } ) => {
         payload.forEach( ({address , abi}) => {
-            
+            state.abis.push({address,abi})
+            state.abiMap?.set(address,abi)
+            return state;
         })
     })
     return initialState;

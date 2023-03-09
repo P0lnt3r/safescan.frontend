@@ -5,13 +5,14 @@ import { fectAllAddressProp } from "../services/address";
 import { fetchAbiMethodSignature } from "../services/utils";
 import { Application_Update_AbiMethodSignature, Application_Update_AddressPropMap, Application_Update_BlockchainContext } from "../state/application/action";
 import config from '../config'
+import { Abi_Init_Map } from "../state/abi/action";
 
 const WS_HOST = config.ws_host;
 export default () => {
     const dispatch =  useDispatch();
     useEffect( ()=>{
 
-        
+        dispatch( Abi_Init_Map("") );       
 
         const ws = new WebSocket(`${WS_HOST}/blockchain`);
         ws.onopen = function (e) {

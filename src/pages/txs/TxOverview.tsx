@@ -17,6 +17,7 @@ import { defaultAbiCoder } from 'ethers/lib/utils';
 import BUSD from "../../abi/BUSD.json"
 import { Interface } from '@ethersproject/abi'
 import { useAddressAbi } from '../../state/abi/hook';
+import { useDispatch } from 'react-redux';
 
 const { TextArea } = Input;
 const { Title, Text, Paragraph, Link } = Typography;
@@ -77,8 +78,23 @@ export default ({
     //     console.log(decodeResult);
     // }
     /////////////////////////////////////////////////////////////////
-    const json = useAddressAbi(to);
-    console.log(json);
+    // const _json = useAddressAbi(to , useDispatch());
+    // const abi = useMemo( ()=>{
+    //     if ( _json ){
+    //         return new Interface(_json);
+    //     }
+    // } , [_json] );
+    // if ( abi ){
+    //     const func = abi.getFunction(methodId);
+    //     console.log(func);
+    //     const result = abi.decodeFunctionData(abi.getFunction("0xa9059cbb"), input)
+    //     console.log(result);
+    // }
+    // const objabi = [
+    //     "function transfer(address from, uint value)",
+    //   ];
+    // const i = new Interface(objabi);
+    // console.log(i.getFunction(methodId));
 
     return <>
 
