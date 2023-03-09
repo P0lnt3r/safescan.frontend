@@ -139,3 +139,8 @@ export interface AbiMethodSignatureVO {
     hex : string
 }
 
+export interface AddressAbiVO {
+    address : string ,
+    abi : string
+}
+

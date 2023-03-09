@@ -16,6 +16,7 @@ import { useMethodSignature } from '../../state/application/hooks';
 import { defaultAbiCoder } from 'ethers/lib/utils';
 import BUSD from "../../abi/BUSD.json"
 import { Interface } from '@ethersproject/abi'
+import { useAddressAbi } from '../../state/abi/hook';
 
 const { TextArea } = Input;
 const { Title, Text, Paragraph, Link } = Typography;
@@ -63,10 +64,10 @@ export default ({
     }, [gasUsed, gas])
 
 
-    const abi = new Interface(BUSD);
-    console.log(abi.getFunction("transfer"));
-    const result = abi.decodeFunctionData( abi.getFunction("0xa9059cbb") , input )
-    console.log(result);
+    // const abi = new Interface(BUSD);
+    // console.log(abi.getFunction("transfer"));
+    // const result = abi.decodeFunctionData( abi.getFunction("0xa9059cbb") , input )
+    // console.log(result);
     /////////////////////////////////////////////////////////////////
     // const abiMethodDefine = useMethodSignature(methodId);
     // console.log(abiMethodDefine);
@@ -76,7 +77,8 @@ export default ({
     //     console.log(decodeResult);
     // }
     /////////////////////////////////////////////////////////////////
-    
+    const json = useAddressAbi(to);
+    console.log(json);
 
     return <>
 

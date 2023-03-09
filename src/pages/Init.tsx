@@ -10,6 +10,9 @@ const WS_HOST = config.ws_host;
 export default () => {
     const dispatch =  useDispatch();
     useEffect( ()=>{
+
+        
+
         const ws = new WebSocket(`${WS_HOST}/blockchain`);
         ws.onopen = function (e) {
 

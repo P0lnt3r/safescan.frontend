@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { Abi_Save } from './action';
+import { Abi_Init_Map, Abi_Save } from './action';
 
 export interface AbiVO {
     address : string ,
@@ -8,29 +8,28 @@ export interface AbiVO {
 
 export interface AbiState {
     abis : AbiVO[] , 
-    map : Map<string ,string>
+    abiMap? : Map<string ,string>
 }
 
 const initialState : AbiState = {
     abis : [
         { address : "1" , abi:"2" }
-    ],
-    map : new Map<string , string>()
+    ]
 }
 
-export default createReducer( initialState , (builder) => {
 
-    initialState.abis.forEach( ({address,abi})=>{
-        initialState.map.set(address,abi);
-    })
+
+export default createReducer( initialState , (builder) => {
+    
+    builder.addCase( Abi_Init_Map , () => {
+        
+    } )
 
     builder.addCase( Abi_Save  , ( state , { payload } ) => {
         payload.forEach( ({address , abi}) => {
-            if ( ! state.map.get(address) ){
-                state.map.set(address , abi);
-                state.abis.push({address , abi})
-            }
+            
         })
     })
+    return initialState;
     
 })
