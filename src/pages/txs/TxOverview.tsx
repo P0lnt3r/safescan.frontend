@@ -16,8 +16,9 @@ import { useMethodSignature } from '../../state/application/hooks';
 import { defaultAbiCoder } from 'ethers/lib/utils';
 import BUSD from "../../abi/BUSD.json"
 import { Interface } from '@ethersproject/abi'
-import { useAddressAbi } from '../../state/abi/hook';
+import { useAddressAbi, useAddressFunctionFragment } from '../../state/abi/hook';
 import { useDispatch } from 'react-redux';
+import TxInput from './TxInput';
 
 const { TextArea } = Input;
 const { Title, Text, Paragraph, Link } = Typography;
@@ -95,6 +96,8 @@ export default ({
     //   ];
     // const i = new Interface(objabi);
     // console.log(i.getFunction(methodId));
+
+    const functionFragment = useAddressFunctionFragment( to , methodId , useDispatch() );
 
     return <>
 
@@ -316,8 +319,7 @@ export default ({
                 <Text strong style={{ marginLeft: "5px" }}>Input Data</Text>
             </Col>
             <Col xl={16} xs={24} style={{ marginTop: '14px' }}>
-                <TextArea style={{ cursor: "default", color: "black" }} rows={4} disabled
-                    value={input} />
+                <TxInput raw={input} fragment={functionFragment} methodId={methodId} ></TxInput>
             </Col>
         </Row>
 

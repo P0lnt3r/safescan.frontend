@@ -14,9 +14,7 @@ export function useMethodSignature(methodHex: string): Abi_Method_Define | undef
 }
 
 export function useAddressProp(address: string | undefined): AddressPropVO | undefined {
-    console.log('useAddressProp >' , address);
     return useSelector((state: AppState) => {
-        console.log('useAddressProp >' , state.application.addressPropMap);
         return state.application.addressPropMap.get(address);
     });
 }
