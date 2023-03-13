@@ -1,13 +1,14 @@
 
 import { AnyAction } from '@reduxjs/toolkit';
-import { Fragment, Interface } from 'ethers/lib/utils';
+import { FormatTypes, Fragment, Interface } from 'ethers/lib/utils';
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchAddressAbi } from '../../services/utils';
 import { AppState } from '../index';
 import { Abi_Save } from './action';
 import json_IERC20 from '../../abi/IERC20.json';
 
-export function useAddressFunctionFragment(address: string, methodId: string, dispatch: (action: AnyAction) => any): Fragment | undefined {
+export function useAddressFunctionFragment(address: string, hex: string, dispatch: (action: AnyAction) => any): Fragment | undefined {
+    const isFunction = hex.length === 10 ;
     const result = useSelector((state: AppState) => {
         const addressAbiJson = state.abi.abiMap?.get(address);
         if ( addressAbiJson ){
@@ -28,11 +29,11 @@ export function useAddressFunctionFragment(address: string, methodId: string, di
                 
             }
         }
-        const methodSignature = state.application.methodSignature.get(methodId);
+        const methodSignature = state.application.methodSignature.get(hex);
         if ( methodSignature ){
             return {
                 type : "methodsignature",
-                json : [`function ${methodSignature}`]
+                json : [`${isFunction?"function":"event"} ${methodSignature}`]
             }
         }
         return undefined;
@@ -43,10 +44,13 @@ export function useAddressFunctionFragment(address: string, methodId: string, di
         })
     }
     if ( result ){
-        return new Interface( result.json ).getFunction(methodId);
+        const IContract = new Interface( result.json );
+        return isFunction ? IContract.getFunction(hex)
+                : IContract.getEvent(hex);
     }
     return undefined;
 }
+
 
 export function useAddressEventFragment() {
 

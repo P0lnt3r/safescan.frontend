@@ -19,23 +19,23 @@ export default ({
             {
                 params.map((param, index) => {
                     if (param.index > 0) {
-                        return <>
+                        return <Text key={index}>
                             <Text type="secondary">{`${index == 0 ? " " : ", "}index_topic_${param.index} `}</Text>
                             <Text italic>{`${param.type} `}</Text>
                             <Text strong type="danger">{`${param.name}`}</Text>
-                        </>
+                        </Text>
                     }
-                    return <>
+                    return <Text key={index}>
                         <Text italic>{`${index == 0 ? " " : ", "}${param.type} `}</Text>
                         <Text strong type="danger">{`${param.name}`}</Text>
-                    </>
+                    </Text>
                 })
             }
             <Text strong>{" )"}</Text>
         </>
     }
 
-    function EventLogTopic(index: number, hex: string, indexed: Abi_Method_Param[], data:Abi_Method_Param[]) {
+    function EventLogTopic(index: number, hex: string, indexed: Abi_Method_Param[], data: Abi_Method_Param[]) {
         const abiMethodParam = index <= indexed.length ? indexed[index - 1] : data[index - 1 - indexed.length];
         const decodeResult = defaultAbiCoder.decode([abiMethodParam.type], hex);
         return <>
@@ -61,23 +61,25 @@ export default ({
         const decodeResult = hex != "0x" ? defaultAbiCoder.decode(abiTypes, hex) : undefined;
         return <>
             {decodeResult && decodeResult.map((result, index) => {
-                return <>
+                return <Row key={index} style={ 
+                        index == 0 ? { marginTop: "20px", paddingLeft: "20px", paddingRight: "20px" }
+                            : { paddingLeft: "20px", paddingRight: "20px" }
+                    }>
                     <Col xl={2} xs={24}>
                         <Text type="secondary" strong>{data[index].name}:</Text>
                     </Col>
                     <Col xl={22} xs={24}>
                         <Text>{result.toString().toLowerCase()}</Text>
                     </Col>
-                </>
+                </Row>
             })}
         </>
     }
 
 
     function EventLog(eventLog: EventLogVO) {
-        const topic = eventLog.topic0;
-        const abiMethodDefine = useMethodSignature(topic);
-        console.log(abiMethodDefine);
+        const { address, topic0 } = eventLog;
+        const abiMethodDefine = useMethodSignature(address, topic0);
         return (
             <Row key={eventLog.logIndex}>
                 <Col xl={2} xs={24} style={{ marginTop: '14px' }}>
@@ -111,7 +113,7 @@ export default ({
                                 JSON.parse(eventLog.topicsArr).map((val: any, index: any) => {
                                     return (<Row key={index}>
                                         {
-                                            abiMethodDefine && index > 0 ? EventLogTopic(index, val, abiMethodDefine.indexed,abiMethodDefine.data)
+                                            abiMethodDefine && index > 0 ? EventLogTopic(index, val, abiMethodDefine.indexed, abiMethodDefine.data)
                                                 : <>
                                                     <Col xl={2} xs={24}><Text code>{index}</Text></Col>
                                                     <Col xl={22} xs={24}>
@@ -129,17 +131,18 @@ export default ({
                         <Col xl={2} xs={24} style={{ marginTop: "20px" }}>
                             <Text italic>Data</Text>
                         </Col>
-                        <Col xl={22} xs={24} style={{ backgroundColor: "#f8f9fa" }}>
-                            <Row style={{ marginTop: "20px", marginBottom: "20px", paddingLeft: "20px", paddingRight: "20px" }}>
-                                {
-                                    abiMethodDefine ? EventLogData(eventLog.data, abiMethodDefine.data)
-                                        : <>
-                                            <Col xl={24}>
-                                                {eventLog.data}
-                                            </Col>
-                                        </>
-                                }
-                            </Row>
+                        <Col xl={22} xs={24} style={{ backgroundColor: "#f8f9fa" , paddingBottom:"20px" }}>
+
+                            {
+                                abiMethodDefine ? EventLogData(eventLog.data, abiMethodDefine.data)
+                                    :
+                                    <Row style={{ marginTop: "20px", paddingLeft: "20px", paddingRight: "20px" }}>
+                                        <Col xl={24}>
+                                            <Text>{eventLog.data}</Text>
+                                        </Col>
+                                    </Row>
+                            }
+
                         </Col>
                     </Row>
                 </Col>
