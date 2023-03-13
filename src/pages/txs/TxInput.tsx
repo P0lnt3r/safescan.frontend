@@ -11,9 +11,6 @@ import { Abi_Method_Param } from '../../utils/decode/index.d';
 const { TextArea } = Input;
 const { Title, Text, Paragraph } = Typography;
 
-
-
-
 export default ({ raw, methodId, fragment }: {
     raw: string
     methodId: string
@@ -49,7 +46,7 @@ export default ({ raw, methodId, fragment }: {
                 {
                     key: '2',
                     label: (
-                        <a href='javascript:void(0)' onClick={() => setShowAbiDecode(true)}>
+                        <a onClick={() => setShowAbiDecode(true)}>
                             Abi Decode
                         </a>
                     ),
@@ -101,30 +98,30 @@ export default ({ raw, methodId, fragment }: {
                     "padding": "2%"
                 }}>
                     <Row>
-                        <Col xl={2} xs={24}>
+                        <Col xl={4} xs={24}>
                             <Text strong>Function</Text>
                         </Col>
-                        <Col xl={22} xs={24}>
+                        <Col xl={20} xs={24}>
                             <Text>{functionSignature}</Text>
                         </Col>
                     </Row>
                     <Row style={{ "marginTop": "20px" }}>
-                        <Col xl={2} xs={24}>
+                        <Col xl={4} xs={24}>
                             <Text strong>MethodId</Text>
                         </Col>
-                        <Col xl={22} xs={24}>
+                        <Col xl={20} xs={24}>
                             <Text>{methodId}</Text>
                         </Col>
                     </Row>
                     <Row style={{ "marginTop": "20px" }}>
-                        <Col xl={2} xs={24}>
+                        <Col xl={4} xs={24}>
                             <Text strong>Input</Text>
                         </Col>
                     </Row>
                     {
                         decodeResult && decodeResult.map(({ index, type, name, value }) => {
                             return (<Row key={index}>
-                                <Col xl={2}>
+                                <Col xl={4}>
                                     <Text code>{index}</Text>
                                     <Text strong style={{ "float": "right", "paddingRight": "5px" }}>{name}:</Text>
                                 </Col>

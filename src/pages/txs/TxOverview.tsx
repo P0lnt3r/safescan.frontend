@@ -16,7 +16,7 @@ import { useMethodSignature } from '../../state/application/hooks';
 import { defaultAbiCoder } from 'ethers/lib/utils';
 import BUSD from "../../abi/BUSD.json"
 import { Interface } from '@ethersproject/abi'
-import { useAddressAbi, useAddressFunctionFragment } from '../../state/abi/hook';
+import { useAddressFunctionFragment } from '../../state/abi/hook';
 import { useDispatch } from 'react-redux';
 import TxInput from './TxInput';
 

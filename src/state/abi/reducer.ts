@@ -13,7 +13,7 @@ export interface AbiState {
 
 const initialState : AbiState = {
     abis : [
-        { address : "1" , abi:"2" }
+
     ]
 }
 
@@ -27,7 +27,7 @@ export default createReducer( initialState , (builder) => {
         return state;
     })
     builder.addCase( Abi_Save  , ( state , { payload } ) => {
-        payload.forEach( ({address , abi}) => {
+        payload.forEach(({address , abi}) => {
             state.abis.push({address,abi})
             state.abiMap?.set(address,abi)
             return state;
