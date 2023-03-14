@@ -2,8 +2,9 @@ import { Abi_Method_Define, Abi_Method_Param } from ".";
 
 
 export default (signature: string): Abi_Method_Define => {
-
-    console.log("Parse : ", signature);
+    if ( signature.startsWith("function ") || signature.startsWith("event ") ){
+        signature = signature.substring( signature.indexOf(" ") + 1 );
+    }
     const firstSplitIndex = signature.indexOf("(");
     const name = signature.substring(0, firstSplitIndex);
     const paramStr = signature.substring(firstSplitIndex + 1, signature.length - 1);

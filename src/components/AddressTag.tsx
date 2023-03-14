@@ -17,11 +17,15 @@ export default (
         showStyle?: ShowStyle
     }) => {
         address = address.toLocaleLowerCase();
+    
+    if ( !address.startsWith("0x") ){
+        return <>{address}</>
+    }
+
     const addressProp = useAddressProp(address.toLocaleLowerCase());
     const tag = addressProp?.tag
     const subAddress = BothSub(address, sub);
     showStyle = showStyle ? showStyle : ShowStyle.DEFAULT;
-
     return (<>
         {
             showStyle === ShowStyle.DEFAULT &&

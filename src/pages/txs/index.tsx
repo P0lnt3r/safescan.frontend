@@ -10,8 +10,8 @@ import TransactionHash from '../../components/TransactionHash';
 import { DateFormat } from '../../utils/DateUtil';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import EtherAmount from '../../components/EtherAmount';
-import { useParams } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
+import TxMethodId from '../../components/TxMethodId';
 
 const { Title, Text, Link } = Typography;
 
@@ -40,6 +40,7 @@ export default function () {
       title: 'Method',
       dataIndex: 'methodId',
       width: 100,
+      render:(methodId , txVO) => <TxMethodId address={txVO.to} methodId={methodId}></TxMethodId>
     },
     {
       title: 'Block',

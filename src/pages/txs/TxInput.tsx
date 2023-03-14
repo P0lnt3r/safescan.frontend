@@ -1,12 +1,10 @@
 
 import { Button, Col, Input, Row, Typography, Dropdown, Space, Menu } from 'antd';
-import { defaultAbiCoder, Fragment, ParamType } from 'ethers/lib/utils';
+import { defaultAbiCoder, Fragment, ParamType, Interface, FunctionFragment } from 'ethers/lib/utils';
 import { useMemo, useState } from 'react';
 import AddressTag from '../../components/AddressTag';
-import type { MenuProps } from 'antd';
 import { DownOutlined, SmileOutlined } from '@ant-design/icons';
 
-import { Abi_Method_Param } from '../../utils/decode/index.d';
 
 const { TextArea } = Input;
 const { Title, Text, Paragraph } = Typography;
@@ -16,13 +14,12 @@ export default ({ raw, methodId, fragment }: {
     methodId: string
     fragment?: Fragment
 }) => {
-
     const functionSignature = useMemo(() => {
         if (fragment) {
             const functionName = fragment.name;
             let result: string = functionName + "(";
             fragment.inputs.forEach((input: ParamType) => {
-                result += ` ${input.baseType} ${input.name},`;
+                result += ` ${input.type} ${input.name},`;
             })
             result = fragment.inputs.length > 0 ? result.substring(0, result.length - 1) + " )"
                 : result + ")";
@@ -55,18 +52,17 @@ export default ({ raw, methodId, fragment }: {
             ]}
         />
     );
-
     const decodeResult = useMemo<{
         index: number,
         type: string,
         name: string,
-        value: string
+        value: any
     }[]>(() => {
         const decodeResult: {
             index: number,
             type: string,
             name: string,
-            value: string
+            value: any
         }[] = [];
         if (fragment && raw && fragment.inputs.length > 0) {
             const inputNames: string[] = [];
@@ -75,13 +71,14 @@ export default ({ raw, methodId, fragment }: {
                 inputNames.push(input.name)
                 inputTypes.push(input.baseType);
             })
-            const result = defaultAbiCoder.decode(inputTypes, "0x" + raw.substring(10));
+            const result = new Interface([fragment.format("full")])
+                .decodeFunctionData(fragment as FunctionFragment, raw);
             for (var i = 0; i < result.length; i++) {
                 decodeResult.push({
                     index: i,
                     type: inputTypes[i],
                     name: inputNames[i],
-                    value: result[i].toString()
+                    value: result[i]
                 })
             }
         }
@@ -127,8 +124,20 @@ export default ({ raw, methodId, fragment }: {
                                 </Col>
                                 <Col xl={20} xs={24}>
                                     {
-                                        type === "address" ? <AddressTag address={value} sub={0}></AddressTag>
-                                            : <Text>{value}</Text>
+                                        type !== "array" ?
+                                            type === "address" ? <AddressTag address={value.toString()} sub={0} />
+                                                : <Text>{value.toString()}</Text>
+                                            : <>
+                                                { 
+                                                    value.map( ( ele : any , index : number ) => {
+                                                        return <Row key={index}>
+                                                            {
+                                                                 <AddressTag address={ele.toString()} sub={0} />
+                                                            }
+                                                        </Row>
+                                                    } )
+                                                }
+                                            </>
                                     }
                                 </Col>
                             </Row>)
@@ -142,7 +151,7 @@ export default ({ raw, methodId, fragment }: {
         }
 
         <Dropdown overlay={menu}>
-            <Button style={{marginTop:"10px"}}>
+            <Button style={{ marginTop: "10px" }}>
                 <Space>
                     View Input As
                     <DownOutlined />

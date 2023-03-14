@@ -1,7 +1,5 @@
 import { Card, Typography, Tag, Input, Button, Space, Tooltip, Tabs, Row, Col, Divider } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import type { TabsProps } from 'antd';
 import {
     CheckCircleOutlined,
     CloseCircleOutlined,
@@ -12,13 +10,10 @@ import { DateFormat } from '../../utils/DateUtil';
 import EtherAmount from '../../components/EtherAmount';
 import JSBI from 'jsbi';
 import NumberFormat from '../../utils/NumberFormat';
-import { useMethodSignature } from '../../state/application/hooks';
-import { defaultAbiCoder } from 'ethers/lib/utils';
-import BUSD from "../../abi/BUSD.json"
-import { Interface } from '@ethersproject/abi'
-import { useAddressFunctionFragment } from '../../state/abi/hook';
+import { useAddressFunctionFragment } from '../../state/application/hooks';
 import { useDispatch } from 'react-redux';
 import TxInput from './TxInput';
+import NavigateLink from '../../components/NavigateLink';
 
 const { TextArea } = Input;
 const { Title, Text, Paragraph, Link } = Typography;
@@ -65,39 +60,7 @@ export default ({
         return "";
     }, [gasUsed, gas])
 
-
-    // const abi = new Interface(BUSD);
-    // console.log(abi.getFunction("transfer"));
-    // const result = abi.decodeFunctionData( abi.getFunction("0xa9059cbb") , input )
-    // console.log(result);
-    /////////////////////////////////////////////////////////////////
-    // const abiMethodDefine = useMethodSignature(methodId);
-    // console.log(abiMethodDefine);
-    // const types: string[] | undefined = abiMethodDefine && abiMethodDefine.params.map(p => p.type);
-    // if (types) {
-    //     const decodeResult = defaultAbiCoder.decode(types, `0x${input.substring(10)}`)
-    //     console.log(decodeResult);
-    // }
-    /////////////////////////////////////////////////////////////////
-    // const _json = useAddressAbi(to , useDispatch());
-    // const abi = useMemo( ()=>{
-    //     if ( _json ){
-    //         return new Interface(_json);
-    //     }
-    // } , [_json] );
-    // if ( abi ){
-    //     const func = abi.getFunction(methodId);
-    //     console.log(func);
-    //     const result = abi.decodeFunctionData(abi.getFunction("0xa9059cbb"), input)
-    //     console.log(result);
-    // }
-    // const objabi = [
-    //     "function transfer(address from, uint value)",
-    //   ];
-    // const i = new Interface(objabi);
-    // console.log(i.getFunction(methodId));
-
-    const functionFragment = useAddressFunctionFragment( to , methodId , useDispatch() );
+    const functionFragment = useAddressFunctionFragment(to, methodId, useDispatch());
 
     return <>
 
@@ -181,11 +144,11 @@ export default ({
                 <Text strong style={{ marginLeft: "5px" }}>From</Text>
             </Col>
             <Col xl={16} xs={24} style={{ marginTop: '14px' }}>
-                <Link href={`/address/${from}`}>
+                <NavigateLink path={`/address/${from}`}>
                     <Paragraph copyable style={{ color: "rgba(52, 104, 171, 0.85)" }}>
                         {from}
                     </Paragraph>
-                </Link>
+                </NavigateLink>
             </Col>
         </Row>
         <Divider style={{ margin: '18px 0px' }} />
@@ -197,11 +160,11 @@ export default ({
                 <Text strong style={{ marginLeft: "5px" }}>To</Text>
             </Col>
             <Col xl={16} xs={24} style={{ marginTop: '14px' }}>
-                <Link href={`/address/${to}`}>
+                <NavigateLink path={`/address/${to}`}>
                     <Paragraph copyable style={{ color: "rgba(52, 104, 171, 0.85)" }}>
                         {to}
                     </Paragraph>
-                </Link>
+                </NavigateLink>
             </Col>
         </Row>
 

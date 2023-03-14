@@ -1,6 +1,6 @@
 
 import { createAction } from '@reduxjs/toolkit';
-import { AbiMethodSignatureVO, AddressPropVO, BlockchainContextVO, BlockVO, TransactionVO } from '../../services';
+import { AbiMethodSignatureVO, AddressAbiVO, AddressPropVO, BlockchainContextVO } from '../../services';
 
 export type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
@@ -16,4 +16,6 @@ export const Application_Update_AbiMethodSignature = createAction<AbiMethodSigna
 
 export const Application_Update_BlockchainContext = createAction<BlockchainContextVO>("Application_Update_BlockchainContext");
 
+export const Application_Save_ABI = createAction<AddressAbiVO[]>("Application_Save_ABI");
 
+export const Application_Init = createAction<string>("Application_Init");
