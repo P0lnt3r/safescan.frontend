@@ -1,20 +1,15 @@
-import { PaginationProps , Tag  } from "antd";
 import { useEffect, useState } from "react"
-import { ERC20TransferVO, TransactionVO } from "../../services";
+import { ERC20TransferVO } from "../../services";
 import { fetchAddressERC20Transfers } from "../../services/tx";
-import { Card, Table, Typography, Row, Col } from 'antd';
+import { Table, Typography, Row, Col , PaginationProps } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { fetchTransactions } from '../../services/tx';
 import { useTranslation } from 'react-i18next';
 import AddressTag, { ShowStyle } from '../../components/AddressTag';
 import TransactionHash from '../../components/TransactionHash';
 import { DateFormat } from '../../utils/DateUtil';
-import { ArrowRightOutlined } from '@ant-design/icons';
 import EtherAmount from '../../components/EtherAmount';
-import { useParams } from 'react-router';
-import { useSearchParams } from 'react-router-dom';
 
-const { Title, Text, Link } = Typography;
+const {  Text } = Typography;
 
 export default ({ address }: { address: string }) => {
     const { t } = useTranslation();
@@ -46,7 +41,7 @@ export default ({ address }: { address: string }) => {
 
     useEffect(() => {
         doFetchAddressTransactions();
-    }, []);
+    }, [address]);
 
     const columns: ColumnsType<ERC20TransferVO> = [
         {

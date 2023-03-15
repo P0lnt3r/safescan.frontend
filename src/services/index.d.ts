@@ -28,7 +28,7 @@ function obj2URIParams(data : any){
     var _result = [];
     for (var key in data) {
       var value = data[key];
-      if (value.constructor == Array) {
+      if (value.constructor === Array) {
         value.forEach(function(_value) {
           _result.push(key + "=" + _value);
         });
@@ -64,16 +64,16 @@ export interface BlockVO {
     number: number,
     difficulty: number,
     extraData: string,
-    gasLimit: number,
-    gasUsed: number,
+    gasLimit: string,
+    gasUsed: string,
     hash: string,
     miner: string,
     parentHash: string,
     reward: string,
     sha3Uncles: string,
-    size: number,
+    size: string,
     timestamp: number,
-    totalDifficulty: number,
+    totalDifficulty: string,
     txns: number
 }
 
@@ -81,9 +81,9 @@ export interface TransactionVO {
     blockHash: string
     blockNumber: integer
     from: string
-    gas: number
-    gasPrice: number
-    gasUsed: number
+    gas: string
+    gasPrice: string
+    gasUsed: string
     hash: string
     input: string
     methodId: string
@@ -92,7 +92,7 @@ export interface TransactionVO {
     timestamp: number
     to: string
     transactionIndex: number
-    value: number
+    value: string
 }
 
 export interface EventLogVO {

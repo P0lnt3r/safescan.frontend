@@ -1,44 +1,36 @@
-import { useParams } from "react-router-dom"
-import { Card, Typography, Tag, Input, Button, Space, Tooltip, Tabs, Row, Col, Divider } from 'antd';
+import { useNavigate, useParams } from "react-router-dom"
+import { Card, Typography, Input, Button,  Tooltip, Row, Col, Divider } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-
-import type { TabsProps } from 'antd';
 import {
-    CheckCircleOutlined,
-    CloseCircleOutlined,
     QuestionCircleOutlined,
-    SearchOutlined, LeftOutlined, RightOutlined
-
+    LeftOutlined, 
+    RightOutlined
 } from '@ant-design/icons';
 
 import { DateFormat } from '../../utils/DateUtil';
-import EtherAmount from '../../components/EtherAmount';
-import JSBI from 'jsbi';
-import NumberFormat from '../../utils/NumberFormat';
+import  {format} from '../../utils/NumberFormat';
 import { fetchBlock } from "../../services/block";
 import { BlockVO } from "../../services";
-import { defaultAbiCoder } from 'ethers/lib/utils';
 import { useAddressProp } from "../../state/application/hooks";
+import NavigateLink from "../../components/NavigateLink";
 
 const { TextArea } = Input;
 const { Title, Text, Paragraph, Link } = Typography;
 export default function () {
     const { height } = useParams();
+    const navigate = useNavigate();
     const [blockVO, setBlockVO] = useState<BlockVO>();
     const addressProp = useAddressProp(blockVO?.miner);
-    console.log(addressProp);
-
     useEffect(() => {
         fetchBlock(Number(height), undefined).then((blockVO: BlockVO) => {
             setBlockVO(blockVO);
         })
-    }, []);
+    }, [height]);
 
     const gasUsedRate = useMemo(() => {
         if (blockVO) {
             const { gasLimit, gasUsed } = blockVO;
-            return Math.round(gasUsed / gasLimit * 10000) / 100 + "%";
+            return Math.round(Number(gasUsed) / Number(gasLimit) * 10000) / 100 + "%";
         }
         return "";
     }, [blockVO])
@@ -60,11 +52,11 @@ export default function () {
                     </Col>
                     <Col xl={16} xs={24}>
                         <Tooltip title="View previous block">
-                            <Button size="small" type="primary" shape="circle" icon={<LeftOutlined />} />
+                            <Button onClick={() => navigate(`/block/${Number(height)-1}`)} size="small" type="primary" shape="circle" icon={<LeftOutlined />} />
                         </Tooltip>
                         <Text strong style={{ margin: "14px" }}>{height}</Text>
                         <Tooltip title="View next block">
-                            <Button size="small" type="primary" shape="circle" icon={<RightOutlined />} />
+                            <Button onClick={() => navigate(`/block/${Number(height)+1}`)} size="small" type="primary" shape="circle" icon={<RightOutlined />} />
                         </Tooltip>
                     </Col>
                 </Row>
@@ -93,9 +85,9 @@ export default function () {
                         <Text strong style={{ marginLeft: "5px" }}>Transactions:</Text>
                     </Col>
                     <Col xl={16} xs={24}>
-                        <Link href={`/txs?block=${blockVO?.number}`}>
+                        <NavigateLink path={`/txs?block=${blockVO?.number}`}>
                             <Text code>{blockVO?.txns} transactions</Text>
-                        </Link>
+                        </NavigateLink>
                         in this block
                     </Col>
                 </Row>
@@ -109,9 +101,9 @@ export default function () {
                         <Text strong style={{ marginLeft: "5px" }}>Miner:</Text>
                     </Col>
                     <Col xl={16} xs={24} >
-                        <Link href={`/address/${blockVO?.miner}`}>
+                        <NavigateLink path={`/address/${blockVO?.miner}`}>
                             {blockVO?.miner}
-                        </Link>
+                        </NavigateLink>
                         {
                             addressProp && <Text strong>  ({addressProp?.tag})</Text>
                         }
@@ -140,7 +132,7 @@ export default function () {
                         <Text strong style={{ marginLeft: "5px" }}>Total Difficulty:</Text>
                     </Col>
                     <Col xl={16} xs={24}>
-                        <Text>{blockVO && NumberFormat(blockVO.totalDifficulty)}</Text>
+                        <Text>{blockVO && format(blockVO.totalDifficulty)}</Text>
                     </Col>
                 </Row>
                 <Divider style={{ margin: '18px 0px' }} />
@@ -153,7 +145,7 @@ export default function () {
                         <Text strong style={{ marginLeft: "5px" }}>Size:</Text>
                     </Col>
                     <Col xl={16} xs={24} >
-                        <Text>{blockVO && NumberFormat(blockVO.size)} bytes</Text>
+                        <Text>{blockVO && format(blockVO.size)} bytes</Text>
                     </Col>
                 </Row>
                 <Divider style={{ margin: '18px 0px' }} />
@@ -166,7 +158,7 @@ export default function () {
                         <Text strong style={{ marginLeft: "5px" }}>Gas Limit:</Text>
                     </Col>
                     <Col xl={16} xs={24} >
-                        <Text>{blockVO && NumberFormat(blockVO.gasLimit)}</Text>
+                        <Text>{blockVO && format(blockVO.gasLimit)}</Text>
                     </Col>
                 </Row>
                 <Divider style={{ margin: '18px 0px' }} />
@@ -179,7 +171,7 @@ export default function () {
                         <Text strong style={{ marginLeft: "5px" }}>Gas Used:</Text>
                     </Col>
                     <Col xl={16} xs={24} >
-                        <Text>{blockVO && NumberFormat(blockVO.gasUsed)} ({gasUsedRate})</Text>
+                        <Text>{blockVO && format(blockVO.gasUsed)} ({gasUsedRate})</Text>
                     </Col>
                 </Row>
                 <Divider style={{ margin: '18px 0px' }} />

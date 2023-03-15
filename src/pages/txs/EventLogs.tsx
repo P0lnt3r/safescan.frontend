@@ -1,10 +1,11 @@
 import { Typography, Row, Col, Divider } from 'antd';
 import { defaultAbiCoder } from 'ethers/lib/utils';
+import NavigateLink from '../../components/NavigateLink';
 import { EventLogVO } from '../../services';
 import { useMethodSignature } from '../../state/application/hooks';
 import { Abi_Method_Define, Abi_Method_Param } from '../../utils/decode';
 
-const { Text, Link } = Typography;
+const { Text } = Typography;
 
 export default ({
     eventLogs
@@ -20,13 +21,13 @@ export default ({
                 params.map((param, index) => {
                     if (param.index > 0) {
                         return <Text key={index}>
-                            <Text type="secondary">{`${index == 0 ? " " : ", "}index_topic_${param.index} `}</Text>
+                            <Text type="secondary">{`${index === 0 ? " " : ", "}index_topic_${param.index} `}</Text>
                             <Text italic>{`${param.type} `}</Text>
                             <Text strong type="danger">{`${param.name}`}</Text>
                         </Text>
                     }
                     return <Text key={index}>
-                        <Text italic>{`${index == 0 ? " " : ", "}${param.type} `}</Text>
+                        <Text italic>{`${index === 0 ? " " : ", "}${param.type} `}</Text>
                         <Text strong type="danger">{`${param.name}`}</Text>
                     </Text>
                 })
@@ -46,9 +47,9 @@ export default ({
             <Col xl={22} xs={24}>
                 {
                     "address" === abiMethodParam.type ?
-                        <Link href={`/address/${decodeResult.toString().toLowerCase()}`}>
+                        <NavigateLink path={`/address/${decodeResult.toString().toLowerCase()}`}>
                             {decodeResult.toString().toLowerCase()}
-                        </Link>
+                        </NavigateLink>
                         : <Text>{decodeResult.toString().toLowerCase()}</Text>
                 }
             </Col>
@@ -62,7 +63,7 @@ export default ({
         return <>
             {decodeResult && decodeResult.map((result, index) => {
                 return <Row key={index} style={ 
-                        index == 0 ? { marginTop: "20px", paddingLeft: "20px", paddingRight: "20px" }
+                        index === 0 ? { marginTop: "20px", paddingLeft: "20px", paddingRight: "20px" }
                             : { paddingLeft: "20px", paddingRight: "20px" }
                     }>
                     <Col xl={2} xs={24}>
@@ -91,9 +92,9 @@ export default ({
                             <Text strong>Address</Text>
                         </Col>
                         <Col xl={22} xs={24}>
-                            <Link href={`/address/${eventLog.address}`}>
+                            <NavigateLink path={`/address/${eventLog.address}`}>
                                 {eventLog.address}
-                            </Link>
+                            </NavigateLink>
                         </Col>
                     </Row>
                     <Row style={{ marginTop: "15px" }}>

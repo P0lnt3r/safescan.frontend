@@ -1,5 +1,5 @@
-import { Card, Typography, Tag, Input, Button, Space, Tooltip, Tabs, Row, Col, Divider } from 'antd';
-import { useEffect, useMemo, useState } from 'react';
+import { Typography, Tag, Input, Tooltip, Row, Col, Divider } from 'antd';
+import { useMemo } from 'react';
 import {
     CheckCircleOutlined,
     CloseCircleOutlined,
@@ -9,14 +9,13 @@ import { TransactionVO } from '../../services';
 import { DateFormat } from '../../utils/DateUtil';
 import EtherAmount from '../../components/EtherAmount';
 import JSBI from 'jsbi';
-import NumberFormat from '../../utils/NumberFormat';
+import {format} from '../../utils/NumberFormat';
 import { useAddressFunctionFragment } from '../../state/application/hooks';
 import { useDispatch } from 'react-redux';
 import TxInput from './TxInput';
 import NavigateLink from '../../components/NavigateLink';
 
-const { TextArea } = Input;
-const { Title, Text, Paragraph, Link } = Typography;
+const { Text, Paragraph } = Typography;
 
 export default ({
     blockHash,
@@ -36,30 +35,20 @@ export default ({
     value,
 }: TransactionVO) => {
 
-    const txFee = useMemo(() => {
-        if (gasPrice && gasUsed) {
-            return JSBI.multiply(
-                JSBI.BigInt(gasPrice),
-                JSBI.BigInt(gasUsed)
-            ).toString();
+    const {txFee , gasPriceGWEI , gasUsedRate} = useMemo(() => {
+        const txFee = (gasPrice && gasUsed) ? JSBI.multiply(
+            JSBI.BigInt(gasPrice),
+            JSBI.BigInt(gasUsed)
+        ).toString() : "0";
+        const gasPriceGWEI = (gasPrice) ? JSBI.divide(
+            JSBI.BigInt(gasPrice),
+            JSBI.BigInt("1000000000")
+        ).toString() : "0";
+        const gasUsedRate = (gas && gasUsed) ? Math.round(Number(gasUsed) / Number(gas) * 10000) / 100 + "%" : "";
+        return {
+            txFee , gasPriceGWEI , gasUsedRate
         }
-        return "0";
-    }, [gasPrice, gasUsed]);
-    const gasPriceGWEI = useMemo(() => {
-        if (gasPrice) {
-            return JSBI.divide(
-                JSBI.BigInt(gasPrice),
-                JSBI.BigInt("1000000000")
-            )
-        }
-    }, [gasPrice]);
-    const gasUsedRate = useMemo(() => {
-        if (gas && gasUsed) {
-            return Math.round(gasUsed / gas * 10000) / 100 + "%";
-        }
-        return "";
-    }, [gasUsed, gas])
-
+    } , [ gasPrice, gasUsed, gas] );
     const functionFragment = useAddressFunctionFragment(to, methodId, useDispatch());
 
     return <>
@@ -89,13 +78,13 @@ export default ({
             </Col>
             <Col span={16}>
                 {
-                    status && status == 1 &&
+                    status && status === 1 &&
                     <Tag icon={<CheckCircleOutlined />} color="green">
                         Success
                     </Tag>
                 }
                 {
-                    status && status == 0 &&
+                    status && status === 0 &&
                     <Tag icon={<CloseCircleOutlined />} color="red">
                         Fail
                     </Tag>
@@ -112,9 +101,9 @@ export default ({
             </Col>
             <Col span={16}>
                 <Text strong>
-                    <Link href={`/block/${blockNumber}`}>
+                    <NavigateLink path={`/block/${blockNumber}`}>
                         {blockNumber}
-                    </Link>
+                    </NavigateLink>
                 </Text>
             </Col>
         </Row>
@@ -178,7 +167,7 @@ export default ({
             </Col>
             <Col span={16}>
                 {
-                    value && <EtherAmount raw={value + ""} />
+                    value && <EtherAmount raw={value.toString()} fix={18} />
                 }
             </Col>
         </Row>
@@ -223,7 +212,7 @@ export default ({
             </Col>
             <Col span={16}>
                 {
-                    <>{gas && NumberFormat(gas)}</>
+                    <>{gas && format(`${gas}`)}</>
                 }
             </Col>
         </Row>
@@ -238,7 +227,7 @@ export default ({
             </Col>
             <Col span={16}>
                 {
-                    <>{gasUsed && NumberFormat(gasUsed)} ({gasUsedRate})</>
+                    <>{gasUsed && format(gasUsed)} ({gasUsedRate})</>
                 }
             </Col>
         </Row>

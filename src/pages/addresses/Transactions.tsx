@@ -1,20 +1,17 @@
-import { PaginationProps , Tag  } from "antd";
 import { useEffect, useState } from "react"
 import { TransactionVO } from "../../services";
 import { fetchAddressTransactions } from "../../services/tx";
-import { Card, Table, Typography, Row, Col } from 'antd';
+import { PaginationProps , Table, Typography, Row, Col } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { fetchTransactions } from '../../services/tx';
 import { useTranslation } from 'react-i18next';
 import AddressTag, { ShowStyle } from '../../components/AddressTag';
 import TransactionHash from '../../components/TransactionHash';
 import { DateFormat } from '../../utils/DateUtil';
-import { ArrowRightOutlined } from '@ant-design/icons';
 import EtherAmount from '../../components/EtherAmount';
-import { useParams } from 'react-router';
-import { useSearchParams } from 'react-router-dom';
+import NavigateLink from "../../components/NavigateLink";
+import TxMethodId from "../../components/TxMethodId";
 
-const { Title, Text, Link } = Typography;
+const { Text } = Typography;
 
 export default ({ address }: { address: string }) => {
     const { t } = useTranslation();
@@ -46,14 +43,14 @@ export default ({ address }: { address: string }) => {
 
     useEffect(() => {
         doFetchAddressTransactions();
-    }, []);
+    }, [address]);
 
     const columns: ColumnsType<TransactionVO> = [
         {
             title: <>{t('Txn Hash')}</>,
             dataIndex: 'hash',
             key: 'hash',
-            render: (val, txVO) => <><TransactionHash txhash={val} sub={8} status={txVO.status}></TransactionHash></>,
+            render: (val, txVO) => <TransactionHash txhash={val} sub={8} status={txVO.status}></TransactionHash>,
             width: 180,
             fixed: 'left',
         },
@@ -61,12 +58,13 @@ export default ({ address }: { address: string }) => {
             title: 'Method',
             dataIndex: 'methodId',
             width: 100,
+            render: ( methodId , txVO ) => <TxMethodId methodId={methodId} address={txVO.to} />
         },
         {
             title: 'Block',
             dataIndex: 'blockNumber',
             width: 80,
-            render: blockNumber => <Link href={`/block/${blockNumber}`}>{blockNumber}</Link>
+            render: blockNumber => <NavigateLink path={`/block/${blockNumber}`}>{blockNumber}</NavigateLink>
         },
         {
             title: 'Date Time',
@@ -123,7 +121,7 @@ export default ({ address }: { address: string }) => {
     return <>
 
         <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
-            pagination={pagination}
+            pagination={pagination} rowKey={ (txVO : TransactionVO) => txVO.hash }
         />
 
     </>

@@ -12,8 +12,9 @@ import { ArrowRightOutlined } from '@ant-design/icons';
 import EtherAmount from '../../components/EtherAmount';
 import { useSearchParams } from 'react-router-dom';
 import TxMethodId from '../../components/TxMethodId';
+import NavigateLink from '../../components/NavigateLink';
 
-const { Title, Text, Link } = Typography;
+const { Title, Text } = Typography;
 
 export default function () {
 
@@ -46,7 +47,7 @@ export default function () {
       title: 'Block',
       dataIndex: 'blockNumber',
       width: 80,
-      render: blockNumber => <Link href={`/block/${blockNumber}`}>{blockNumber}</Link>
+      render: blockNumber => <NavigateLink path={`/block/${blockNumber}`}>{blockNumber}</NavigateLink>
     },
     {
       title: 'Date Time',
@@ -125,13 +126,13 @@ export default function () {
         {
           blockNumber > 0 &&
           <Text type='secondary' style={{ lineHeight: "34px", marginLeft: "5px", fontSize: "18px" }}>
-            For Block <Link href={`/block/${blockNumber}`}> #{blockNumber} </Link>
+            For Block <NavigateLink path={`/block/${blockNumber}`}> #{blockNumber} </NavigateLink>
           </Text>
         }
       </Row>
       <Card>
         <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
-          pagination={pagination}
+          pagination={pagination} rowKey={(txVO)=>txVO.hash}
         />
       </Card>
     </>

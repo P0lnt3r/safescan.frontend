@@ -1,18 +1,18 @@
 
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { AddressPropVO, BlockVO, TransactionVO } from '../../services';
 import { Abi_Method_Define } from '../../utils/decode';
 import ParseABIDefine from '../../utils/decode/ParseABIDefine';
 import { AppState } from '../index';
 import { FormatTypes, Interface , Fragment } from 'ethers/lib/utils';
-import { CommonAbiType, CommonAbi_Config, getCommonFragment, getFragment } from '../../utils/decode/config';
+import { CommonAbiType, getCommonFragment, getFragment } from '../../utils/decode/config';
 import { Application_Save_ABI } from './action';
 import { fetchAddressAbi } from '../../services/utils';
 import { AnyAction } from '@reduxjs/toolkit';
 
 export function useAddressProp(address: string | undefined): AddressPropVO | undefined {
     return useSelector((state: AppState) => {
-        return state.application.addressPropMap.get(address);
+        return state.application.addressPropMap?.get(address);
     });
 }
 
@@ -44,14 +44,14 @@ export function useMethodIdName( address : string , methodId : string ) : string
                 return byAddressAbi.name;
             }
         }
-        const addressPropVO = state.application.addressPropMap.get(address);
+        const addressPropVO = state.application.addressPropMap?.get(address);
         if (addressPropVO && addressPropVO.subType in CommonAbiType) {
             const byCommonAbi = getCommonFragment( addressPropVO.subType as CommonAbiType , methodId );
             if (byCommonAbi) {
                 return byCommonAbi.name;
             }
         }
-        const methodSignature = state.application.methodSignature.get(methodId);
+        const methodSignature = state.application.methodSignature?.get(methodId);
         if (methodSignature) {
             const IContract = new Interface([`function ${methodSignature}`]);
             return IContract.getFunction(methodId).name;
@@ -78,14 +78,14 @@ export function useAddressFunctionFragment(address: string, hex: string, dispatc
                 dispatch(Application_Save_ABI(data));
             })
         }
-        const addressPropVO = state.application.addressPropMap.get(address);
+        const addressPropVO = state.application.addressPropMap?.get(address);
         if (addressPropVO && addressPropVO.subType in CommonAbiType) {
             const byCommonAbi = getCommonFragment( addressPropVO.subType as CommonAbiType , hex );
             if (byCommonAbi) {
                 return byCommonAbi;
             }
         }
-        const methodSignature = state.application.methodSignature.get(hex);
+        const methodSignature = state.application.methodSignature?.get(hex);
         if (methodSignature) {
             const IContract = new Interface([`${isFunction ? "function" : "event"} ${methodSignature}`]);
             return isFunction ? IContract.getFunction(hex)
@@ -104,7 +104,7 @@ export function useMethodSignature(address: string, hex: string): Abi_Method_Def
             const fragmentSignature = byAddressAbi.format(FormatTypes.full);
             return ParseABIDefine(fragmentSignature);
         }
-        const addressPropVO = state.application.addressPropMap.get(address);
+        const addressPropVO = state.application.addressPropMap?.get(address);
         if (addressPropVO) {
             const { subType } = addressPropVO;
             if (subType in CommonAbiType) {
@@ -115,7 +115,7 @@ export function useMethodSignature(address: string, hex: string): Abi_Method_Def
                 }
             }
         }
-        const methodSignature = state.application.methodSignature.get(hex);
+        const methodSignature = state.application.methodSignature?.get(hex);
         if (methodSignature) {
             return ParseABIDefine(methodSignature);
         }

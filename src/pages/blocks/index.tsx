@@ -1,5 +1,5 @@
 
-import { Card, Table, Typography, notification , Progress  } from 'antd';
+import { Card, Table, Typography, Progress  } from 'antd';
 import { PaginationProps } from 'antd/es/pagination';
 import type { ColumnsType } from 'antd/es/table';
 import { useEffect, useState } from 'react';
@@ -8,9 +8,10 @@ import { fetchBlocks } from '../../services/block';
 import { useTranslation } from 'react-i18next';
 import { DateFormat } from '../../utils/DateUtil';
 import AddressTag from '../../components/AddressTag';
-import NumberFormat from '../../utils/NumberFormat';
+import  {format} from '../../utils/NumberFormat';
+import NavigateLink from '../../components/NavigateLink';
 
-const { Title , Link , Text } = Typography;
+const { Title , Text } = Typography;
 
 export default function () {
 
@@ -20,7 +21,7 @@ export default function () {
       key: 'number',
       title: <>{t('block')}</>,
       dataIndex: 'number',
-      render: text => <Link href={`/block/${text}`}>{text}</Link>,
+      render: text => <NavigateLink path={`/block/${text}`}>{text}</NavigateLink>,
       width: 120,
       fixed: 'left',
     },
@@ -28,13 +29,13 @@ export default function () {
       title: 'Date Time',
       dataIndex: 'timestamp',
       width: 180,
-      render: val => DateFormat(Number(val) * 1000)
+      render: val => DateFormat(Number(val) * 1000) 
     },
     {
       title: 'Txns',
       dataIndex: 'txns',
       width: 70,
-      render: (txns ,blockVO) => <Link href={`/txs?block=${blockVO.number}`}>{txns}</Link>
+      render: (txns ,blockVO) => <NavigateLink path={`/txs?block=${blockVO.number}`}>{txns}</NavigateLink>
     },
     {
       title: 'Miner',
@@ -49,9 +50,9 @@ export default function () {
       width: 200,
       render: (gasUsed , blockVO) => {
         const gasLimit = blockVO.gasLimit;
-        const rate = Math.round(gasUsed / gasLimit * 10000) / 100;
+        const rate = Math.round(gasUsed / Number(gasLimit) * 10000) / 100;
         return <>
-          <Text>{NumberFormat(gasUsed)}</Text>
+          <Text>{format(gasUsed)}</Text>
           <Text type='secondary' style={{marginLeft:"6px",fontSize:"12px"}}>({rate}%)</Text>
           <Progress percent={rate} showInfo={false} />
         </>
@@ -61,7 +62,7 @@ export default function () {
       title: 'Gas Limit',
       dataIndex: 'gasLimit',
       width: 150,
-      render: ( gasLimit ) => <Text>{NumberFormat(gasLimit)}</Text> 
+      render: ( gasLimit ) => <Text>{format(gasLimit)}</Text> 
     },
     {
       title: 'Reward',
