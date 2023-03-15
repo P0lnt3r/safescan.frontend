@@ -1,7 +1,7 @@
 
 import { Button, Col, Input, Row, Typography, Dropdown, Space, Menu } from 'antd';
 import { defaultAbiCoder, Fragment, ParamType, Interface, FunctionFragment } from 'ethers/lib/utils';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import AddressTag from '../../components/AddressTag';
 import { DownOutlined, SmileOutlined } from '@ant-design/icons';
 
@@ -14,6 +14,9 @@ export default ({ raw, methodId, fragment }: {
     methodId: string
     fragment?: Fragment
 }) => {
+
+   
+
     const functionSignature = useMemo(() => {
         if (fragment) {
             const functionName = fragment.name;
@@ -29,6 +32,11 @@ export default ({ raw, methodId, fragment }: {
     }, [raw, fragment]);
 
     const [showAbiDecode, setShowAbiDecode] = useState<boolean>(fragment ? true : false);
+    useEffect( () => {
+        fragment && setShowAbiDecode(true);
+    } , [fragment] );
+
+
     const menu = (
         <Menu
             items={[

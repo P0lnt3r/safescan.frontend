@@ -7,13 +7,14 @@ import {
 } from '@ant-design/icons';
 import { TransactionVO } from '../../services';
 import { DateFormat } from '../../utils/DateUtil';
-import EtherAmount from '../../components/EtherAmount';
+import EtherAmount, { GWEI } from '../../components/EtherAmount';
 import JSBI from 'jsbi';
-import {format} from '../../utils/NumberFormat';
+import { format } from '../../utils/NumberFormat';
 import { useAddressFunctionFragment } from '../../state/application/hooks';
 import { useDispatch } from 'react-redux';
 import TxInput from './TxInput';
 import NavigateLink from '../../components/NavigateLink';
+import { CurrencyAmount } from '@uniswap/sdk';
 
 const { Text, Paragraph } = Typography;
 
@@ -35,24 +36,20 @@ export default ({
     value,
 }: TransactionVO) => {
 
-    const {txFee , gasPriceGWEI , gasUsedRate} = useMemo(() => {
+    const { txFee, gasPriceGWEI, gasUsedRate } = useMemo(() => {
         const txFee = (gasPrice && gasUsed) ? JSBI.multiply(
             JSBI.BigInt(gasPrice),
             JSBI.BigInt(gasUsed)
         ).toString() : "0";
-        const gasPriceGWEI = (gasPrice) ? JSBI.divide(
-            JSBI.BigInt(gasPrice),
-            JSBI.BigInt("1000000000")
-        ).toString() : "0";
+        const gasPriceGWEI = (gasPrice) ? GWEI(gasPrice) : "0";
         const gasUsedRate = (gas && gasUsed) ? Math.round(Number(gasUsed) / Number(gas) * 10000) / 100 + "%" : "";
         return {
-            txFee , gasPriceGWEI , gasUsedRate
+            txFee, gasPriceGWEI, gasUsedRate
         }
-    } , [ gasPrice, gasUsed, gas] );
+    }, [gasPrice, gasUsed, gas]);
     const functionFragment = useAddressFunctionFragment(to, methodId, useDispatch());
 
     return <>
-
         <Row>
             <Col xl={8} xs={24} style={{ marginTop: '14px' }}>
                 <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
@@ -159,28 +156,27 @@ export default ({
 
         <Divider style={{ margin: '18px 0px' }} />
         <Row>
-            <Col span={8}>
+            <Col xl={8} xs={24}>
                 <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
                     <QuestionCircleOutlined />
                 </Tooltip>
                 <Text strong style={{ marginLeft: "5px" }}>Value</Text>
             </Col>
-            <Col span={16}>
+            <Col xl={16} xs={24}>
                 {
                     value && <EtherAmount raw={value.toString()} fix={18} />
                 }
             </Col>
         </Row>
 
-        <Divider style={{ margin: '18px 0px' }} />
-        <Row>
-            <Col span={8}>
+        <Row style={{ margin: '18px 0px' }}>
+            <Col xl={8} xs={24}>
                 <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
                     <QuestionCircleOutlined />
                 </Tooltip>
                 <Text strong style={{ marginLeft: "5px" }}>Txn Fee</Text>
             </Col>
-            <Col span={16}>
+            <Col xl={16} xs={24}>
                 {
                     <EtherAmount raw={txFee} fix={18}></EtherAmount>
                 }
@@ -189,81 +185,56 @@ export default ({
 
         <Divider style={{ margin: '18px 0px' }} />
         <Row>
-            <Col span={8}>
+            <Col xl={8} xs={24}>
                 <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
                     <QuestionCircleOutlined />
                 </Tooltip>
                 <Text strong style={{ marginLeft: "5px" }}>Gas Price</Text>
             </Col>
-            <Col span={16}>
+            <Col xl={16} xs={24}>
                 {
-                    <>{gasPriceGWEI} (Gwei)</>
+                    <><EtherAmount raw={gasPrice} fix={18}></EtherAmount> ({gasPriceGWEI}Gwei) </>
                 }
             </Col>
         </Row>
 
-        <Divider style={{ margin: '18px 0px' }} />
-        <Row>
-            <Col span={8}>
+        <Row style={{ margin: '18px 0px' }}>
+            <Col xl={8} xs={24}>
                 <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
                     <QuestionCircleOutlined />
                 </Tooltip>
-                <Text strong style={{ marginLeft: "5px" }}>Gas Limit</Text>
+                <Text strong style={{ marginLeft: "5px" }}>Gas Limit <Divider type="vertical" /> Usage by Txn</Text>
             </Col>
-            <Col span={16}>
+            <Col xl={16} xs={24}>
                 {
-                    <>{gas && format(`${gas}`)}</>
+                    <>
+                        <Text>{gas && format(`${gas}`)}</Text>
+                        <Divider type="vertical" />
+                        <Text>{gasUsed && format(gasUsed)} ({gasUsedRate})</Text>
+                    </>
                 }
             </Col>
         </Row>
 
         <Divider style={{ margin: '18px 0px' }} />
         <Row>
-            <Col span={8}>
+            <Col xl={8} xs={24}>
                 <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
                     <QuestionCircleOutlined />
                 </Tooltip>
-                <Text strong style={{ marginLeft: "5px" }}>Gas Used</Text>
+                <Text strong style={{ marginLeft: "5px" }}>Other Attributes</Text>
             </Col>
-            <Col span={16}>
+            <Col xl={16} xs={24}>
                 {
-                    <>{gasUsed && format(gasUsed)} ({gasUsedRate})</>
+                    <>
+                        <Tag>{`Position:${transactionIndex}`}</Tag>
+                        <Tag>{`Nonce:${nonce}`}</Tag>
+                    </>
                 }
             </Col>
         </Row>
 
-        <Divider style={{ margin: '18px 0px' }} />
-        <Row>
-            <Col span={8}>
-                <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
-                    <QuestionCircleOutlined />
-                </Tooltip>
-                <Text strong style={{ marginLeft: "5px" }}>Nonce</Text>
-            </Col>
-            <Col span={16}>
-                {
-                    <>{nonce}</>
-                }
-            </Col>
-        </Row>
-
-        <Divider style={{ margin: '18px 0px' }} />
-        <Row>
-            <Col span={8}>
-                <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
-                    <QuestionCircleOutlined />
-                </Tooltip>
-                <Text strong style={{ marginLeft: "5px" }}>Position</Text>
-            </Col>
-            <Col span={16}>
-                {
-                    <>{transactionIndex}</>
-                }
-            </Col>
-        </Row>
-
-        <Divider style={{ margin: '18px 0px' }} />
-        <Row>
+        <Row style={{ margin: '18px 0px' }}>
             <Col xl={8} xs={24} style={{ marginTop: '14px' }}>
                 <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
                     <QuestionCircleOutlined />
