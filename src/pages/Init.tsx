@@ -28,7 +28,6 @@ export default () => {
         fectAllAddressProp().then( (arr : AddressPropVO[]) => {
             dispatch( Application_Update_AddressPropMap(arr) );
         })
-
         fetchAbiMethodSignature().then( (arr) => {
             dispatch( Application_Update_AbiMethodSignature(arr) )
         });
