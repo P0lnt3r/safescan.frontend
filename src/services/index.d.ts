@@ -80,7 +80,8 @@ export interface BlockVO {
 export interface TransactionVO {
     blockHash: string
     blockNumber: integer
-    from: string
+    from: string,
+    fromPropVO : AddressPropVO | undefined
     gas: string
     gasPrice: string
     gasUsed: string
@@ -91,6 +92,7 @@ export interface TransactionVO {
     status: number
     timestamp: number
     to: string
+    toPropVO : AddressPropVO | undefined
     transactionIndex: number
     value: string
 }

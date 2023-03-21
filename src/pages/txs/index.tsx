@@ -1,4 +1,4 @@
-import { Card, Table, Typography, Row, Col } from 'antd';
+import { Card, Table, Typography, Row, Col, Tooltip } from 'antd';
 import { PaginationProps } from 'antd/es/pagination';
 import type { ColumnsType } from 'antd/es/table';
 import { useEffect, useMemo, useState } from 'react';
@@ -8,13 +8,16 @@ import { useTranslation } from 'react-i18next';
 import AddressTag from '../../components/AddressTag';
 import TransactionHash from '../../components/TransactionHash';
 import { DateFormat } from '../../utils/DateUtil';
-import { ArrowRightOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, FileTextOutlined } from '@ant-design/icons';
 import EtherAmount from '../../components/EtherAmount';
-import { useSearchParams } from 'react-router-dom';
+import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import TxMethodId from '../../components/TxMethodId';
 import NavigateLink from '../../components/NavigateLink';
+import { useDispatch } from 'react-redux';
+import { JSBI } from '@uniswap/sdk';
 
-const { Title, Text } = Typography;
+
+const { Title, Text, Link } = Typography;
 
 export default function () {
 
@@ -28,6 +31,7 @@ export default function () {
   }, [searchParams]);
 
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   const columns: ColumnsType<TransactionVO> = [
     {
       title: <>{t('Txn Hash')}</>,
@@ -41,13 +45,13 @@ export default function () {
       title: 'Method',
       dataIndex: 'methodId',
       width: 100,
-      render:(methodId , txVO) => <TxMethodId address={txVO.to} methodId={methodId}></TxMethodId>
+      render: (methodId, txVO) => <TxMethodId address={txVO.to} methodId={methodId}></TxMethodId>
     },
     {
       title: 'Block',
       dataIndex: 'blockNumber',
       width: 80,
-      render: blockNumber => <NavigateLink path={`/block/${blockNumber}`}>{blockNumber}</NavigateLink>
+      render: blockNumber => <RouterLink to={`/block/${blockNumber}`}>{blockNumber}</RouterLink>
     },
     {
       title: 'Date Time',
@@ -59,33 +63,71 @@ export default function () {
       title: "From",
       dataIndex: 'from',
       width: 180,
-      render: (val) => <>
-        <Row>
-          <Col span={22}>
-            <AddressTag address={val} sub={8}></AddressTag>
-          </Col>
-          <Col>
-            <ArrowRightOutlined />
-          </Col>
-        </Row>
-      </>
+      render: (from, txVO) => {
+        const { fromPropVO } = txVO;
+        const tag = fromPropVO?.tag;
+        const type = fromPropVO?.type;
+        return <>
+          <Row>
+            <Col span={22}>
+              {<Tooltip title={from}>
+                <RouterLink to={`/address/${from}`}>
+                  <Link style={{ width: "80%", marginLeft: "5px" }} ellipsis>{tag ? tag : from}</Link>
+                </RouterLink>
+              </Tooltip>
+              }
+            </Col>
+            <Col>
+              <ArrowRightOutlined />
+            </Col>
+          </Row>
+        </>
+      }
     },
     {
       title: 'To',
       dataIndex: 'to',
       width: 180,
-      render: (val) => <><AddressTag address={val} sub={8}></AddressTag></>
+      render: (to, txVO) => {
+        const { methodId, toPropVO } = txVO;
+        const tag = toPropVO?.tag;
+        const type = toPropVO?.type;
+        return <>
+          {
+            (methodId || type === "contract") && <Tooltip title="Contract"><FileTextOutlined /></Tooltip>
+          }
+          {
+            <Tooltip title={to}>
+              <RouterLink to={`/address/${to}`}>
+                <Link style={{ width: "80%", marginLeft: "5px" }} ellipsis>{tag ? tag : to}</Link>
+              </RouterLink>
+            </Tooltip>
+          }
+        </>
+      }
     },
     {
       title: 'Value',
       dataIndex: 'value',
       width: 100,
-      render: (value) => < div style={{ fontSize: '14px' }} ><EtherAmount raw={value}></EtherAmount></div>
+      render: (value) => <Text strong><EtherAmount raw={value.toString()} fix={6} /></Text>
     },
     {
       title: 'Txn Fee',
       dataIndex: 'txFee',
       width: 100,
+      render: (_, txVO) => {
+        const { gasPrice, gasUsed } = txVO;
+        const txFee = (gasPrice && gasUsed) ? JSBI.multiply(
+          JSBI.BigInt(gasPrice),
+          JSBI.BigInt(gasUsed)
+        ).toString() : "0";
+        return <>
+          <Text type="secondary">
+            <EtherAmount raw={txFee.toString()} fix={6} ignoreLabel />
+          </Text>
+        </>
+      }
     },
   ];
 
@@ -93,7 +135,7 @@ export default function () {
     fetchTransactions({
       current: pagination.current, pageSize: pagination.pageSize,
       blockNumber: blockNumber > 0 ? blockNumber : undefined
-    }).then((data) => {
+    }, dispatch).then((data) => {
       setTableData(data.records);
       setPagination({
         current: data.current,
@@ -132,7 +174,7 @@ export default function () {
       </Row>
       <Card>
         <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
-          pagination={pagination} rowKey={(txVO)=>txVO.hash}
+          pagination={pagination} rowKey={(txVO) => txVO.hash}
         />
       </Card>
     </>

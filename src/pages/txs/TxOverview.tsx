@@ -15,13 +15,14 @@ import { useDispatch } from 'react-redux';
 import TxInput from './TxInput';
 import NavigateLink from '../../components/NavigateLink';
 import { CurrencyAmount } from '@uniswap/sdk';
+import { Link as RouterLink } from 'react-router-dom';
 
 const { Text, Paragraph } = Typography;
 
 export default ({
     blockHash,
     blockNumber,
-    from,
+    from,fromPropVO,
     gas,
     gasPrice,
     gasUsed,
@@ -31,7 +32,7 @@ export default ({
     nonce,
     status,
     timestamp,
-    to,
+    to,toPropVO,
     transactionIndex,
     value,
 }: TransactionVO) => {
@@ -47,6 +48,7 @@ export default ({
             txFee, gasPriceGWEI, gasUsedRate
         }
     }, [gasPrice, gasUsed, gas]);
+
     const functionFragment = useAddressFunctionFragment(to, methodId, useDispatch());
 
     return <>
@@ -98,9 +100,9 @@ export default ({
             </Col>
             <Col span={16}>
                 <Text strong>
-                    <NavigateLink path={`/block/${blockNumber}`}>
+                    <RouterLink to={`/block/${blockNumber}`}>
                         {blockNumber}
-                    </NavigateLink>
+                    </RouterLink>
                 </Text>
             </Col>
         </Row>
@@ -130,11 +132,11 @@ export default ({
                 <Text strong style={{ marginLeft: "5px" }}>From</Text>
             </Col>
             <Col xl={16} xs={24} style={{ marginTop: '14px' }}>
-                <NavigateLink path={`/address/${from}`}>
+                <RouterLink to={`/address/${from}`}>
                     <Paragraph copyable style={{ color: "rgba(52, 104, 171, 0.85)" }}>
                         {from}
                     </Paragraph>
-                </NavigateLink>
+                </RouterLink>
             </Col>
         </Row>
         <Divider style={{ margin: '18px 0px' }} />
@@ -146,11 +148,16 @@ export default ({
                 <Text strong style={{ marginLeft: "5px" }}>To</Text>
             </Col>
             <Col xl={16} xs={24} style={{ marginTop: '14px' }}>
-                <NavigateLink path={`/address/${to}`}>
+                <RouterLink to={`/address/${to}`}>
                     <Paragraph copyable style={{ color: "rgba(52, 104, 171, 0.85)" }}>
                         {to}
                     </Paragraph>
-                </NavigateLink>
+                </RouterLink>
+                {
+                    toPropVO && <>
+                        ({toPropVO.tag})
+                    </>
+                }
             </Col>
         </Row>
 
@@ -164,7 +171,7 @@ export default ({
             </Col>
             <Col xl={16} xs={24}>
                 {
-                    value && <EtherAmount raw={value.toString()} fix={18} />
+                    value && <Text strong><EtherAmount raw={value.toString()} fix={18} /></Text>
                 }
             </Col>
         </Row>
@@ -178,7 +185,7 @@ export default ({
             </Col>
             <Col xl={16} xs={24}>
                 {
-                    <EtherAmount raw={txFee} fix={18}></EtherAmount>
+                    <Text type="secondary"><EtherAmount raw={txFee} fix={18} /></Text>
                 }
             </Col>
         </Row>

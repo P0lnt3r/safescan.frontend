@@ -10,9 +10,7 @@ const WS_HOST = config.ws_host;
 export default () => {
     const dispatch =  useDispatch();
     useEffect( ()=>{
-
         dispatch( Application_Init("") );       
-
         const ws = new WebSocket(`${WS_HOST}/blockchain`);
         ws.onopen = function (e) {
 
@@ -25,13 +23,12 @@ export default () => {
         ws.onclose = function (e) {
 
         }
-        fectAllAddressProp().then( (arr : AddressPropVO[]) => {
-            dispatch( Application_Update_AddressPropMap(arr) );
-        })
+        // fectAllAddressProp().then( (arr : AddressPropVO[]) => {
+        //     dispatch( Application_Update_AddressPropMap(arr) );
+        // })
         fetchAbiMethodSignature().then( (arr) => {
             dispatch( Application_Update_AbiMethodSignature(arr) )
         });
-
     } , []);
     return (<></>);
 }

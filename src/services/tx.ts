@@ -1,9 +1,22 @@
-import { TransactionVO, PageQueryDTO, PageResponseVO, POST, EventLogVO, ERC20TransferVO } from "./index.d";
+import { TransactionVO, PageQueryDTO, PageResponseVO, POST, EventLogVO, ERC20TransferVO , AddressPropVO } from "./index.d";
 import config from "../config";
+import { useDispatch } from "react-redux";
+import { AnyAction } from "@reduxjs/toolkit";
+import { Application_Update_AddressPropMap } from "../state/application/action";
 const API_HOST = config.api_host;
 
-export async function fetchTransactions( params : PageQueryDTO ) : Promise<PageResponseVO<TransactionVO>> {
+export async function fetchTransactions( params : PageQueryDTO , dispatch: (action: AnyAction) => any ) : Promise<PageResponseVO<TransactionVO>> {
     const serverResponse = await POST( `${API_HOST}/txs` , { ...params } );
+    const pageVO = serverResponse.data as PageResponseVO<TransactionVO>;
+    
+    // 将交易数据中的地址属性信息内容更新到 state 
+    const addressPropVOArr : AddressPropVO[] = [];
+    pageVO.records.forEach( txvo => {
+        txvo.fromPropVO && addressPropVOArr.push(txvo.fromPropVO);
+        txvo.toPropVO && addressPropVOArr.push(txvo.toPropVO);
+    });
+    dispatch(Application_Update_AddressPropMap(addressPropVOArr));
+
     return serverResponse.data;
 }
 

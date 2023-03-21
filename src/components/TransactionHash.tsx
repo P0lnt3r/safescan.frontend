@@ -1,9 +1,9 @@
 
 import { Typography, Tooltip } from 'antd';
-import { BothSub } from '../utils/0xHashUtil';
 import { CheckCircleTwoTone, ExclamationCircleTwoTone } from '@ant-design/icons';
-import NavigateLink from './NavigateLink';
+import { Link as RouterLink } from 'react-router-dom';
 const { Link } = Typography;
+
 
 export default (
     { txhash, status, sub }: {
@@ -11,7 +11,7 @@ export default (
         status?: number,
         sub: number
     }) => {
-    let tag = BothSub(txhash, sub);
+
     const tipIcon = (status?: number) => {
         if (status == 1) {
             return <CheckCircleTwoTone twoToneColor="#52c41a" />
@@ -20,6 +20,7 @@ export default (
         }
         return <></>
     }
+
     return (<>
         <Tooltip>
             {
@@ -27,9 +28,9 @@ export default (
             }
         </Tooltip>
         <Tooltip title={txhash}>
-            <NavigateLink path={`/tx/${txhash}`}>
-                {tag}
-            </NavigateLink>
+            <RouterLink to={`/tx/${txhash}`}>
+                <Link href='#' ellipsis style={{width:'80%' , marginLeft:"5px"}}>{txhash}</Link>
+            </RouterLink>
         </Tooltip>
     </>)
 }
