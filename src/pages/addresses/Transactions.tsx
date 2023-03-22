@@ -32,7 +32,6 @@ export default ({ address }: { address: string }) => {
     const [tableData, setTableData] = useState<TransactionVO[]>([]);
 
     async function doFetchAddressTransactions() {
-        console.log("doFetchAddressTransactions :", pagination.current);
         fetchAddressTransactions({
             current: pagination.current,
             pageSize: pagination.pageSize,
@@ -98,9 +97,9 @@ export default ({ address }: { address: string }) => {
                                             {tag ? tag : from}
                                         </Text>
                                         :
-                                        <NavigateLink path={`/address/${from}`}>
+                                        <RouterLink to={`/address/${from}`}>
                                             <Link style={{ width: "80%" }} ellipsis>{tag ? tag : from}</Link>
-                                        </NavigateLink>
+                                        </RouterLink>
                                 }
                             </Tooltip>
                         </Col>
@@ -133,9 +132,9 @@ export default ({ address }: { address: string }) => {
                                 ? <Text style={{ width: "80%", marginLeft: "5px" }} ellipsis>
                                     {tag ? tag : to}
                                 </Text>
-                                : <NavigateLink path={`/address/${to}`}>
+                                : <RouterLink to={`/address/${to}`}>
                                     <Link style={{ width: "80%", marginLeft: "5px" }} ellipsis>{tag ? tag : to}</Link>
-                                </NavigateLink>
+                                </RouterLink>
                         }
                     </Tooltip>
 
