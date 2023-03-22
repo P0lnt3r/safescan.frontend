@@ -6,7 +6,7 @@ import {
 import { isMobile } from 'react-device-detect'
 import type { TabsProps } from 'antd';
 import QRCode from 'qrcode.react';
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Transactions from "./Transactions";
 import ERC20Transfers from "./ERC20Transfers";
 
@@ -15,18 +15,20 @@ const { Title, Text, Paragraph, Link } = Typography;
 export default function () {
 
     const { address } = useParams();
-    const items: TabsProps['items'] = [
-        {
-            key: 'transactions',
-            label: "Transactions",
-            children: address && <Transactions address={address} ></Transactions>,
-        },
-        {
-            key: 'erc20-transactions',
-            label: `ERC20 Transactions`,
-            children: address && <ERC20Transfers address={address}></ERC20Transfers>,
-        }
-    ];
+    const items: TabsProps['items'] = useMemo( () => {
+        return [
+            {
+                key: 'transactions',
+                label: "Transactions",
+                children: address && <Transactions address={address} ></Transactions>,
+            },
+            {
+                key: 'erc20-transactions',
+                label: `ERC20 Transactions`,
+                children: address && <ERC20Transfers address={address}></ERC20Transfers>,
+            }
+        ]
+    } , [address]);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
