@@ -38,7 +38,7 @@ export default ({ address }: { address: string }) => {
         current: 1,
         pageSize: 10,
         showTotal: (total) => <>Total : {total}</>,
-        onChange:paginationOnChange
+        onChange: paginationOnChange
     });
     const [tableData, setTableData] = useState<ERC20TransferVO[]>([]);
 
@@ -97,7 +97,25 @@ export default ({ address }: { address: string }) => {
             title: 'Value',
             dataIndex: 'value',
             width: 100,
-            render: (value) => < div style={{ fontSize: '14px' }} ><EtherAmount raw={value}></EtherAmount></div>
+            render: (value, erc20TransferVO) => {
+                const { tokenPropVO } = erc20TransferVO;
+                const erc20 = tokenPropVO && tokenPropVO.subType === "erc20" ? tokenPropVO ?.prop : undefined;
+                return (
+                    < div style={{ fontSize: '14px' }} ><EtherAmount raw={value}></EtherAmount></div>
+                )
+            }
+        },
+        {
+            title: 'Value',
+            dataIndex: 'value',
+            width: 100,
+            render: (value, erc20TransferVO) => {
+                const { tokenPropVO } = erc20TransferVO;
+                const erc20 = tokenPropVO && tokenPropVO.subType === "erc20" ? tokenPropVO ?.prop : undefined;
+                return (
+                    < div style={{ fontSize: '14px' }} ><EtherAmount raw={value}></EtherAmount></div>
+                )
+            }
         },
     ];
 

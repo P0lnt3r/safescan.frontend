@@ -123,6 +123,7 @@ export interface ERC20TransferVO {
     timestamp: integer
     to: string
     token: string
+    tokenPropVO : AddressPropVO | null
     transactionHash: string
     value: string
 }
