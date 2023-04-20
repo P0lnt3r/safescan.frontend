@@ -7,9 +7,10 @@ import { useTranslation } from 'react-i18next';
 import AddressTag, { ShowStyle } from '../../components/AddressTag';
 import TransactionHash from '../../components/TransactionHash';
 import { DateFormat } from '../../utils/DateUtil';
-import EtherAmount from '../../components/EtherAmount';
+import { Link as RouterLink } from 'react-router-dom';
+import ERC20TokenAmount from "../../components/ERC20TokenAmount";
 
-const { Text } = Typography;
+const { Text, Link } = Typography;
 
 export default ({ address }: { address: string }) => {
     const { t } = useTranslation();
@@ -99,21 +100,39 @@ export default ({ address }: { address: string }) => {
             width: 100,
             render: (value, erc20TransferVO) => {
                 const { tokenPropVO } = erc20TransferVO;
-                const erc20 = tokenPropVO && tokenPropVO.subType === "erc20" ? tokenPropVO ?.prop : undefined;
+                const erc20Prop = tokenPropVO && tokenPropVO.subType === "erc20" ? tokenPropVO?.prop : undefined;
+                const erc20 = erc20Prop ? JSON.parse(erc20Prop) : undefined;
                 return (
-                    < div style={{ fontSize: '14px' }} ><EtherAmount raw={value}></EtherAmount></div>
+                    <div style={{ fontSize: '14px' }}>
+                        {
+                            tokenPropVO &&
+                            <ERC20TokenAmount address={tokenPropVO?.address} name={erc20.name} symbol={erc20.symbol} decimals={erc20.decimals} raw={value} fixed={4} />
+                        }
+                    </div>
                 )
             }
         },
         {
-            title: 'Value',
+            title: 'Token',
             dataIndex: 'value',
             width: 100,
             render: (value, erc20TransferVO) => {
                 const { tokenPropVO } = erc20TransferVO;
-                const erc20 = tokenPropVO && tokenPropVO.subType === "erc20" ? tokenPropVO ?.prop : undefined;
+                const erc20Prop = tokenPropVO && tokenPropVO.subType === "erc20" ? tokenPropVO?.prop : undefined;
+                const erc20 = erc20Prop ? JSON.parse(erc20Prop) : undefined;
                 return (
-                    < div style={{ fontSize: '14px' }} ><EtherAmount raw={value}></EtherAmount></div>
+                    <div style={{ fontSize: '14px' }}>
+                        {
+                            tokenPropVO && <>
+                                <RouterLink to={`/address/${tokenPropVO.address}`}>
+                                    <Link href='#' ellipsis style={{ width: '80%', marginLeft: "5px" }}>
+                                        <Text>{erc20.name}</Text>
+                                        (<Text>{erc20.symbol}</Text>)
+                                    </Link>
+                                </RouterLink>
+                            </>
+                        }
+                    </div>
                 )
             }
         },
