@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { ERC20TransferVO } from "../../services";
 import { fetchAddressERC20Transfers } from "../../services/tx";
-import { Table, Typography, Row, Col, PaginationProps } from 'antd';
+import { Table, Typography, Row, Col, PaginationProps, Tooltip } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslation } from 'react-i18next';
 import AddressTag, { ShowStyle } from '../../components/AddressTag';
@@ -9,28 +9,13 @@ import TransactionHash from '../../components/TransactionHash';
 import { DateFormat } from '../../utils/DateUtil';
 import { Link as RouterLink } from 'react-router-dom';
 import ERC20TokenAmount from "../../components/ERC20TokenAmount";
+import ERC20Logo from "../../components/ERC20Logo";
 
 const { Text, Link } = Typography;
 
 export default ({ address }: { address: string }) => {
+
     const { t } = useTranslation();
-
-    async function doFetchAddressTransactions() {
-        fetchAddressERC20Transfers({
-            current: pagination.current,
-            pageSize: pagination.pageSize,
-            address: address
-        }).then(data => {
-            setPagination({
-                current: data.current,
-                pageSize: data.pageSize,
-                total: data.total,
-                ...pagination
-            })
-            setTableData(data.records);
-        })
-    }
-
     function paginationOnChange(current: number, pageSize: number) {
         pagination.current = current;
         doFetchAddressTransactions();
@@ -43,7 +28,26 @@ export default ({ address }: { address: string }) => {
     });
     const [tableData, setTableData] = useState<ERC20TransferVO[]>([]);
 
+
+    async function doFetchAddressTransactions() {
+        fetchAddressERC20Transfers({
+            current: pagination.current,
+            pageSize: pagination.pageSize,
+            address: address
+        }).then(data => {
+            setPagination({
+                ...pagination,
+                current: data.current,
+                pageSize: data.pageSize,
+                total: data.total,
+                onChange: paginationOnChange,
+            })
+            setTableData(data.records);
+        })
+    }
+
     useEffect(() => {
+        pagination.current = 1;
         doFetchAddressTransactions();
     }, [address]);
 
@@ -65,34 +69,50 @@ export default ({ address }: { address: string }) => {
             title: "From",
             dataIndex: 'from',
             width: 180,
-            render: (val) => <>
-                <Row>
-                    <Col span={20}>
-                        {
-                            address === val
-                                ? <AddressTag address={val} sub={8} showStyle={ShowStyle.NO_LINK} />
-                                : <AddressTag address={val} sub={8} />
-                        }
-                    </Col>
-                    <Col span={4}>
-                        {
-                            address === val
-                                ? <Text code strong style={{ color: "orange" }}>OUT</Text>
-                                : <Text code strong style={{ color: "green" }}>IN</Text>
-                        }
-                    </Col>
-                </Row>
-            </>
+            render: (from, txVO) => {
+                return (
+                    <>
+                        <Row>
+                            <Col span={20}>
+                                <Tooltip title={from}>
+                                    {
+                                        address === from
+                                            ? <Text style={{ width: "80%" }} ellipsis>
+                                                {from}
+                                            </Text>
+                                            :
+                                            <RouterLink to={`/address/${from}`}>
+                                                <Link style={{ width: "80%" }} ellipsis>{from}</Link>
+                                            </RouterLink>
+                                    }
+                                </Tooltip>
+                            </Col>
+                            <Col span={4}>
+                                {
+                                    address === from
+                                        ? <Text code strong style={{ color: "orange" }}>OUT</Text>
+                                        : <Text code strong style={{ color: "green" }}>IN</Text>
+                                }
+                            </Col>
+                        </Row>
+                    </>
+                )
+            }
         },
         {
             title: 'To',
             dataIndex: 'to',
             width: 180,
-            render: (val) => <>{
-                address === val
-                    ? <AddressTag address={val} sub={8} showStyle={ShowStyle.NO_LINK} />
-                    : <AddressTag address={val} sub={8} />
-            }</>
+            render: (to) =>
+                <Tooltip title={to}>{
+                    address === to
+                        ? <Text style={{ width: "80%", marginLeft: "5px" }} ellipsis>
+                            {to}
+                        </Text>
+                        : <RouterLink to={`/address/${to}`}>
+                            <Link style={{ width: "80%", marginLeft: "5px" }} ellipsis>{to}</Link>
+                        </RouterLink>
+                }</Tooltip>
         },
         {
             title: 'Value',
@@ -115,7 +135,7 @@ export default ({ address }: { address: string }) => {
         {
             title: 'Token',
             dataIndex: 'value',
-            width: 100,
+            width: 200,
             render: (value, erc20TransferVO) => {
                 const { tokenPropVO } = erc20TransferVO;
                 const erc20Prop = tokenPropVO && tokenPropVO.subType === "erc20" ? tokenPropVO?.prop : undefined;
@@ -125,9 +145,9 @@ export default ({ address }: { address: string }) => {
                         {
                             tokenPropVO && <>
                                 <RouterLink to={`/address/${tokenPropVO.address}`}>
+                                    <ERC20Logo address={tokenPropVO.address} />
                                     <Link href='#' ellipsis style={{ width: '80%', marginLeft: "5px" }}>
-                                        <Text>{erc20.name}</Text>
-                                        (<Text>{erc20.symbol}</Text>)
+                                        {erc20.name}({erc20.symbol})
                                     </Link>
                                 </RouterLink>
                             </>

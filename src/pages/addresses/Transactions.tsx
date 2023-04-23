@@ -41,8 +41,8 @@ export default ({ address }: { address: string }) => {
                 ...pagination,
                 current: data.current,
                 pageSize: data.pageSize,
-                onChange:paginationOnChange,
                 total: data.total,
+                onChange:paginationOnChange,
             })
             setTableData(data.records);
         })
