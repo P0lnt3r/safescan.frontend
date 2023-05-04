@@ -12,9 +12,9 @@ export const POST = async function (url: string, params?: any): Promise<ApiRespo
     return json as ApiResponse<any>;
 }
 
-export const GET = async function( url : string , params?:any ) : Promise<any> {
-    const URI_params = params ? "?" + obj2URIParams( params ) : undefined;
-    const response = await fetch( URI_params ? url + URI_params : url  , {
+export const GET = async function (url: string, params?: any): Promise<any> {
+    const URI_params = params ? "?" + obj2URIParams(params) : undefined;
+    const response = await fetch(URI_params ? url + URI_params : url, {
         method: 'get',
         headers: {
             'Content-Type': "application/json"
@@ -24,17 +24,17 @@ export const GET = async function( url : string , params?:any ) : Promise<any> {
     return json as any;
 }
 
-function obj2URIParams(data : any){
+function obj2URIParams(data: any) {
     var _result = [];
     for (var key in data) {
-      var value = data[key];
-      if (value.constructor === Array) {
-        value.forEach(function(_value) {
-          _result.push(key + "=" + _value);
-        });
-      } else {
-        _result.push(key + '=' + value);
-      }
+        var value = data[key];
+        if (value.constructor === Array) {
+            value.forEach(function (_value) {
+                _result.push(key + "=" + _value);
+            });
+        } else {
+            _result.push(key + '=' + value);
+        }
     }
     return _result.join('&');
 }
@@ -81,7 +81,7 @@ export interface TransactionVO {
     blockHash: string
     blockNumber: integer
     from: string,
-    fromPropVO : AddressPropVO | undefined
+    fromPropVO: AddressPropVO | undefined
     gas: string
     gasPrice: string
     gasUsed: string
@@ -92,7 +92,7 @@ export interface TransactionVO {
     status: number
     timestamp: number
     to: string
-    toPropVO : AddressPropVO | undefined
+    toPropVO: AddressPropVO | undefined
     transactionIndex: number
     value: string
 }
@@ -123,27 +123,42 @@ export interface ERC20TransferVO {
     timestamp: integer
     to: string
     token: string
-    tokenPropVO : AddressPropVO | null
+    tokenPropVO: AddressPropVO | null
     transactionHash: string
     value: string
 }
 
+export interface ContractInternalTransactionVO {
+    id: number,
+    blockNumber: number,
+    error: string,
+    from: string,
+    gas: string,
+    gasUsed: string,
+    revertReason: string,
+    status: number,
+    to: string,
+    transactionHash: string,
+    transactionIndex: number,
+    type: string,
+    value: string
+    level: number,
+}
+
 export interface BlockchainContextVO {
-
-    latestBlockNumber : number , 
-    latestTransactions : TransactionVO[],
-    latestBlocks : BlockVO[]
-
+    latestBlockNumber: number,
+    latestTransactions: TransactionVO[],
+    latestBlocks: BlockVO[]
 }
 
 export interface AbiMethodSignatureVO {
-    method : string 
-    signature : string 
-    hex : string
+    method: string
+    signature: string
+    hex: string
 }
 
 export interface AddressAbiVO {
-    address : string ,
-    abi : string
+    address: string,
+    abi: string
 }
 

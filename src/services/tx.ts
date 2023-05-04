@@ -1,4 +1,4 @@
-import { TransactionVO, PageQueryDTO, PageResponseVO, POST, EventLogVO, ERC20TransferVO , AddressPropVO } from "./index.d";
+import { TransactionVO, PageQueryDTO, PageResponseVO, POST, EventLogVO, ERC20TransferVO , AddressPropVO, ContractInternalTransactionVO } from "./index.d";
 import config from "../config";
 import { useDispatch } from "react-redux";
 import { AnyAction } from "@reduxjs/toolkit";
@@ -37,5 +37,10 @@ export async function fetchAddressTransactions(params : { address : string } | P
 
 export async function fetchAddressERC20Transfers( params : { address : string } | PageQueryDTO ) : Promise<PageResponseVO<ERC20TransferVO>> {
     const serverResponse = await POST( `${API_HOST}/txs/erc20` , { ...params } );
+    return serverResponse.data;
+}
+
+export async function fetchTxContractInternalTransactions( txHash : string ) : Promise<ContractInternalTransactionVO[]>{
+    const serverResponse = await POST( `${API_HOST}/txs/contract_txs` , { transactionHash : txHash } );
     return serverResponse.data;
 }

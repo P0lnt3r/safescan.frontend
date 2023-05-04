@@ -6,8 +6,9 @@ import { Tabs, Row, Col, Divider } from 'antd';
 import type { TabsProps } from 'antd';
 import TxOverview from "./TxOverview";
 import EventLogs from "./EventLogs";
-import { fetchEventLogs, fetchTransaction } from "../../services/tx";
-import { EventLogVO, TransactionVO } from "../../services";
+import { fetchEventLogs, fetchTransaction, fetchTxContractInternalTransactions } from "../../services/tx";
+import { ContractInternalTransactionVO, EventLogVO, TransactionVO } from "../../services";
+import ContractInternalTransactions from "./ContractInternalTransactions";
 
 const { Title } = Typography;
 
@@ -17,6 +18,7 @@ export default function () {
     const { t } = useTranslation();
     const [txVO , setTxVO] = useState<TransactionVO>();
     const [eventLogs , setEventLogs] = useState<EventLogVO[]>();
+    const [contractInternalTransactions , setContractInternalTransactions] = useState<ContractInternalTransactionVO[]>();
     
 
     useEffect( () => {
@@ -27,6 +29,9 @@ export default function () {
             fetchEventLogs(txHash).then( (eventLogs) => {
                 setEventLogs(eventLogs);
             });
+            fetchTxContractInternalTransactions(txHash).then( ( contractInternalTransactions ) => {
+                setContractInternalTransactions( contractInternalTransactions );
+            } )
         }
     },[]);
     const items: TabsProps['items'] = [
@@ -34,6 +39,11 @@ export default function () {
             key: 'overview',
             label: `Overview`,
             children: txVO && <TxOverview {...txVO}></TxOverview>,
+        },
+        {
+            key: 'contractInternalTransactions',
+            label: `Internal Transactions`,
+            children: <ContractInternalTransactions from={txVO?.from} to={txVO?.to} contractInternalTransactions={contractInternalTransactions} />,
         },
         {
             key: 'eventlogs',
