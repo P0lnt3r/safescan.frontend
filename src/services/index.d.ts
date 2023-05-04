@@ -94,7 +94,10 @@ export interface TransactionVO {
     to: string
     toPropVO: AddressPropVO | undefined
     transactionIndex: number
-    value: string
+    value: string,
+    error : string,
+    revertReason:string,
+    hasInternalError:number
 }
 
 export interface EventLogVO {

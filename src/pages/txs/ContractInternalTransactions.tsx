@@ -32,8 +32,8 @@ export default ({
     to: string | undefined
 }) => {
 
-    const TypeTraceAddress = ({ level, status }: { level: number, status: number }) => {
-        let content = "call_0";
+    const TypeTraceAddress = ({ level, status, type }: { level: number, status: number , type : string }) => {
+        let content = `${type.toLowerCase()}_0`;
         for (let i = 0; i < level; i++) {
             content += "_1";
         }
@@ -67,7 +67,7 @@ export default ({
         {
             title: <Text strong style={{ color: "#6c757e" }}>Type Trace Address</Text>,
             dataIndex: 'level',
-            render: (level, txVO) => <TypeTraceAddress level={level} status={txVO.status}></TypeTraceAddress>,
+            render: (level, txVO) => <TypeTraceAddress {...txVO}></TypeTraceAddress>,
             width: 150,
             fixed:true
         },
@@ -97,13 +97,13 @@ export default ({
                 <Row>
                     {
                         isExternalAddress(to) &&
-                        <Col span={4} >
+                        <Col span={2} >
                             <Tooltip title="An External Address">
                                 <ExportOutlined />
                             </Tooltip>
                         </Col>
                     }
-                    <Col span={18}>
+                    <Col span={22}>
                         <Tooltip title={to}>
                             <RouterLink to={`/address/${to}`}>
                                 <Link ellipsis>{to}</Link>

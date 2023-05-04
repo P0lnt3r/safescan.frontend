@@ -3,9 +3,10 @@ import { useMemo } from 'react';
 import {
     CheckCircleOutlined,
     CloseCircleOutlined,
-    QuestionCircleOutlined
+    QuestionCircleOutlined,
+    FrownOutlined
 } from '@ant-design/icons';
-import { TransactionVO } from '../../services';
+import { ContractInternalTransactionVO, TransactionVO } from '../../services';
 import { DateFormat } from '../../utils/DateUtil';
 import EtherAmount, { GWEI } from '../../components/EtherAmount';
 import JSBI from 'jsbi';
@@ -16,26 +17,33 @@ import TxInput from './TxInput';
 import NavigateLink from '../../components/NavigateLink';
 import { CurrencyAmount } from '@uniswap/sdk';
 import { Link as RouterLink } from 'react-router-dom';
+import shape from '../../images/shape-1.svg'
+import ContractInternalTransactions from './ContractInternalTransactions';
 
-const { Text, Paragraph } = Typography;
+const { Text, Paragraph, Link } = Typography;
 
-export default ({
-    blockHash,
-    blockNumber,
-    from,fromPropVO,
-    gas,
-    gasPrice,
-    gasUsed,
-    hash,
-    input,
-    methodId,
-    nonce,
-    status,
-    timestamp,
-    to,toPropVO,
-    transactionIndex,
-    value,
-}: TransactionVO) => {
+export default ({ txVO, contractInternalTransactions }: { txVO: TransactionVO, contractInternalTransactions: ContractInternalTransactionVO[] | undefined }) => {
+
+    const {
+        blockHash,
+        blockNumber,
+        from, fromPropVO,
+        gas,
+        gasPrice,
+        gasUsed,
+        hash,
+        input,
+        methodId,
+        nonce,
+        status,
+        timestamp,
+        to, toPropVO,
+        transactionIndex,
+        value,
+        error,
+        revertReason,
+        hasInternalError
+    } = txVO
 
     const { txFee, gasPriceGWEI, gasUsedRate } = useMemo(() => {
         const txFee = (gasPrice && gasUsed) ? JSBI.multiply(
@@ -77,15 +85,15 @@ export default ({
             </Col>
             <Col span={16}>
                 {
-                    status && status === 1 &&
+                    status === 1 &&
                     <Tag icon={<CheckCircleOutlined />} color="green">
                         Success
                     </Tag>
                 }
                 {
-                    status && status === 0 &&
+                    status === 0 &&
                     <Tag icon={<CloseCircleOutlined />} color="red">
-                        Fail
+                        Fail with error "{revertReason}"
                     </Tag>
                 }
             </Col>
@@ -158,6 +166,55 @@ export default ({
                         ({toPropVO.tag})
                     </>
                 }
+                {
+                    error &&
+                    <>
+                        <img src={shape} style={{ width: "8px", marginTop: "-8px", marginRight: "4px" }} />
+                        <Text type="danger">Warning! Error encountered during contract execution [
+                            <Text type="danger" strong>{error}</Text>
+                            ] <FrownOutlined /> </Text>
+                    </>
+                }
+                {
+                    !error && contractInternalTransactions &&
+                    <>
+                        {
+                            contractInternalTransactions.map((contractInternalTransactionVO) => {
+                                const { id, type, from, to, value } = contractInternalTransactionVO;
+                                return (type != 'CREATE2' &&
+                                    <Row key={id}>
+                                        <img src={shape} style={{ width: "8px", marginTop: "-8px", marginRight: "4px" }} />
+                                        <Text type='secondary' strong>
+                                            {
+                                                value && type === 'CALL' && "TRANSFER"
+                                            }
+                                            {
+                                                'CALL' !== type && type
+                                            }
+                                        </Text>
+                                        {
+                                            value && type === 'CALL' && <Text style={{marginLeft:'4px' , marginRight:'4px'}}> 
+                                                <EtherAmount raw={value} fix={18}></EtherAmount> 
+                                            </Text>
+                                        }
+                                        <Text type='secondary' style={{marginLeft:'4px' , marginRight:'4px'}}> From </Text>
+                                        <Tooltip title={from}>
+                                            <RouterLink to={`/addresses/${from}`} style={{minWidth:"100px",maxWidth:"20%"}}>
+                                                <Link ellipsis>{from}</Link>
+                                            </RouterLink>
+                                        </Tooltip>
+                                        <Text type='secondary' style={{marginLeft:'4px' , marginRight:'4px'}}> To </Text>
+                                        <Tooltip title={to}>
+                                            <RouterLink to={`/addresses/${to}`} style={{minWidth:"100px",maxWidth:"20%"}}>
+                                                <Link ellipsis>{to}</Link>
+                                            </RouterLink>
+                                        </Tooltip>
+                                    </Row>
+                                )
+                            })
+                        }
+                    </>
+                }
             </Col>
         </Row>
 
@@ -172,6 +229,13 @@ export default ({
             <Col xl={16} xs={24}>
                 {
                     value && <Text strong><EtherAmount raw={value.toString()} fix={18} /></Text>
+                }
+                {
+                    revertReason && <> -
+                        <Tooltip title={`Value transfer did not complete from a contract ${error}`} placement="right">
+                            <Text type='danger' strong>[CANCELED]</Text>
+                        </Tooltip>
+                    </>
                 }
             </Col>
         </Row>

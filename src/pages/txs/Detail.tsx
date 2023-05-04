@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom"
 import { Card, Table, Typography, notification } from 'antd';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Tabs, Row, Col, Divider } from 'antd';
 import type { TabsProps } from 'antd';
@@ -19,7 +19,6 @@ export default function () {
     const [txVO , setTxVO] = useState<TransactionVO>();
     const [eventLogs , setEventLogs] = useState<EventLogVO[]>();
     const [contractInternalTransactions , setContractInternalTransactions] = useState<ContractInternalTransactionVO[]>();
-    
 
     useEffect( () => {
         if ( txHash ){
@@ -31,23 +30,27 @@ export default function () {
             });
             fetchTxContractInternalTransactions(txHash).then( ( contractInternalTransactions ) => {
                 setContractInternalTransactions( contractInternalTransactions );
-            } )
+            });
         }
     },[]);
+    const hasEventLogs = useMemo( () => {
+        return eventLogs && eventLogs.length > 0
+    } , [eventLogs] );
+
     const items: TabsProps['items'] = [
         {
             key: 'overview',
             label: `Overview`,
-            children: txVO && <TxOverview {...txVO}></TxOverview>,
+            children: txVO && <TxOverview txVO={txVO} contractInternalTransactions={contractInternalTransactions}></TxOverview>,
         },
         {
             key: 'contractInternalTransactions',
-            label: `Internal Transactions`,
+            label: `Internal Txns`,
             children: <ContractInternalTransactions from={txVO?.from} to={txVO?.to} contractInternalTransactions={contractInternalTransactions} />,
         },
         {
             key: 'eventlogs',
-            label: `Event Logs (${eventLogs?.length})`,
+            label: `${hasEventLogs ? `Logs (${eventLogs?.length})` : ""}`,
             children: <EventLogs eventLogs={eventLogs} ></EventLogs>,
         },
     ];
