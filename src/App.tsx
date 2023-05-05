@@ -8,6 +8,7 @@ import Addresses from './pages/addresses';
 import AddressDetail from './pages/addresses/Detail';
 import Txs from './pages/txs';
 import TxDetail from './pages/txs/Detail';
+import TxsInternal from './pages/txsInternal';
 import { Routes, Router, Route, BrowserRouter } from 'react-router-dom'
 import { Breadcrumb, Layout, Menu } from 'antd';
 
@@ -28,6 +29,7 @@ function App() {
               <Route path="/address/:address" index element={<AddressDetail />} />
               <Route path="/txs" index element={<Txs />} />
               <Route path="/tx/:txHash" index element={<TxDetail />} />
+              <Route path="/txsInternal" index element={<TxsInternal />} />
             </Routes>
           </div>
         </BrowserRouter>

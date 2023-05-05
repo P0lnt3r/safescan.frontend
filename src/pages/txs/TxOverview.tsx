@@ -4,9 +4,10 @@ import {
     CheckCircleOutlined,
     CloseCircleOutlined,
     QuestionCircleOutlined,
-    FrownOutlined
+    FrownOutlined,
+    CaretRightOutlined
 } from '@ant-design/icons';
-import { ContractInternalTransactionVO, TransactionVO } from '../../services';
+import { ContractInternalTransactionVO, ERC20TransferVO, TransactionVO } from '../../services';
 import { DateFormat } from '../../utils/DateUtil';
 import EtherAmount, { GWEI } from '../../components/EtherAmount';
 import JSBI from 'jsbi';
@@ -19,10 +20,17 @@ import { CurrencyAmount } from '@uniswap/sdk';
 import { Link as RouterLink } from 'react-router-dom';
 import shape from '../../images/shape-1.svg'
 import ContractInternalTransactions from './ContractInternalTransactions';
+import ERC20TokenAmount from '../../components/ERC20TokenAmount';
+import ERC20Logo from '../../components/ERC20Logo';
 
 const { Text, Paragraph, Link } = Typography;
 
-export default ({ txVO, contractInternalTransactions }: { txVO: TransactionVO, contractInternalTransactions: ContractInternalTransactionVO[] | undefined }) => {
+export default ({ txVO, contractInternalTransactions, erc20Transfers }:
+    {
+        txVO: TransactionVO,
+        contractInternalTransactions: ContractInternalTransactionVO[] | undefined,
+        erc20Transfers: ERC20TransferVO[] | undefined,
+    }) => {
 
     const {
         blockHash,
@@ -183,7 +191,7 @@ export default ({ txVO, contractInternalTransactions }: { txVO: TransactionVO, c
                                 const { id, type, from, to, value } = contractInternalTransactionVO;
                                 return (type != 'CREATE2' &&
                                     <Row key={id}>
-                                        <img src={shape} style={{ width: "8px", marginTop: "-8px", marginRight: "4px" }} />
+                                        <img src={shape} style={{ width: "8px", marginTop: "-2px", marginRight: "4px" }} />
                                         <Text type='secondary' strong>
                                             {
                                                 value && type === 'CALL' && "TRANSFER"
@@ -193,19 +201,19 @@ export default ({ txVO, contractInternalTransactions }: { txVO: TransactionVO, c
                                             }
                                         </Text>
                                         {
-                                            value && type === 'CALL' && <Text style={{marginLeft:'4px' , marginRight:'4px'}}> 
-                                                <EtherAmount raw={value} fix={18}></EtherAmount> 
+                                            value && type === 'CALL' && <Text style={{ marginLeft: '4px', marginRight: '4px' }}>
+                                                <EtherAmount raw={value} fix={18}></EtherAmount>
                                             </Text>
                                         }
-                                        <Text type='secondary' style={{marginLeft:'4px' , marginRight:'4px'}}> From </Text>
+                                        <Text type='secondary' style={{ marginLeft: '4px', marginRight: '4px' }}> From </Text>
                                         <Tooltip title={from}>
-                                            <RouterLink to={`/addresses/${from}`} style={{minWidth:"100px",maxWidth:"20%"}}>
+                                            <RouterLink to={`/addresses/${from}`} style={{ minWidth: "100px", maxWidth: "20%" }}>
                                                 <Link ellipsis>{from}</Link>
                                             </RouterLink>
                                         </Tooltip>
-                                        <Text type='secondary' style={{marginLeft:'4px' , marginRight:'4px'}}> To </Text>
+                                        <Text type='secondary' style={{ marginLeft: '4px', marginRight: '4px' }}> To </Text>
                                         <Tooltip title={to}>
-                                            <RouterLink to={`/addresses/${to}`} style={{minWidth:"100px",maxWidth:"20%"}}>
+                                            <RouterLink to={`/addresses/${to}`} style={{ minWidth: "100px", maxWidth: "20%" }}>
                                                 <Link ellipsis>{to}</Link>
                                             </RouterLink>
                                         </Tooltip>
@@ -217,6 +225,51 @@ export default ({ txVO, contractInternalTransactions }: { txVO: TransactionVO, c
                 }
             </Col>
         </Row>
+
+        {
+            // ERC20 Transfer 列表
+            erc20Transfers && erc20Transfers.length > 0 &&
+            <>
+                <Divider style={{ margin: '18px 0px' }} />
+                <Row>
+                    <Col xl={8} xs={24}>
+                        <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
+                            <QuestionCircleOutlined />
+                        </Tooltip>
+                        <Text strong style={{ marginLeft: "5px" }}>Tokens Transferred:  <Tag color="#77838f">{erc20Transfers.length}</Tag></Text>
+                    </Col>
+                    <Col xl={16} xs={24}>
+                        {
+                            erc20Transfers.map(erc20TransferVO => {
+                                const { transactionHash, from, to, token, tokenPropVO , value } = erc20TransferVO;
+                                const erc20Prop = tokenPropVO && tokenPropVO.subType === "erc20" ? tokenPropVO?.prop : undefined;
+                                const erc20 = erc20Prop ? JSON.parse(erc20Prop) : undefined;
+                                return (<>
+                                    <Row style={{marginTop:"2px"}}>
+                                        <Text strong> <CaretRightOutlined /> From</Text>
+                                        <RouterLink to={`/address/${from}`} style={{ minWidth: "60px", maxWidth: "15%",marginLeft:"5px" }}>
+                                            <Link ellipsis>{from}</Link>
+                                        </RouterLink>
+                                        <Text strong> To</Text>
+                                        <RouterLink to={`/address/${to}`} style={{ minWidth: "60px", maxWidth: "15%",marginLeft:"5px" }}>
+                                            <Link ellipsis>{to}</Link>
+                                        </RouterLink>
+                                        <Text strong style={{marginRight:"5px"}}> For</Text>
+                                        <ERC20TokenAmount address={token} name={erc20.name} symbol={erc20.symbol} decimals={erc20.decimals} raw={value} 
+                                            fixed={erc20.decimals} />
+                                        <span style={{marginRight:"5px"}}></span>    
+                                        <ERC20Logo address={token} />
+                                        <Link href='#' ellipsis style={{ width: '20%', marginLeft: "5px" }}>
+                                            {erc20.name}({erc20.symbol})
+                                        </Link>
+                                    </Row>
+                                </>)
+                            })
+                        }
+                    </Col>
+                </Row>
+            </>
+        }
 
         <Divider style={{ margin: '18px 0px' }} />
         <Row>
@@ -298,8 +351,8 @@ export default ({ txVO, contractInternalTransactions }: { txVO: TransactionVO, c
             <Col xl={16} xs={24}>
                 {
                     <>
-                        <Tag>{`Position:${transactionIndex}`}</Tag>
                         <Tag>{`Nonce:${nonce}`}</Tag>
+                        <Tag>{`Position:${transactionIndex}`}</Tag>
                     </>
                 }
             </Col>

@@ -6,8 +6,8 @@ import { Tabs, Row, Col, Divider } from 'antd';
 import type { TabsProps } from 'antd';
 import TxOverview from "./TxOverview";
 import EventLogs from "./EventLogs";
-import { fetchEventLogs, fetchTransaction, fetchTxContractInternalTransactions } from "../../services/tx";
-import { ContractInternalTransactionVO, EventLogVO, TransactionVO } from "../../services";
+import { fetchEventLogs, fetchTransaction, fetchTxContractInternalTransactions, fetchTxERC20Transfers } from "../../services/tx";
+import { ContractInternalTransactionVO, ERC20TransferVO, EventLogVO, TransactionVO } from "../../services";
 import ContractInternalTransactions from "./ContractInternalTransactions";
 
 const { Title } = Typography;
@@ -19,6 +19,7 @@ export default function () {
     const [txVO , setTxVO] = useState<TransactionVO>();
     const [eventLogs , setEventLogs] = useState<EventLogVO[]>();
     const [contractInternalTransactions , setContractInternalTransactions] = useState<ContractInternalTransactionVO[]>();
+    const [txERC20Transfers , setTxERC20Transfers] = useState<ERC20TransferVO[]>();
 
     useEffect( () => {
         if ( txHash ){
@@ -31,27 +32,33 @@ export default function () {
             fetchTxContractInternalTransactions(txHash).then( ( contractInternalTransactions ) => {
                 setContractInternalTransactions( contractInternalTransactions );
             });
+            fetchTxERC20Transfers(txHash).then( (txERC20Transfers) => {
+                setTxERC20Transfers(txERC20Transfers);
+            });
         }
     },[]);
     const hasEventLogs = useMemo( () => {
         return eventLogs && eventLogs.length > 0
     } , [eventLogs] );
+    const hasInternalTxns = useMemo( () => {
+        return contractInternalTransactions && contractInternalTransactions.length > 0
+    } , [contractInternalTransactions])
 
     const items: TabsProps['items'] = [
         {
             key: 'overview',
             label: `Overview`,
-            children: txVO && <TxOverview txVO={txVO} contractInternalTransactions={contractInternalTransactions}></TxOverview>,
+            children: txVO && <TxOverview txVO={txVO} contractInternalTransactions={contractInternalTransactions} erc20Transfers={txERC20Transfers} />,
         },
         {
             key: 'contractInternalTransactions',
-            label: `Internal Txns`,
+            label: `${hasInternalTxns ? `Internal Txns` : ""}`,
             children: <ContractInternalTransactions from={txVO?.from} to={txVO?.to} contractInternalTransactions={contractInternalTransactions} />,
         },
         {
             key: 'eventlogs',
             label: `${hasEventLogs ? `Logs (${eventLogs?.length})` : ""}`,
-            children: <EventLogs eventLogs={eventLogs} ></EventLogs>,
+            children: <EventLogs eventLogs={eventLogs} />,
         },
     ];
     return (

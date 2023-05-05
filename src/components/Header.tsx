@@ -36,6 +36,7 @@ const Header: React.FC = () => {
         getItem(t('blockchain').toString(), 'blockchain', <AppstoreOutlined />, [
             getItem('View Pending Transactions', '/txsPending'),
             getItem('View Transactions', '/txs'),
+            getItem('Contract Internal Transactions', '/txsInternal'),
             getItem('View Blocks', '/blocks'),
         ]),
         getItem(t('masternode').toString(), 'masternode', <SettingOutlined />, [

@@ -44,3 +44,13 @@ export async function fetchTxContractInternalTransactions( txHash : string ) : P
     const serverResponse = await POST( `${API_HOST}/txs/contract_txs` , { transactionHash : txHash } );
     return serverResponse.data;
 }
+
+export async function fetchTxERC20Transfers( txHash : string ) : Promise<ERC20TransferVO[]> {
+    const serverResponse = await POST( `${API_HOST}/txs/${txHash}/erc20`);
+    return serverResponse.data;
+}
+
+export async function fetchContractInternalTransactions( params : PageQueryDTO ) : Promise<PageResponseVO<ContractInternalTransactionVO>>{
+    const serverResponse = await POST( `${API_HOST}/txs/internal` , { ...params } );
+    return serverResponse.data;
+}

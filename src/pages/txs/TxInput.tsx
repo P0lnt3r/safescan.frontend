@@ -15,8 +15,6 @@ export default ({ raw, methodId, fragment }: {
     fragment?: Fragment
 }) => {
 
-   
-
     const functionSignature = useMemo(() => {
         if (fragment) {
             const functionName = fragment.name;
