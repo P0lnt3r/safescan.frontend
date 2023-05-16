@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { AbiMethodSignatureVO, AddressAbiVO, AddressPropVO, BlockVO, TransactionVO } from '../../services';
+import { AbiMethodSignatureVO, AddressAbiVO, AddressPropVO, BlockVO, StatisticVO, TransactionVO } from '../../services';
 import { Application_Init, Application_Notification, Application_Save_ABI, Application_Update_AbiMethodSignature, Application_Update_AddressPropMap, Application_Update_BlockchainContext, NotificationType } from './action';
 import { FormatTypes, Interface, Fragment } from 'ethers/lib/utils';
 
@@ -12,6 +12,7 @@ export interface IApplicationState {
 
     latestBlocks: BlockVO[]
     latestTransactions: TransactionVO[]
+    statistic?: StatisticVO
 
     abis: AddressAbiVO[],
     abiMap?: Map<string, any>,
@@ -29,6 +30,7 @@ const initialState: IApplicationState = {
     addressPropMap: new Map(),
     latestBlocks: [],
     latestTransactions: [],
+    statistic : undefined, 
     abis: []
 }
 
@@ -100,12 +102,13 @@ export default createReducer(initialState, (builder) => {
         })
 
         .addCase(Application_Update_BlockchainContext, (state, { payload }) => {
-            const { latestBlockNumber, latestBlocks, latestTransactions } = payload;
+            const { latestBlockNumber, latestBlocks, latestTransactions , statistic } = payload;
             return {
                 ...state,
                 blockNumber: latestBlockNumber,
                 latestBlocks,
-                latestTransactions
+                latestTransactions,
+                statistic
             }
         })
 

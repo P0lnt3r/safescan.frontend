@@ -151,7 +151,8 @@ export interface ContractInternalTransactionVO {
 export interface BlockchainContextVO {
     latestBlockNumber: number,
     latestTransactions: TransactionVO[],
-    latestBlocks: BlockVO[]
+    latestBlocks: BlockVO[],
+    statistic: StatisticVO,
 }
 
 export interface AbiMethodSignatureVO {
@@ -165,3 +166,10 @@ export interface AddressAbiVO {
     abi: string
 }
 
+export interface StatisticVO {
+    totalTxns : number,
+    totalInternalTxns : number ,
+    totalERC20Transfers : number ,
+    totalAddress : number ,
+    totalContract : number ,
+}

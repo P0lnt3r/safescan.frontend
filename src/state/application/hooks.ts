@@ -1,6 +1,6 @@
 
 import { useSelector } from 'react-redux'
-import { AddressPropVO, BlockVO, TransactionVO } from '../../services';
+import { AddressPropVO, BlockVO, StatisticVO, TransactionVO } from '../../services';
 import { Abi_Method_Define } from '../../utils/decode';
 import ParseABIDefine from '../../utils/decode/ParseABIDefine';
 import { AppState } from '../index';
@@ -22,6 +22,10 @@ export function useAddressAbi( address : string ) : any | undefined {
 
 export function useBlockNumber(): number {
     return useSelector((state: AppState) => state.application.blockNumber);
+}
+
+export function useStatistic() : StatisticVO | undefined{
+    return useSelector((state: AppState) => state.application.statistic);
 }
 
 export function useLatestBlocks(): BlockVO[] {

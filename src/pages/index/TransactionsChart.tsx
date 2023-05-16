@@ -1,6 +1,10 @@
 
 import { useState, useEffect } from 'react';
 import { Line } from '@ant-design/plots';
+import { Button, Col, Row, Card, Space, Typography, Statistic, Divider } from 'antd';
+
+
+const { Title, Text, Link } = Typography;
 
 export default () => {
 
@@ -31,7 +35,8 @@ export default () => {
 
     return (
         <>
-            <Line style={{height:"160px"}} {...config} />
+            <Text strong type='secondary'>SAFE MASTERNODES HISTORY LAST 30 DAYS</Text>
+            <Line style={{height:"140px",marginTop:"10px"}} {...config} />
         </>
     )
 }
