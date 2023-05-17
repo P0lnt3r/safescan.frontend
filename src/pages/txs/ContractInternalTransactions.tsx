@@ -91,7 +91,7 @@ export default ({
             width: 100,
         },
         {
-            title: <Text strong style={{ color: "#6c757e" }}>To</Text>,
+            title: <><Text strong style={{ color: "#6c757e" }}>To</Text></>,
             dataIndex: 'to',
             render: (to, txVO) =>
                 <Row>
@@ -115,7 +115,7 @@ export default ({
             width: 100,
         },
         {
-            title: <Text strong style={{ color: "#6c757e" }}>Value</Text>,
+            title: <><Text strong style={{ color: "#6c757e" }}>Value</Text></>,
             dataIndex: 'value',
             render: (value, txVO) => <>
                 <Text strong>
@@ -125,7 +125,7 @@ export default ({
             width: 180,
         },
         {
-            title: <Text strong style={{ color: "#6c757e" }}>Gas Limit</Text>,
+            title: <><Text strong style={{ color: "#6c757e" }}>Gas Limit</Text></>,
             dataIndex: 'gas',
             render: (gas, txVO) => <>
                 {format(gas)}

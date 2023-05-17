@@ -5,6 +5,14 @@ import { fetchAddressBalanceRank } from '../../services/address';
 import { AddressBalanceRankVO } from '../../services';
 import type { ColumnsType } from 'antd/es/table';
 import EtherAmount from '../../components/EtherAmount';
+import { Link as RouterLink } from 'react-router-dom';
+import {
+    UserOutlined,
+    FileTextOutlined,
+    SafetyOutlined,
+    ApartmentOutlined
+} from '@ant-design/icons';
+import { format } from '../../utils/NumberFormat';
 
 const { Title, Text, Link } = Typography;
 
@@ -46,21 +54,31 @@ export default () => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Rank</Text>,
             dataIndex: 'rank',
-            render: (rank) => <>{rank}</>,
+            render: (rank) => <Text strong>{rank}</Text >,
             width: 40,
             fixed: 'left',
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Address</Text>,
             dataIndex: 'address',
-            render: (address) => <>{address}</>,
-            width: 160,
+            render: (address , addressBalanceRankVO : AddressBalanceRankVO) => <>
+                {
+                    addressBalanceRankVO.addressPropVO?.type == 'contract' && 
+                        <>
+                            <Tooltip title="Contract"><FileTextOutlined style={{marginRight:"5px"}}/></Tooltip>
+                        </>
+                }
+                <RouterLink to={`/address/${address}`}>
+                    <Link>{address}</Link>
+                </RouterLink>
+            </>,
+            width: 140,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Name Tag</Text>,
             dataIndex: 'addressPropVO',
             render: (addressProp) => <>{addressProp?.tag}</>,
-            width: 100,
+            width: 80,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Balance</Text>,
@@ -77,7 +95,7 @@ export default () => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Txn Count</Text>,
             dataIndex: 'txCount',
-            render: (txCount) => <>{txCount}</>,
+            render: (txCount) => <>  { txCount && format(txCount+"")} </>,
             width: 60,
         }
     ];
