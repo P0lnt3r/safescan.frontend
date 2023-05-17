@@ -173,3 +173,10 @@ export interface StatisticVO {
     totalAddress : number ,
     totalContract : number ,
 }
+
+export interface AddressBalanceRankVO {
+    rank : number,
+    address : string , 
+    addressPropVO : AddressPropVO,
+    balance : string ,
+}

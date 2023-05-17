@@ -1,5 +1,18 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { AppstoreOutlined, AreaChartOutlined, SettingOutlined, UnorderedListOutlined, CloseOutlined } from '@ant-design/icons';
+import { 
+    AppstoreOutlined, 
+    AreaChartOutlined, 
+    SettingOutlined, 
+    UnorderedListOutlined, 
+    CloseOutlined ,
+    HomeOutlined,
+    FundViewOutlined,
+    ApartmentOutlined,
+    SecurityScanOutlined,
+    
+    WalletOutlined,
+} from '@ant-design/icons';
+
 import type { MenuProps } from 'antd';
 import { Menu, Row, Col, Button, Layout, Input } from 'antd';
 import SAFE_LOGO from '../images/safe_logo.png'
@@ -32,24 +45,28 @@ const Header: React.FC = () => {
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
     const items: MenuItem[] = [
-        getItem(t('home').toString(), '', <AreaChartOutlined />),
-        getItem(t('blockchain').toString(), 'blockchain', <AppstoreOutlined />, [
+        getItem(t('home').toString(), '', <HomeOutlined />),
+        getItem(t('blockchain').toString(), 'blockchain', <SecurityScanOutlined />, [
             getItem('View Pending Transactions', '/txsPending'),
             getItem('View Transactions', '/txs'),
             getItem('View Internal Transactions', '/txsInternal'),
             getItem('View Blocks', '/blocks'),
         ]),
-        getItem(t('masternode').toString(), 'masternode', <SettingOutlined />, [
+        getItem(t('masternode').toString(), 'masternode', <ApartmentOutlined />, [
             getItem('MasterNode List', '/masternodes'),
         ]),
-        getItem(t('assets').toString(), 'assets', <SettingOutlined />, [
+        getItem(t('assets').toString(), 'assets', <WalletOutlined />, [
             getItem('ERC20 Assets List', '9'),
             getItem('ERC20 Assets Txs', '11'),
         ]),
-        getItem('Language', 'language', <SettingOutlined />, [
-            getItem('English', 'en'),
-            getItem('中文', 'zh'),
+        getItem("Statistic", 'statistic', <AreaChartOutlined />, [
+            getItem('Top Account', '/accounts'),
+            getItem('Chart', '/charts'),
         ]),
+        // getItem('Language', 'language', <SettingOutlined />, [
+        //     getItem('English', 'en'),
+        //     getItem('中文', 'zh'),
+        // ]),
     ];
     // submenu keys of first level
     const rootSubmenuKeys = ['blockchain', 'masternode', 'assets'];

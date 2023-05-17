@@ -16,7 +16,7 @@ export default () => {
 
         }
         ws.onmessage = (msg) => {
-            console.log('On Message :' , msg);
+            // console.log('On Message :' , msg);
             const json = JSON.parse(msg.data) as BlockchainContextVO;
             dispatch( Application_Update_BlockchainContext(json) )            
         };

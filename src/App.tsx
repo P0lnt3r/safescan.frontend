@@ -11,6 +11,7 @@ import TxDetail from './pages/txs/Detail';
 import TxsInternal from './pages/txsInternal';
 import { Routes, Router, Route, BrowserRouter } from 'react-router-dom'
 import { Breadcrumb, Layout, Menu } from 'antd';
+import RankAddress from './pages/statistics/RankAddress';
 
 const { Content } = Layout;
 
@@ -30,6 +31,7 @@ function App() {
               <Route path="/txs" index element={<Txs />} />
               <Route path="/tx/:txHash" index element={<TxDetail />} />
               <Route path="/txsInternal" index element={<TxsInternal />} />
+              <Route path="/accounts" index element={<RankAddress />} />
             </Routes>
           </div>
         </BrowserRouter>
