@@ -180,3 +180,24 @@ export interface AddressBalanceRankVO {
     addressPropVO : AddressPropVO,
     balance : string ,
 }
+
+export interface AddressVO {
+    address : string , 
+    type    : string , 
+    propVO ?: AddressPropVO , 
+    balance : {
+        balance : string , 
+        txCount : number 
+    },
+    tokens : {
+        token : string,
+        balance : string
+    }[]
+}
+
+export interface ERC20TokenVO {
+    address: string,
+    name: string,
+    symbol: string,
+    decimals: number
+}

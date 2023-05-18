@@ -12,6 +12,7 @@ import TxsInternal from './pages/txsInternal';
 import { Routes, Router, Route, BrowserRouter } from 'react-router-dom'
 import { Breadcrumb, Layout, Menu } from 'antd';
 import RankAddress from './pages/statistics/RankAddress';
+import ERC20Tokens from './pages/assets/ERC20Tokens';
 
 const { Content } = Layout;
 
@@ -32,6 +33,7 @@ function App() {
               <Route path="/tx/:txHash" index element={<TxDetail />} />
               <Route path="/txsInternal" index element={<TxsInternal />} />
               <Route path="/accounts" index element={<RankAddress />} />
+              <Route path="/assets/erc20tokens" index element={<ERC20Tokens />} />
             </Routes>
           </div>
         </BrowserRouter>

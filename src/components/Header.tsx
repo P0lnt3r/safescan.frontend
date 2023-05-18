@@ -56,8 +56,8 @@ const Header: React.FC = () => {
             getItem('MasterNode List', '/masternodes'),
         ]),
         getItem(t('assets').toString(), 'assets', <WalletOutlined />, [
-            getItem('ERC20 Assets List', '9'),
-            getItem('ERC20 Assets Txs', '11'),
+            getItem('ERC20 Tokens', '/assets/erc20tokens'),
+            getItem('ERC20 Transfers', '11'),
         ]),
         getItem("Statistic", 'statistic', <AreaChartOutlined />, [
             getItem('Top Account', '/accounts'),

@@ -1,21 +1,24 @@
 import { useParams } from "react-router-dom"
 import { Card, Typography, Tag, Input, Button, Space, Tooltip, Tabs, Row, Col, Divider, Modal } from 'antd';
 import {
-    SearchOutlined, QrcodeOutlined,
+    SearchOutlined, QrcodeOutlined, FileTextOutlined , UserOutlined
 } from '@ant-design/icons';
 import { isMobile } from 'react-device-detect'
 import type { TabsProps } from 'antd';
 import QRCode from 'qrcode.react';
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Transactions from "./Transactions";
 import ERC20Transfers from "./ERC20Transfers";
+import { fetchAddress } from "../../services/address";
+import { AddressVO } from "../../services";
+import EtherAmount from "../../components/EtherAmount";
 
 const { Title, Text, Paragraph, Link } = Typography;
 
 export default function () {
 
     const { address } = useParams();
-    const items: TabsProps['items'] = useMemo( () => {
+    const items: TabsProps['items'] = useMemo(() => {
         return [
             {
                 key: 'transactions',
@@ -28,16 +31,25 @@ export default function () {
                 children: address && <ERC20Transfers address={address}></ERC20Transfers>,
             }
         ]
-    } , [address]);
+    }, [address]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [addressVO, setAddressVO] = useState<AddressVO>();
+
+    useEffect(() => {
+        if (address) {
+            fetchAddress(address).then(data => {
+                setAddressVO(data)
+            })
+        }
+    }, [address])
 
     return (
         <>
             {
                 address &&
-                <Modal title={address} 
-                       open={isModalOpen} onCancel={()=>setIsModalOpen(false)} closable={false} style={{ textAlign: "center" }}
-                       footer={<></>}>
+                <Modal title={address}
+                    open={isModalOpen} onCancel={() => setIsModalOpen(false)} closable={false} style={{ textAlign: "center" }}
+                    footer={<></>}>
                     <QRCode
                         value={address}
                         size={200}
@@ -47,7 +59,20 @@ export default function () {
             }
             <Row>
                 <Col xs={24} xl={2}>
-                    <Title level={4}>Address</Title>
+                    <Title level={4}>
+                        {
+                            addressVO && addressVO.type == "contract" && <>
+                                <FileTextOutlined />
+                                <Text style={{ marginLeft: "8px" }}>Contract</Text>
+                            </>
+                        }
+                        {
+                            addressVO && addressVO.type == "address" && <>
+                                <UserOutlined />
+                                <Text style={{ marginLeft: "8px" }}>Address</Text>
+                            </>
+                        }
+                    </Title>
                 </Col>
                 <Col xs={24} xl={20}>
                     <Row>
@@ -60,8 +85,8 @@ export default function () {
                                 {address}
                             </Paragraph>
                         </Text>
-                        <Tooltip title="点击查看二维码">
-                            <Button onClick={()=>setIsModalOpen(true)} style={{ marginTop: "2px", marginLeft: "5px" }} type="primary" size="small" shape="circle" icon={<QrcodeOutlined />} />
+                        <Tooltip title="Click to view QR Code">
+                            <Button onClick={() => setIsModalOpen(true)} style={{ marginTop: "2px", marginLeft: "5px" }} type="primary" size="small" shape="circle" icon={<QrcodeOutlined />} />
                         </Tooltip>
                     </Row>
                 </Col>
@@ -74,7 +99,13 @@ export default function () {
                     <Card size="small" title={<Title level={5}>Overview</Title>}>
                         <Row>
                             <Col xl={10} xs={24}><Text strong>Balance:</Text></Col>
-                            <Col xl={14} xs={24}><Text strong>5433.21 SAFE</Text></Col>
+                            <Col xl={14} xs={24}>
+                                <Text strong>
+                                    {
+                                        addressVO && addressVO.balance && <EtherAmount raw={addressVO.balance.balance} fix={18} />
+                                    }
+                                </Text>
+                            </Col>
                         </Row>
                     </Card>
                 </Col>
@@ -82,7 +113,13 @@ export default function () {
                     <Card size="small" title={<Title level={5}>More Informations</Title>}>
                         <Row>
                             <Col xl={10} xs={24}><Text strong>Name Tag:</Text></Col>
-                            <Col xl={14} xs={24}><Text ></Text></Col>
+                            <Col xl={14} xs={24}>
+                                <Text>
+                                    {
+                                        addressVO && addressVO.propVO && addressVO.propVO.tag
+                                    }
+                                </Text>
+                            </Col>
                         </Row>
                     </Card>
                 </Col>
