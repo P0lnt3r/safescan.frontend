@@ -199,5 +199,8 @@ export interface ERC20TokenVO {
     address: string,
     name: string,
     symbol: string,
-    decimals: number
+    decimals: number,
+    holders: number,
+    totalTransfers: number,
+    totalTransferAmount: string,
 }

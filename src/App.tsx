@@ -13,6 +13,7 @@ import { Routes, Router, Route, BrowserRouter } from 'react-router-dom'
 import { Breadcrumb, Layout, Menu } from 'antd';
 import RankAddress from './pages/statistics/RankAddress';
 import ERC20Tokens from './pages/assets/ERC20Tokens';
+import ERC20Transfers from './pages/assets/ERC20Transfers';
 
 const { Content } = Layout;
 
@@ -34,6 +35,7 @@ function App() {
               <Route path="/txsInternal" index element={<TxsInternal />} />
               <Route path="/accounts" index element={<RankAddress />} />
               <Route path="/assets/erc20tokens" index element={<ERC20Tokens />} />
+              <Route path="/assets/erc20txns" index element={<ERC20Transfers />} />
             </Routes>
           </div>
         </BrowserRouter>

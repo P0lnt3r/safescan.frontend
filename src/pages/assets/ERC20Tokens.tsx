@@ -16,6 +16,7 @@ import {
 import { format } from '../../utils/NumberFormat';
 import { fetchERC20Tokens } from '../../services/assets';
 import ERC20Logo from '../../components/ERC20Logo';
+import ERC20TokenAmount from '../../components/ERC20TokenAmount';
 
 const { Title, Text, Link } = Typography;
 
@@ -71,11 +72,40 @@ export default () => {
             fixed: 'left',
         },
         {
-            title: <Text strong style={{ color: "#6c757e" }}>Decimals</Text>,
-            dataIndex: 'decimals',
-            render: (decimals, vo) => {
+            title: <Text strong style={{ color: "#6c757e" }}>Holders</Text>,
+            dataIndex: 'holders',
+            render: (holders, vo) => {
                 return <>
-                    {decimals}
+                    {holders}
+                </>
+            },
+            width: 40,
+            fixed: 'left',
+        },
+        {
+            title: <Text strong style={{ color: "#6c757e" }}>Transfer Txns</Text>,
+            dataIndex: 'totalTransfers',
+            render: (totalTransfers, vo) => {
+                return <>
+                    {totalTransfers}
+                </>
+            },
+            width: 40,
+            fixed: 'left',
+        },
+        {
+            title: <Text strong style={{ color: "#6c757e" }}>Transfer Amount</Text>,
+            dataIndex: 'totalTransferAmount',
+            render: (totalTransferAmount, vo) => {
+                return <>
+                    {
+                        totalTransferAmount &&
+                        <>
+                            <ERC20TokenAmount address={vo.address} name={vo.name} symbol={vo.symbol}
+                                raw={totalTransferAmount} fixed={6} decimals={vo.decimals} />
+                            <Text style={{marginLeft:"5px"}}>{vo.symbol}</Text>
+                        </>
+                    }
                 </>
             },
             width: 40,
@@ -88,7 +118,6 @@ export default () => {
         <Card>
             <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
                 pagination={pagination}
-
             />
         </Card>
     </>)

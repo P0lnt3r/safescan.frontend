@@ -57,7 +57,7 @@ const Header: React.FC = () => {
         ]),
         getItem(t('assets').toString(), 'assets', <WalletOutlined />, [
             getItem('ERC20 Tokens', '/assets/erc20tokens'),
-            getItem('ERC20 Transfers', '11'),
+            getItem('ERC20 Transfers', '/assets/erc20txns'),
         ]),
         getItem("Statistic", 'statistic', <AreaChartOutlined />, [
             getItem('Top Account', '/accounts'),
