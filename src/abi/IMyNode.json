@@ -1,0 +1,142 @@
+[
+	{
+		"inputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "ID",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "names",
+						"type": "uint256[]"
+					}
+				],
+				"internalType": "struct IMyNode.TestInfo[]",
+				"name": "infos",
+				"type": "tuple[]"
+			}
+		],
+		"name": "getTestInfo",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "ID",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "names",
+						"type": "uint256[]"
+					}
+				],
+				"internalType": "struct IMyNode.TestInfo[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "lockID",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "addr",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "amount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "height",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct IMyNode.MemberInfo[]",
+						"name": "founders",
+						"type": "tuple[]"
+					}
+				],
+				"internalType": "struct IMyNode.NodeInfo[]",
+				"name": "infos",
+				"type": "tuple[]"
+			}
+		],
+		"name": "getTop",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "lockID",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "addr",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "amount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "height",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct IMyNode.MemberInfo[]",
+						"name": "founders",
+						"type": "tuple[]"
+					}
+				],
+				"internalType": "struct IMyNode.NodeInfo[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]

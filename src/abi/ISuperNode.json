@@ -1,0 +1,437 @@
+[
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_addr",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_lockDay",
+				"type": "uint256"
+			}
+		],
+		"name": "appendRegister",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_addr",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_newAddr",
+				"type": "address"
+			}
+		],
+		"name": "changeAddress",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_addr",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_newDescription",
+				"type": "string"
+			}
+		],
+		"name": "changeDescription",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_addr",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_newEnode",
+				"type": "string"
+			}
+		],
+		"name": "changeEnode",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_addr",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_newPubkey",
+				"type": "string"
+			}
+		],
+		"name": "changePubkey",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_addr",
+				"type": "address"
+			}
+		],
+		"name": "exist",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "existID",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_ip",
+				"type": "string"
+			}
+		],
+		"name": "existIP",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_addr",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_lockID",
+				"type": "uint256"
+			}
+		],
+		"name": "existLockID",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_pubkey",
+				"type": "string"
+			}
+		],
+		"name": "existPubkey",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getNum",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getTop",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "addr",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "creator",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "enode",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "ip",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "pubkey",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "state",
+						"type": "uint256"
+					},
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "lockID",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "addr",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "amount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "height",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct ISuperNode.MemberInfo[]",
+						"name": "founders",
+						"type": "tuple[]"
+					},
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "creator",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "partner",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "voter",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct INode.IncentivePlan",
+						"name": "incentivePlan",
+						"type": "tuple"
+					},
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "lockID",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "addr",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "amount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "height",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct ISuperNode.MemberInfo[]",
+						"name": "voters",
+						"type": "tuple[]"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalVoteNum",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalVoterAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "createHeight",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "updateHeight",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct ISuperNode.SuperNodeInfo[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bool",
+				"name": "_isUnion",
+				"type": "bool"
+			},
+			{
+				"internalType": "address",
+				"name": "_addr",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_lockDay",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_enode",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_pubkey",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_description",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_creatorIncentive",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_partnerIncentive",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_voterIncentive",
+				"type": "uint256"
+			}
+		],
+		"name": "register",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_addr",
+				"type": "address"
+			}
+		],
+		"name": "reward",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	}
+]

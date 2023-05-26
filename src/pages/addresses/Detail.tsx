@@ -12,6 +12,7 @@ import ERC20Transfers from "./ERC20Transfers";
 import { fetchAddress } from "../../services/address";
 import { AddressVO } from "../../services";
 import EtherAmount from "../../components/EtherAmount";
+import SuperMasterNode from "./SuperMasterNode";
 
 const { Title, Text, Paragraph, Link } = Typography;
 
@@ -124,6 +125,10 @@ export default function () {
                     </Card>
                 </Col>
             </Row>
+
+            <Divider style={{ marginTop: "20px" }} />
+
+            <SuperMasterNode></SuperMasterNode>
 
             <Divider style={{ marginTop: "20px" }} />
 
