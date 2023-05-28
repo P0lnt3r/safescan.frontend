@@ -10,35 +10,10 @@ import AddressTag from '../../components/AddressTag';
 import NavigateLink from '../../components/NavigateLink';
 import TransactionHash from '../../components/TransactionHash';
 import EtherAmount from '../../components/EtherAmount';
+import { Link as RouterLink } from 'react-router-dom';
+import { FileTextOutlined } from '@ant-design/icons';
 
 const { Title, Text, Link } = Typography;
-
-const data = [
-    {
-        title: '2001',
-    },
-    {
-        title: '2000',
-    },
-    {
-        title: '1999',
-    },
-    {
-        title: '1998',
-    },
-    {
-        title: '2001',
-    },
-    {
-        title: '2000',
-    },
-    {
-        title: '1999',
-    },
-    {
-        title: '1998',
-    },
-];
 
 export default function () {
 
@@ -81,8 +56,19 @@ export default function () {
                                                 </Col>
                                             </Row>
                                             <Row>
-                                                <Col xl={0} xs={4}>
-                                                    <AddressTag address={blockVO.miner} sub={8}></AddressTag>
+                                                <Col xl={0} xs={24}>
+                                                    <Tooltip title={blockVO.miner}>
+                                                        <RouterLink to={`/address/${blockVO.miner}`}>
+                                                            <Link ellipsis>
+                                                                {
+                                                                    blockVO.minerPropVO && <>{blockVO.minerPropVO.tag}</>
+                                                                }
+                                                                {
+                                                                    !blockVO.minerPropVO && <>{blockVO.miner}</>
+                                                                }
+                                                            </Link>
+                                                        </RouterLink>
+                                                    </Tooltip>
                                                 </Col>
                                             </Row>
                                             <Row>
@@ -103,7 +89,18 @@ export default function () {
                                         <Col xl={14} xs={0}>
                                             <Row>
                                                 <Col xl={24}>
-                                                    <AddressTag address={blockVO.miner} sub={8}></AddressTag>
+                                                    <Tooltip title={blockVO.miner}>
+                                                        <RouterLink to={`/address/${blockVO.miner}`}>
+                                                            <Link ellipsis>
+                                                                {
+                                                                    blockVO.minerPropVO && <>{blockVO.minerPropVO.tag}</>
+                                                                }
+                                                                {
+                                                                    !blockVO.minerPropVO && <>{blockVO.miner}</>
+                                                                }
+                                                            </Link>
+                                                        </RouterLink>
+                                                    </Tooltip>
                                                 </Col>
                                                 <Col xl={12}>
                                                     <NavigateLink path={`/txs?block=${blockVO.number}`}>
@@ -166,13 +163,41 @@ export default function () {
                                                 <Col xl={0} xs={24}>
                                                     <Text>
                                                         <span>From:</span>
-                                                        <AddressTag address={transaction.from} sub={8}></AddressTag>
+                                                        <Tooltip title={transaction.from}>
+                                                            <RouterLink to={`/address/${transaction.from}`}>
+                                                                <Link ellipsis>
+                                                                    {
+                                                                        transaction.fromPropVO && <>{transaction.fromPropVO.tag}</>
+                                                                    }
+                                                                    {
+                                                                        !transaction.fromPropVO && <>{transaction.from}</>
+                                                                    }
+                                                                </Link>
+                                                            </RouterLink>
+                                                        </Tooltip>
                                                     </Text>
                                                 </Col>
                                                 <Col xl={0} xs={24}>
                                                     <Text>
                                                         <span>To:</span>
-                                                        <AddressTag address={transaction.to} sub={8}></AddressTag>
+                                                        {
+                                                            transaction.toPropVO && transaction.toPropVO.type == "contract" &&
+                                                            <Tooltip title='Contract'>
+                                                                <FileTextOutlined style={{ marginLeft: "2px", marginRight: "2px" }} />
+                                                            </Tooltip>
+                                                        }
+                                                        <Tooltip title={transaction.to}>
+                                                            <RouterLink to={`/address/${transaction.to}`}>
+                                                                <Link ellipsis style={{ width: "80%" }}>
+                                                                    {
+                                                                        transaction.toPropVO && <>{transaction.toPropVO.tag}</>
+                                                                    }
+                                                                    {
+                                                                        !transaction.toPropVO && <>{transaction.to}</>
+                                                                    }
+                                                                </Link>
+                                                            </RouterLink>
+                                                        </Tooltip>
                                                     </Text>
                                                 </Col>
                                             </Row>
@@ -191,13 +216,41 @@ export default function () {
                                                 <Col xl={24}>
                                                     <Text>
                                                         <span>From:</span>
-                                                        <AddressTag address={transaction.from} sub={8}></AddressTag>
+                                                        <Tooltip title={transaction.from}>
+                                                            <RouterLink to={`/address/${transaction.from}`}>
+                                                                <Link ellipsis>
+                                                                    {
+                                                                        transaction.fromPropVO && <>{transaction.fromPropVO.tag}</>
+                                                                    }
+                                                                    {
+                                                                        !transaction.fromPropVO && <>{transaction.from}</>
+                                                                    }
+                                                                </Link>
+                                                            </RouterLink>
+                                                        </Tooltip>
                                                     </Text>
                                                 </Col>
                                                 <Col xl={18}>
                                                     <Text>
                                                         <span>To:</span>
-                                                        <AddressTag address={transaction.to} sub={8}></AddressTag>
+                                                        {
+                                                            transaction.toPropVO && transaction.toPropVO.type == "contract" &&
+                                                            <Tooltip title='Contract'>
+                                                                <FileTextOutlined style={{ marginLeft: "2px", marginRight: "2px" }} />
+                                                            </Tooltip>
+                                                        }
+                                                        <Tooltip title={transaction.to}>
+                                                            <RouterLink to={`/address/${transaction.to}`}>
+                                                                <Link ellipsis style={{ width: "80%" }}>
+                                                                    {
+                                                                        transaction.toPropVO && <>{transaction.toPropVO.tag}</>
+                                                                    }
+                                                                    {
+                                                                        !transaction.toPropVO && <>{transaction.to}</>
+                                                                    }
+                                                                </Link>
+                                                            </RouterLink>
+                                                        </Tooltip>
                                                     </Text>
                                                 </Col>
                                                 <Col xl={6}>

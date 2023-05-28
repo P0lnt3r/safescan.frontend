@@ -67,7 +67,10 @@ export interface BlockVO {
     gasLimit: string,
     gasUsed: string,
     hash: string,
+
     miner: string,
+    minerPropVO: AddressPropVO | undefined
+
     parentHash: string,
     reward: string,
     sha3Uncles: string,
@@ -203,4 +206,37 @@ export interface ERC20TokenVO {
     holders: number,
     totalTransfers: number,
     totalTransferAmount: string,
+}
+
+export interface MemberInfoVO {
+    lockID : number,
+    addr : string ,
+    amount : string,
+    height : number,
+}
+
+export interface IncentivePlanVO {
+    creator : number,
+    partner : number,
+    voter : number
+}
+
+export interface SuperMasterNodeVO {
+    id : number
+    amount: string,
+    state: number,
+    totalVoteNum: number,
+    totalVoterAmount: number,
+    createHeight: number,
+    updateHeight: number,
+    name: string,
+    addr: string,
+    enode: string,
+    creator: string,
+    ip: string,
+    pubkey: string,
+    description: string,
+    founders: MemberInfoVO[],
+    voters: MemberInfoVO[],
+    incentivePlan : IncentivePlanVO
 }

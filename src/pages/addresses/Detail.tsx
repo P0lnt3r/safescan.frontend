@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom"
 import { Card, Typography, Tag, Input, Button, Space, Tooltip, Tabs, Row, Col, Divider, Modal } from 'antd';
 import {
-    SearchOutlined, QrcodeOutlined, FileTextOutlined , UserOutlined
+    SearchOutlined, QrcodeOutlined, FileTextOutlined, UserOutlined
 } from '@ant-design/icons';
 import { isMobile } from 'react-device-detect'
 import type { TabsProps } from 'antd';
@@ -10,7 +10,7 @@ import { useEffect, useMemo, useState } from "react";
 import Transactions from "./Transactions";
 import ERC20Transfers from "./ERC20Transfers";
 import { fetchAddress } from "../../services/address";
-import { AddressVO } from "../../services";
+import { AddressVO, SuperMasterNodeVO } from "../../services";
 import EtherAmount from "../../components/EtherAmount";
 import SuperMasterNode from "./SuperMasterNode";
 
@@ -43,6 +43,17 @@ export default function () {
             })
         }
     }, [address])
+
+    const { type, subType, tag, remark , prop } = useMemo(() => {
+        return addressVO?.propVO ? addressVO.propVO : {
+            type: undefined,
+            subType: undefined,
+            tag: undefined,
+            remark: undefined,
+            prop : undefined
+        };
+    }, [addressVO]);
+    console.log(subType);
 
     return (
         <>
@@ -128,7 +139,10 @@ export default function () {
 
             <Divider style={{ marginTop: "20px" }} />
 
-            <SuperMasterNode></SuperMasterNode>
+            {
+                subType == "supermasternode" && prop &&
+                <SuperMasterNode {... JSON.parse(prop) as SuperMasterNodeVO} />
+            }
 
             <Divider style={{ marginTop: "20px" }} />
 
