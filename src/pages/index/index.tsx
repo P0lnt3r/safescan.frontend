@@ -21,7 +21,6 @@ export default function () {
     const blockNumber = useBlockNumber();
     return (
         <>
-            <TestAbi></TestAbi>
             <div style={{ padding: '1%' }}>
                 <Statistics />                
             </div>

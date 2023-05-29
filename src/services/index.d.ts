@@ -234,9 +234,24 @@ export interface SuperMasterNodeVO {
     enode: string,
     creator: string,
     ip: string,
-    pubkey: string,
     description: string,
     founders: MemberInfoVO[],
     voters: MemberInfoVO[],
     incentivePlan : IncentivePlanVO
 }
+
+export interface MasterNodeVO {
+    id : number
+    amount: string,
+    state: number,
+    createHeight: number,
+    updateHeight: number,
+    addr: string,
+    enode: string,
+    creator: string,
+    ip: string,
+    description: string,
+    founders: MemberInfoVO[],
+    incentivePlan : IncentivePlanVO
+}
+

@@ -1,5 +1,5 @@
 
-import { Card, Table, Typography, Progress  } from 'antd';
+import { Card, Table, Typography, Progress, Tooltip  } from 'antd';
 import { PaginationProps } from 'antd/es/pagination';
 import type { ColumnsType } from 'antd/es/table';
 import { useEffect, useState } from 'react';
@@ -9,9 +9,10 @@ import { useTranslation } from 'react-i18next';
 import { DateFormat } from '../../utils/DateUtil';
 import AddressTag from '../../components/AddressTag';
 import  {format} from '../../utils/NumberFormat';
-import NavigateLink from '../../components/NavigateLink';
+import { Link as RouterLink } from 'react-router-dom';
+import EtherAmount from '../../components/EtherAmount';
 
-const { Title , Text } = Typography;
+const { Title , Text , Link } = Typography;
 
 export default function () {
 
@@ -21,7 +22,7 @@ export default function () {
       key: 'number',
       title: <>{t('block')}</>,
       dataIndex: 'number',
-      render: text => <NavigateLink path={`/block/${text}`}>{text}</NavigateLink>,
+      render: text => <RouterLink to={`/block/${text}`}>{text}</RouterLink>,
       width: 120,
       fixed: 'left',
     },
@@ -35,14 +36,30 @@ export default function () {
       title: 'Txns',
       dataIndex: 'txns',
       width: 70,
-      render: (txns ,blockVO) => <NavigateLink path={`/txs?block=${blockVO.number}`}>{txns}</NavigateLink>
+      render: (txns ,blockVO) => <RouterLink to={`/txs?block=${blockVO.number}`}>{txns}</RouterLink>
     },
     {
       title: 'Miner',
       dataIndex: 'miner',
       width: 450,
       ellipsis: true,
-      render: address => <AddressTag address={address} sub={8}></AddressTag>
+      render: (address , blockVO) => {
+        const propVO = blockVO.minerPropVO;
+        return <>
+          {
+            propVO == null && 
+            <Link ellipsis>{address}</Link>
+          }
+          {
+            propVO != null &&
+            <Tooltip title={address}>
+              <RouterLink to={`/address/${address}`}>
+                <Link ellipsis>{propVO.tag}</Link>
+              </RouterLink>
+            </Tooltip>
+          }
+        </>
+      }
     },
     {
       title: 'Gas Used',
@@ -68,6 +85,7 @@ export default function () {
       title: 'Reward',
       dataIndex: 'reward',
       width: 200,
+      render: ( reward ) => <Text strong><EtherAmount raw={reward} /></Text> 
     },
   ];
 

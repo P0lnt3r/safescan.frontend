@@ -80,7 +80,7 @@ export default function () {
                                                 <Col offset={8} xl={0} xs={8}>
                                                     <Tooltip title="Block Reward">
                                                         <Text code>
-                                                            <EtherAmount raw="100000000000"></EtherAmount>
+                                                            <EtherAmount fix={4} raw={blockVO.reward}></EtherAmount>
                                                         </Text>
                                                     </Tooltip>
                                                 </Col>
@@ -111,7 +111,7 @@ export default function () {
                                                     <div style={{ textAlign: 'right' }}>
                                                         <Tooltip title="Block Reward">
                                                             <Text code>
-                                                                <EtherAmount raw="100000000000"></EtherAmount>
+                                                                <EtherAmount fix={4} raw={blockVO.reward}></EtherAmount>
                                                             </Text>
                                                         </Tooltip>
                                                     </div>
