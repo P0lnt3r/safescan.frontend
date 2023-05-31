@@ -175,6 +175,8 @@ export interface StatisticVO {
     totalERC20Transfers : number ,
     totalAddress : number ,
     totalContract : number ,
+    totalRewards : string,
+    circulation : string
 }
 
 export interface AddressBalanceRankVO {

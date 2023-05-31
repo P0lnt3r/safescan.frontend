@@ -12,19 +12,29 @@ import {
     SafetyOutlined,
     ApartmentOutlined
 } from '@ant-design/icons';
+import { CurrencyAmount } from '@uniswap/sdk';
+import { useMemo } from 'react';
+
 const { Title, Text, Link } = Typography;
+
 
 export default () => {
     const blockNumber = useBlockNumber();
     const statistic = useStatistic();
     
+    const circulationSupply = useMemo( () => {
+        const circulation = statistic?.circulation;
+        return circulation ? CurrencyAmount.ether(circulation).toFixed( 2 )
+            : "0"
+    } , [statistic] );
+ 
     return (
         <Card>
             <Row>
                 <Col xl={6} xs={24} style={{ padding: "1%" }}>
                     <Statistic title="Latest Block Number" value={blockNumber} />
                     <Divider />
-                    <Statistic title="Circulation Supply of SAFE" value={21595638.60} />
+                    <Statistic title="Circulation Supply of SAFE" value={circulationSupply} />
                     <Col xl={0} xs={24}>
                         <Divider />
                     </Col>
