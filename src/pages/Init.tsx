@@ -13,7 +13,7 @@ export default () => {
         dispatch( Application_Init("") );       
         const ws = new WebSocket(`${WS_HOST}/blockchain`);
         ws.onopen = function (e) {
-
+            
         }
         ws.onmessage = (msg) => {
             // console.log('On Message :' , msg);
@@ -21,7 +21,6 @@ export default () => {
             dispatch( Application_Update_BlockchainContext(json) )            
         };
         ws.onclose = function (e) {
-
         }
         // fectAllAddressProp().then( (arr : AddressPropVO[]) => {
         //     dispatch( Application_Update_AddressPropMap(arr) );

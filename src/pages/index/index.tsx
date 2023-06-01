@@ -12,7 +12,6 @@ import {
     ApartmentOutlined
 } from '@ant-design/icons';
 import Statistics from './Statistics';
-import TestAbi from './TestAbi';
 const { Title, Text, Link } = Typography;
 
 export default function () {

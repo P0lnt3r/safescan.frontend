@@ -1,0 +1,445 @@
+[{
+	"anonymous": false,
+	"inputs": [{
+		"indexed": false,
+		"internalType": "uint8",
+		"name": "version",
+		"type": "uint8"
+	}],
+	"name": "Initialized",
+	"type": "event"
+}, {
+	"anonymous": false,
+	"inputs": [{
+		"indexed": true,
+		"internalType": "address",
+		"name": "previousOwner",
+		"type": "address"
+	}, {
+		"indexed": true,
+		"internalType": "address",
+		"name": "newOwner",
+		"type": "address"
+	}],
+	"name": "OwnershipTransferred",
+	"type": "event"
+}, {
+	"anonymous": false,
+	"inputs": [{
+		"indexed": false,
+		"internalType": "address",
+		"name": "_addr",
+		"type": "address"
+	}, {
+		"indexed": false,
+		"internalType": "uint256",
+		"name": "_amount",
+		"type": "uint256"
+	}, {
+		"indexed": false,
+		"internalType": "uint256",
+		"name": "_lockDay",
+		"type": "uint256"
+	}, {
+		"indexed": false,
+		"internalType": "uint256",
+		"name": "_id",
+		"type": "uint256"
+	}],
+	"name": "SafeDeposit",
+	"type": "event"
+}, {
+	"anonymous": false,
+	"inputs": [{
+		"indexed": false,
+		"internalType": "address",
+		"name": "_from",
+		"type": "address"
+	}, {
+		"indexed": false,
+		"internalType": "address",
+		"name": "_to",
+		"type": "address"
+	}, {
+		"indexed": false,
+		"internalType": "uint256",
+		"name": "_amount",
+		"type": "uint256"
+	}, {
+		"indexed": false,
+		"internalType": "uint256",
+		"name": "_lockDay",
+		"type": "uint256"
+	}, {
+		"indexed": false,
+		"internalType": "uint256",
+		"name": "_id",
+		"type": "uint256"
+	}],
+	"name": "SafeTransfer",
+	"type": "event"
+}, {
+	"anonymous": false,
+	"inputs": [{
+		"indexed": false,
+		"internalType": "address",
+		"name": "_addr",
+		"type": "address"
+	}, {
+		"indexed": false,
+		"internalType": "uint256",
+		"name": "_amount",
+		"type": "uint256"
+	}],
+	"name": "SafeWithdraw",
+	"type": "event"
+}, {
+	"stateMutability": "payable",
+	"type": "fallback"
+}, {
+	"inputs": [],
+	"name": "GetInitializeData",
+	"outputs": [{
+		"internalType": "bytes",
+		"name": "",
+		"type": "bytes"
+	}],
+	"stateMutability": "pure",
+	"type": "function"
+}, {
+	"inputs": [{
+		"components": [{
+			"internalType": "address",
+			"name": "target",
+			"type": "address"
+		}, {
+			"internalType": "bytes",
+			"name": "callData",
+			"type": "bytes"
+		}],
+		"internalType": "struct System.Call[]",
+		"name": "calls",
+		"type": "tuple[]"
+	}],
+	"name": "aggregate",
+	"outputs": [{
+		"internalType": "uint256",
+		"name": "blockNumber",
+		"type": "uint256"
+	}, {
+		"internalType": "bytes[]",
+		"name": "returnData",
+		"type": "bytes[]"
+	}],
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "address",
+		"name": "_to",
+		"type": "address"
+	}, {
+		"internalType": "uint256",
+		"name": "_lockDay",
+		"type": "uint256"
+	}],
+	"name": "deposit",
+	"outputs": [{
+		"internalType": "uint256",
+		"name": "",
+		"type": "uint256"
+	}],
+	"stateMutability": "payable",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "uint256",
+		"name": "_id",
+		"type": "uint256"
+	}, {
+		"internalType": "uint256",
+		"name": "_day",
+		"type": "uint256"
+	}],
+	"name": "freeze",
+	"outputs": [],
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "address",
+		"name": "_addr",
+		"type": "address"
+	}],
+	"name": "getAvailableAmount",
+	"outputs": [{
+		"internalType": "uint256",
+		"name": "",
+		"type": "uint256"
+	}, {
+		"internalType": "uint256[]",
+		"name": "",
+		"type": "uint256[]"
+	}],
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "address",
+		"name": "_addr",
+		"type": "address"
+	}],
+	"name": "getFreezeAmount",
+	"outputs": [{
+		"internalType": "uint256",
+		"name": "",
+		"type": "uint256"
+	}, {
+		"internalType": "uint256[]",
+		"name": "",
+		"type": "uint256[]"
+	}],
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "address",
+		"name": "_addr",
+		"type": "address"
+	}],
+	"name": "getLockAmount",
+	"outputs": [{
+		"internalType": "uint256",
+		"name": "",
+		"type": "uint256"
+	}, {
+		"internalType": "uint256[]",
+		"name": "",
+		"type": "uint256[]"
+	}],
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "uint256",
+		"name": "_id",
+		"type": "uint256"
+	}],
+	"name": "getRecordByID",
+	"outputs": [{
+		"components": [{
+			"internalType": "uint256",
+			"name": "id",
+			"type": "uint256"
+		}, {
+			"internalType": "address",
+			"name": "addr",
+			"type": "address"
+		}, {
+			"internalType": "uint256",
+			"name": "amount",
+			"type": "uint256"
+		}, {
+			"internalType": "uint256",
+			"name": "lockDay",
+			"type": "uint256"
+		}, {
+			"internalType": "uint256",
+			"name": "startHeight",
+			"type": "uint256"
+		}, {
+			"internalType": "uint256",
+			"name": "unlockHeight",
+			"type": "uint256"
+		}, {
+			"internalType": "uint256",
+			"name": "freezeHeight",
+			"type": "uint256"
+		}, {
+			"internalType": "uint256",
+			"name": "unfreezeHeight",
+			"type": "uint256"
+		}, {
+			"internalType": "uint256",
+			"name": "createHeight",
+			"type": "uint256"
+		}, {
+			"internalType": "uint256",
+			"name": "updateHeight",
+			"type": "uint256"
+		}],
+		"internalType": "struct IAccountManager.AccountRecord",
+		"name": "",
+		"type": "tuple"
+	}],
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "address",
+		"name": "_addr",
+		"type": "address"
+	}],
+	"name": "getRecords",
+	"outputs": [{
+		"components": [{
+			"internalType": "uint256",
+			"name": "id",
+			"type": "uint256"
+		}, {
+			"internalType": "address",
+			"name": "addr",
+			"type": "address"
+		}, {
+			"internalType": "uint256",
+			"name": "amount",
+			"type": "uint256"
+		}, {
+			"internalType": "uint256",
+			"name": "lockDay",
+			"type": "uint256"
+		}, {
+			"internalType": "uint256",
+			"name": "startHeight",
+			"type": "uint256"
+		}, {
+			"internalType": "uint256",
+			"name": "unlockHeight",
+			"type": "uint256"
+		}, {
+			"internalType": "uint256",
+			"name": "freezeHeight",
+			"type": "uint256"
+		}, {
+			"internalType": "uint256",
+			"name": "unfreezeHeight",
+			"type": "uint256"
+		}, {
+			"internalType": "uint256",
+			"name": "createHeight",
+			"type": "uint256"
+		}, {
+			"internalType": "uint256",
+			"name": "updateHeight",
+			"type": "uint256"
+		}],
+		"internalType": "struct IAccountManager.AccountRecord[]",
+		"name": "",
+		"type": "tuple[]"
+	}],
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "address",
+		"name": "_addr",
+		"type": "address"
+	}],
+	"name": "getTotalAmount",
+	"outputs": [{
+		"internalType": "uint256",
+		"name": "",
+		"type": "uint256"
+	}, {
+		"internalType": "uint256[]",
+		"name": "",
+		"type": "uint256[]"
+	}],
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"inputs": [],
+	"name": "initialize",
+	"outputs": [],
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"inputs": [],
+	"name": "owner",
+	"outputs": [{
+		"internalType": "address",
+		"name": "",
+		"type": "address"
+	}],
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"inputs": [],
+	"name": "renounceOwnership",
+	"outputs": [],
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "address",
+		"name": "_to",
+		"type": "address"
+	}],
+	"name": "reward",
+	"outputs": [{
+		"internalType": "uint256",
+		"name": "",
+		"type": "uint256"
+	}],
+	"stateMutability": "payable",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "address",
+		"name": "_to",
+		"type": "address"
+	}, {
+		"internalType": "uint256",
+		"name": "_amount",
+		"type": "uint256"
+	}, {
+		"internalType": "uint256",
+		"name": "_lockDay",
+		"type": "uint256"
+	}],
+	"name": "transfer",
+	"outputs": [{
+		"internalType": "uint256",
+		"name": "",
+		"type": "uint256"
+	}],
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "address",
+		"name": "newOwner",
+		"type": "address"
+	}],
+	"name": "transferOwnership",
+	"outputs": [],
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"inputs": [],
+	"name": "withdraw",
+	"outputs": [{
+		"internalType": "uint256",
+		"name": "",
+		"type": "uint256"
+	}],
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "uint256[]",
+		"name": "_ids",
+		"type": "uint256[]"
+	}],
+	"name": "withdraw",
+	"outputs": [{
+		"internalType": "uint256",
+		"name": "",
+		"type": "uint256"
+	}],
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"stateMutability": "payable",
+	"type": "receive"
+}]

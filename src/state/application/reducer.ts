@@ -45,7 +45,6 @@ export default createReducer(initialState, (builder) => {
             state.abis = [];
         }
         state.abis.forEach(({ address, abi }) => {
-
             ////////////////////////////////////////////////////////////////////////////////////////////////
             state.abiMap?.set(address, abi)
             const IContract = new Interface(abi);
