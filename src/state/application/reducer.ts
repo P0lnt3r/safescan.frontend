@@ -2,6 +2,8 @@ import { createReducer } from '@reduxjs/toolkit';
 import { AbiMethodSignatureVO, AddressAbiVO, AddressPropVO, BlockVO, StatisticVO, TransactionVO } from '../../services';
 import { Application_Init, Application_Notification, Application_Save_ABI, Application_Update_AbiMethodSignature, Application_Update_AddressPropMap, Application_Update_BlockchainContext, NotificationType } from './action';
 import { FormatTypes, Interface, Fragment } from 'ethers/lib/utils';
+import { SysContractABI, SystemContract } from '../../utils/decode/config';
+import { add } from 'date-fns';
 
 export interface IApplicationState {
 
@@ -44,6 +46,12 @@ export default createReducer(initialState, (builder) => {
         if (!state.abis) {
             state.abis = [];
         }
+        for ( const address in SysContractABI){
+            state.abis.push( {
+                address ,
+                abi : SysContractABI[address as SystemContract]
+            } )
+        }
         state.abis.forEach(({ address, abi }) => {
             ////////////////////////////////////////////////////////////////////////////////////////////////
             state.abiMap?.set(address, abi)
@@ -75,7 +83,6 @@ export default createReducer(initialState, (builder) => {
                 }
             }
             ////////////////////////////////////////////////////////////////////////////////////////////////
-
             map.set(address, JSON.parse(abi))
         });
         state.abiMap = map;
