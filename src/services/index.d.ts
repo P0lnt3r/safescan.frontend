@@ -98,9 +98,9 @@ export interface TransactionVO {
     toPropVO: AddressPropVO | undefined
     transactionIndex: number
     value: string,
-    error : string,
-    revertReason:string,
-    hasInternalError:number
+    error: string,
+    revertReason: string,
+    hasInternalError: number
 }
 
 export interface EventLogVO {
@@ -170,33 +170,37 @@ export interface AddressAbiVO {
 }
 
 export interface StatisticVO {
-    totalTxns : number,
-    totalInternalTxns : number ,
-    totalERC20Transfers : number ,
-    totalAddress : number ,
-    totalContract : number ,
-    totalRewards : string,
-    circulation : string
+    totalTxns: number,
+    totalInternalTxns: number,
+    totalERC20Transfers: number,
+    totalAddress: number,
+    totalContract: number,
+    totalRewards: string,
+    circulation: string
 }
 
 export interface AddressBalanceRankVO {
-    rank : number,
-    address : string , 
-    addressPropVO : AddressPropVO,
-    balance : string ,
+    rank: number,
+    address: string,
+    addressPropVO: AddressPropVO,
+    balance: string,
 }
 
 export interface AddressVO {
-    address : string , 
-    type    : string , 
-    propVO ?: AddressPropVO , 
-    balance : {
-        balance : string , 
-        txCount : number 
+    address: string,
+    type: string,
+    propVO?: AddressPropVO,
+    balance: {
+        balance: string,
+        txCount: number,
+        totalAmount: string,
+        availableAmount: string,
+        lockAmount: string,
+        freezeAmount: string,
     },
-    tokens : {
-        token : string,
-        balance : string
+    tokens: {
+        token: string,
+        balance: string
     }[]
 }
 
@@ -211,20 +215,20 @@ export interface ERC20TokenVO {
 }
 
 export interface MemberInfoVO {
-    lockID : number,
-    addr : string ,
-    amount : string,
-    height : number,
+    lockID: number,
+    addr: string,
+    amount: string,
+    height: number,
 }
 
 export interface IncentivePlanVO {
-    creator : number,
-    partner : number,
-    voter : number
+    creator: number,
+    partner: number,
+    voter: number
 }
 
 export interface SuperMasterNodeVO {
-    id : number
+    id: number
     amount: string,
     state: number,
     totalVoteNum: number,
@@ -239,11 +243,11 @@ export interface SuperMasterNodeVO {
     description: string,
     founders: MemberInfoVO[],
     voters: MemberInfoVO[],
-    incentivePlan : IncentivePlanVO
+    incentivePlan: IncentivePlanVO
 }
 
 export interface MasterNodeVO {
-    id : number
+    id: number
     amount: string,
     state: number,
     createHeight: number,
@@ -254,6 +258,20 @@ export interface MasterNodeVO {
     ip: string,
     description: string,
     founders: MemberInfoVO[],
-    incentivePlan : IncentivePlanVO
+    incentivePlan: IncentivePlanVO
+}
+
+export interface NodeRewardVO {
+    blockNumber: number,
+    timestamp: number,
+    transactionHash: string,
+    eventLogIndex: number,
+    nodeAddress: string,
+    nodeAddressPropVO?: AddressPropVO,
+    nodeType: number,
+    address: string,
+    addressPropVO?: AddressPropVO
+    rewardType: number,
+    amount: string
 }
 

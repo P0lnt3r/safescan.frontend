@@ -7,8 +7,9 @@ import type { TabsProps } from 'antd';
 import TxOverview from "./TxOverview";
 import EventLogs from "./EventLogs";
 import { fetchEventLogs, fetchTransaction, fetchTxContractInternalTransactions, fetchTxERC20Transfers } from "../../services/tx";
-import { ContractInternalTransactionVO, ERC20TransferVO, EventLogVO, TransactionVO } from "../../services";
+import { ContractInternalTransactionVO, ERC20TransferVO, EventLogVO, NodeRewardVO, TransactionVO } from "../../services";
 import ContractInternalTransactions from "./ContractInternalTransactions";
+import { fetchTxNodeRewards } from "../../services/node";
 
 const { Title } = Typography;
 
@@ -16,39 +17,45 @@ export default function () {
 
     const { txHash } = useParams();
     const { t } = useTranslation();
-    const [txVO , setTxVO] = useState<TransactionVO>();
-    const [eventLogs , setEventLogs] = useState<EventLogVO[]>();
-    const [contractInternalTransactions , setContractInternalTransactions] = useState<ContractInternalTransactionVO[]>();
-    const [txERC20Transfers , setTxERC20Transfers] = useState<ERC20TransferVO[]>();
+    const [txVO, setTxVO] = useState<TransactionVO>();
+    const [eventLogs, setEventLogs] = useState<EventLogVO[]>();
+    const [contractInternalTransactions, setContractInternalTransactions] = useState<ContractInternalTransactionVO[]>();
+    const [txERC20Transfers, setTxERC20Transfers] = useState<ERC20TransferVO[]>();
+    const [nodeRewards, setNodeRewards] = useState<NodeRewardVO[]>();
 
-    useEffect( () => {
-        if ( txHash ){
-            fetchTransaction(txHash).then( (txVO)=>{
+    useEffect(() => {
+        if (txHash) {
+            fetchTransaction(txHash).then((txVO) => {
                 setTxVO(txVO);
             });
-            fetchEventLogs(txHash).then( (eventLogs) => {
+            fetchEventLogs(txHash).then((eventLogs) => {
                 setEventLogs(eventLogs);
             });
-            fetchTxContractInternalTransactions(txHash).then( ( contractInternalTransactions ) => {
-                setContractInternalTransactions( contractInternalTransactions );
+            fetchTxContractInternalTransactions(txHash).then((contractInternalTransactions) => {
+                setContractInternalTransactions(contractInternalTransactions);
             });
-            fetchTxERC20Transfers(txHash).then( (txERC20Transfers) => {
+            fetchTxERC20Transfers(txHash).then((txERC20Transfers) => {
                 setTxERC20Transfers(txERC20Transfers);
             });
+            fetchTxNodeRewards(txHash).then(nodeRewards => setNodeRewards(nodeRewards))
         }
-    },[]);
-    const hasEventLogs = useMemo( () => {
+    }, [txHash]);
+    const hasEventLogs = useMemo(() => {
         return eventLogs && eventLogs.length > 0
-    } , [eventLogs] );
-    const hasInternalTxns = useMemo( () => {
+    }, [eventLogs]);
+    const hasInternalTxns = useMemo(() => {
         return contractInternalTransactions && contractInternalTransactions.length > 0
-    } , [contractInternalTransactions])
+    }, [contractInternalTransactions])
 
     const items: TabsProps['items'] = [
         {
             key: 'overview',
             label: `Overview`,
-            children: txVO && <TxOverview txVO={txVO} contractInternalTransactions={contractInternalTransactions} erc20Transfers={txERC20Transfers} />,
+            children: txVO && <TxOverview txVO={txVO}
+                contractInternalTransactions={contractInternalTransactions}
+                erc20Transfers={txERC20Transfers}
+                nodeRewards={nodeRewards}
+            />,
         },
         {
             key: 'contractInternalTransactions',
@@ -65,7 +72,7 @@ export default function () {
         <>
             <Title level={3}>Transaction Details</Title>
             <Card>
-                <Tabs defaultActiveKey="overview" items={items}/>
+                <Tabs defaultActiveKey="overview" items={items} />
             </Card>
         </>
     )

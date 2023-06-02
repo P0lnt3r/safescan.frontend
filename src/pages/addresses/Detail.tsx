@@ -14,6 +14,7 @@ import { AddressVO, MasterNodeVO, SuperMasterNodeVO } from "../../services";
 import EtherAmount from "../../components/EtherAmount";
 import SuperMasterNode from "./SuperMasterNode";
 import MasterNode from "./MasterNode";
+import NodeRewards from "./NodeRewards";
 
 const { Title, Text, Paragraph, Link } = Typography;
 
@@ -31,6 +32,11 @@ export default function () {
                 key: 'erc20-transactions',
                 label: `ERC20 Transactions`,
                 children: address && <ERC20Transfers address={address}></ERC20Transfers>,
+            },
+            {
+                key: 'noderewards',
+                label: "Node Rewards",
+                children: address && <NodeRewards address={address} />
             }
         ]
     }, [address]);
@@ -54,7 +60,6 @@ export default function () {
             prop : undefined
         };
     }, [addressVO]);
-    console.log(subType);
 
     return (
         <>
@@ -116,6 +121,46 @@ export default function () {
                                 <Text strong>
                                     {
                                         addressVO && addressVO.balance && <EtherAmount raw={addressVO.balance.balance} fix={18} />
+                                    }
+                                </Text>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col xl={10} xs={24}><Text strong>TotalAmount:</Text></Col>
+                            <Col xl={14} xs={24}>
+                                <Text strong>
+                                    {
+                                        addressVO && addressVO.balance && <EtherAmount raw={addressVO.balance.totalAmount} fix={18} />
+                                    }
+                                </Text>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col xl={10} xs={24}><Text strong>AvailabeAmount:</Text></Col>
+                            <Col xl={14} xs={24}>
+                                <Text strong>
+                                    {
+                                        addressVO && addressVO.balance && <EtherAmount raw={addressVO.balance.availableAmount} fix={18} />
+                                    }
+                                </Text>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col xl={10} xs={24}><Text strong>Lock Amount:</Text></Col>
+                            <Col xl={14} xs={24}>
+                                <Text strong>
+                                    {
+                                        addressVO && addressVO.balance && <EtherAmount raw={addressVO.balance.lockAmount} fix={18} />
+                                    }
+                                </Text>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col xl={10} xs={24}><Text strong>Freeze Amount:</Text></Col>
+                            <Col xl={14} xs={24}>
+                                <Text strong>
+                                    {
+                                        addressVO && addressVO.balance && <EtherAmount raw={addressVO.balance.freezeAmount} fix={18} />
                                     }
                                 </Text>
                             </Col>

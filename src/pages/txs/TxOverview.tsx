@@ -5,9 +5,10 @@ import {
     CloseCircleOutlined,
     QuestionCircleOutlined,
     FrownOutlined,
-    CaretRightOutlined
+    CaretRightOutlined,
+    ArrowRightOutlined
 } from '@ant-design/icons';
-import { ContractInternalTransactionVO, ERC20TransferVO, TransactionVO } from '../../services';
+import { AddressPropVO, ContractInternalTransactionVO, ERC20TransferVO, NodeRewardVO, TransactionVO } from '../../services';
 import { DateFormat } from '../../utils/DateUtil';
 import EtherAmount, { GWEI } from '../../components/EtherAmount';
 import JSBI from 'jsbi';
@@ -25,11 +26,12 @@ import ERC20Logo from '../../components/ERC20Logo';
 
 const { Text, Paragraph, Link } = Typography;
 
-export default ({ txVO, contractInternalTransactions, erc20Transfers }:
+export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeRewards }:
     {
         txVO: TransactionVO,
         contractInternalTransactions: ContractInternalTransactionVO[] | undefined,
         erc20Transfers: ERC20TransferVO[] | undefined,
+        nodeRewards: NodeRewardVO[] | undefined
     }) => {
 
     const {
@@ -53,6 +55,8 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers }:
         hasInternalError
     } = txVO
 
+    console.log(nodeRewards);
+
     const { txFee, gasPriceGWEI, gasUsedRate } = useMemo(() => {
         const txFee = (gasPrice && gasUsed) ? JSBI.multiply(
             JSBI.BigInt(gasPrice),
@@ -66,6 +70,73 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers }:
     }, [gasPrice, gasUsed, gas]);
 
     const functionFragment = useAddressFunctionFragment(to, methodId, useDispatch());
+
+    const { superNode, masterNode } = useMemo<{
+        superNode?: { address: string, propVO: AddressPropVO },
+        masterNode?: { address: string, propVO: AddressPropVO },
+    }>(() => {
+        let superNode, masterNode;
+        if (nodeRewards) {
+            nodeRewards.forEach(nodeReward => {
+                if (nodeReward.nodeType == 1) {
+                    superNode = {
+                        address: nodeReward.nodeAddress,
+                        propVO: nodeReward.nodeAddressPropVO
+                    }
+                } else if (nodeReward.nodeType == 2) {
+                    masterNode = {
+                        address: nodeReward.nodeAddress,
+                        propVO: nodeReward?.nodeAddressPropVO
+                    }
+                }
+            })
+        }
+        return {
+            superNode, masterNode
+        }
+    }, [nodeRewards]);
+
+    const RewardTypeLabel = (rewardType: number) => {
+        switch (rewardType) {
+            case 1:
+                return "Creator";
+            case 2:
+                return "Founder";
+            case 3:
+                return "Voter";
+        }
+    }
+    const RenderNodeReward = (nodeReward: NodeRewardVO) => {
+        const { address, addressPropVO, rewardType, amount } = nodeReward;
+        const rewardTypeLabel = RewardTypeLabel(rewardType);
+        return <>
+            <Row>
+                <Col style={{ minWidth: "260px" }}>
+                    <img src={shape} style={{ width: "8px", marginTop: "-2px", marginRight: "4px" }} />
+                    <Text style={{ marginRight: "5px" }} type="secondary" >[{rewardTypeLabel}]</Text>
+                    <EtherAmount raw={amount} fix={18} />
+                </Col>
+                <Col xl={16} xs={24}>
+                    <Text><ArrowRightOutlined style={{ marginLeft: "15px", marginRight: "10px" }} />
+                        {
+                            addressPropVO &&
+                            <Tooltip title={address}>
+                                <RouterLink to={`/address/${address}`}>
+                                    <Link>{addressPropVO?.tag}</Link>
+                                </RouterLink>
+                            </Tooltip>
+                        }
+                        {
+                            !addressPropVO &&
+                            <RouterLink to={`/address/${address}`}>
+                                <Link>{address}</Link>
+                            </RouterLink>
+                        }
+                    </Text>
+                </Col>
+            </Row>
+        </>
+    }
 
     return <>
         <Row>
@@ -241,23 +312,23 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers }:
                     <Col xl={16} xs={24}>
                         {
                             erc20Transfers.map(erc20TransferVO => {
-                                const { transactionHash, from, to, token, tokenPropVO , value } = erc20TransferVO;
+                                const { transactionHash, from, to, token, tokenPropVO, value } = erc20TransferVO;
                                 const erc20Prop = tokenPropVO && tokenPropVO.subType === "erc20" ? tokenPropVO?.prop : undefined;
                                 const erc20 = erc20Prop ? JSON.parse(erc20Prop) : undefined;
                                 return (<>
-                                    <Row style={{marginTop:"2px"}}>
+                                    <Row style={{ marginTop: "2px" }}>
                                         <Text strong> <CaretRightOutlined /> From</Text>
-                                        <RouterLink to={`/address/${from}`} style={{ minWidth: "60px", maxWidth: "15%",marginLeft:"5px" }}>
+                                        <RouterLink to={`/address/${from}`} style={{ minWidth: "60px", maxWidth: "15%", marginLeft: "5px" }}>
                                             <Link ellipsis>{from}</Link>
                                         </RouterLink>
                                         <Text strong> To</Text>
-                                        <RouterLink to={`/address/${to}`} style={{ minWidth: "60px", maxWidth: "15%",marginLeft:"5px" }}>
+                                        <RouterLink to={`/address/${to}`} style={{ minWidth: "60px", maxWidth: "15%", marginLeft: "5px" }}>
                                             <Link ellipsis>{to}</Link>
                                         </RouterLink>
-                                        <Text strong style={{marginRight:"5px"}}> For</Text>
-                                        <ERC20TokenAmount address={token} name={erc20.name} symbol={erc20.symbol} decimals={erc20.decimals} raw={value} 
+                                        <Text strong style={{ marginRight: "5px" }}> For</Text>
+                                        <ERC20TokenAmount address={token} name={erc20.name} symbol={erc20.symbol} decimals={erc20.decimals} raw={value}
                                             fixed={erc20.decimals} />
-                                        <span style={{marginRight:"5px"}}></span>    
+                                        <span style={{ marginRight: "5px" }}></span>
                                         <ERC20Logo address={token} />
                                         <Link href='#' ellipsis style={{ width: '20%', marginLeft: "5px" }}>
                                             {erc20.name}({erc20.symbol})
@@ -266,6 +337,67 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers }:
                                 </>)
                             })
                         }
+                    </Col>
+                </Row>
+            </>
+        }
+
+        {
+            // 节点奖励
+            nodeRewards && nodeRewards.length > 0 &&
+            <>
+                <Divider style={{ margin: '18px 0px' }} />
+                <Row>
+                    <Col xl={8} xs={24}>
+                        <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
+                            <QuestionCircleOutlined />
+                        </Tooltip>
+                        <Text strong style={{ marginLeft: "5px" }}>Node Rewards:  <Tag color="#77838f">{nodeRewards.length}</Tag></Text>
+                    </Col>
+                    <Col xl={16} xs={24}>
+                        <Row style={{ marginTop: "2px" }}>
+                            <Text strong style={{marginRight:"5px"}}>SuperNode:</Text>
+                            {
+                                superNode && superNode.propVO &&
+                                <Tooltip title={superNode.address}>
+                                    <RouterLink to={`/address/${superNode.address}`}>
+                                        <Link>{superNode.propVO.tag}</Link>
+                                    </RouterLink>
+                                </Tooltip>
+                            }
+                            {
+                                superNode && !superNode.propVO &&
+                                <RouterLink to={`/address/${superNode.address}`}>
+                                    <Link>{superNode.address}</Link>
+                                </RouterLink>
+                            }
+                        </Row>
+                        {
+                            nodeRewards.filter(nodeReward => nodeReward.nodeType == 1)
+                                .map(nodeReward => RenderNodeReward(nodeReward))
+                        }
+                        <Row style={{ marginTop: "20px" }}>
+                            <Text strong style={{marginRight:"5px"}}>MasterNode:</Text>
+                            {
+                                masterNode && masterNode.propVO &&
+                                <Tooltip title={masterNode.address}>
+                                    <RouterLink to={`/address/${masterNode.address}`}>
+                                        <Link>{masterNode.propVO.tag}</Link>
+                                    </RouterLink>
+                                </Tooltip>
+                            }
+                            {
+                                masterNode && !masterNode.propVO &&
+                                <RouterLink to={`/address/${masterNode.address}`}>
+                                    <Link>{masterNode.address}</Link>
+                                </RouterLink>
+                            }
+                        </Row>
+                        {
+                            nodeRewards.filter(nodeReward => nodeReward.nodeType == 2)
+                                .map(nodeReward => RenderNodeReward(nodeReward))
+                        }
+
                     </Col>
                 </Row>
             </>
