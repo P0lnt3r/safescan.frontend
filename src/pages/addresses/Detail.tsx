@@ -29,15 +29,16 @@ export default function () {
                 children: address && <Transactions address={address} ></Transactions>,
             },
             {
+                key: 'noderewards',
+                label: "Node Rewards",
+                children: address && <NodeRewards address={address} />
+            },
+            {
                 key: 'erc20-transactions',
                 label: `ERC20 Transactions`,
                 children: address && <ERC20Transfers address={address}></ERC20Transfers>,
             },
-            {
-                key: 'noderewards',
-                label: "Node Rewards",
-                children: address && <NodeRewards address={address} />
-            }
+            
         ]
     }, [address]);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -120,7 +121,7 @@ export default function () {
                             <Col xl={14} xs={24}>
                                 <Text strong>
                                     {
-                                        addressVO && addressVO.balance && <EtherAmount raw={addressVO.balance.balance} fix={18} />
+                                        addressVO && addressVO.balance && addressVO.balance.balance && <EtherAmount raw={addressVO.balance.balance} fix={18} />
                                     }
                                 </Text>
                             </Col>
@@ -130,7 +131,7 @@ export default function () {
                             <Col xl={14} xs={24}>
                                 <Text strong>
                                     {
-                                        addressVO && addressVO.balance && <EtherAmount raw={addressVO.balance.totalAmount} fix={18} />
+                                        addressVO && addressVO.balance && addressVO.balance.totalAmount && <EtherAmount raw={addressVO.balance.totalAmount} fix={18} />
                                     }
                                 </Text>
                             </Col>
@@ -140,7 +141,7 @@ export default function () {
                             <Col xl={14} xs={24}>
                                 <Text strong>
                                     {
-                                        addressVO && addressVO.balance && <EtherAmount raw={addressVO.balance.availableAmount} fix={18} />
+                                        addressVO && addressVO.balance && addressVO.balance.availableAmount && <EtherAmount raw={addressVO.balance.availableAmount} fix={18} />
                                     }
                                 </Text>
                             </Col>
@@ -150,7 +151,7 @@ export default function () {
                             <Col xl={14} xs={24}>
                                 <Text strong>
                                     {
-                                        addressVO && addressVO.balance && <EtherAmount raw={addressVO.balance.lockAmount} fix={18} />
+                                        addressVO && addressVO.balance && addressVO.balance.lockAmount && <EtherAmount raw={addressVO.balance.lockAmount} fix={18} />
                                     }
                                 </Text>
                             </Col>
@@ -160,7 +161,7 @@ export default function () {
                             <Col xl={14} xs={24}>
                                 <Text strong>
                                     {
-                                        addressVO && addressVO.balance && <EtherAmount raw={addressVO.balance.freezeAmount} fix={18} />
+                                        addressVO && addressVO.balance && addressVO.balance.freezeAmount && <EtherAmount raw={addressVO.balance.freezeAmount} fix={18} />
                                     }
                                 </Text>
                             </Col>

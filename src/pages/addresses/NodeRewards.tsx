@@ -54,53 +54,108 @@ export default ({ address }: { address: string }) => {
         doFetchAddressNodeWards();
     }, [address]);
 
+    const RewardTypeLabel = (rewardType: number) => {
+        switch (rewardType) {
+            case 1:
+                return "Creator";
+            case 2:
+                return "Founder";
+            case 3:
+                return "Voter";
+        }
+    }
+
     const columns: ColumnsType<NodeRewardVO> = [
         {
-            title: <>{t('Txn Hash')}</>,
+            title: <Text strong style={{ color: "#6c757e" }}>Txn Hash</Text>,
             dataIndex: 'transactionHash',
             render: (txHash, txVO) => <TransactionHash txhash={txHash} sub={8}></TransactionHash>,
             width: 180,
             fixed: 'left',
         },
         {
-            title: 'Block',
+            title: <Text strong style={{ color: "#6c757e" }}>Block</Text>,
             dataIndex: 'blockNumber',
             width: 80,
             render: blockNumber => <NavigateLink path={`/block/${blockNumber}`}>{blockNumber}</NavigateLink>
         },
         {
-            title: 'Date Time',
+            title: <Text strong style={{ color: "#6c757e" }}>Date Time</Text>,
             dataIndex: 'timestamp',
             width: 130,
             render: (val) => <>{DateFormat(val * 1000)}</>
         },
         {
-            title: "Node",
+            title: <Text strong style={{ color: "#6c757e" }}>Node</Text>,
             dataIndex: 'nodeAddress',
             width: 180,
             render: (nodeAddress, nodeReward) => {
+                const hasLink = !(nodeAddress == address);
+                const nodeType = nodeReward.nodeType == 1 ? "SuperNode" : "MasterNode"
                 return <>
-                    {nodeAddress}    
+                    <Tooltip title={nodeAddress}>
+                        <Text strong style={{ marginRight: "5px" }}>{nodeType}:</Text>
+                        {
+                            nodeReward.nodeAddressPropVO &&
+                            <>
+                                {!hasLink && <>{nodeReward.nodeAddressPropVO.tag}</>}
+                                {hasLink && <RouterLink to={`address/${nodeAddress}`}>
+                                    <Link ellipsis>{nodeReward.nodeAddressPropVO.tag}</Link>
+                                </RouterLink>}
+                            </>
+                        }
+                        {
+                            !nodeReward.nodeAddressPropVO &&
+                            <>
+                                {!hasLink && <Text ellipsis>{nodeAddress}</Text>}
+                                {hasLink && <RouterLink to={`address/${nodeAddress}`}>
+                                    <Link ellipsis>{nodeAddress}</Link>
+                                </RouterLink>}
+                            </>
+                        }
+                    </Tooltip>
                 </>
             }
         },
         {
-            title: 'To',
+            title: <Text strong style={{ color: "#6c757e" }}>Address</Text>,
             dataIndex: 'address',
             width: 180,
-            render: (address, nodeReward) => {
+            render: (addr, nodeReward) => {
+                const hasLink = !(addr == address);
+                const rewardType = RewardTypeLabel(nodeReward.rewardType);
                 return <>
-                    {address}
+                    <Tooltip title={addr}>
+                        <Text type="secondary" style={{ marginRight: "5px" }}>[{rewardType}]</Text>
+                        {
+                            nodeReward.addressPropVO &&
+                            <>
+                                {!hasLink && <>{nodeReward.addressPropVO.tag}</>}
+                                {hasLink && <RouterLink to={`address/${addr}`}>
+                                    <Link ellipsis>{nodeReward.addressPropVO.tag}</Link>
+                                </RouterLink>}
+                            </>
+                        }
+                        {
+                            !nodeReward.addressPropVO &&
+                            <>
+                                {!hasLink && <Text ellipsis>{address}</Text>}
+                                {hasLink && <RouterLink to={`address/${addr}`}>
+                                    <Link ellipsis>{address}</Link>
+                                </RouterLink>}
+                            </>
+                        }
+                    </Tooltip>
                 </>
             }
         },
         {
-            title: 'Value',
+            title: <Text strong style={{ color: "#6c757e" }}>Amount</Text>,
             dataIndex: 'amount',
             width: 100,
             render: (value) => <Text strong><EtherAmount raw={value} /></Text>
         }
-       
+
     ];
 
     return <>
