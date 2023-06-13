@@ -13,6 +13,7 @@ import SystemContractAbiConfig from './SystemContractAbi';
     超级节点状态合约:SuperNodeState.sol,    地址: 0x0000000000000000000000000000000000001062
     提案合约:Proposal.sol,                  地址: 0x0000000000000000000000000000000000001072
     系统奖励合约"SystemReward.sol,          地址: 0x0000000000000000000000000000000000001082
+    MultiCall                             地址: 0x0000000000000000000000000000000000001102
 */
 export enum SystemContract {
     SystemProperty      = "0x0000000000000000000000000000000000001002",
@@ -23,7 +24,8 @@ export enum SystemContract {
     MasterNodeState     = "0x0000000000000000000000000000000000001052",
     SuperNodeState      = "0x0000000000000000000000000000000000001062",
     Proposal            = "0x0000000000000000000000000000000000001072",
-    SystemReward        = "0x0000000000000000000000000000000000001082"
+    SystemReward        = "0x0000000000000000000000000000000000001082",
+    MultiCall           = "0x0000000000000000000000000000000000001102"
 }
 
 export const SysContractABI: { [address in SystemContract]: string } = {
@@ -36,6 +38,7 @@ export const SysContractABI: { [address in SystemContract]: string } = {
     [SystemContract.SuperNodeState]     : SystemContractAbiConfig._0x0000000000000000000000000000000000001062,
     [SystemContract.Proposal]           : SystemContractAbiConfig._0x0000000000000000000000000000000000001072,
     [SystemContract.SystemReward]       : SystemContractAbiConfig._0x0000000000000000000000000000000000001082,
+    [SystemContract.MultiCall]          : SystemContractAbiConfig._0x0000000000000000000000000000000000001102
 }
 
 export enum CommonAbiType {

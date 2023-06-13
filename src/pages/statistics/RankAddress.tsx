@@ -13,6 +13,7 @@ import {
     ApartmentOutlined
 } from '@ant-design/icons';
 import { format } from '../../utils/NumberFormat';
+import { JSBI } from '@uniswap/sdk';
 
 const { Title, Text, Link } = Typography;
 
@@ -61,12 +62,12 @@ export default () => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Address</Text>,
             dataIndex: 'address',
-            render: (address , addressBalanceRankVO : AddressBalanceRankVO) => <>
+            render: (address, addressBalanceRankVO: AddressBalanceRankVO) => <>
                 {
-                    addressBalanceRankVO.addressPropVO?.type == 'contract' && 
-                        <>
-                            <Tooltip title="Contract"><FileTextOutlined style={{marginRight:"5px"}}/></Tooltip>
-                        </>
+                    addressBalanceRankVO.addressPropVO?.type == 'contract' &&
+                    <>
+                        <Tooltip title="Contract"><FileTextOutlined style={{ marginRight: "5px" }} /></Tooltip>
+                    </>
                 }
                 <RouterLink to={`/address/${address}`}>
                     <Link>{address}</Link>
@@ -83,7 +84,16 @@ export default () => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Balance</Text>,
             dataIndex: 'balance',
-            render: (balance) => <Text strong><EtherAmount raw={balance} fix={6} /></Text>,
+            render: (balance, addressBalanceRankVO) => {
+                const totalAmount = addressBalanceRankVO.totalAmount;
+                const totalBalance = JSBI.add(
+                    JSBI.BigInt(balance),
+                    JSBI.BigInt(totalAmount)
+                ).toString();
+                return <>
+                    <Text strong><EtherAmount raw={totalBalance} fix={6} /></Text>
+                </>
+            },
             width: 120,
         },
         {
@@ -95,7 +105,7 @@ export default () => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Txn Count</Text>,
             dataIndex: 'txCount',
-            render: (txCount) => <>  { txCount && format(txCount+"")} </>,
+            render: (txCount) => <>  {txCount && format(txCount + "")} </>,
             width: 60,
         }
     ];

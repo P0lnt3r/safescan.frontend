@@ -184,6 +184,7 @@ export interface AddressBalanceRankVO {
     address: string,
     addressPropVO: AddressPropVO,
     balance: string,
+    totalAmount : string
 }
 
 export interface AddressVO {
@@ -273,5 +274,20 @@ export interface NodeRewardVO {
     addressPropVO?: AddressPropVO
     rewardType: number,
     amount: string
+}
+
+export interface AccountRecordVO {
+    lockId: number,
+    address: string,
+    amount: string,
+    lockDay: number,
+    startHeight: number,
+    unlockHeight: number,
+    sepcialAddress: string,
+    freezeHeight: number,
+    unfreezeHeight: number,
+    votedAddress: string,
+    voteHeight: number,
+    releaseHeight: number,
 }
 
