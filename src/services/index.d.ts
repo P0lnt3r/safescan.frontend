@@ -284,9 +284,11 @@ export interface AccountRecordVO {
     startHeight: number,
     unlockHeight: number,
     sepcialAddress: string,
+    nodeAddressPropVO : AddressPropVO,
     freezeHeight: number,
     unfreezeHeight: number,
     votedAddress: string,
+    votedAddressPropVO : AddressPropVO,
     voteHeight: number,
     releaseHeight: number,
 }

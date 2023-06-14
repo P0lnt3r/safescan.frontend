@@ -118,16 +118,127 @@ export default ({ address }: { address: string }) => {
                 render={(lockId) => {
                     return <>{lockId}</>
                 }}
+                width={100}
+                fixed
             />
-
             <Column title={<Text strong style={{ color: "#6c757e" }}>Amount</Text>}
                 dataIndex="amount"
                 render={(amount) => {
                     return <Text strong><EtherAmount raw={amount} /></Text>
                 }}
+                width={200}
             />
-
-
+            <Column title={<Text strong style={{ color: "#6c757e" }}>Lock Day</Text>}
+                dataIndex="lockDay"
+                render={(lockDay) => {
+                    return <Text>{lockDay}</Text>
+                }}
+                width={100}
+            />
+            <Column title={<Text strong style={{ color: "#6c757e" }}>Start-Height</Text>}
+                dataIndex="startHeight"
+                render={(startHeight) => {
+                    return <>{startHeight}</>
+                }}
+                width={100}
+            />
+            <Column title={<Text strong style={{ color: "#6c757e" }}>Unlock-Height</Text>}
+                dataIndex="unlockHeight"
+                render={(unlockHeight) => {
+                    return <>{unlockHeight}</>
+                }}
+                width={100}
+            />
+            <ColumnGroup title="节点竞选">
+                <Column title={<Text strong style={{ color: "#6c757e" }}>Node Address</Text>}
+                    dataIndex="sepcialAddress"
+                    render={(sepcialAddress, accountRecord: AccountRecordVO) => {
+                        const hasLink = !(sepcialAddress == address);
+                        return <>
+                            <Tooltip title={sepcialAddress}>
+                                {
+                                    accountRecord.nodeAddressPropVO &&
+                                    <>
+                                        {!hasLink && <>{accountRecord.nodeAddressPropVO.tag}</>}
+                                        {hasLink && <RouterLink to={`address/${sepcialAddress}`}>
+                                            <Link ellipsis>{accountRecord.nodeAddressPropVO.tag}</Link>
+                                        </RouterLink>}
+                                    </>
+                                }
+                                {
+                                    !accountRecord.nodeAddressPropVO &&
+                                    <>
+                                        {!hasLink && <Text ellipsis>{sepcialAddress}</Text>}
+                                        {hasLink && <RouterLink to={`address/${sepcialAddress}`}>
+                                            <Link ellipsis>{sepcialAddress}</Link>
+                                        </RouterLink>}
+                                    </>
+                                }
+                            </Tooltip>
+                        </>
+                    }}
+                    width={100}
+                />
+                <Column title={<Text strong style={{ color: "#6c757e" }}>Freeze-Height</Text>}
+                    dataIndex="freezeHeight"
+                    render={(freezeHeight) => {
+                        return <>{freezeHeight}</>
+                    }}
+                    width={100}
+                />
+                <Column title={<Text strong style={{ color: "#6c757e" }}>Unfreeze-Height</Text>}
+                    dataIndex="unfreezeHeight"
+                    render={(unfreezeHeight) => {
+                        return <>{unfreezeHeight}</>
+                    }}
+                    width={100}
+                />
+            </ColumnGroup>
+            <ColumnGroup title="节点投票">
+                <Column title={<Text strong style={{ color: "#6c757e" }}>Node Address</Text>}
+                    dataIndex="votedAddress"
+                    render={(votedAddress, accountRecord: AccountRecordVO) => {
+                        const hasLink = !(votedAddress == address);
+                        return <>
+                            <Tooltip title={votedAddress}>
+                                {
+                                    accountRecord.votedAddressPropVO &&
+                                    <>
+                                        {!hasLink && <>{accountRecord.votedAddressPropVO.tag}</>}
+                                        {hasLink && <RouterLink to={`address/${votedAddress}`}>
+                                            <Link ellipsis>{accountRecord.votedAddressPropVO.tag}</Link>
+                                        </RouterLink>}
+                                    </>
+                                }
+                                {
+                                    !accountRecord.votedAddressPropVO &&
+                                    <>
+                                        {!hasLink && <Text ellipsis>{votedAddress}</Text>}
+                                        {hasLink && <RouterLink to={`address/${votedAddress}`}>
+                                            <Link ellipsis>{votedAddress}</Link>
+                                        </RouterLink>}
+                                    </>
+                                }
+                            </Tooltip>
+                        </>
+                    }}
+                    width={100}
+                />
+                <Column title={<Text strong style={{ color: "#6c757e" }}>Freeze-Height</Text>}
+                    dataIndex="voteHeight"
+                    render={(voteHeight) => {
+                        return <>{voteHeight}</>
+                    }}
+                    width={100}
+                />
+                <Column title={<Text strong style={{ color: "#6c757e" }}>Unfreeze-Height</Text>}
+                    dataIndex="releaseHeight"
+                    render={(releaseHeight) => {
+                        return <>{releaseHeight}</>
+                    }}
+                    width={100}
+                />
+            </ColumnGroup>
 
         </Table>
 
