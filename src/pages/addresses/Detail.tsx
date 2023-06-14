@@ -15,6 +15,7 @@ import EtherAmount from "../../components/EtherAmount";
 import SuperMasterNode from "./SuperMasterNode";
 import MasterNode from "./MasterNode";
 import NodeRewards from "./NodeRewards";
+import AccountRecords from "./AccountRecords";
 
 const { Title, Text, Paragraph, Link } = Typography;
 
@@ -37,6 +38,11 @@ export default function () {
                 key: 'erc20-transactions',
                 label: `ERC20 Transactions`,
                 children: address && <ERC20Transfers address={address}></ERC20Transfers>,
+            },
+            {
+                key: 'accountRecords',
+                label: `Account Records`,
+                children: address && <AccountRecords address={address}></AccountRecords>,
             },
             
         ]
