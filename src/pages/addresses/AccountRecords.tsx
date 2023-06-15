@@ -118,7 +118,7 @@ export default ({ address }: { address: string }) => {
                 render={(lockId) => {
                     return <>{lockId}</>
                 }}
-                width={100}
+                width={80}
                 fixed
             />
             <Column title={<Text strong style={{ color: "#6c757e" }}>Amount</Text>}
@@ -126,29 +126,30 @@ export default ({ address }: { address: string }) => {
                 render={(amount) => {
                     return <Text strong><EtherAmount raw={amount} /></Text>
                 }}
-                width={200}
+                width={150}
             />
             <Column title={<Text strong style={{ color: "#6c757e" }}>Lock Day</Text>}
                 dataIndex="lockDay"
                 render={(lockDay) => {
                     return <Text>{lockDay}</Text>
                 }}
-                width={100}
+                width={80}
             />
-            <Column title={<Text strong style={{ color: "#6c757e" }}>Start-Height</Text>}
+            <Column title={<Text strong style={{ color: "#6c757e" }}>Start</Text>}
                 dataIndex="startHeight"
                 render={(startHeight) => {
                     return <>{startHeight}</>
                 }}
-                width={100}
+                width={80}
             />
-            <Column title={<Text strong style={{ color: "#6c757e" }}>Unlock-Height</Text>}
+            <Column title={<Text strong style={{ color: "#6c757e" }}>Unlock</Text>}
                 dataIndex="unlockHeight"
                 render={(unlockHeight) => {
                     return <>{unlockHeight}</>
                 }}
-                width={100}
+                width={80}
             />
+
             <ColumnGroup title="节点竞选">
                 <Column title={<Text strong style={{ color: "#6c757e" }}>Node Address</Text>}
                     dataIndex="sepcialAddress"
@@ -177,24 +178,32 @@ export default ({ address }: { address: string }) => {
                             </Tooltip>
                         </>
                     }}
-                    width={100}
+                    width={160}
                 />
-                <Column title={<Text strong style={{ color: "#6c757e" }}>Freeze-Height</Text>}
+                <Column title={<Text strong style={{ color: "#6c757e" }}>Freeze</Text>}
                     dataIndex="freezeHeight"
                     render={(freezeHeight) => {
                         return <>{freezeHeight}</>
                     }}
-                    width={100}
+                    width={80}
                 />
-                <Column title={<Text strong style={{ color: "#6c757e" }}>Unfreeze-Height</Text>}
+                <Column title={<Text strong style={{ color: "#6c757e" }}>Unfreeze</Text>}
                     dataIndex="unfreezeHeight"
                     render={(unfreezeHeight) => {
                         return <>{unfreezeHeight}</>
                     }}
-                    width={100}
+                    width={80}
                 />
             </ColumnGroup>
+
             <ColumnGroup title="节点投票">
+                <Column title={<Text strong style={{ color: "#6c757e" }}>代理节点</Text>}
+                    dataIndex=""
+                    render={() => {
+                        return <>{ }</>
+                    }}
+                    width={80}
+                />
                 <Column title={<Text strong style={{ color: "#6c757e" }}>Node Address</Text>}
                     dataIndex="votedAddress"
                     render={(votedAddress, accountRecord: AccountRecordVO) => {
@@ -222,21 +231,21 @@ export default ({ address }: { address: string }) => {
                             </Tooltip>
                         </>
                     }}
-                    width={100}
+                    width={160}
                 />
-                <Column title={<Text strong style={{ color: "#6c757e" }}>Freeze-Height</Text>}
+                <Column title={<Text strong style={{ color: "#6c757e" }}>Freeze</Text>}
                     dataIndex="voteHeight"
                     render={(voteHeight) => {
                         return <>{voteHeight}</>
                     }}
-                    width={100}
+                    width={80}
                 />
-                <Column title={<Text strong style={{ color: "#6c757e" }}>Unfreeze-Height</Text>}
+                <Column title={<Text strong style={{ color: "#6c757e" }}>Unfreeze</Text>}
                     dataIndex="releaseHeight"
                     render={(releaseHeight) => {
                         return <>{releaseHeight}</>
                     }}
-                    width={100}
+                    width={80}
                 />
             </ColumnGroup>
 
