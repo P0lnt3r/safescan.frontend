@@ -68,7 +68,7 @@ export default ({ address }: { address: string }) => {
 
     const expandedRowRender = (accountRecord: AccountRecordVO) => {
         const {
-            sepcialAddress, nodeAddressPropVO, freezeHeight, unfreezeHeight,
+            specialAddress, nodeAddressPropVO, freezeHeight, unfreezeHeight,
             votedAddress, votedAddressPropVO, voteHeight, releaseHeight
         } = accountRecord;
         const columns: TableColumnsType<ExpandedAccountRecordDataType> = [
@@ -121,12 +121,12 @@ export default ({ address }: { address: string }) => {
             },
         ];
         const data = [];
-        if (sepcialAddress) {
+        if (specialAddress) {
             data.push({
                 key: "",
                 transactionHash: "0x0000000000000000000000000000000000000000",
-                action: "SNRegister",
-                nodeAddress: sepcialAddress,
+                action: "SNAppendRegister",
+                nodeAddress: specialAddress,
                 nodeAddressPropVO,
                 freezeHeight,
                 unfreezeHeight
@@ -151,12 +151,12 @@ export default ({ address }: { address: string }) => {
         <Table dataSource={tableData} scroll={{ x: 800 }}
             expandable={{ expandedRowRender }}
             pagination={pagination} rowKey={(accountRecord: AccountRecordVO) => accountRecord.lockId}>
-            <Column title={<Text strong style={{ color: "#6c757e" }}>ID</Text>}
+            <Column title={<Text strong style={{ color: "#6c757e" }}>Lock ID</Text>}
                 dataIndex="lockId"
                 render={(lockId) => {
                     return <>{lockId}</>
                 }}
-                width={20}
+                width={40}
                 fixed
             />
             <Column title={<Text strong style={{ color: "#6c757e" }}>Amount</Text>}
@@ -164,20 +164,20 @@ export default ({ address }: { address: string }) => {
                 render={(amount) => {
                     return <Text strong><EtherAmount raw={amount} /></Text>
                 }}
-                width={80}
+                width={110}
             />
 
             <Column title={<Text strong style={{ color: "#6c757e" }}>Member Of Node</Text>}
-                dataIndex="sepcialAddress"
-                render={(sepcialAddress, accountRecord: AccountRecordVO) => {
-                    const hasLink = !(sepcialAddress == address);
+                dataIndex="specialAddress"
+                render={(specialAddress, accountRecord: AccountRecordVO) => {
+                    const hasLink = !(specialAddress == address);
                     return <>
-                        <Tooltip title={sepcialAddress}>
+                        <Tooltip title={specialAddress}>
                             {
                                 accountRecord.nodeAddressPropVO &&
                                 <>
                                     {!hasLink && <>{accountRecord.nodeAddressPropVO.tag}</>}
-                                    {hasLink && <RouterLink to={`address/${sepcialAddress}`}>
+                                    {hasLink && <RouterLink to={`address/${specialAddress}`}>
                                         <Link ellipsis>{accountRecord.nodeAddressPropVO.tag}</Link>
                                     </RouterLink>}
                                 </>
@@ -185,23 +185,23 @@ export default ({ address }: { address: string }) => {
                             {
                                 !accountRecord.nodeAddressPropVO &&
                                 <>
-                                    {!hasLink && <Text ellipsis>{sepcialAddress}</Text>}
-                                    {hasLink && <RouterLink to={`address/${sepcialAddress}`}>
-                                        <Link ellipsis>{sepcialAddress}</Link>
+                                    {!hasLink && <Text ellipsis>{specialAddress}</Text>}
+                                    {hasLink && <RouterLink to={`address/${specialAddress}`}>
+                                        <Link ellipsis>{specialAddress}</Link>
                                     </RouterLink>}
                                 </>
                             }
                         </Tooltip>
                     </>
                 }}
-                width={80}
+                width={70}
             />
             <Column title={<Text strong style={{ color: "#6c757e" }}>Proxy MasterNode</Text>}
                 dataIndex=""
                 render={() => {
                     return <>{ }</>
                 }}
-                width={80}
+                width={70}
             />
             <Column title={<Text strong style={{ color: "#6c757e" }}>Vote For Node</Text>}
                 dataIndex="votedAddress"
@@ -230,15 +230,19 @@ export default ({ address }: { address: string }) => {
                         </Tooltip>
                     </>
                 }}
-                width={80}
+                width={70}
             />
 
-            <Column title={<Text strong style={{ color: "#6c757e" }}>Start</Text>}
+            <Column title={<Text strong style={{ color: "#6c757e" }}>Lock Time</Text>}
                 dataIndex="startHeight"
                 render={(startHeight) => {
-                    return <>{startHeight} <Divider type="vertical" /> 2020-12-12 12:12:12</>
+                    return <>
+                        <Tooltip title={startHeight}>
+                            <Text>2020-08-08 12:12:12</Text>
+                        </Tooltip>
+                    </>
                 }}
-                width={100}
+                width={80}
             />
             <Column title={<Text strong style={{ color: "#6c757e" }}>Lock Day</Text>}
                 dataIndex="lockDay"
@@ -250,9 +254,13 @@ export default ({ address }: { address: string }) => {
             <Column title={<Text strong style={{ color: "#6c757e" }}>Unlock</Text>}
                 dataIndex="unlockHeight"
                 render={(unlockHeight) => {
-                    return <>{unlockHeight}<Divider type="vertical" /> 2020-12-12 12:12:12</>
+                    return <>
+                        <Tooltip title={unlockHeight}>
+                            <Text>2020-08-08 12:12:12</Text>
+                        </Tooltip>
+                    </>
                 }}
-                width={100}
+                width={80}
             />
 
         </Table>

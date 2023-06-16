@@ -283,7 +283,7 @@ export interface AccountRecordVO {
     lockDay: number,
     startHeight: number,
     unlockHeight: number,
-    sepcialAddress: string,
+    specialAddress: string,
     nodeAddressPropVO : AddressPropVO,
     freezeHeight: number,
     unfreezeHeight: number,
