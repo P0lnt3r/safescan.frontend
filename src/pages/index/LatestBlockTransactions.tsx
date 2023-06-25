@@ -12,14 +12,13 @@ import TransactionHash from '../../components/TransactionHash';
 import EtherAmount from '../../components/EtherAmount';
 import { Link as RouterLink } from 'react-router-dom';
 import { FileTextOutlined } from '@ant-design/icons';
+import { isMobile } from 'react-device-detect';
 
 const { Title, Text, Link } = Typography;
 
 export default function () {
-
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
-
     const blocks = useLatestBlocks();
     const transactions = useLatestTransactions();
 
@@ -44,12 +43,12 @@ export default function () {
                                         </Col>
                                         <Col xl={8} xs={20} style={{ paddingLeft: '2%' }}>
                                             <Row>
-                                                <Col xl={24} xs={12}>
+                                                <Col xl={24} xs={10}>
                                                     <NavigateLink path={`/block/${blockVO.number}`}>
                                                         {blockVO.number}
                                                     </NavigateLink>
                                                 </Col>
-                                                <Col xl={24} xs={12}>
+                                                <Col xl={24} xs={14} style={isMobile ? {textAlign:"right"} : {} }>
                                                     <Text type="secondary">
                                                         {DateFormat(blockVO.timestamp * 1000)}
                                                     </Text>
@@ -77,7 +76,7 @@ export default function () {
                                                         {blockVO.txns} txns
                                                     </NavigateLink>
                                                 </Col>
-                                                <Col offset={8} xl={0} xs={8}>
+                                                <Col xl={0} xs={16} style={{textAlign:"right"}}>
                                                     <Tooltip title="Block Reward">
                                                         <Text code>
                                                             <EtherAmount fix={4} raw={blockVO.reward}></EtherAmount>
@@ -150,10 +149,10 @@ export default function () {
                                         </Col>
                                         <Col xl={8} xs={20} style={{ paddingLeft: '2%' }}>
                                             <Row>
-                                                <Col xl={24} xs={12}>
+                                                <Col xl={24} xs={10}>
                                                     <TransactionHash txhash={transaction.hash} sub={6}></TransactionHash>
                                                 </Col>
-                                                <Col xl={24} xs={12}>
+                                                <Col xl={24} xs={14} style={isMobile ? {textAlign:"right"} : {} }>
                                                     <Text type="secondary">
                                                         {DateFormat(transaction.timestamp * 1000)}
                                                     </Text>
@@ -202,7 +201,7 @@ export default function () {
                                                 </Col>
                                             </Row>
                                             <Row>
-                                                <Col offset={16} xl={0} xs={8}>
+                                                <Col offset={8} xl={0} xs={16} style={{textAlign:"right"}}>
                                                     <Tooltip title="Amount">
                                                         <Text code>
                                                             <EtherAmount fix={4} raw={transaction.value.toString()}></EtherAmount>

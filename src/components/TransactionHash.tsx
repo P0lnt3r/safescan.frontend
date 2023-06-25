@@ -29,7 +29,7 @@ export default (
         </Tooltip>
         <Tooltip title={txhash}>
             <RouterLink to={`/tx/${txhash}`}>
-                <Link ellipsis style={{width:'80%' , marginLeft:"5px"}}>{txhash}</Link>
+                <Link ellipsis style={{width:'80%' , marginLeft:"2px"}}>{txhash}</Link>
             </RouterLink>
         </Tooltip>
     </>)

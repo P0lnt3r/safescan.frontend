@@ -176,7 +176,8 @@ export interface StatisticVO {
     totalAddress: number,
     totalContract: number,
     totalRewards: string,
-    circulation: string
+    circulation: string,
+    totalMasterNodes: number
 }
 
 export interface AddressBalanceRankVO {

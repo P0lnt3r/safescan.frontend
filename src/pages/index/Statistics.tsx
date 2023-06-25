@@ -59,7 +59,7 @@ export default () => {
                         <Col span={12}>
                             <Statistic style={{ float: "right" }} valueStyle={{ float: "right" }} title={
                                 <Text style={{ float: "right" }} type="secondary">Active Masternodes</Text>}
-                                value={9999} suffix={<ApartmentOutlined />}
+                                value={statistic?.totalMasterNodes} suffix={<ApartmentOutlined />}
                             />
                         </Col>
                     </Row>
