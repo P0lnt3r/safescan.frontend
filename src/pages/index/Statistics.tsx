@@ -3,7 +3,7 @@ import { Button, Col, Row, Card, Space, Typography, Statistic, Divider } from 'a
 import { useNavigate } from 'react-router-dom';
 import { useTranslation, Trans } from 'react-i18next';
 import LatestBlockTransactions from './LatestBlockTransactions';
-import { useBlockNumber, useStatistic } from '../../state/application/hooks';
+import { useBlockNumber, useDBStoredBlockNumber, useStatistic } from '../../state/application/hooks';
 import TransactionsChart from './TransactionsChart';
 import { isMobile } from 'react-device-detect';
 import {
@@ -20,6 +20,7 @@ const { Title, Text, Link } = Typography;
 
 export default () => {
     const blockNumber = useBlockNumber();
+    const dbStoreBlockNumber = useDBStoredBlockNumber();
     const statistic = useStatistic();
     
     const circulationSupply = useMemo( () => {
@@ -32,7 +33,7 @@ export default () => {
         <Card>
             <Row>
                 <Col xl={6} xs={24} style={{ padding: "1%" }}>
-                    <Statistic title="Latest Block Number" value={blockNumber} />
+                    <Statistic title="Latest Block Number" value={`${blockNumber}`} />
                     <Divider />
                     <Statistic title="Circulation Supply of SAFE" value={circulationSupply} />
                     <Col xl={0} xs={24}>

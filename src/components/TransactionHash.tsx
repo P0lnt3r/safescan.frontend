@@ -2,15 +2,19 @@
 import { Typography, Tooltip } from 'antd';
 import { CheckCircleTwoTone, ExclamationCircleTwoTone } from '@ant-design/icons';
 import { Link as RouterLink } from 'react-router-dom';
+import { useDBStoredBlockNumber } from '../state/application/hooks';
 const { Link } = Typography;
 
 
 export default (
-    { txhash, status, sub }: {
+    { txhash, status, sub , blockNumber }: {
         txhash: string,
         status?: number,
-        sub: number
-    }) => {
+        sub: number,
+        blockNumber? : number
+    } ) => {
+
+    const dbStoredBlockNumber = useDBStoredBlockNumber();
 
     const tipIcon = (status?: number) => {
         if (status == 1) {
@@ -29,7 +33,14 @@ export default (
         </Tooltip>
         <Tooltip title={txhash}>
             <RouterLink to={`/tx/${txhash}`}>
-                <Link ellipsis style={{width:'80%' , marginLeft:"2px"}}>{txhash}</Link>
+                {
+                    blockNumber && blockNumber > dbStoredBlockNumber &&
+                    <Link italic underline ellipsis style={{width:'80%' , marginLeft:"2px"}}>{txhash}</Link>
+                }
+                {
+                    ((blockNumber && blockNumber <= dbStoredBlockNumber) || !blockNumber) &&
+                    <Link ellipsis style={{width:'80%' , marginLeft:"2px"}}>{txhash}</Link>
+                }
             </RouterLink>
         </Tooltip>
     </>)

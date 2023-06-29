@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { BlockOutlined } from '@ant-design/icons';
 import { useTranslation, Trans } from 'react-i18next';
 import { useEffect } from 'react';
-import { useLatestBlocks, useLatestTransactions } from '../../state/application/hooks';
+import { useDBStoredBlockNumber, useLatestBlocks, useLatestTransactions } from '../../state/application/hooks';
 import { DateFormat } from '../../utils/DateUtil';
 import AddressTag from '../../components/AddressTag';
 import NavigateLink from '../../components/NavigateLink';
@@ -19,6 +19,7 @@ const { Title, Text, Link } = Typography;
 export default function () {
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
+    const dbStoredBlockNumber = useDBStoredBlockNumber();
     const blocks = useLatestBlocks();
     const transactions = useLatestTransactions();
 
@@ -45,7 +46,10 @@ export default function () {
                                             <Row>
                                                 <Col xl={24} xs={10}>
                                                     <NavigateLink path={`/block/${blockVO.number}`}>
-                                                        {blockVO.number}
+                                                        {
+                                                            blockVO.number > dbStoredBlockNumber ? <Link italic underline>{blockVO.number}</Link>
+                                                                : <Link>{blockVO.number}</Link>
+                                                        }
                                                     </NavigateLink>
                                                 </Col>
                                                 <Col xl={24} xs={14} style={isMobile ? {textAlign:"right"} : {} }>
@@ -150,7 +154,7 @@ export default function () {
                                         <Col xl={8} xs={20} style={{ paddingLeft: '2%' }}>
                                             <Row>
                                                 <Col xl={24} xs={10}>
-                                                    <TransactionHash txhash={transaction.hash} sub={6}></TransactionHash>
+                                                    <TransactionHash txhash={transaction.hash} sub={6} blockNumber={transaction.blockNumber}></TransactionHash>
                                                 </Col>
                                                 <Col xl={24} xs={14} style={isMobile ? {textAlign:"right"} : {} }>
                                                     <Text type="secondary">

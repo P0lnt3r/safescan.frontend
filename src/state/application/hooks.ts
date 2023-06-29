@@ -24,6 +24,10 @@ export function useBlockNumber(): number {
     return useSelector((state: AppState) => state.application.blockNumber);
 }
 
+export function useDBStoredBlockNumber() : number {
+    return useSelector((state: AppState) => state.application.dbStoredBlockNumber);
+}
+
 export function useStatistic() : StatisticVO | undefined{
     return useSelector((state: AppState) => state.application.statistic);
 }

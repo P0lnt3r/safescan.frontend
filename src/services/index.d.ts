@@ -153,6 +153,7 @@ export interface ContractInternalTransactionVO {
 
 export interface BlockchainContextVO {
     latestBlockNumber: number,
+    dbStoredBlockNumber: number,
     latestTransactions: TransactionVO[],
     latestBlocks: BlockVO[],
     statistic: StatisticVO,

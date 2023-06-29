@@ -8,6 +8,7 @@ import { add } from 'date-fns';
 export interface IApplicationState {
 
     blockNumber: number,
+    dbStoredBlockNumber: number,
 
     methodSignature?: Map<string, string>,
     addressPropMap?: Map<string | undefined, AddressPropVO>
@@ -28,6 +29,7 @@ export interface IApplicationState {
 
 const initialState: IApplicationState = {
     blockNumber: 0,
+    dbStoredBlockNumber: 0,
     methodSignature: new Map(),
     addressPropMap: new Map(),
     latestBlocks: [],
@@ -108,10 +110,11 @@ export default createReducer(initialState, (builder) => {
         })
 
         .addCase(Application_Update_BlockchainContext, (state, { payload }) => {
-            const { latestBlockNumber, latestBlocks, latestTransactions , statistic } = payload;
+            const { latestBlockNumber, dbStoredBlockNumber , latestBlocks, latestTransactions , statistic } = payload;
             return {
                 ...state,
                 blockNumber: latestBlockNumber,
+                dbStoredBlockNumber : dbStoredBlockNumber,
                 latestBlocks,
                 latestTransactions,
                 statistic
