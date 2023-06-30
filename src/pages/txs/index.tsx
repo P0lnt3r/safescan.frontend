@@ -1,11 +1,10 @@
 import { Card, Table, Typography, Row, Col, Tooltip } from 'antd';
 import { PaginationProps } from 'antd/es/pagination';
-import type { ColumnsType } from 'antd/es/table';
+import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { useEffect, useMemo, useState } from 'react';
 import { TransactionVO } from '../../services';
 import { fetchTransactions } from '../../services/tx';
 import { useTranslation } from 'react-i18next';
-import AddressTag from '../../components/AddressTag';
 import TransactionHash from '../../components/TransactionHash';
 import { DateFormat } from '../../utils/DateUtil';
 import { ArrowRightOutlined, FileTextOutlined } from '@ant-design/icons';
@@ -15,9 +14,11 @@ import TxMethodId from '../../components/TxMethodId';
 import NavigateLink from '../../components/NavigateLink';
 import { useDispatch } from 'react-redux';
 import { JSBI } from '@uniswap/sdk';
-
-
+import { useBlockNumber } from '../../state/application/hooks';
+import { format } from '../../utils/NumberFormat';
 const { Title, Text, Link } = Typography;
+
+const DEFAULT_PAGESIZE = 50;
 
 export default function () {
 
@@ -29,38 +30,38 @@ export default function () {
       return 0;
     }
   }, [searchParams]);
-
+  const latestBlockNumber = useBlockNumber();
   const { t } = useTranslation();
   const dispatch = useDispatch();
+
   const columns: ColumnsType<TransactionVO> = [
     {
-      title: <>{t('Txn Hash')}</>,
+      title: <Text strong style={{ color: "#6c757e" }}>Txn Hash</Text>,
       dataIndex: 'hash',
-      key: 'hash',
-      render: (val, txVO) => <><TransactionHash txhash={val} sub={8} status={txVO.status}></TransactionHash></>,
+      render: (val, txVO) => <><TransactionHash blockNumber={txVO.blockNumber} txhash={val} sub={8} status={txVO.status}></TransactionHash></>,
       width: 180,
       fixed: 'left',
     },
     {
-      title: 'Method',
+      title: <Text strong style={{ color: "#6c757e" }}>Method</Text>,
       dataIndex: 'methodId',
       width: 100,
       render: (methodId, txVO) => <TxMethodId address={txVO.to} methodId={methodId}></TxMethodId>
     },
     {
-      title: 'Block',
+      title: <Text strong style={{ color: "#6c757e" }}>Block</Text>,
       dataIndex: 'blockNumber',
       width: 80,
       render: blockNumber => <RouterLink to={`/block/${blockNumber}`}>{blockNumber}</RouterLink>
     },
     {
-      title: 'Date Time',
+      title: <Text strong style={{ color: "#6c757e" }}>Date Time</Text>,
       dataIndex: 'timestamp',
       width: 130,
       render: (val) => <>{DateFormat(val * 1000)}</>
     },
     {
-      title: "From",
+      title: <Text strong style={{ color: "#6c757e" }}>From</Text>,
       dataIndex: 'from',
       width: 180,
       render: (from, txVO) => {
@@ -85,7 +86,7 @@ export default function () {
       }
     },
     {
-      title: 'To',
+      title: <Text strong style={{ color: "#6c757e" }}>To</Text>,
       dataIndex: 'to',
       width: 180,
       render: (to, txVO) => {
@@ -107,13 +108,13 @@ export default function () {
       }
     },
     {
-      title: 'Value',
+      title: <Text strong style={{ color: "#6c757e" }}>Value</Text>,
       dataIndex: 'value',
       width: 100,
       render: (value) => <Text strong><EtherAmount raw={value.toString()} fix={6} /></Text>
     },
     {
-      title: 'Txn Fee',
+      title: <Text strong style={{ color: "#6c757e" }}>Txn Fee</Text>,
       dataIndex: 'txFee',
       width: 100,
       render: (_, txVO) => {
@@ -131,35 +132,80 @@ export default function () {
     },
   ];
 
-  const doFetchBlocks = async () => {
+  const doFetchTransactions = async () => {
+    setLoading(true);
     fetchTransactions({
       current: pagination.current, pageSize: pagination.pageSize,
       blockNumber: blockNumber > 0 ? blockNumber : undefined
     }, dispatch).then((data) => {
+      setLoading(false);
       setTableData(data.records);
-      setPagination({
-        current: data.current,
-        pageSize: data.pageSize,
-        total: data.total,
-        ...pagination
+      const unconfirmed = [];
+      data.records.forEach(tx => {
+        if (tx.confirmed != 1) {
+          unconfirmed.push(tx);
+        }
       })
+      setConfirmed(data.total);
+      setUnconfirmed(unconfirmed.length);
+      const onChange = (page: number, pageSize: number) => {
+        pagination.pageSize = unconfirmed.length > 0 ? pageSize - unconfirmed.length : pageSize;
+        pagination.current = page;
+        doFetchTransactions();
+      }
+      if (pagination.current == 1) {
+        const total = data.total;
+        const dbSize = data.records.length - unconfirmed.length;
+        const dbPages = Math.floor(total / dbSize);
+        const uiTotal = (dbPages * unconfirmed.length) + total;
+        setPagination({
+          ...pagination,
+          current: data.current,
+          total: uiTotal,
+          pageSize: dbSize + unconfirmed.length,
+          onChange: onChange
+        })
+      } else {
+        setPagination({
+          ...pagination,
+          current: data.current,
+          total: data.total,
+          pageSize: data.pageSize,
+          onChange: onChange
+        })
+      }
     })
   }
 
-  const [pagination, setPagination] = useState<PaginationProps>({
+  const [pagination, setPagination] = useState<TablePaginationConfig>({
     current: 1,
-    pageSize: 10,
-    showTotal: (total) => <>Total : {total}</>,
-    onChange: (page, pageSize) => {
-      pagination.current = page;
-      doFetchBlocks();
-    }
+    pageSize: DEFAULT_PAGESIZE,
+    position: ["topRight", "bottomRight"],
+    pageSizeOptions: [],
+    responsive: true,
   });
+
   const [tableData, setTableData] = useState<TransactionVO[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [unconfirmed, setUnconfirmed] = useState<number>(0);
+  const [confirmed, setConfirmed] = useState<number>(0);
 
   useEffect(() => {
-    doFetchBlocks();
-  }, []);
+    if (pagination.current == 1) {
+      pagination.pageSize = DEFAULT_PAGESIZE;
+      doFetchTransactions();
+    }
+  }, [latestBlockNumber]);
+
+  function OutputTotal() {
+    return <>
+      <Text strong style={{ color: "#6c757e" }}>Total of {
+        confirmed && <>{format(confirmed + "")}</>
+      } Transactions
+        {unconfirmed > 0 && <Text> and {unconfirmed} unconfirmed</Text>}
+      </Text>
+    </>
+  }
 
   return (
     <>
@@ -172,11 +218,15 @@ export default function () {
           </Text>
         }
       </Row>
+
       <Card>
+        <OutputTotal />
         <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
           pagination={pagination} rowKey={(txVO) => txVO.hash}
+          loading={loading}
         />
       </Card>
+
     </>
   )
 }

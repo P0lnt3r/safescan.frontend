@@ -1,26 +1,31 @@
 import { useNavigate, useParams } from "react-router-dom"
-import { Card, Typography, Input, Button,  Tooltip, Row, Col, Divider } from 'antd';
+import { Card, Typography, Input, Button, Tooltip, Row, Col, Divider } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 import {
     QuestionCircleOutlined,
-    LeftOutlined, 
+    LeftOutlined,
     RightOutlined
 } from '@ant-design/icons';
 
-import { DateFormat } from '../../utils/DateUtil';
-import  {format} from '../../utils/NumberFormat';
+import { DateFormat, DateFormatBeforeNow } from '../../utils/DateUtil';
+import { format } from '../../utils/NumberFormat';
 import { fetchBlock } from "../../services/block";
 import { BlockVO } from "../../services";
-import { useAddressProp } from "../../state/application/hooks";
+import { useAddressProp, useBlockNumber } from "../../state/application/hooks";
 import NavigateLink from "../../components/NavigateLink";
+import EtherAmount from "../../components/EtherAmount";
 
 const { TextArea } = Input;
 const { Title, Text, Paragraph, Link } = Typography;
 export default function () {
+
     const { height } = useParams();
     const navigate = useNavigate();
     const [blockVO, setBlockVO] = useState<BlockVO>();
-    const addressProp = useAddressProp(blockVO?.miner);
+    const blockNumber = useBlockNumber();
+    
+    DateFormatBeforeNow( blockVO?.timestamp );
+
     useEffect(() => {
         fetchBlock(Number(height), undefined).then((blockVO: BlockVO) => {
             setBlockVO(blockVO);
@@ -52,11 +57,18 @@ export default function () {
                     </Col>
                     <Col xl={16} xs={24}>
                         <Tooltip title="View previous block">
-                            <Button onClick={() => navigate(`/block/${Number(height)-1}`)} size="small" type="primary" shape="circle" icon={<LeftOutlined />} />
+                            <Button
+                                onClick={() => navigate(`/block/${Number(height) - 1}`)} size="small" type="primary" shape="circle" icon={<LeftOutlined />} />
                         </Tooltip>
-                        <Text strong style={{ margin: "14px" }}>{height}</Text>
+                        {
+                            blockVO?.confirmed == 1 && <Text strong style={{ margin: "14px" }}>{height}</Text>
+                        }
+                        {
+                            blockVO?.confirmed == 0 && <Text italic underline style={{ margin: "14px" }}>{height}</Text>
+                        }
                         <Tooltip title="View next block">
-                            <Button onClick={() => navigate(`/block/${Number(height)+1}`)} size="small" type="primary" shape="circle" icon={<RightOutlined />} />
+                            <Button disabled={Number(height) + 1 > blockNumber}
+                                onClick={() => navigate(`/block/${Number(height) + 1}`)} size="small" type="primary" shape="circle" icon={<RightOutlined />} />
                         </Tooltip>
                     </Col>
                 </Row>
@@ -71,8 +83,22 @@ export default function () {
                     </Col>
                     <Col xl={16} xs={24}>
                         <Text>
-                            {blockVO && DateFormat(blockVO?.timestamp * 1000)}
+                            {blockVO && DateFormat(blockVO?.timestamp * 1000)} - {blockVO?.timestamp}
                         </Text>
+                        <br />
+                        {
+                            blockVO?.confirmed == 1 &&
+                            <Text strong>
+                                {blockVO && blockNumber - blockVO?.number} Blocks Confirmed
+                            </Text>
+                        }
+                        {
+                            blockVO?.confirmed == 0 &&
+                            <Text italic>
+                                {blockVO && blockNumber - blockVO?.number} Blocks Confirmed
+                            </Text>
+                        }
+
                     </Col>
                 </Row>
                 <Divider style={{ margin: '18px 0px' }} />
@@ -105,8 +131,24 @@ export default function () {
                             {blockVO?.miner}
                         </NavigateLink>
                         {
-                            addressProp && <Text strong>  ({addressProp?.tag})</Text>
+                            blockVO?.minerPropVO && <Text style={{marginLeft:"5px"}} strong>(SuperNode: {blockVO?.minerPropVO.tag})</Text>
                         }
+                    </Col>
+                </Row>
+                <Divider style={{ margin: '18px 0px' }} />
+
+                <Row>
+                    <Col xl={8} xs={24}>
+                        <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
+                            <QuestionCircleOutlined />
+                        </Tooltip>
+                        <Text strong style={{ marginLeft: "5px" }}>Reward:</Text>
+                    </Col>
+                    <Col xl={16} xs={24}>
+                        <Text strong>
+                            {blockVO && <EtherAmount raw={blockVO?.reward} fix={18} />}
+                        </Text>
+
                     </Col>
                 </Row>
                 <Divider style={{ margin: '18px 0px' }} />

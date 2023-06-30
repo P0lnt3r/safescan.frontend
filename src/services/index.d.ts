@@ -77,7 +77,9 @@ export interface BlockVO {
     size: string,
     timestamp: number,
     totalDifficulty: string,
-    txns: number
+    txns: number,
+
+    confirmed: number
 }
 
 export interface TransactionVO {
@@ -100,7 +102,8 @@ export interface TransactionVO {
     value: string,
     error: string,
     revertReason: string,
-    hasInternalError: number
+    hasInternalError: number,
+    confirmed : number
 }
 
 export interface EventLogVO {

@@ -16,8 +16,11 @@ export default () => {
             
         }
         ws.onmessage = (msg) => {
-            // console.log('On Message :' , msg);
             const json = JSON.parse(msg.data) as BlockchainContextVO;
+            // console.log('OnMes:' , {
+            //     db : json.dbStoredBlockNumber,
+            //     bl : json.latestBlockNumber
+            // });
             dispatch( Application_Update_BlockchainContext(json) )            
         };
         ws.onclose = function (e) {
