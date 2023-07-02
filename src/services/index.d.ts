@@ -142,16 +142,19 @@ export interface ContractInternalTransactionVO {
     blockNumber: number,
     error: string,
     from: string,
+    fromPropVO : AddressPropVO | undefined , 
     gas: string,
     gasUsed: string,
     revertReason: string,
     status: number,
     to: string,
+    toPropVO : AddressPropVO | undefined,
     transactionHash: string,
     transactionIndex: number,
     type: string,
-    value: string
+    value: string,
     level: number,
+    confirmed: number
 }
 
 export interface BlockchainContextVO {
@@ -278,7 +281,8 @@ export interface NodeRewardVO {
     address: string,
     addressPropVO?: AddressPropVO
     rewardType: number,
-    amount: string
+    amount: string,
+    confirmed: number
 }
 
 export interface AccountRecordVO {

@@ -14,7 +14,7 @@ import TxMethodId from '../../components/TxMethodId';
 import NavigateLink from '../../components/NavigateLink';
 import { useDispatch } from 'react-redux';
 import { JSBI } from '@uniswap/sdk';
-import { useBlockNumber } from '../../state/application/hooks';
+import { useBlockNumber, useDBStoredBlockNumber } from '../../state/application/hooks';
 import { format } from '../../utils/NumberFormat';
 const { Title, Text, Link } = Typography;
 
@@ -23,6 +23,7 @@ const DEFAULT_PAGESIZE = 50;
 export default function () {
 
   const [searchParams] = useSearchParams();
+
   const blockNumber = useMemo(() => {
     try {
       return Number(searchParams.get("block"));
@@ -30,7 +31,10 @@ export default function () {
       return 0;
     }
   }, [searchParams]);
+
   const latestBlockNumber = useBlockNumber();
+  const dbStoredBlockNumber = useDBStoredBlockNumber();
+
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
@@ -52,7 +56,19 @@ export default function () {
       title: <Text strong style={{ color: "#6c757e" }}>Block</Text>,
       dataIndex: 'blockNumber',
       width: 80,
-      render: blockNumber => <RouterLink to={`/block/${blockNumber}`}>{blockNumber}</RouterLink>
+      render: (blockNumber, vo) => {
+        return <>
+          {
+            vo.confirmed == 1 && <RouterLink to={`/block/${blockNumber}`}>{blockNumber}</RouterLink>
+          }
+          {
+            vo.confirmed == 0 && 
+            <RouterLink to={`/block/${blockNumber}`}>
+              <Link italic underline>{blockNumber}</Link>
+            </RouterLink>
+          }
+        </>
+      }
     },
     {
       title: <Text strong style={{ color: "#6c757e" }}>Date Time</Text>,
@@ -155,14 +171,14 @@ export default function () {
       }
       if (pagination.current == 1) {
         const total = data.total;
-        const dbSize = data.records.length - unconfirmed.length;
+        const dbSize = data.pageSize;
         const dbPages = Math.floor(total / dbSize);
         const uiTotal = (dbPages * unconfirmed.length) + total;
         setPagination({
           ...pagination,
           current: data.current,
           total: uiTotal,
-          pageSize: dbSize + unconfirmed.length,
+          pageSize: data.records.length,
           onChange: onChange
         })
       } else {
@@ -191,19 +207,21 @@ export default function () {
   const [confirmed, setConfirmed] = useState<number>(0);
 
   useEffect(() => {
-    if (pagination.current == 1) {
+    if (pagination.current == 1 && dbStoredBlockNumber != latestBlockNumber && unconfirmed >= 0) {
       pagination.pageSize = DEFAULT_PAGESIZE;
       doFetchTransactions();
     }
-  }, [latestBlockNumber]);
+  }, [latestBlockNumber, dbStoredBlockNumber,blockNumber]);
 
   function OutputTotal() {
     return <>
-      <Text strong style={{ color: "#6c757e" }}>Total of {
-        confirmed && <>{format(confirmed + "")}</>
-      } Transactions
-        {unconfirmed > 0 && <Text> and {unconfirmed} unconfirmed</Text>}
-      </Text>
+      {
+        confirmed != unconfirmed && <Text strong style={{ color: "#6c757e" }}>Total of {
+          confirmed && <>{format(confirmed + "")}</>
+        } Transactions
+          {unconfirmed > 0 && <Text> and {unconfirmed} unconfirmed</Text>}
+        </Text>
+      }
     </>
   }
 

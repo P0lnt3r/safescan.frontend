@@ -16,6 +16,7 @@ import SuperMasterNode from "./SuperMasterNode";
 import MasterNode from "./MasterNode";
 import NodeRewards from "./NodeRewards";
 import AccountRecords from "./AccountRecords";
+import ContractInternalTransactions from "./ContractInternalTransactions";
 
 const { Title, Text, Paragraph, Link } = Typography;
 
@@ -24,6 +25,11 @@ export default function () {
     const { address } = useParams();
     const items: TabsProps['items'] = useMemo(() => {
         return [
+            {
+                key: 'contractInternalTransactions',
+                label: "Internal Txns",
+                children: address && <ContractInternalTransactions address={address} ></ContractInternalTransactions>,
+            },
             {
                 key: 'transactions',
                 label: "Transactions",

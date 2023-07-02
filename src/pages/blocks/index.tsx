@@ -124,14 +124,14 @@ export default function () {
       }
       if (pagination.current == 1) {
         const total = data.total;
-        const dbSize = data.pageSize - unconfirmed.length;
+        const dbSize = data.pageSize;
         const dbPages = Math.floor(total / dbSize);
         const uiTotal = (dbPages * unconfirmed.length) + total;
         setPagination({
           ...pagination,
           current: data.current,
           total: uiTotal,
-          pageSize: data.pageSize,
+          pageSize: data.records.length,
           onChange: onChange
         })
       } else {

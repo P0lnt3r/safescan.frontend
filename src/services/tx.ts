@@ -35,6 +35,11 @@ export async function fetchAddressTransactions(params: { address: string } | Pag
     return serverResponse.data;
 }
 
+export async function fetchAddressContractInternalTransactions(params: { address: string } | PageQueryDTO): Promise<PageResponseVO<ContractInternalTransactionVO>> {
+    const serverResponse = await POST(`${API_HOST}/txs/contract_txs/address`, { ...params });
+    return serverResponse.data;
+}
+
 export async function fetchAddressERC20Transfers(params: { address: string } | PageQueryDTO): Promise<PageResponseVO<ERC20TransferVO>> {
     const serverResponse = await POST(`${API_HOST}/txs/erc20`, { ...params });
     return serverResponse.data;
