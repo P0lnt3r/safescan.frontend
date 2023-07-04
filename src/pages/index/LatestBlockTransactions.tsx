@@ -233,7 +233,7 @@ export default function () {
                                                         </Tooltip>
                                                     </Text>
                                                 </Col>
-                                                <Col xl={18}>
+                                                <Col xl={14}>
                                                     <Text>
                                                         <span>To:</span>
                                                         {
@@ -256,7 +256,7 @@ export default function () {
                                                         </Tooltip>
                                                     </Text>
                                                 </Col>
-                                                <Col xl={6}>
+                                                <Col xl={10}>
                                                     <div style={{ textAlign: 'right' }}>
                                                         <Tooltip title="Amount">
                                                             <Text code>

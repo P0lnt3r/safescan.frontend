@@ -15,7 +15,7 @@ import BlockNumber from "../../components/BlockNumber";
 
 const { Text, Link } = Typography;
 
-const DEFAULT_PAGESIZE = 10;
+const DEFAULT_PAGESIZE = 20;
 
 export default ({ address }: { address: string }) => {
 
@@ -84,6 +84,7 @@ export default ({ address }: { address: string }) => {
 
     useEffect(() => {
         pagination.current = 1;
+        pagination.pageSize = DEFAULT_PAGESIZE;
         doFetchAddressContractIntenalTransactions();
     }, [address]);
 

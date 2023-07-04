@@ -24,6 +24,10 @@ export function useBlockNumber(): number {
     return useSelector((state: AppState) => state.application.blockNumber);
 }
 
+export function useBlockTimestamp() : number {
+    return useSelector((state: AppState) => state.application.latestTimestamp);
+}
+
 export function useDBStoredBlockNumber() : number {
     return useSelector((state: AppState) => state.application.dbStoredBlockNumber);
 }

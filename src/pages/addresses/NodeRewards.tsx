@@ -87,6 +87,7 @@ export default ({ address }: { address: string }) => {
 
     useEffect(() => {
         pagination.current = 1;
+        pagination.pageSize = 20;
         doFetchAddressNodeWards();
     }, [address]);
 

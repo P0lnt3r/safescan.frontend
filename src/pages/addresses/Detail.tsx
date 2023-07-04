@@ -26,14 +26,14 @@ export default function () {
     const items: TabsProps['items'] = useMemo(() => {
         return [
             {
-                key: 'contractInternalTransactions',
-                label: "Internal Txns",
-                children: address && <ContractInternalTransactions address={address} ></ContractInternalTransactions>,
-            },
-            {
                 key: 'transactions',
                 label: "Transactions",
                 children: address && <Transactions address={address} ></Transactions>,
+            },
+            {
+                key: 'contractInternalTransactions',
+                label: "Internal Txns",
+                children: address && <ContractInternalTransactions address={address} ></ContractInternalTransactions>,
             },
             {
                 key: 'noderewards',

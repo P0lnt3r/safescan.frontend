@@ -103,7 +103,7 @@ export interface TransactionVO {
     error: string,
     revertReason: string,
     hasInternalError: number,
-    confirmed : number
+    confirmed: number
 }
 
 export interface EventLogVO {
@@ -142,13 +142,13 @@ export interface ContractInternalTransactionVO {
     blockNumber: number,
     error: string,
     from: string,
-    fromPropVO : AddressPropVO | undefined , 
+    fromPropVO: AddressPropVO | undefined,
     gas: string,
     gasUsed: string,
     revertReason: string,
     status: number,
     to: string,
-    toPropVO : AddressPropVO | undefined,
+    toPropVO: AddressPropVO | undefined,
     transactionHash: string,
     transactionIndex: number,
     type: string,
@@ -159,6 +159,7 @@ export interface ContractInternalTransactionVO {
 
 export interface BlockchainContextVO {
     latestBlockNumber: number,
+    latestBlockTimestamp: number,
     dbStoredBlockNumber: number,
     latestTransactions: TransactionVO[],
     latestBlocks: BlockVO[],
@@ -192,7 +193,7 @@ export interface AddressBalanceRankVO {
     address: string,
     addressPropVO: AddressPropVO,
     balance: string,
-    totalAmount : string
+    totalAmount: string
 }
 
 export interface AddressVO {
@@ -286,19 +287,47 @@ export interface NodeRewardVO {
 }
 
 export interface AccountRecordVO {
+
     lockId: number,
     address: string,
     amount: string,
     lockDay: number,
+    startTxHash: string,
     startHeight: number,
+    startTimestamp: number,
+    addLockTxHash: string,
     unlockHeight: number,
+    unlockTimestamp: number,
+
     specialAddress: string,
-    nodeAddressPropVO : AddressPropVO,
+    nodeAddressPropVO: AddressPropVO,
+    registerAction: string,
+    registerActionTxHash: string,
     freezeHeight: number,
+    freezeTimestamp: number,
     unfreezeHeight: number,
+    unfreezeTimestamp: number,
+
+    proxyMasternode: string,
+    proxyAddressPropVO: AddressPropVO,
+    proxyAction: string,
+    proxyActionTxHash: string,
+    proxyHeight: number,
+    proxyTimestamp: number,
+
     votedAddress: string,
-    votedAddressPropVO : AddressPropVO,
+    votedAddressPropVO: AddressPropVO,
+    voteAction: string,
+    voteActionTxHash: string,
     voteHeight: number,
+    voteTimestamp: number,
     releaseHeight: number,
+    releaseTimestamp: number,
+
+    recordState: number,
+    withdrawHeight: number,
+    withdrawTimestamp: number,
+    withdrawTxHash: string
+
 }
 

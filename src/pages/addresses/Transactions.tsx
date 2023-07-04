@@ -14,10 +14,11 @@ import { ArrowRightOutlined, FileTextOutlined } from '@ant-design/icons';
 import { Link as RouterLink } from "react-router-dom";
 import { JSBI } from "@uniswap/sdk";
 import { format } from "../../utils/NumberFormat";
+import BlockNumber from "../../components/BlockNumber";
 
 const { Text, Link } = Typography;
 
-const DEFAULT_PAGESIZE = 10;
+const DEFAULT_PAGESIZE = 20;
 
 export default ({ address }: { address: string }) => {
 
@@ -85,6 +86,7 @@ export default ({ address }: { address: string }) => {
 
     useEffect(() => {
         pagination.current = 1;
+        pagination.pageSize = DEFAULT_PAGESIZE;
         doFetchAddressTransactions();
     }, [address]);
 
@@ -106,31 +108,31 @@ export default ({ address }: { address: string }) => {
             dataIndex: 'hash',
             key: 'hash',
             render: (val, txVO) => <><TransactionHash blockNumber={txVO.blockNumber} txhash={val} sub={8} status={txVO.status}></TransactionHash></>,
-            width: 180,
+            width: 150,
             fixed: 'left',
         },
         {
-            title: 'Method',
+            title: <Text strong style={{ color: "#6c757e" }}>Method</Text>,
             dataIndex: 'methodId',
             width: 100,
             render: (methodId, txVO) => <TxMethodId methodId={methodId} address={txVO.to} />
         },
         {
-            title: 'Block',
+            title: <Text strong style={{ color: "#6c757e" }}>Block</Text>,
             dataIndex: 'blockNumber',
             width: 80,
-            render: blockNumber => <NavigateLink path={`/block/${blockNumber}`}>{blockNumber}</NavigateLink>
+            render: (blockNumber,txVO) => <BlockNumber blockNumber={blockNumber} confirmed={txVO.confirmed}></BlockNumber> 
         },
         {
-            title: 'Date Time',
+            title: <Text strong style={{ color: "#6c757e" }}>Date Time</Text>,
             dataIndex: 'timestamp',
-            width: 130,
+            width: 120,
             render: (val) => <>{DateFormat(val * 1000)}</>
         },
         {
-            title: "From",
+            title: <Text strong style={{ color: "#6c757e" }}>From</Text>,
             dataIndex: 'from',
-            width: 180,
+            width: 150,
             render: (from, txVO) => {
                 const { fromPropVO } = txVO;
                 const tag = fromPropVO?.tag;
@@ -162,9 +164,9 @@ export default ({ address }: { address: string }) => {
             }
         },
         {
-            title: 'To',
+            title: <Text strong style={{ color: "#6c757e" }}>To</Text>,
             dataIndex: 'to',
-            width: 180,
+            width: 150,
             render: (to, txVO) => {
                 const { methodId, toPropVO } = txVO;
                 const tag = toPropVO?.tag;
@@ -190,28 +192,28 @@ export default ({ address }: { address: string }) => {
             }
         },
         {
-            title: 'Value',
+            title: <Text strong style={{ color: "#6c757e" }}>Value</Text>,
             dataIndex: 'value',
-            width: 100,
+            width: 150,
             render: (value) => <Text strong><EtherAmount raw={value} /></Text>
         },
-        {
-            title: 'Txn Fee',
-            dataIndex: 'txFee',
-            width: 100,
-            render: (_, txVO) => {
-                const { gasPrice, gasUsed } = txVO;
-                const txFee = (gasPrice && gasUsed) ? JSBI.multiply(
-                    JSBI.BigInt(gasPrice),
-                    JSBI.BigInt(gasUsed)
-                ).toString() : "0";
-                return <>
-                    <Text type="secondary">
-                        <EtherAmount raw={txFee.toString()} fix={6} ignoreLabel />
-                    </Text>
-                </>
-            }
-        },
+        // {
+        //     title: 'Txn Fee',
+        //     dataIndex: 'txFee',
+        //     width: 100,
+        //     render: (_, txVO) => {
+        //         const { gasPrice, gasUsed } = txVO;
+        //         const txFee = (gasPrice && gasUsed) ? JSBI.multiply(
+        //             JSBI.BigInt(gasPrice),
+        //             JSBI.BigInt(gasUsed)
+        //         ).toString() : "0";
+        //         return <>
+        //             <Text type="secondary">
+        //                 <EtherAmount raw={txFee.toString()} fix={6} ignoreLabel />
+        //             </Text>
+        //         </>
+        //     }
+        // },
     ];
 
     return <>
