@@ -331,3 +331,16 @@ export interface AccountRecordVO {
 
 }
 
+export interface SafeAccountManagerActionVO {
+    blockNumber: number,
+    timestamp: number,
+    transactionHash: string,
+    eventLogIndex: number,
+    action: string,
+    from: string | undefined,
+    to: string,
+    amount: string,
+    lockDay: number,
+    lockId: number,
+}
+

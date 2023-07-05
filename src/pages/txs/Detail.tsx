@@ -7,10 +7,13 @@ import type { TabsProps } from 'antd';
 import TxOverview from "./TxOverview";
 import EventLogs from "./EventLogs";
 import { fetchEventLogs, fetchTransaction, fetchTxContractInternalTransactions, fetchTxERC20Transfers } from "../../services/tx";
-import { ContractInternalTransactionVO, ERC20TransferVO, EventLogVO, NodeRewardVO, TransactionVO } from "../../services";
+import { ContractInternalTransactionVO, ERC20TransferVO, EventLogVO, NodeRewardVO, SafeAccountManagerActionVO, TransactionVO } from "../../services";
 import ContractInternalTransactions from "./ContractInternalTransactions";
 import { fetchTxNodeRewards } from "../../services/node";
-
+import SystemContractAbi from "../../utils/decode/SystemContractAbi";
+import { SysContractABI, SystemContract } from "../../utils/decode/config";
+import { FormatTypes, Fragment, Interface } from 'ethers/lib/utils';
+import { fetchTxSafeAccountManagerAction } from "../../services/accountRecord";
 const { Title } = Typography;
 
 export default function () {
@@ -22,6 +25,8 @@ export default function () {
     const [contractInternalTransactions, setContractInternalTransactions] = useState<ContractInternalTransactionVO[]>();
     const [txERC20Transfers, setTxERC20Transfers] = useState<ERC20TransferVO[]>();
     const [nodeRewards, setNodeRewards] = useState<NodeRewardVO[]>();
+    const [safeAccountManagerActions , setSafeAccountManagerActions] = useState<SafeAccountManagerActionVO[]>();
+    
 
     useEffect(() => {
         if (txHash) {
@@ -38,14 +43,21 @@ export default function () {
                 setTxERC20Transfers(txERC20Transfers);
             });
             fetchTxNodeRewards(txHash).then(nodeRewards => setNodeRewards(nodeRewards))
+            fetchTxSafeAccountManagerAction(txHash).then( safeAccountManagerActions => {
+                setSafeAccountManagerActions(safeAccountManagerActions)
+            }  )
         }
     }, [txHash]);
+
     const hasEventLogs = useMemo(() => {
         return eventLogs && eventLogs.length > 0
     }, [eventLogs]);
+
     const hasInternalTxns = useMemo(() => {
         return contractInternalTransactions && contractInternalTransactions.length > 0
     }, [contractInternalTransactions])
+
+    
 
     const items: TabsProps['items'] = [
         {
@@ -55,6 +67,7 @@ export default function () {
                 contractInternalTransactions={contractInternalTransactions}
                 erc20Transfers={txERC20Transfers}
                 nodeRewards={nodeRewards}
+                safeAccountManagerActions={safeAccountManagerActions}
             />,
         },
         {

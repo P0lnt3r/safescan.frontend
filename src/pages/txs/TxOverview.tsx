@@ -6,9 +6,11 @@ import {
     QuestionCircleOutlined,
     FrownOutlined,
     CaretRightOutlined,
-    ArrowRightOutlined
+    ArrowRightOutlined,
+    LockOutlined,
+    RightOutlined
 } from '@ant-design/icons';
-import { AddressPropVO, ContractInternalTransactionVO, ERC20TransferVO, NodeRewardVO, TransactionVO } from '../../services';
+import { AddressPropVO, ContractInternalTransactionVO, ERC20TransferVO, EventLogVO, NodeRewardVO, SafeAccountManagerActionVO, TransactionVO } from '../../services';
 import { DateFormat } from '../../utils/DateUtil';
 import EtherAmount, { GWEI } from '../../components/EtherAmount';
 import JSBI from 'jsbi';
@@ -23,15 +25,17 @@ import shape from '../../images/shape-1.svg'
 import ContractInternalTransactions from './ContractInternalTransactions';
 import ERC20TokenAmount from '../../components/ERC20TokenAmount';
 import ERC20Logo from '../../components/ERC20Logo';
+import { isMobile } from 'react-device-detect';
 
 const { Text, Paragraph, Link } = Typography;
 
-export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeRewards }:
+export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeRewards, safeAccountManagerActions }:
     {
         txVO: TransactionVO,
         contractInternalTransactions: ContractInternalTransactionVO[] | undefined,
         erc20Transfers: ERC20TransferVO[] | undefined,
-        nodeRewards: NodeRewardVO[] | undefined
+        nodeRewards: NodeRewardVO[] | undefined,
+        safeAccountManagerActions: SafeAccountManagerActionVO[] | undefined,
     }) => {
 
     const {
@@ -136,6 +140,46 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                 </Col>
             </Row>
         </>
+    }
+
+    const RenderSafeAccountManagerAction = (safeAccountManagerAction: SafeAccountManagerActionVO) => {
+        const { lockId, action, amount, to, lockDay } = safeAccountManagerAction;
+        const isLock = action == "SafeDeposit";
+        const isAddLock = action == "SafeAddLockDay";
+        return <Row>
+            <Col xs={10} xl={4}>
+                <Tooltip title="Locked">
+                    <LockOutlined /><Text strong type='secondary'>[LockID:{lockId}]</Text>
+                </Tooltip>
+            </Col>
+            <Col xs={14} xl={20}>
+                <EtherAmount raw={amount} fix={18}></EtherAmount>
+                {
+                    !isMobile && <>
+                        <ArrowRightOutlined /> {
+                            <Tooltip title={to}>
+                                <RouterLink to={`/address/${to}`}>
+                                    <Link ellipsis>{to}</Link>
+                                </RouterLink>
+                            </Tooltip>
+                        } ( { isAddLock && "+" } {lockDay} Days)
+                    </>
+                }
+            </Col>
+            {
+                isMobile && <>
+                    <Col xs={24}>
+                        <ArrowRightOutlined /> {
+                            <Tooltip title={to}>
+                                <RouterLink to={`/address/${to}`}>
+                                    <Link ellipsis style={{maxWidth:"70%"}}>{to}</Link>
+                                </RouterLink>
+                            </Tooltip>
+                        } ({lockDay} Days)
+                    </Col>
+                </>
+            }
+        </Row>
     }
 
     return <>
@@ -356,7 +400,7 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                     </Col>
                     <Col xl={16} xs={24}>
                         <Row style={{ marginTop: "2px" }}>
-                            <Text strong style={{marginRight:"5px"}}>SuperNode:</Text>
+                            <Text strong style={{ marginRight: "5px" }}>SuperNode:</Text>
                             {
                                 superNode && superNode.propVO &&
                                 <Tooltip title={superNode.address}>
@@ -377,7 +421,7 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                                 .map(nodeReward => RenderNodeReward(nodeReward))
                         }
                         <Row style={{ marginTop: "20px" }}>
-                            <Text strong style={{marginRight:"5px"}}>MasterNode:</Text>
+                            <Text strong style={{ marginRight: "5px" }}>MasterNode:</Text>
                             {
                                 masterNode && masterNode.propVO &&
                                 <Tooltip title={masterNode.address}>
@@ -398,6 +442,25 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                                 .map(nodeReward => RenderNodeReward(nodeReward))
                         }
 
+                    </Col>
+                </Row>
+            </>
+        }
+
+        {
+            // SafeAccountManagerActions 锁仓这种数据.
+            safeAccountManagerActions && safeAccountManagerActions.length > 0 &&
+            <>
+                <Divider style={{ margin: '18px 0px' }} />
+                <Row id="safeAccountManagerActions">
+                    <Col xl={8} xs={24}>
+                        <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
+                            <QuestionCircleOutlined />
+                        </Tooltip>
+                        <Text strong style={{ marginLeft: "5px" }}>AccountManager Actions</Text>
+                    </Col>
+                    <Col xl={16} xs={24}>
+                        {safeAccountManagerActions.map(RenderSafeAccountManagerAction)}
                     </Col>
                 </Row>
             </>
