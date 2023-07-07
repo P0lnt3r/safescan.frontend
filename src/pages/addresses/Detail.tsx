@@ -41,16 +41,15 @@ export default function () {
                 children: address && <NodeRewards address={address} />
             },
             {
-                key: 'erc20-transactions',
-                label: `ERC20 Transactions`,
-                children: address && <ERC20Transfers address={address}></ERC20Transfers>,
-            },
-            {
                 key: 'accountRecords',
                 label: `Account Records`,
                 children: address && <AccountRecords address={address}></AccountRecords>,
             },
-            
+            {
+                key: 'erc20-transactions',
+                label: `ERC20 Transactions`,
+                children: address && <ERC20Transfers address={address}></ERC20Transfers>,
+            },
         ]
     }, [address]);
     const [isModalOpen, setIsModalOpen] = useState(false);

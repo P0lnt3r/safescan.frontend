@@ -57,6 +57,8 @@ export interface PageResponseVO<VO> {
 export interface PageQueryDTO {
     current: number | undefined,
     pageSize: number | undefined,
+    orderMode?: string | undefined,
+    orderProp?: string | undefined,
     blockNumber?: number
 }
 
@@ -341,6 +343,6 @@ export interface SafeAccountManagerActionVO {
     to: string,
     amount: string,
     lockDay: number,
-    lockId: number,
+    lockId: string,
 }
 

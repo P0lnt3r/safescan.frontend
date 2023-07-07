@@ -8,7 +8,12 @@ import {
     CaretRightOutlined,
     ArrowRightOutlined,
     LockOutlined,
-    RightOutlined
+    UnlockOutlined,
+    ExportOutlined,
+    ImportOutlined,
+    MedicineBoxOutlined,
+    UserSwitchOutlined,
+    SyncOutlined
 } from '@ant-design/icons';
 import { AddressPropVO, ContractInternalTransactionVO, ERC20TransferVO, EventLogVO, NodeRewardVO, SafeAccountManagerActionVO, TransactionVO } from '../../services';
 import { DateFormat } from '../../utils/DateUtil';
@@ -144,40 +149,109 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
 
     const RenderSafeAccountManagerAction = (safeAccountManagerAction: SafeAccountManagerActionVO) => {
         const { lockId, action, amount, to, lockDay } = safeAccountManagerAction;
-        const isLock = action == "SafeDeposit";
+        const lockIds = JSON.parse(lockId);
+
+        const isDeposit = action == "SafeDeposit";
+        const isWithdraw = action == "SafeWithdraw";
+        const isTransfer = action == "SafeTransfer";
         const isAddLock = action == "SafeAddLockDay";
+
+        const OutputActionAndLabel = () => {
+            if (isDeposit) {
+                return <>
+                    <ImportOutlined />
+                    <Text type='secondary'> [Deposit]</Text>
+                </>;
+            }
+            if (isWithdraw) {
+                return <>
+                    <ExportOutlined />
+                    <Text type='secondary'> [Withdraw]</Text>
+                </>;
+            }
+            if (isAddLock) {
+                return <>
+                    <MedicineBoxOutlined />
+                    <Text type='secondary'> [AddLock]</Text>
+                </>;
+            }
+            return <>
+                <SyncOutlined />
+                <Text type='secondary'> [Transfer]</Text>
+            </>;
+        }
+
         return <Row>
-            <Col xs={10} xl={4}>
-                <Tooltip title="Locked">
-                    <LockOutlined /><Text strong type='secondary'>[LockID:{lockId}]</Text>
-                </Tooltip>
-            </Col>
-            <Col xs={14} xl={20}>
-                <EtherAmount raw={amount} fix={18}></EtherAmount>
-                {
-                    !isMobile && <>
-                        <ArrowRightOutlined /> {
-                            <Tooltip title={to}>
-                                <RouterLink to={`/address/${to}`}>
-                                    <Link ellipsis>{to}</Link>
-                                </RouterLink>
-                            </Tooltip>
-                        } ( { isAddLock && "+" } {lockDay} Days)
-                    </>
-                }
-            </Col>
+            {!isMobile && <>
+                <Col span={24}>
+                    {
+                        <>
+                            {OutputActionAndLabel()}
+                            <span style={{ marginLeft: "2%" }}></span>
+                            <EtherAmount raw={amount} fix={18}></EtherAmount>
+                            {
+                                <>
+                                    <ArrowRightOutlined style={{ marginLeft: "1%", marginRight: "1%" }} />
+                                    <Tooltip title={to}>
+                                        <RouterLink to={`/address/${to}`}>
+                                            <Link ellipsis>{to}</Link>
+                                        </RouterLink>
+                                    </Tooltip>
+                                </>
+                            }
+                        </>
+                    }
+                </Col>
+            </>}
+            {isMobile && <>
+                <Col span={24}>
+                    {
+                        <>
+                            {OutputActionAndLabel()}
+                            <span style={{ marginLeft: "2%" }}></span>
+                            <EtherAmount raw={amount} fix={18}></EtherAmount>
+                        </>
+                    }
+                </Col>
+                <Col span={24}>
+                    <ArrowRightOutlined />
+                    <Tooltip title={to}>
+                        <RouterLink to={`/address/${to}`}>
+                            <Link style={{ maxWidth: "85%",marginLeft:"1%" }} ellipsis>{to}</Link>
+                        </RouterLink>
+                    </Tooltip>
+                </Col>
+            </>}
             {
-                isMobile && <>
-                    <Col xs={24}>
-                        <ArrowRightOutlined /> {
-                            <Tooltip title={to}>
-                                <RouterLink to={`/address/${to}`}>
-                                    <Link ellipsis style={{maxWidth:"70%"}}>{to}</Link>
-                                </RouterLink>
-                            </Tooltip>
-                        } ({lockDay} Days)
-                    </Col>
-                </>
+                (lockIds instanceof Array) &&
+                lockIds.map(lockId => {
+                    return <>
+                        {
+                            lockId != '0' &&
+                            <Col span={24}>
+                                <img src={shape} style={{ width: "8px", marginTop: "-2px", marginRight: "4px" }} />
+                                <UnlockOutlined />
+                                <Text type='secondary' strong delete>[LockID:{lockId}]</Text>
+                            </Col>
+                        }
+                    </>
+                })
+            }
+            {
+                lockId != "0" && !(lockIds instanceof Array) &&
+                <Col span={24}>
+                    <img src={shape} style={{ width: "8px", marginTop: "-2px", marginRight: "4px" }} />
+                    <LockOutlined />
+                    <Text type='secondary' strong>[LockID:{lockId}]</Text>
+                    <Text>
+                        {
+                            lockDay > 0 &&
+                            <>
+                                ( {isAddLock && "+"}{lockDay} Days )
+                            </>
+                        }
+                    </Text>
+                </Col>
             }
         </Row>
     }
