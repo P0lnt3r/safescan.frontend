@@ -4,16 +4,18 @@ import { useEffect, useMemo, useState } from 'react';
 import {
     QuestionCircleOutlined,
     LeftOutlined,
-    RightOutlined
+    RightOutlined,
+    SyncOutlined
 } from '@ant-design/icons';
 
-import { DateFormat, DateFormatBeforeNow } from '../../utils/DateUtil';
+import { DateFormat } from '../../utils/DateUtil';
 import { format } from '../../utils/NumberFormat';
 import { fetchBlock } from "../../services/block";
 import { BlockVO } from "../../services";
-import { useAddressProp, useBlockNumber } from "../../state/application/hooks";
+import { useBlockNumber } from "../../state/application/hooks";
 import NavigateLink from "../../components/NavigateLink";
 import EtherAmount from "../../components/EtherAmount";
+import config from "../../config";
 
 const { TextArea } = Input;
 const { Title, Text, Paragraph, Link } = Typography;
@@ -23,14 +25,28 @@ export default function () {
     const navigate = useNavigate();
     const [blockVO, setBlockVO] = useState<BlockVO>();
     const blockNumber = useBlockNumber();
-    
-    DateFormatBeforeNow( blockVO?.timestamp );
+
 
     useEffect(() => {
-        fetchBlock(Number(height), undefined).then((blockVO: BlockVO) => {
-            setBlockVO(blockVO);
-        })
-    }, [height]);
+        if (!blockVO) {
+            fetchBlock(Number(height), undefined).then((blockVO: BlockVO) => {
+                setBlockVO(blockVO);
+            })
+        } else {
+            if (blockVO.number + "" != height) {
+                fetchBlock(Number(height), undefined).then((blockVO: BlockVO) => {
+                    setBlockVO(blockVO);
+                })
+            }
+            if (blockVO.confirmed == 0 &&
+                blockNumber - blockVO.number >= config.block_confirmed
+            ) {
+                fetchBlock(Number(height), undefined).then((blockVO: BlockVO) => {
+                    setBlockVO(blockVO);
+                })
+            }
+        }
+    }, [height, blockNumber]);
 
     const gasUsedRate = useMemo(() => {
         if (blockVO) {
@@ -83,7 +99,7 @@ export default function () {
                     </Col>
                     <Col xl={16} xs={24}>
                         <Text>
-                            {blockVO && DateFormat(blockVO?.timestamp * 1000)} - {blockVO?.timestamp}
+                            {blockVO && DateFormat(blockVO?.timestamp * 1000)}
                         </Text>
                         <br />
                         {
@@ -93,12 +109,13 @@ export default function () {
                             </Text>
                         }
                         {
-                            blockVO?.confirmed == 0 &&
-                            <Text italic>
-                                {blockVO && blockNumber - blockVO?.number} Blocks Confirmed
-                            </Text>
+                            blockVO?.confirmed == 0 && <>
+                                <SyncOutlined spin style={{marginRight:"5px"}}/>
+                                <Text italic>
+                                    {blockVO && blockNumber - blockVO?.number} Blocks Confirmed
+                                </Text>
+                            </>
                         }
-
                     </Col>
                 </Row>
                 <Divider style={{ margin: '18px 0px' }} />
@@ -131,7 +148,7 @@ export default function () {
                             {blockVO?.miner}
                         </NavigateLink>
                         {
-                            blockVO?.minerPropVO && <Text style={{marginLeft:"5px"}} strong>(SuperNode: {blockVO?.minerPropVO.tag})</Text>
+                            blockVO?.minerPropVO && <Text style={{ marginLeft: "5px" }} strong>(SuperNode: {blockVO?.minerPropVO.tag})</Text>
                         }
                     </Col>
                 </Row>

@@ -18,6 +18,7 @@ import { Menu, Row, Col, Button, Layout, Input } from 'antd';
 import SAFE_LOGO from '../images/safe_logo.png'
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import SearchComponent from './SearchComponent';
 
 const { Search } = Input;
 type MenuItem = Required<MenuProps>['items'][number];
@@ -97,7 +98,7 @@ const Header: React.FC = () => {
                     <img src={SAFE_LOGO} style={{ display: "block", maxHeight: "100%" }}></img>
                 </Col>
                 <Col span={isMobile ? 20 : 10}>
-                    <Search style={{ marginLeft: '40px', width: '80%', marginTop: '6px' }} size='large' placeholder="Input Address/TxHash" enterButton />
+                    <SearchComponent />
                 </Col>
                 <Col span={isMobile ? 2 : 0} >
                     <span style={{ float: 'right' }}>

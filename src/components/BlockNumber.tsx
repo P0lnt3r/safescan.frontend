@@ -1,11 +1,13 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { Typography } from 'antd';
+import { useBlockNumber } from '../state/application/hooks';
 
 const { Link } = Typography;
 
 export default ({ blockNumber, confirmed }: {
     blockNumber: number,
-    confirmed?: number
+    confirmed?: number,
+    showConfirmed ?: false,
 }) => {
     const Render = () => {
         if (confirmed == undefined ) {
@@ -15,7 +17,7 @@ export default ({ blockNumber, confirmed }: {
         } else {
             if (confirmed == 1) {
                 return <RouterLink to={`/block/${blockNumber}`}>
-                    {blockNumber}
+                    <Link strong>{blockNumber}</Link>
                 </RouterLink>
             } else {
                 return <RouterLink to={`/block/${blockNumber}`}>
