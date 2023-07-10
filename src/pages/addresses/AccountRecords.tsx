@@ -57,18 +57,12 @@ export default ({ address }: { address: string }) => {
         pageSizeOptions: [],
         responsive: true,
     });
-
     const [tableData, setTableData] = useState<AccountRecordVO[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [tableQueryParams, setTableQueryParams] = useState<{
         orderProp?: string | undefined,
         orderMode?: string | undefined
     }>({});
-
-    function paginationOnChange(page: number, pageSize: number) {
-        pagination.current = page;
-        doFetchAddressAccountRecords();
-    }
 
     async function doFetchAddressAccountRecords() {
         setLoading(true);

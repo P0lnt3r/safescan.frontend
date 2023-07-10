@@ -31,7 +31,7 @@ export default function () {
     const blockNumber = useBlockNumber();
 
     useEffect(() => {
-        if ( !txHash ){
+        if (!txHash) {
             return;
         }
         if (!txVO) {
@@ -49,21 +49,16 @@ export default function () {
         fetchTransaction(txHash).then((txVO) => {
             setTxVO(txVO);
         });
-
         fetchEventLogs(txHash).then((eventLogs) => {
             setEventLogs(eventLogs);
         });
-
         fetchTxContractInternalTransactions(txHash).then((contractInternalTransactions) => {
             setContractInternalTransactions(contractInternalTransactions);
         });
-
         fetchTxERC20Transfers(txHash).then((txERC20Transfers) => {
             setTxERC20Transfers(txERC20Transfers);
         });
-
         fetchTxNodeRewards(txHash).then(nodeRewards => setNodeRewards(nodeRewards))
-
         fetchTxSafeAccountManagerAction(txHash).then(safeAccountManagerActions => {
             setSafeAccountManagerActions(safeAccountManagerActions)
         })
@@ -77,28 +72,32 @@ export default function () {
         return contractInternalTransactions && contractInternalTransactions.length > 0
     }, [contractInternalTransactions])
 
-    const items: TabsProps['items'] = [
-        {
-            key: 'overview',
-            label: `Overview`,
-            children: txVO && <TxOverview txVO={txVO}
-                contractInternalTransactions={contractInternalTransactions}
-                erc20Transfers={txERC20Transfers}
-                nodeRewards={nodeRewards}
-                safeAccountManagerActions={safeAccountManagerActions}
-            />,
-        },
-        {
-            key: 'contractInternalTransactions',
-            label: `${hasInternalTxns ? `Internal Txns` : ""}`,
-            children: <ContractInternalTransactions from={txVO?.from} to={txVO?.to} contractInternalTransactions={contractInternalTransactions} />,
-        },
-        {
-            key: 'eventlogs',
-            label: `${hasEventLogs ? `Logs (${eventLogs?.length})` : ""}`,
-            children: <EventLogs eventLogs={eventLogs} />,
-        },
-    ];
+    const items = useMemo<TabsProps['items']>(() => {
+        return [
+            {
+                key: 'overview',
+                label: `Overview`,
+                children: txVO &&
+                    <TxOverview txVO={txVO}
+                        contractInternalTransactions={contractInternalTransactions}
+                        erc20Transfers={txERC20Transfers}
+                        nodeRewards={nodeRewards}
+                        safeAccountManagerActions={safeAccountManagerActions}
+                    />,
+            },
+            {
+                key: 'contractInternalTransactions',
+                label: `${hasInternalTxns ? `Internal Txns` : ""}`,
+                children: <ContractInternalTransactions from={txVO?.from} to={txVO?.to} contractInternalTransactions={contractInternalTransactions} />,
+            },
+            {
+                key: 'eventlogs',
+                label: `${hasEventLogs ? `Logs (${eventLogs?.length})` : ""}`,
+                children: <EventLogs eventLogs={eventLogs} />,
+            },
+        ]
+    } , [txVO] );
+
     return (
         <>
             <Title level={3}>Transaction Details</Title>

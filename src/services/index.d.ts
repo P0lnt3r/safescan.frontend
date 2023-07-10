@@ -140,7 +140,7 @@ export interface ERC20TransferVO {
 }
 
 export interface ContractInternalTransactionVO {
-    id: number,
+    id: string,
     blockNumber: number,
     error: string,
     from: string,
@@ -195,7 +195,10 @@ export interface AddressBalanceRankVO {
     address: string,
     addressPropVO: AddressPropVO,
     balance: string,
-    totalAmount: string
+    totalAmount: string,
+    lockAmount: string,
+    freezeAmount : string,
+    totalBalance : string
 }
 
 export interface AddressVO {
