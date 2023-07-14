@@ -13,6 +13,8 @@ import {
     ImportOutlined,
     MedicineBoxOutlined,
     UserSwitchOutlined,
+    HourglassTwoTone,
+    CarryOutTwoTone,
     SyncOutlined,
 } from '@ant-design/icons';
 import { AddressPropVO, ContractInternalTransactionVO, ERC20TransferVO, EventLogVO, NodeRewardVO, SafeAccountManagerActionVO, TransactionVO } from '../../services';
@@ -184,6 +186,8 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
         const isWithdraw = action == "SafeWithdraw";
         const isTransfer = action == "SafeTransfer";
         const isAddLock = action == "SafeAddLockDay";
+        const isFreeze = action == "SafeFreeze";
+        const isVote = action == "SafeVote";
         const OutputActionAndLabel = () => {
             if (isDeposit) {
                 return <>
@@ -202,6 +206,18 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                     <MedicineBoxOutlined />
                     <Text type='secondary'> [AddLock]</Text>
                 </>;
+            }
+            if (isFreeze) {
+                return <>
+                    <HourglassTwoTone />
+                    <Text type='secondary'> [Freeze]</Text>
+                </>;
+            }
+            if ( isVote ){
+                return <>
+                    <CarryOutTwoTone />
+                    <Text type='secondary'> [Vote]</Text>
+                </>
             }
             return <>
                 <SyncOutlined />

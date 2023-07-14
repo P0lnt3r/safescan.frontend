@@ -25,6 +25,7 @@ export enum SystemContract {
     SuperNodeState      = "0x0000000000000000000000000000000000001062",
     Proposal            = "0x0000000000000000000000000000000000001072",
     SystemReward        = "0x0000000000000000000000000000000000001082",
+    SAFE3               = "0x0000000000000000000000000000000000001092",
     MultiCall           = "0x0000000000000000000000000000000000001102"
 }
 
@@ -38,6 +39,7 @@ export const SysContractABI: { [address in SystemContract]: string } = {
     [SystemContract.SuperNodeState]     : SystemContractAbiConfig._0x0000000000000000000000000000000000001062,
     [SystemContract.Proposal]           : SystemContractAbiConfig._0x0000000000000000000000000000000000001072,
     [SystemContract.SystemReward]       : SystemContractAbiConfig._0x0000000000000000000000000000000000001082,
+    [SystemContract.SAFE3]              : SystemContractAbiConfig._0x0000000000000000000000000000000000001092,
     [SystemContract.MultiCall]          : SystemContractAbiConfig._0x0000000000000000000000000000000000001102
 }
 

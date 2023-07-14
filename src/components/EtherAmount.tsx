@@ -10,7 +10,7 @@ export function GWEI( raw : string ){
 }
 
 export default ( { raw , fix , ignoreLabel } : { raw : string | bigint , fix?:number , ignoreLabel ?: boolean } ) => {
-    let amount = CurrencyAmount.ether(raw).toFixed( fix ? fix : 6 );
+    let amount = raw ? CurrencyAmount.ether(raw).toFixed( fix ? fix : 6 ) : "0";
     amount = format(amount);
     return <>
         <>{amount} { !ignoreLabel && NATIVE_LABEL}</> 

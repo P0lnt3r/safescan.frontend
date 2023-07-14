@@ -134,9 +134,9 @@ export default ({ address }: { address: string }) => {
                             {
                                 expandedAccountRecord.nodeAddressPropVO &&
                                 <>
-                                    {!hasLink && <>{accountRecord.nodeAddressPropVO.tag}</>}
+                                    {!hasLink && <>{expandedAccountRecord.nodeAddressPropVO.tag}</>}
                                     {hasLink && <RouterLink to={`/address/${nodeAddress}`}>
-                                        <Link ellipsis>{accountRecord.nodeAddressPropVO.tag}</Link>
+                                        <Link ellipsis>{expandedAccountRecord.nodeAddressPropVO.tag}</Link>
                                     </RouterLink>}
                                 </>
                             }
@@ -165,8 +165,20 @@ export default ({ address }: { address: string }) => {
                 }
             },
             {
-                title: 'Unfreeze', dataIndex: 'unfreezeHeight', render: (unfreezeHeight) => {
-                    return <BlockNumberFormatTime blockNumber={unfreezeHeight}></BlockNumberFormatTime>
+                title: 'Unfreeze', dataIndex: 'unfreezeHeight', render: (unfreezeHeight,expandedAccountRecord) => {
+                    const unfreezeTimestamp = expandedAccountRecord.unfreezeTimestamp;
+                    return <>
+                        <Tooltip title={unfreezeHeight}>
+                            {
+                                !unfreezeTimestamp &&
+                                <BlockNumberFormatTime blockNumber={unfreezeHeight} />
+                            }
+                            {
+                                unfreezeTimestamp &&
+                                <Text type="success" strong>{DateFormat(unfreezeTimestamp * 1000)}</Text>
+                            }
+                        </Tooltip>
+                    </>
                 }
             },
         ];
@@ -367,7 +379,7 @@ export default ({ address }: { address: string }) => {
                                 {
                                     accountRecord.votedAddressPropVO &&
                                     <>
-                                        {!hasLink && <>{accountRecord.nodeAddressPropVO.tag}</>}
+                                        {!hasLink && <>{accountRecord.votedAddressPropVO.tag}</>}
                                         {hasLink && <RouterLink to={`/address/${votedAddress}`}>
                                             <Link ellipsis>{accountRecord.votedAddressPropVO.tag}</Link>
                                         </RouterLink>}

@@ -92,9 +92,9 @@ export default () => {
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Name</Text>,
-            dataIndex: 'name',
-            render: (name) => <>
-                {name}
+            dataIndex: 'description',
+            render: (description) => <>
+                {description}
             </>,
             width: 140,
         },

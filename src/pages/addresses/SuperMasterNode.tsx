@@ -87,8 +87,8 @@ export default (superMasterNode: SuperMasterNodeVO) => {
                             }
                         </Descriptions.Item>
 
-                        <Descriptions.Item span={3} label={<Text strong style={{ color: "#6c757e" }} >Voters ({superMasterNode.voters.length})</Text>}>
-                            {
+                        <Descriptions.Item span={3} label={<Text strong style={{ color: "#6c757e" }} >Voters ({})</Text>}>
+                            {/* {
                                 superMasterNode.voters.map(({ lockID, addr, amount, height }) => {
                                     return (<>
                                         <Row key={lockID}>
@@ -108,7 +108,7 @@ export default (superMasterNode: SuperMasterNodeVO) => {
                                         </Row>
                                     </>)
                                 })
-                            }
+                            } */}
                         </Descriptions.Item>
 
                     </Descriptions>
