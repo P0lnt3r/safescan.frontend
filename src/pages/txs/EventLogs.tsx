@@ -133,7 +133,6 @@ export default ({
                             <Text italic>Data</Text>
                         </Col>
                         <Col xl={22} xs={24} style={{ backgroundColor: "#f8f9fa" , paddingBottom:"20px" }}>
-
                             {
                                 abiMethodDefine ? EventLogData(eventLog.data, abiMethodDefine.data)
                                     :
@@ -143,7 +142,6 @@ export default ({
                                         </Col>
                                     </Row>
                             }
-
                         </Col>
                     </Row>
                 </Col>

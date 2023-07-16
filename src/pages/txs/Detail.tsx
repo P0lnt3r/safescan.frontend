@@ -37,6 +37,9 @@ export default function () {
         if (!txVO) {
             fetchTransactionData(txHash);
         } else {
+            if (txVO.hash != txHash) {
+                fetchTransactionData(txHash);
+            }
             if (txVO?.confirmed == 0 &&
                 blockNumber - txVO.confirmed >= config.block_confirmed
             ) {
@@ -72,31 +75,30 @@ export default function () {
         return contractInternalTransactions && contractInternalTransactions.length > 0
     }, [contractInternalTransactions])
 
-    const items = useMemo<TabsProps['items']>(() => {
-        return [
-            {
-                key: 'overview',
-                label: `Overview`,
-                children: txVO &&
-                    <TxOverview txVO={txVO}
-                        contractInternalTransactions={contractInternalTransactions}
-                        erc20Transfers={txERC20Transfers}
-                        nodeRewards={nodeRewards}
-                        safeAccountManagerActions={safeAccountManagerActions}
-                    />,
-            },
-            {
-                key: 'contractInternalTransactions',
-                label: `${hasInternalTxns ? `Internal Txns` : ""}`,
-                children: <ContractInternalTransactions from={txVO?.from} to={txVO?.to} contractInternalTransactions={contractInternalTransactions} />,
-            },
-            {
-                key: 'eventlogs',
-                label: `${hasEventLogs ? `Logs (${eventLogs?.length})` : ""}`,
-                children: <EventLogs eventLogs={eventLogs} />,
-            },
-        ]
-    } , [txVO] );
+    const items: TabsProps['items'] = [
+        {
+            key: 'overview',
+            label: `Overview`,
+            children: txVO &&
+                <TxOverview txVO={txVO}
+                    contractInternalTransactions={contractInternalTransactions}
+                    erc20Transfers={txERC20Transfers}
+                    nodeRewards={nodeRewards}
+                    safeAccountManagerActions={safeAccountManagerActions}
+                />,
+        },
+        {
+            key: 'contractInternalTransactions',
+            label: `${hasInternalTxns ? `Internal Txns` : ""}`,
+            children: <ContractInternalTransactions from={txVO?.from} to={txVO?.to} contractInternalTransactions={contractInternalTransactions} />,
+        },
+        {
+            key: 'eventlogs',
+            label: `${hasEventLogs ? `Logs (${eventLogs?.length})` : ""}`,
+            children: <EventLogs eventLogs={eventLogs} />,
+        },
+    ]
+
 
     return (
         <>

@@ -263,13 +263,13 @@ export default ({ address }: { address: string }) => {
             loading={loading}
             onChange={handleTableOnChange}
             pagination={pagination} rowKey={(accountRecord: AccountRecordVO) => accountRecord.lockId}>
-            <Column title={<Text strong style={{ color: "#6c757e" }}>Lock ID</Text>}
+            <Column title={<Text strong style={{ color: "#6c757e" }}>ID</Text>}
                 dataIndex="lockId"
                 render={(lockId, accountRecord: AccountRecordVO) => {
-                    const { unlockTimestamp, withdrawTimestamp } = accountRecord;
+                    const { unlockTimestamp, withdrawTimestamp,lockDay } = accountRecord;
                     return <>
                         {
-                            !unlockTimestamp && <LockOutlined />
+                            (!unlockTimestamp && lockDay > 0) && <LockOutlined />
                         }
                         {
                             unlockTimestamp && <UnlockOutlined />

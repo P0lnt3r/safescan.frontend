@@ -114,10 +114,10 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
         }
     }
     const RenderNodeReward = (nodeReward: NodeRewardVO) => {
-        const { address, addressPropVO, rewardType, amount } = nodeReward;
+        const { address, addressPropVO, rewardType, amount, eventLogIndex } = nodeReward;
         const rewardTypeLabel = RewardTypeLabel(rewardType);
         return <>
-            <Row>
+            <Row key={eventLogIndex}>
                 <Col style={{ minWidth: "260px" }}>
                     <img src={shape} style={{ width: "8px", marginTop: "-2px", marginRight: "4px" }} />
                     <Text style={{ marginRight: "5px" }} type="secondary" >[{rewardTypeLabel}]</Text>
@@ -148,7 +148,7 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
     const RenderContractInternalTransaction = (contractInternalTransaction: ContractInternalTransactionVO) => {
         const { id, type, from, to, value } = contractInternalTransaction;
         return (type != 'CREATE2' &&
-            <Row key={ id }>
+            <Row key={id}>
                 <img src={shape} style={{ width: "8px", marginTop: "-2px", marginRight: "4px" }} />
                 <Text type='secondary' strong>
                     {
@@ -188,6 +188,7 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
         const isAddLock = action == "SafeAddLockDay";
         const isFreeze = action == "SafeFreeze";
         const isVote = action == "SafeVote";
+        const isMoveID0 = action == "SafeMoveID0";
         const OutputActionAndLabel = () => {
             if (isDeposit) {
                 return <>
@@ -213,10 +214,16 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                     <Text type='secondary'> [Freeze]</Text>
                 </>;
             }
-            if ( isVote ){
+            if (isVote) {
                 return <>
                     <CarryOutTwoTone />
                     <Text type='secondary'> [Vote]</Text>
+                </>
+            }
+            if (isMoveID0) {
+                return <>
+                    <SyncOutlined />
+                    <Text type='secondary'> [MoveID0]</Text>
                 </>
             }
             return <>
@@ -226,25 +233,22 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
         }
         return <Row>
             {!isMobile && <>
-                <Col span={24}>
-                    {
-                        <>
-                            {OutputActionAndLabel()}
-                            <span style={{ marginLeft: "2%" }}></span>
+                <Row style={{ width: "60%" }}>
+                    <Col span={8}>
+                        {OutputActionAndLabel()}
+                        <span style={{ float: "right" }}>
                             <EtherAmount raw={amount} fix={18}></EtherAmount>
-                            {
-                                <>
-                                    <ArrowRightOutlined style={{ marginLeft: "1%", marginRight: "1%" }} />
-                                    <Tooltip title={to}>
-                                        <RouterLink to={`/address/${to}`}>
-                                            <Link ellipsis>{to}</Link>
-                                        </RouterLink>
-                                    </Tooltip>
-                                </>
-                            }
-                        </>
-                    }
-                </Col>
+                            <ArrowRightOutlined />
+                        </span>
+                    </Col>
+                    <Col span={16}>
+                        <Tooltip title={to}>
+                            <RouterLink to={`/address/${to}`}>
+                                <Link ellipsis>{to}</Link>
+                            </RouterLink>
+                        </Tooltip>
+                    </Col>
+                </Row>
             </>}
             {isMobile && <>
                 <Col span={24}>
@@ -274,7 +278,7 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                             <Col span={24}>
                                 <img src={shape} style={{ width: "8px", marginTop: "-2px", marginRight: "4px" }} />
                                 <UnlockOutlined />
-                                <Text type='secondary' strong delete>[LockID:{lockId}]</Text>
+                                <Text type='secondary' strong delete>[ID:{lockId}]</Text>
                             </Col>
                         }
                     </>
@@ -284,13 +288,19 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                 lockId != "0" && !(lockIds instanceof Array) &&
                 <Col span={24}>
                     <img src={shape} style={{ width: "8px", marginTop: "-2px", marginRight: "4px" }} />
-                    <LockOutlined />
-                    <Text type='secondary' strong>[LockID:{lockId}]</Text>
+                    <Text type='secondary' strong>[ID:{lockId}]</Text>
                     <Text>
                         {
                             lockDay > 0 &&
                             <>
-                                ( {isAddLock && "+"}{lockDay} Days )
+                                (
+                                {
+                                    (isDeposit || isTransfer) && <LockOutlined />
+                                }
+                                {
+                                    (isFreeze || isVote) && <HourglassTwoTone />
+                                }
+                                {lockDay} Days)
                             </>
                         }
                     </Text>
@@ -440,7 +450,7 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                 {
                     !error && contractInternalTransactions &&
                     <>
-                        { contractInternalTransactions.map(RenderContractInternalTransaction) }
+                        {contractInternalTransactions.map(RenderContractInternalTransaction)}
                     </>
                 }
             </Col>
