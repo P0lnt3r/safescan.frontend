@@ -118,9 +118,9 @@ export default () => {
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>State</Text>,
-            dataIndex: 'state',
-            render: (state) => <>
-                {State(state)}
+            dataIndex: 'stateInfo',
+            render: (stateInfo) => <>
+                {State(stateInfo.state)}
             </>,
             width: 140,
         },
