@@ -7,9 +7,9 @@ import type { TabsProps } from 'antd';
 import TxOverview from "./TxOverview";
 import EventLogs from "./EventLogs";
 import { fetchEventLogs, fetchTransaction, fetchTxContractInternalTransactions, fetchTxERC20Transfers } from "../../services/tx";
-import { ContractInternalTransactionVO, ERC20TransferVO, EventLogVO, NodeRewardVO, SafeAccountManagerActionVO, TransactionVO } from "../../services";
+import { ContractInternalTransactionVO, ERC20TransferVO, EventLogVO, NodeRegisterActionVO, NodeRewardVO, SafeAccountManagerActionVO, TransactionVO } from "../../services";
 import ContractInternalTransactions from "./ContractInternalTransactions";
-import { fetchTxNodeRewards } from "../../services/node";
+import { fetchTxNodeRegisterActionss, fetchTxNodeRewards } from "../../services/node";
 import SystemContractAbi from "../../utils/decode/SystemContractAbi";
 import { SysContractABI, SystemContract } from "../../utils/decode/config";
 import { FormatTypes, Fragment, Interface } from 'ethers/lib/utils';
@@ -28,6 +28,7 @@ export default function () {
     const [txERC20Transfers, setTxERC20Transfers] = useState<ERC20TransferVO[]>();
     const [nodeRewards, setNodeRewards] = useState<NodeRewardVO[]>();
     const [safeAccountManagerActions, setSafeAccountManagerActions] = useState<SafeAccountManagerActionVO[]>();
+    const [nodeRegisterActions , setNodeRegisterActions] = useState<NodeRegisterActionVO[]>();
     const blockNumber = useBlockNumber();
 
     useEffect(() => {
@@ -49,9 +50,7 @@ export default function () {
     }, [txHash, blockNumber]);
 
     const fetchTransactionData = async (txHash: string) => {
-        fetchTransaction(txHash).then((txVO) => {
-            setTxVO(txVO);
-        });
+        fetchTransaction(txHash).then(setTxVO);
         fetchEventLogs(txHash).then((eventLogs) => {
             setEventLogs(eventLogs);
         });
@@ -65,6 +64,7 @@ export default function () {
         fetchTxSafeAccountManagerAction(txHash).then(safeAccountManagerActions => {
             setSafeAccountManagerActions(safeAccountManagerActions)
         })
+        fetchTxNodeRegisterActionss(txHash).then( nodeRegisterActions => setNodeRegisterActions(nodeRegisterActions) );
     }
 
     const hasEventLogs = useMemo(() => {
@@ -85,6 +85,7 @@ export default function () {
                     erc20Transfers={txERC20Transfers}
                     nodeRewards={nodeRewards}
                     safeAccountManagerActions={safeAccountManagerActions}
+                    nodeRegisterActions={nodeRegisterActions}
                 />,
         },
         {

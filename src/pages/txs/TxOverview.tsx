@@ -1,4 +1,4 @@
-import { Typography, Tag, Input, Tooltip, Row, Col, Divider } from 'antd';
+import { Typography, Tag, Input, Tooltip, Row, Col, Divider, Badge, Card } from 'antd';
 import { useMemo } from 'react';
 import {
     CheckCircleOutlined,
@@ -16,8 +16,11 @@ import {
     HourglassTwoTone,
     CarryOutTwoTone,
     SyncOutlined,
+    ApartmentOutlined,
+    UserOutlined,
+    SolutionOutlined,
 } from '@ant-design/icons';
-import { AddressPropVO, ContractInternalTransactionVO, ERC20TransferVO, EventLogVO, NodeRewardVO, SafeAccountManagerActionVO, TransactionVO } from '../../services';
+import { AddressPropVO, ContractInternalTransactionVO, ERC20TransferVO, EventLogVO, NodeRegisterActionVO, NodeRewardVO, SafeAccountManagerActionVO, TransactionVO } from '../../services';
 import { DateFormat } from '../../utils/DateUtil';
 import EtherAmount, { GWEI } from '../../components/EtherAmount';
 import JSBI from 'jsbi';
@@ -31,16 +34,18 @@ import ERC20TokenAmount from '../../components/ERC20TokenAmount';
 import ERC20Logo from '../../components/ERC20Logo';
 import { isMobile } from 'react-device-detect';
 import BlockNumber from '../../components/BlockNumber';
+import TxNodeRegisterActions from './TxNodeRegisterActions';
 
 const { Text, Paragraph, Link } = Typography;
 
-export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeRewards, safeAccountManagerActions }:
+export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeRewards, safeAccountManagerActions, nodeRegisterActions }:
     {
         txVO: TransactionVO,
         contractInternalTransactions: ContractInternalTransactionVO[] | undefined,
         erc20Transfers: ERC20TransferVO[] | undefined,
         nodeRewards: NodeRewardVO[] | undefined,
         safeAccountManagerActions: SafeAccountManagerActionVO[] | undefined,
+        nodeRegisterActions: NodeRegisterActionVO[] | undefined
     }) => {
 
     const {
@@ -557,6 +562,23 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                                 .map(nodeReward => RenderNodeReward(nodeReward))
                         }
 
+                    </Col>
+                </Row>
+            </>
+        }
+
+        {
+            nodeRegisterActions && nodeRegisterActions.length > 0 && <>
+                <Divider style={{ margin: '18px 0px' }} />
+                <Row>
+                    <Col xl={8} xs={24}>
+                        <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
+                            <QuestionCircleOutlined />
+                        </Tooltip>
+                        <Text strong style={{ marginLeft: "5px" }}>Node Actions</Text>
+                    </Col>
+                    <Col xl={12} xs={24}>
+                        <TxNodeRegisterActions nodeRegisterActions={nodeRegisterActions} />
                     </Col>
                 </Row>
             </>

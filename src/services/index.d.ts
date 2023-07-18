@@ -355,3 +355,17 @@ export interface SafeAccountManagerActionVO {
     lockId: string,
 }
 
+export interface NodeRegisterActionVO {
+    blockNumber: number,
+    timestamp: number,
+    transactionHash: string,
+    eventLogIndex: number,
+    nodeType: string,
+    registerType: string,
+    address: string,
+    operator: string,
+    amount: string,
+    lockDays: number,
+    lockId: number
+}
+

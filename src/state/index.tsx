@@ -9,7 +9,7 @@ const customizedMiddleware = getDefaultMiddleware({
     serializableCheck: false
 })
 
-const PERSISTED_KEYS: string[] = [ 'application.abis' , 'application.blockNumber' , 'application.dbStoredBlockNumber' ]
+const PERSISTED_KEYS: string[] = [ 'application.abis'  ]
 const store = configureStore({
     reducer: {
         application,

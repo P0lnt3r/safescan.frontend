@@ -1,4 +1,4 @@
-import { GET, MasterNodeVO, NodeRewardVO, POST, PageQueryDTO, PageResponseVO, SuperMasterNodeVO } from "./index.d";
+import { GET, MasterNodeVO, NodeRegisterActionVO, NodeRewardVO, POST, PageQueryDTO, PageResponseVO, SuperMasterNodeVO } from "./index.d";
 import config from "../config";
 const API_HOST = config.api_host;
 
@@ -19,5 +19,10 @@ export async function fetchAddressNodeRewards( params : { address : string } | P
 
 export async function fetchTxNodeRewards( txHash : string ) : Promise<NodeRewardVO[]>{
     const serverResponse = await POST( `${API_HOST}/noderewards/${txHash}` , {} );
+    return serverResponse.data;
+}
+
+export async function fetchTxNodeRegisterActionss( txHash : string ) : Promise<NodeRegisterActionVO[]>{
+    const serverResponse = await POST( `${API_HOST}/noderegisters/${txHash}` , {} );
     return serverResponse.data;
 }
