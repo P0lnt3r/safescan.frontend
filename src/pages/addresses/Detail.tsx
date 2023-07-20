@@ -63,13 +63,13 @@ export default function () {
         }
     }, [address])
 
-    const { type, subType, tag, remark , prop } = useMemo(() => {
+    const { type, subType, tag, remark, prop } = useMemo(() => {
         return addressVO?.propVO ? addressVO.propVO : {
             type: undefined,
             subType: undefined,
             tag: undefined,
             remark: undefined,
-            prop : undefined
+            prop: undefined
         };
     }, [addressVO]);
 
@@ -196,16 +196,14 @@ export default function () {
             </Row>
 
             <Divider style={{ marginTop: "20px" }} />
-
             {
                 subType == "supermasternode" && prop &&
-                <SuperMasterNode {... JSON.parse(prop) as SuperMasterNodeVO} />
+                <SuperMasterNode {...JSON.parse(prop) as SuperMasterNodeVO} />
             }
             {
                 subType == "masternode" && prop &&
-                <MasterNode {... JSON.parse(prop) as MasterNodeVO} />
+                <MasterNode {...JSON.parse(prop) as MasterNodeVO} />
             }
-
             <Divider style={{ marginTop: "20px" }} />
 
             <Card>

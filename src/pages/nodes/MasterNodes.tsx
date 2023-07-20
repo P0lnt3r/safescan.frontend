@@ -68,7 +68,6 @@ export default () => {
         return (<>
             <Badge {..._state} />
         </>)
-
     }
 
     const columns: ColumnsType<MasterNodeVO> = [

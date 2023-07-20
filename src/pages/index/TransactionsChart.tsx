@@ -2,9 +2,11 @@
 import { useState, useEffect } from 'react';
 import { Line } from '@ant-design/plots';
 import { Button, Col, Row, Card, Space, Typography, Statistic, Divider } from 'antd';
+import config from '../../config';
 
 
 const { Title, Text, Link } = Typography;
+const API_HOST = config.api_host;
 
 export default () => {
 
@@ -15,7 +17,7 @@ export default () => {
     }, []);
 
     const asyncFetch = () => {
-        fetch('https://gw.alipayobjects.com/os/bmw-prod/1d565782-dde4-4bb6-8946-ea6a38ccf184.json')
+        fetch(`${API_HOST}/charts/masterNodesHistory`)
             .then((response) => response.json())
             .then((json) => setData(json))
             .catch((error) => {
@@ -24,11 +26,10 @@ export default () => {
     };
     const config = {
         data,
-        xField: 'Date',
-        yField: 'scales',
+        xField: 'date',
+        yField: 'count',
         xAxis: {
-            // type: 'timeCat',
-            tickCount: 5,
+            tickCount: 4,
         },
         smooth: true,
     };

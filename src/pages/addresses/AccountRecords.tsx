@@ -15,7 +15,8 @@ import {
     ArrowRightOutlined,
     FileTextOutlined,
     LockOutlined,
-    UnlockOutlined
+    UnlockOutlined,
+    HourglassTwoTone
 } from '@ant-design/icons';
 import { Link as RouterLink } from "react-router-dom";
 import { JSBI } from "@uniswap/sdk";
@@ -25,6 +26,7 @@ import BlockNumberFormatTime from "../../components/BlockNumberFormatTime";
 import { Button } from "antd/lib/radio";
 import { FilterValue, SorterResult, TableCurrentDataSource, TablePaginationConfig } from "antd/es/table/interface";
 import { DataSourceItemType } from "antd/lib/auto-complete";
+import { useBlockNumber } from "../../state/application/hooks";
 
 
 
@@ -49,6 +51,7 @@ const DEFAULT_PAGESIZE = 20;
 export default ({ address }: { address: string }) => {
 
     const { t } = useTranslation();
+    const blockNumber = useBlockNumber();
 
     const [pagination, setPagination] = useState<TablePaginationConfig>({
         current: 1,
@@ -266,13 +269,17 @@ export default ({ address }: { address: string }) => {
             <Column title={<Text strong style={{ color: "#6c757e" }}>ID</Text>}
                 dataIndex="lockId"
                 render={(lockId, accountRecord: AccountRecordVO) => {
-                    const { unlockTimestamp, withdrawTimestamp,lockDay } = accountRecord;
+                    const { unlockTimestamp, withdrawTimestamp,lockDay,unfreezeHeight,releaseHeight } = accountRecord;
                     return <>
                         {
                             (!unlockTimestamp && lockDay > 0) && <LockOutlined />
                         }
                         {
                             unlockTimestamp && <UnlockOutlined />
+                        }
+                        {
+                            (blockNumber < unfreezeHeight || blockNumber < releaseHeight) && 
+                            <HourglassTwoTone />
                         }
                         {lockId}
                     </>

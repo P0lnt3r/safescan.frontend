@@ -249,6 +249,7 @@ export interface SuperMasterNodeVO {
     totalVoterAmount: number,
     createHeight: number,
     updateHeight: number,
+    lastRewardHeight: number,
     name: string,
     addr: string,
     enode: string,
@@ -256,11 +257,16 @@ export interface SuperMasterNodeVO {
     ip: string,
     description: string,
     founders: MemberInfoVO[],
-    voters: MemberInfoVO[],
     incentivePlan: IncentivePlanVO,
     stateInfo : {
         state : number , 
         height : number
+    } , 
+    voteInfo : {
+        totalAmount : string,
+        totalNum : string,
+        height: number,
+        voters: MemberInfoVO[]
     }
 }
 
@@ -279,7 +285,8 @@ export interface MasterNodeVO {
     stateInfo : {
         state : number,
         height : number
-    }
+    },
+    lastRewardHeight : number
 }
 
 export interface NodeRewardVO {

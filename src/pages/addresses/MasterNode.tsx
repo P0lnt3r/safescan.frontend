@@ -4,84 +4,137 @@ import { Link as RouterLink } from 'react-router-dom';
 import EtherAmount from '../../components/EtherAmount';
 import { Pie } from '@ant-design/plots';
 import IncentivePlanPie from '../../components/IncentivePlanPie';
+import {
+    ApartmentOutlined,
+    UserOutlined,
+    SolutionOutlined,
+    HourglassTwoTone,
+    ClusterOutlined
+} from '@ant-design/icons';
+import { PresetStatusColorType } from 'antd/es/_util/colors';
+import { isMobile } from 'react-device-detect';
 
 const { Title, Text, Paragraph, Link } = Typography;
 
-export default ( masterNode : MasterNodeVO ) => {
-    const incentivePlan = masterNode.incentivePlan;
+export default (masterNode: MasterNodeVO) => {
+
+    const { id, ip, description, creator, enode, incentivePlan, stateInfo, lastRewardHeight, amount, founders } = masterNode;
+
+    const nodeState = stateInfo.state;
+
+    function State(state: number) {
+        let _state: {
+            status: PresetStatusColorType,
+            text: string
+        } = {
+            status: "default",
+            text: "default"
+        }
+        if (state == 1) {
+            _state.status = "processing";
+            _state.text = "ENABLED";
+        }
+        return (<>
+            <Badge {..._state} />
+        </>)
+    }
+
     return (<>
         <Row>
             <Col style={{ marginTop: "10px", padding: "5px" }} span={24} >
-                <Card size="small">
-                    <Descriptions title="Master Node" layout="vertical" bordered>
-                        <Descriptions.Item label={<Text strong style={{ color: "#6c757e" }}>ID</Text>}>
-                            {masterNode.id}
-                        </Descriptions.Item>
-                        <Descriptions.Item label={<Text strong style={{ color: "#6c757e" }}>Amount</Text>}>
-                            <Text strong>
-                                <EtherAmount raw={masterNode.amount} fix={18}></EtherAmount>
-                            </Text>
-                        </Descriptions.Item>
-                        <Descriptions.Item label={<Text strong style={{ color: "#6c757e" }}>IP</Text>}>
-                            {masterNode.ip}
-                        </Descriptions.Item>
-
-                        <Descriptions.Item label={<Text strong style={{ color: "#6c757e" }}>Update Height</Text>}>
-                            {masterNode.updateHeight}
-                        </Descriptions.Item>
-                       
-                        <Descriptions.Item span={2} label={<Text strong style={{ color: "#6c757e" }} >Description</Text>}>
-                            {masterNode.description}
-                        </Descriptions.Item>
-
-                        <Descriptions.Item span={2} label={<Text strong style={{ color: "#6c757e" }}>Creator</Text>}>
-                            <RouterLink to={`/address/${masterNode.creator.toLowerCase()}`}>
-                                <Link>{masterNode.creator.toLowerCase()}</Link>
-                            </RouterLink>
-                        </Descriptions.Item>
-                        <Descriptions.Item label={<Text strong style={{ color: "#6c757e" }}>Create Height</Text>}>
-                            {masterNode.createHeight}
-                        </Descriptions.Item>
-                        
-
-                        <Descriptions.Item span={3} label={<Text strong style={{ color: "#6c757e" }} >ENODE</Text>}>
-                            {masterNode.enode}
-                        </Descriptions.Item>
-
-                        <Descriptions.Item span={3} label={<Text strong style={{ color: "#6c757e" }} >IncentivePlan</Text>}>
-                            <Row>
-                                <Col xs={24} xl={8}>
-                                    <div style={{ height: "200px" }}>
-                                        <IncentivePlanPie {... incentivePlan} />
-                                    </div>
+                <Card size="default" title={<Text strong><ApartmentOutlined style={{ marginRight: "5px" }} />MasterNode</Text>}>
+                    <Row>
+                        <Col xl={12}>
+                            <Row style={{ marginTop: "10px" }}>
+                                <Col span={8}><Text strong>ID:</Text></Col>
+                                <Col span={16}>
+                                    <Text>{id}</Text>
                                 </Col>
                             </Row>
-                        </Descriptions.Item>
+                            <Row style={{ marginTop: "10px" }}>
+                                <Col span={8}><Text strong>State:</Text></Col>
+                                <Col span={16}>
+                                    {State(nodeState)}
+                                </Col>
+                            </Row>
+                            <Row style={{ marginTop: "10px" }}>
+                                <Col span={8}><Text strong>IP:</Text></Col>
+                                <Col span={16}>
+                                    <Text>{ip}</Text>
+                                </Col>
+                            </Row>
+                            <Row style={{ marginTop: "10px" }}>
+                                <Col span={8}><Text strong>Description:</Text></Col>
+                                <Col span={16}>
+                                    <Text>{description}</Text>
+                                </Col>
+                            </Row>
+                            <Row style={{ marginTop: "10px" }}>
+                                <Col span={8}><Text strong>Amount:</Text></Col>
+                                <Col span={16}>
+                                    <Text><EtherAmount raw={amount} fix={18}></EtherAmount></Text>
+                                </Col>
+                            </Row>
+                            <Row style={{ marginTop: "10px" }}>
+                                <Col span={8}><Text strong>Reward Height:</Text></Col>
+                                <Col span={16}>
+                                    <Text>{lastRewardHeight}</Text>
+                                </Col>
+                            </Row>
+                            <Row style={{ marginTop: "10px" }}>
+                                <Col xl={8} xs={24}><Text strong>Creator:</Text></Col>
+                                <Col xl={16} xs={24}>
+                                    <Text>{creator.toLowerCase()}</Text>
+                                </Col>
+                            </Row>
+                        </Col>
+                        <Col xl={12} xs={24} style={{ marginTop: "10px" }}>
+                            <Text strong>Incentive Plan</Text>
+                            <div style={{ height: "150px" }}>
+                                <IncentivePlanPie {...incentivePlan} />
+                            </div>
+                        </Col>
+                    </Row>
+                    <Row style={{ marginTop: "10px" }}>
+                        <Col xl={4} xs={24}><Text strong>Enode:</Text></Col>
+                        <Col xl={20} xs={24}>
+                            <Text>{enode}</Text>
+                        </Col>
+                    </Row>
 
-                        <Descriptions.Item span={3} label={<Text strong style={{ color: "#6c757e" }} >Founders ({masterNode.founders.length})</Text>}>
-                            {
-                                masterNode.founders.map(({ lockID, addr, amount, height }) => {
-                                    return (<>
-                                        <Row key={lockID}>
-                                            <Divider></Divider>
-                                            <Col xs={24} xl={6}>
-                                                <RouterLink to={`/address/${addr.toLowerCase()}`}>
-                                                    <Link>{addr.toLowerCase()}</Link>
-                                                </RouterLink>
-                                            </Col>
-                                            <Col xs={24} xl={6}>
-                                                <Text type="secondary">[LockID:{lockID}]</Text>
-                                                <Text strong style={{ float: "right" }}>
-                                                    Amount:{<EtherAmount raw={amount} fix={18} />}
-                                                </Text>
-                                            </Col>
-                                            <Divider ></Divider>
-                                        </Row>
-                                    </>)
-                                })
-                            }
-                        </Descriptions.Item>
-                    </Descriptions>
+                    <Row>
+                        <Col span={24}>
+                            <Descriptions style={{ marginTop: "20px" }} layout="vertical" bordered>
+                                <Descriptions.Item span={3} label={<Text strong style={{ color: "#6c757e" }} >Founders ({founders.length})</Text>}>
+                                    {
+                                        founders.map(({ lockID, addr, amount, height }) => {
+                                            return (<>
+                                                <Row key={lockID}>
+                                                    <Divider></Divider>
+                                                    <Col xs={24} xl={4}>
+                                                        <Text type="secondary">[ID:{lockID}]</Text>
+                                                        <Text strong style={{ float: "right" }}>
+                                                            Amount:{<EtherAmount raw={amount} fix={18} />}
+                                                        </Text>
+                                                    </Col>
+                                                    <Col xs={0} xl={2}>
+
+                                                    </Col>
+                                                    <Col xs={24} xl={10}>
+                                                        <RouterLink to={`/address/${addr.toLowerCase()}`}>
+                                                            {addr.toLowerCase()}
+                                                        </RouterLink>
+                                                    </Col>
+                                                    <Divider />
+                                                </Row>
+                                            </>)
+                                        })
+                                    }
+                                </Descriptions.Item>
+                            </Descriptions>
+                        </Col>
+                    </Row>
+
                 </Card>
             </Col>
         </Row>
