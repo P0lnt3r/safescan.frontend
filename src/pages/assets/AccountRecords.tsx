@@ -1,4 +1,5 @@
 
+
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { AccountRecordVO, AddressPropVO, NodeRewardVO, TransactionVO } from "../../services";
 import { fetchAddressTransactions } from "../../services/tx";
@@ -21,14 +22,14 @@ import {
 import { Link as RouterLink } from "react-router-dom";
 import { JSBI } from "@uniswap/sdk";
 import { fetchAddressNodeRewards } from "../../services/node";
-import { fetchAddressAccountRecord } from "../../services/accountRecord";
+import { fetchAccountRecord, fetchAddressAccountRecord } from "../../services/accountRecord";
 import BlockNumberFormatTime from "../../components/BlockNumberFormatTime";
 import { Button } from "antd/lib/radio";
 import { FilterValue, SorterResult, TableCurrentDataSource, TablePaginationConfig } from "antd/es/table/interface";
 import { DataSourceItemType } from "antd/lib/auto-complete";
 import { useBlockNumber } from "../../state/application/hooks";
 
-const { Text, Link } = Typography;
+const { Text, Link, Title } = Typography;
 const { Column, ColumnGroup } = Table;
 const EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
 
@@ -44,9 +45,9 @@ interface ExpandedAccountRecordDataType {
     unfreezeHeight: number
     unfreezeTimestamp: number
 }
-const DEFAULT_PAGESIZE = 10;
+const DEFAULT_PAGESIZE = 20;
 
-export default ({ address }: { address: string }) => {
+export default () => {
 
     const { t } = useTranslation();
     const blockNumber = useBlockNumber();
@@ -65,14 +66,13 @@ export default ({ address }: { address: string }) => {
         orderMode?: string | undefined
     }>({});
 
-    async function doFetchAddressAccountRecords() {
+    async function doFetchAccountRecords() {
         setLoading(true);
-        fetchAddressAccountRecord({
+        fetchAccountRecord({
             current: pagination.current,
             pageSize: pagination.pageSize,
             orderProp: tableQueryParams.orderProp,
             orderMode: tableQueryParams.orderMode,
-            address: address
         }).then(data => {
             setLoading(false);
             setPagination({
@@ -87,8 +87,8 @@ export default ({ address }: { address: string }) => {
 
     useEffect(() => {
         pagination.current = 1;
-        doFetchAddressAccountRecords();
-    }, [address]);
+        doFetchAccountRecords();
+    }, []);
 
     const handleTableOnChange = (page: TablePaginationConfig, filter: any, sorter: any) => {
         let _sorter = sorter as SorterResult<AccountRecordVO>
@@ -101,7 +101,7 @@ export default ({ address }: { address: string }) => {
         }
         pagination.current = page.current;
         pagination.pageSize = page.pageSize
-        doFetchAddressAccountRecords();
+        doFetchAccountRecords();
     }
 
     const expandedRowRender = (accountRecord: AccountRecordVO) => {
@@ -129,7 +129,7 @@ export default ({ address }: { address: string }) => {
             {
                 title: "Node", dataIndex: "nodeAddress", width: 200,
                 render: (nodeAddress, expandedAccountRecord) => {
-                    const hasLink = !(nodeAddress == address);
+                    const hasLink = true;
                     return <>
                         <Tooltip title={nodeAddress}>
                             {
@@ -245,7 +245,7 @@ export default ({ address }: { address: string }) => {
     return <>
         <Button onClick={() => {
             pagination.current = 1;
-            doFetchAddressAccountRecords();
+            doFetchAccountRecords();
         }}>Refresh</Button>
         <Table dataSource={tableData} scroll={{ x: 800 }}
             expandable={{
@@ -268,7 +268,7 @@ export default ({ address }: { address: string }) => {
             <Column title={<Text strong style={{ color: "#6c757e" }}>ID</Text>}
                 dataIndex="lockId"
                 render={(lockId, accountRecord: AccountRecordVO) => {
-                    const { unlockTimestamp, withdrawTimestamp, lockDay, unfreezeHeight, releaseHeight } = accountRecord;
+                    const { unlockTimestamp, lockDay, unfreezeHeight, releaseHeight } = accountRecord;
                     return <>
                         {
                             (!unlockTimestamp && lockDay > 0) && <LockOutlined />
@@ -315,11 +315,26 @@ export default ({ address }: { address: string }) => {
                 width={110}
                 sorter
             />
+
+            <Column title={<Text strong style={{ color: "#6c757e" }}>Owner</Text>}
+                dataIndex="address"
+                render={(address, accountRecord: AccountRecordVO) => {
+                    return <>
+                        <Tooltip title={address}>
+                            <RouterLink to={`/address/${address}`}>
+                                <Link ellipsis>{address}</Link>
+                            </RouterLink>
+                        </Tooltip>
+                    </>
+                }}
+                width={70}
+            />
+
             <Column title={<Text strong style={{ color: "#6c757e" }}>Member Of Node</Text>}
                 dataIndex="specialAddress"
                 render={(specialAddress, accountRecord: AccountRecordVO) => {
                     const isEmpty = specialAddress == EMPTY_ADDRESS;
-                    const hasLink = !(specialAddress == address);
+                    const hasLink = true;
                     return <>
                         {
                             isEmpty && <Text type="secondary">[EMPTY]</Text>
@@ -351,47 +366,12 @@ export default ({ address }: { address: string }) => {
                 }}
                 width={70}
             />
-            <Column title={<Text strong style={{ color: "#6c757e" }}>Proxy MasterNode</Text>}
-                dataIndex="proxyMasternode"
-                render={(proxyMasternode, accountRecord: AccountRecordVO) => {
-                    const isEmpty = proxyMasternode == undefined || proxyMasternode == EMPTY_ADDRESS;
-                    const hasLink = !(proxyMasternode == address);
-                    return <>
-                        {
-                            isEmpty && <Text type="secondary">[EMPTY]</Text>
-                        }
-                        {
-                            !isEmpty &&
-                            <Tooltip title={proxyMasternode}>
-                                {
-                                    accountRecord.proxyAddressPropVO &&
-                                    <>
-                                        {!hasLink && <>{accountRecord.nodeAddressPropVO.tag}</>}
-                                        {hasLink && <RouterLink to={`/address/${proxyMasternode}`}>
-                                            <Link ellipsis>{accountRecord.proxyAddressPropVO.tag}</Link>
-                                        </RouterLink>}
-                                    </>
-                                }
-                                {
-                                    !accountRecord.proxyAddressPropVO &&
-                                    <>
-                                        {!hasLink && <Text ellipsis>{proxyMasternode}</Text>}
-                                        {hasLink && <RouterLink to={`/address/${proxyMasternode}`}>
-                                            <Link ellipsis>{proxyMasternode}</Link>
-                                        </RouterLink>}
-                                    </>
-                                }
-                            </Tooltip>
-                        }
-                    </>
-                }}
-                width={70}
-            />
+
             <Column title={<Text strong style={{ color: "#6c757e" }}>Vote For Node</Text>}
                 dataIndex="votedAddress"
                 render={(votedAddress, accountRecord: AccountRecordVO) => {
                     const isEmpty = votedAddress == EMPTY_ADDRESS;
-                    const hasLink = !(votedAddress == address);
+                    const hasLink = true;
                     return <>
                         {
                             isEmpty && <Text type="secondary">[EMPTY]</Text>
@@ -424,7 +404,7 @@ export default ({ address }: { address: string }) => {
                 width={70}
             />
 
-            <Column title={<Text strong style={{ color: "#6c757e" }}>Lock Time</Text>}
+            <Column title={<Text strong style={{ color: "#6c757e" }}>Create Time</Text>}
                 dataIndex="startHeight"
                 render={(startHeight, accountRecord: AccountRecordVO) => {
                     return <>

@@ -16,6 +16,7 @@ import ERC20Tokens from './pages/assets/ERC20Tokens';
 import ERC20Transfers from './pages/assets/ERC20Transfers';
 import SuperMasterNodes from './pages/nodes/SuperMasterNodes';
 import MasterNodes from './pages/nodes/MasterNodes';
+import AccountRecords from './pages/assets/AccountRecords';
 
 const { Content } = Layout;
 
@@ -36,6 +37,7 @@ function App() {
               <Route path="/tx/:txHash" index element={<TxDetail />} />
               <Route path="/txsInternal" index element={<TxsInternal />} />
               <Route path="/accounts" index element={<RankAddress />} />
+              <Route path="/assets/accountrecords" index element={<AccountRecords />} />
               <Route path="/assets/erc20tokens" index element={<ERC20Tokens />} />
               <Route path="/assets/erc20txns" index element={<ERC20Transfers />} />
               <Route path="/nodes/supermasternodes" index element={<SuperMasterNodes />} />

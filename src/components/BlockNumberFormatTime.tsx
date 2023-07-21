@@ -13,9 +13,7 @@ export default ({ blockNumber }: {
         {
             (blockNumber - latestBlockNumber > 0) &&
             <Tooltip title={`${blockNumber}`}>
-                <Text strong type="secondary">
-                    {DateFormat(((blockNumber - latestBlockNumber) * 30 + latestBlockTimestamp) * 1000)}
-                </Text>
+                {DateFormat(((blockNumber - latestBlockNumber) * 30 + latestBlockTimestamp) * 1000)}
             </Tooltip>
         }
     </>

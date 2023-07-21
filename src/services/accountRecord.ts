@@ -7,6 +7,11 @@ export async function fetchAddressAccountRecord( params : { address : string } |
     return serverResponse.data;
 }
 
+export async function fetchAccountRecord( params : {} | PageQueryDTO ) : Promise< PageResponseVO<AccountRecordVO> > {
+    const serverResponse = await POST( `${API_HOST}/accountRecords` , params );
+    return serverResponse.data;
+}
+
 export async function fetchTxSafeAccountManagerAction( txHash : string ) : Promise< SafeAccountManagerActionVO[] > {
     const serverResponse = await POST( `${API_HOST}/accountmanager/${txHash}` ,{} );
     return serverResponse.data;
