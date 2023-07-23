@@ -308,6 +308,7 @@ export interface AccountRecordVO {
 
     lockId: number,
     address: string,
+    addressPropVO : AddressPropVO,
     amount: string,
     lockDay: number,
     startTxHash: string,

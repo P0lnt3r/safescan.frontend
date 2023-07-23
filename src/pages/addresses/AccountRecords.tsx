@@ -27,6 +27,8 @@ import { Button } from "antd/lib/radio";
 import { FilterValue, SorterResult, TableCurrentDataSource, TablePaginationConfig } from "antd/es/table/interface";
 import { DataSourceItemType } from "antd/lib/auto-complete";
 import { useBlockNumber } from "../../state/application/hooks";
+import Address from "../../components/Address";
+import AccountRecords from "../assets/AccountRecords";
 
 const { Text, Link } = Typography;
 const { Column, ColumnGroup } = Table;
@@ -131,26 +133,7 @@ export default ({ address }: { address: string }) => {
                 render: (nodeAddress, expandedAccountRecord) => {
                     const hasLink = !(nodeAddress == address);
                     return <>
-                        <Tooltip title={nodeAddress}>
-                            {
-                                expandedAccountRecord.nodeAddressPropVO &&
-                                <>
-                                    {!hasLink && <>{expandedAccountRecord.nodeAddressPropVO.tag}</>}
-                                    {hasLink && <RouterLink to={`/address/${nodeAddress}`}>
-                                        <Link ellipsis>{expandedAccountRecord.nodeAddressPropVO.tag}</Link>
-                                    </RouterLink>}
-                                </>
-                            }
-                            {
-                                !expandedAccountRecord.nodeAddressPropVO &&
-                                <>
-                                    {!hasLink && <Text ellipsis>{nodeAddress}</Text>}
-                                    {hasLink && <RouterLink to={`/address/${nodeAddress}`}>
-                                        <Link ellipsis>{nodeAddress}</Link>
-                                    </RouterLink>}
-                                </>
-                            }
-                        </Tooltip>
+                        <Address address={nodeAddress} propVO={expandedAccountRecord.nodeAddressPropVO} style={{hasLink}} />
                     </>
                 },
             },
@@ -325,27 +308,7 @@ export default ({ address }: { address: string }) => {
                             isEmpty && <Text type="secondary">[EMPTY]</Text>
                         }
                         {
-                            !isEmpty &&
-                            <Tooltip title={specialAddress}>
-                                {
-                                    accountRecord.nodeAddressPropVO &&
-                                    <>
-                                        {!hasLink && <>{accountRecord.nodeAddressPropVO.tag}</>}
-                                        {hasLink && <RouterLink to={`/address/${specialAddress}`}>
-                                            <Link ellipsis>{accountRecord.nodeAddressPropVO.tag}</Link>
-                                        </RouterLink>}
-                                    </>
-                                }
-                                {
-                                    !accountRecord.nodeAddressPropVO &&
-                                    <>
-                                        {!hasLink && <Text ellipsis>{specialAddress}</Text>}
-                                        {hasLink && <RouterLink to={`/address/${specialAddress}`}>
-                                            <Link ellipsis>{specialAddress}</Link>
-                                        </RouterLink>}
-                                    </>
-                                }
-                            </Tooltip>
+                            !isEmpty && <Address address={specialAddress} propVO={accountRecord.nodeAddressPropVO} style={{hasLink}} />
                         }
                     </>
                 }}
@@ -361,27 +324,7 @@ export default ({ address }: { address: string }) => {
                             isEmpty && <Text type="secondary">[EMPTY]</Text>
                         }
                         {
-                            !isEmpty &&
-                            <Tooltip title={proxyMasternode}>
-                                {
-                                    accountRecord.proxyAddressPropVO &&
-                                    <>
-                                        {!hasLink && <>{accountRecord.nodeAddressPropVO.tag}</>}
-                                        {hasLink && <RouterLink to={`/address/${proxyMasternode}`}>
-                                            <Link ellipsis>{accountRecord.proxyAddressPropVO.tag}</Link>
-                                        </RouterLink>}
-                                    </>
-                                }
-                                {
-                                    !accountRecord.proxyAddressPropVO &&
-                                    <>
-                                        {!hasLink && <Text ellipsis>{proxyMasternode}</Text>}
-                                        {hasLink && <RouterLink to={`/address/${proxyMasternode}`}>
-                                            <Link ellipsis>{proxyMasternode}</Link>
-                                        </RouterLink>}
-                                    </>
-                                }
-                            </Tooltip>
+                            !isEmpty && <Address address={proxyMasternode} propVO={accountRecord.proxyAddressPropVO} style={{hasLink}} />
                         }
                     </>
                 }}
@@ -397,27 +340,7 @@ export default ({ address }: { address: string }) => {
                             isEmpty && <Text type="secondary">[EMPTY]</Text>
                         }
                         {
-                            !isEmpty &&
-                            <Tooltip title={votedAddress}>
-                                {
-                                    accountRecord.votedAddressPropVO &&
-                                    <>
-                                        {!hasLink && <>{accountRecord.votedAddressPropVO.tag}</>}
-                                        {hasLink && <RouterLink to={`/address/${votedAddress}`}>
-                                            <Link ellipsis>{accountRecord.votedAddressPropVO.tag}</Link>
-                                        </RouterLink>}
-                                    </>
-                                }
-                                {
-                                    !accountRecord.votedAddressPropVO &&
-                                    <>
-                                        {!hasLink && <Text ellipsis>{votedAddress}</Text>}
-                                        {hasLink && <RouterLink to={`/address/${votedAddress}`}>
-                                            <Link ellipsis>{votedAddress}</Link>
-                                        </RouterLink>}
-                                    </>
-                                }
-                            </Tooltip>
+                            !isEmpty && <Address address={votedAddress} propVO={accountRecord.votedAddressPropVO} style={{hasLink}} />
                         }
                     </>
                 }}

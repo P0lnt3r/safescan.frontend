@@ -28,6 +28,7 @@ import { Button } from "antd/lib/radio";
 import { FilterValue, SorterResult, TableCurrentDataSource, TablePaginationConfig } from "antd/es/table/interface";
 import { DataSourceItemType } from "antd/lib/auto-complete";
 import { useBlockNumber } from "../../state/application/hooks";
+import Address from "../../components/Address";
 
 const { Text, Link, Title } = Typography;
 const { Column, ColumnGroup } = Table;
@@ -131,26 +132,7 @@ export default () => {
                 render: (nodeAddress, expandedAccountRecord) => {
                     const hasLink = true;
                     return <>
-                        <Tooltip title={nodeAddress}>
-                            {
-                                expandedAccountRecord.nodeAddressPropVO &&
-                                <>
-                                    {!hasLink && <>{expandedAccountRecord.nodeAddressPropVO.tag}</>}
-                                    {hasLink && <RouterLink to={`/address/${nodeAddress}`}>
-                                        <Link ellipsis>{expandedAccountRecord.nodeAddressPropVO.tag}</Link>
-                                    </RouterLink>}
-                                </>
-                            }
-                            {
-                                !expandedAccountRecord.nodeAddressPropVO &&
-                                <>
-                                    {!hasLink && <Text ellipsis>{nodeAddress}</Text>}
-                                    {hasLink && <RouterLink to={`/address/${nodeAddress}`}>
-                                        <Link ellipsis>{nodeAddress}</Link>
-                                    </RouterLink>}
-                                </>
-                            }
-                        </Tooltip>
+                        <Address address={nodeAddress} propVO={expandedAccountRecord.nodeAddressPropVO} style={{hasLink}} />
                     </>
                 },
             },
@@ -319,12 +301,9 @@ export default () => {
             <Column title={<Text strong style={{ color: "#6c757e" }}>Owner</Text>}
                 dataIndex="address"
                 render={(address, accountRecord: AccountRecordVO) => {
+                    const { addressPropVO } = accountRecord;
                     return <>
-                        <Tooltip title={address}>
-                            <RouterLink to={`/address/${address}`}>
-                                <Link ellipsis>{address}</Link>
-                            </RouterLink>
-                        </Tooltip>
+                        <Address address={address} propVO={addressPropVO} />
                     </>
                 }}
                 width={70}
@@ -340,27 +319,7 @@ export default () => {
                             isEmpty && <Text type="secondary">[EMPTY]</Text>
                         }
                         {
-                            !isEmpty &&
-                            <Tooltip title={specialAddress}>
-                                {
-                                    accountRecord.nodeAddressPropVO &&
-                                    <>
-                                        {!hasLink && <>{accountRecord.nodeAddressPropVO.tag}</>}
-                                        {hasLink && <RouterLink to={`/address/${specialAddress}`}>
-                                            <Link ellipsis>{accountRecord.nodeAddressPropVO.tag}</Link>
-                                        </RouterLink>}
-                                    </>
-                                }
-                                {
-                                    !accountRecord.nodeAddressPropVO &&
-                                    <>
-                                        {!hasLink && <Text ellipsis>{specialAddress}</Text>}
-                                        {hasLink && <RouterLink to={`/address/${specialAddress}`}>
-                                            <Link ellipsis>{specialAddress}</Link>
-                                        </RouterLink>}
-                                    </>
-                                }
-                            </Tooltip>
+                            !isEmpty && <Address address={specialAddress} propVO={accountRecord.nodeAddressPropVO} style={{hasLink}} />
                         }
                     </>
                 }}
@@ -377,27 +336,7 @@ export default () => {
                             isEmpty && <Text type="secondary">[EMPTY]</Text>
                         }
                         {
-                            !isEmpty &&
-                            <Tooltip title={votedAddress}>
-                                {
-                                    accountRecord.votedAddressPropVO &&
-                                    <>
-                                        {!hasLink && <>{accountRecord.votedAddressPropVO.tag}</>}
-                                        {hasLink && <RouterLink to={`/address/${votedAddress}`}>
-                                            <Link ellipsis>{accountRecord.votedAddressPropVO.tag}</Link>
-                                        </RouterLink>}
-                                    </>
-                                }
-                                {
-                                    !accountRecord.votedAddressPropVO &&
-                                    <>
-                                        {!hasLink && <Text ellipsis>{votedAddress}</Text>}
-                                        {hasLink && <RouterLink to={`/address/${votedAddress}`}>
-                                            <Link ellipsis>{votedAddress}</Link>
-                                        </RouterLink>}
-                                    </>
-                                }
-                            </Tooltip>
+                            !isEmpty && <Address address={votedAddress} propVO={accountRecord.votedAddressPropVO} style={{hasLink}} />
                         }
                     </>
                 }}

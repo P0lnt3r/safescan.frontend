@@ -16,6 +16,7 @@ import { useDispatch } from 'react-redux';
 import { JSBI } from '@uniswap/sdk';
 import { useBlockNumber, useDBStoredBlockNumber } from '../../state/application/hooks';
 import { format } from '../../utils/NumberFormat';
+import Address from '../../components/Address';
 const { Title, Text, Link } = Typography;
 
 const DEFAULT_PAGESIZE = 50;
@@ -87,12 +88,7 @@ export default function () {
         return <>
           <Row>
             <Col span={22}>
-              {<Tooltip title={from}>
-                <RouterLink to={`/address/${from}`}>
-                  <Link style={{ width: "80%", marginLeft: "5px" }} ellipsis>{tag ? tag : from}</Link>
-                </RouterLink>
-              </Tooltip>
-              }
+              <Address address={from} propVO={fromPropVO} />
             </Col>
             <Col>
               <ArrowRightOutlined />
@@ -106,20 +102,9 @@ export default function () {
       dataIndex: 'to',
       width: 180,
       render: (to, txVO) => {
-        const { methodId, toPropVO } = txVO;
-        const tag = toPropVO?.tag;
-        const type = toPropVO?.type;
+        const { toPropVO } = txVO;
         return <>
-          {
-            (methodId || type === "contract") && <Tooltip title="Contract"><FileTextOutlined /></Tooltip>
-          }
-          {
-            <Tooltip title={to}>
-              <RouterLink to={`/address/${to}`}>
-                <Link style={{ width: "80%", marginLeft: "5px" }} ellipsis>{tag ? tag : to}</Link>
-              </RouterLink>
-            </Tooltip>
-          }
+          <Address address={to} propVO={toPropVO} />
         </>
       }
     },
@@ -236,7 +221,6 @@ export default function () {
           </Text>
         }
       </Row>
-
       <Card>
         <OutputTotal />
         <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}

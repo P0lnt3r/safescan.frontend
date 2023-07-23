@@ -11,6 +11,7 @@ import NumberFormat, { format } from '../../utils/NumberFormat';
 import { Link as RouterLink } from 'react-router-dom';
 import EtherAmount from '../../components/EtherAmount';
 import { useDBStoredBlockNumber } from '../../state/application/hooks';
+import Address from '../../components/Address';
 
 const { Title, Text, Link } = Typography;
 
@@ -51,18 +52,7 @@ export default function () {
       render: (address, blockVO) => {
         const propVO = blockVO.minerPropVO;
         return <>
-          {
-            propVO == null &&
-            <Link ellipsis>{address}</Link>
-          }
-          {
-            propVO != null &&
-            <Tooltip title={address}>
-              <RouterLink to={`/address/${address}`}>
-                <Link ellipsis>{propVO.tag}</Link>
-              </RouterLink>
-            </Tooltip>
-          }
+          <Address address={address} propVO={propVO}/>
         </>
       }
     },

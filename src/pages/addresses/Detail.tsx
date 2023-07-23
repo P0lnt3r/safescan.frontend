@@ -197,7 +197,7 @@ export default function () {
 
             <Divider style={{ marginTop: "20px" }} />
             {
-                subType == "supermasternode" && prop &&
+                subType == "supernode" && prop &&
                 <SuperMasterNode {...JSON.parse(prop) as SuperMasterNodeVO} />
             }
             {

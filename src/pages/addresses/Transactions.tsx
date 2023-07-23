@@ -4,20 +4,17 @@ import { fetchAddressTransactions } from "../../services/tx";
 import { PaginationProps, Table, Typography, Row, Col, Tooltip, TablePaginationConfig } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslation } from 'react-i18next';
-import AddressTag, { ShowStyle } from '../../components/AddressTag';
 import TransactionHash from '../../components/TransactionHash';
 import { DateFormat } from '../../utils/DateUtil';
 import EtherAmount from '../../components/EtherAmount';
-import NavigateLink from "../../components/NavigateLink";
 import TxMethodId from "../../components/TxMethodId";
 import { ArrowRightOutlined, FileTextOutlined } from '@ant-design/icons';
 import { Link as RouterLink } from "react-router-dom";
-import { JSBI } from "@uniswap/sdk";
 import { format } from "../../utils/NumberFormat";
 import BlockNumber from "../../components/BlockNumber";
+import Address from "../../components/Address";
 
 const { Text, Link } = Typography;
-
 const DEFAULT_PAGESIZE = 20;
 
 export default ({ address }: { address: string }) => {
@@ -135,22 +132,11 @@ export default ({ address }: { address: string }) => {
             width: 150,
             render: (from, txVO) => {
                 const { fromPropVO } = txVO;
-                const tag = fromPropVO?.tag;
+                const hasLink = !(address == from);
                 return <>
                     <Row>
                         <Col span={20}>
-                            <Tooltip title={from}>
-                                {
-                                    address === from
-                                        ? <Text style={{ width: "80%" }} ellipsis>
-                                            {tag ? tag : from}
-                                        </Text>
-                                        :
-                                        <RouterLink to={`/address/${from}`}>
-                                            <Link style={{ width: "80%" }} ellipsis>{tag ? tag : from}</Link>
-                                        </RouterLink>
-                                }
-                            </Tooltip>
+                            <Address address={from} propVO={fromPropVO} style={ {hasLink:false} } />
                         </Col>
                         <Col span={4}>
                             {
@@ -169,24 +155,9 @@ export default ({ address }: { address: string }) => {
             width: 150,
             render: (to, txVO) => {
                 const { methodId, toPropVO } = txVO;
-                const tag = toPropVO?.tag;
-                const type = toPropVO?.type;
+                const hasLink = address != to;
                 return <>
-                    {
-                        (methodId || type === "contract") && <Tooltip title="Contract"><FileTextOutlined /></Tooltip>
-                    }
-                    <Tooltip title={to}>
-                        {
-                            address === to
-                                ? <Text style={{ width: "80%", marginLeft: "5px" }} ellipsis>
-                                    {tag ? tag : to}
-                                </Text>
-                                : <RouterLink to={`/address/${to}`}>
-                                    <Link style={{ width: "80%", marginLeft: "5px" }} ellipsis>{tag ? tag : to}</Link>
-                                </RouterLink>
-                        }
-                    </Tooltip>
-
+                    <Address address={to} propVO={toPropVO} style={ {hasLink} }></Address>
                 </>
 
             }
