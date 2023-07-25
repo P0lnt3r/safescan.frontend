@@ -14,7 +14,7 @@ import { Breadcrumb, Layout, Menu } from 'antd';
 import RankAddress from './pages/statistics/RankAddress';
 import ERC20Tokens from './pages/assets/ERC20Tokens';
 import ERC20Transfers from './pages/assets/ERC20Transfers';
-import SuperMasterNodes from './pages/nodes/SuperMasterNodes';
+import SuperNodes from './pages/nodes/SuperNodes';
 import MasterNodes from './pages/nodes/MasterNodes';
 import AccountRecords from './pages/assets/AccountRecords';
 
@@ -40,7 +40,7 @@ function App() {
               <Route path="/assets/accountrecords" index element={<AccountRecords />} />
               <Route path="/assets/erc20tokens" index element={<ERC20Tokens />} />
               <Route path="/assets/erc20txns" index element={<ERC20Transfers />} />
-              <Route path="/nodes/supermasternodes" index element={<SuperMasterNodes />} />
+              <Route path="/nodes/supermasternodes" index element={<SuperNodes />} />
               <Route path="/nodes/masternodes" index element={<MasterNodes />} />
             </Routes>
           </div>

@@ -35,6 +35,10 @@ import ERC20Logo from '../../components/ERC20Logo';
 import { isMobile } from 'react-device-detect';
 import BlockNumber from '../../components/BlockNumber';
 import TxNodeRegisterActions from './TxNodeRegisterActions';
+import Address from '../../components/Address';
+import TxNodeRewards from './TxNodeRewards';
+import TxSafeAccountManagerActions from './TxSafeAccountManagerActions';
+import TxInternalTxns from './TxInternalTxns';
 
 const { Text, Paragraph, Link } = Typography;
 
@@ -82,237 +86,6 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
         }
     }, [gasPrice, gasUsed, gas]);
     const functionFragment = useAddressFunctionFragment(to, methodId, useDispatch());
-
-    const { superNode, masterNode } = useMemo<{
-        superNode?: { address: string, propVO: AddressPropVO },
-        masterNode?: { address: string, propVO: AddressPropVO },
-    }>(() => {
-        let superNode, masterNode;
-        if (nodeRewards) {
-            nodeRewards.forEach(nodeReward => {
-                if (nodeReward.nodeType == 1) {
-                    superNode = {
-                        address: nodeReward.nodeAddress,
-                        propVO: nodeReward.nodeAddressPropVO
-                    }
-                } else if (nodeReward.nodeType == 2) {
-                    masterNode = {
-                        address: nodeReward.nodeAddress,
-                        propVO: nodeReward?.nodeAddressPropVO
-                    }
-                }
-            })
-        }
-        return {
-            superNode, masterNode
-        }
-    }, [nodeRewards]);
-
-    const RewardTypeLabel = (rewardType: number) => {
-        switch (rewardType) {
-            case 1:
-                return "Creator";
-            case 2:
-                return "Founder";
-            case 3:
-                return "Voter";
-        }
-    }
-    const RenderNodeReward = (nodeReward: NodeRewardVO) => {
-        const { address, addressPropVO, rewardType, amount, eventLogIndex } = nodeReward;
-        const rewardTypeLabel = RewardTypeLabel(rewardType);
-        return <>
-            <Row key={eventLogIndex}>
-                <Col style={{ minWidth: "260px" }}>
-                    <img src={shape} style={{ width: "8px", marginTop: "-2px", marginRight: "4px" }} />
-                    <Text style={{ marginRight: "5px" }} type="secondary" >[{rewardTypeLabel}]</Text>
-                    <EtherAmount raw={amount} fix={18} />
-                </Col>
-                <Col xl={16} xs={24}>
-                    <Text><ArrowRightOutlined style={{ marginLeft: "15px", marginRight: "10px" }} />
-                        {
-                            addressPropVO &&
-                            <Tooltip title={address}>
-                                <RouterLink to={`/address/${address}`}>
-                                    <Link>{addressPropVO?.tag}</Link>
-                                </RouterLink>
-                            </Tooltip>
-                        }
-                        {
-                            !addressPropVO &&
-                            <RouterLink to={`/address/${address}`}>
-                                <Link>{address}</Link>
-                            </RouterLink>
-                        }
-                    </Text>
-                </Col>
-            </Row>
-        </>
-    }
-
-    const RenderContractInternalTransaction = (contractInternalTransaction: ContractInternalTransactionVO) => {
-        const { id, type, from, to, value } = contractInternalTransaction;
-        return (type != 'CREATE2' &&
-            <Row key={id}>
-                <img src={shape} style={{ width: "8px", marginTop: "-2px", marginRight: "4px" }} />
-                <Text type='secondary' strong>
-                    {
-                        value && type === 'CALL' && "TRANSFER"
-                    }
-                    {
-                        'CALL' !== type && type
-                    }
-                </Text>
-                {
-                    value && type === 'CALL' && <Text style={{ marginLeft: '4px', marginRight: '4px' }}>
-                        <EtherAmount raw={value} fix={18}></EtherAmount>
-                    </Text>
-                }
-                <Text type='secondary' style={{ marginLeft: '4px', marginRight: '4px' }}> From </Text>
-                <Tooltip title={from}>
-                    <RouterLink to={`/addresses/${from}`} style={{ minWidth: "100px", maxWidth: "20%" }}>
-                        <Link ellipsis>{from}</Link>
-                    </RouterLink>
-                </Tooltip>
-                <Text type='secondary' style={{ marginLeft: '4px', marginRight: '4px' }}> To </Text>
-                <Tooltip title={to}>
-                    <RouterLink to={`/addresses/${to}`} style={{ minWidth: "100px", maxWidth: "20%" }}>
-                        <Link ellipsis>{to}</Link>
-                    </RouterLink>
-                </Tooltip>
-            </Row>
-        )
-    }
-
-    const RenderSafeAccountManagerAction = (safeAccountManagerAction: SafeAccountManagerActionVO) => {
-        const { lockId, action, amount, to, lockDay } = safeAccountManagerAction;
-        const lockIds = JSON.parse(lockId);
-        const isDeposit = action == "SafeDeposit";
-        const isWithdraw = action == "SafeWithdraw";
-        const isTransfer = action == "SafeTransfer";
-        const isAddLock = action == "SafeAddLockDay";
-        const isFreeze = action == "SafeFreeze";
-        const isVote = action == "SafeVote";
-        const isMoveID0 = action == "SafeMoveID0";
-        const OutputActionAndLabel = () => {
-            if (isDeposit) {
-                return <>
-                    <ImportOutlined />
-                    <Text type='secondary'> [Deposit]</Text>
-                </>;
-            }
-            if (isWithdraw) {
-                return <>
-                    <ExportOutlined />
-                    <Text type='secondary'> [Withdraw]</Text>
-                </>;
-            }
-            if (isAddLock) {
-                return <>
-                    <MedicineBoxOutlined />
-                    <Text type='secondary'> [AddLock]</Text>
-                </>;
-            }
-            if (isFreeze) {
-                return <>
-                    <HourglassTwoTone />
-                    <Text type='secondary'> [Freeze]</Text>
-                </>;
-            }
-            if (isVote) {
-                return <>
-                    <CarryOutTwoTone />
-                    <Text type='secondary'> [Vote]</Text>
-                </>
-            }
-            if (isMoveID0) {
-                return <>
-                    <SyncOutlined />
-                    <Text type='secondary'> [MoveID0]</Text>
-                </>
-            }
-            return <>
-                <SyncOutlined />
-                <Text type='secondary'> [Transfer]</Text>
-            </>;
-        }
-        return <Row>
-            {!isMobile && <>
-                <Row style={{ width: "60%" }}>
-                    <Col span={8}>
-                        {OutputActionAndLabel()}
-                        <span style={{ float: "right" }}>
-                            <EtherAmount raw={amount} fix={18}></EtherAmount>
-                            <ArrowRightOutlined />
-                        </span>
-                    </Col>
-                    <Col span={16}>
-                        <Tooltip title={to}>
-                            <RouterLink to={`/address/${to}`}>
-                                <Link ellipsis>{to}</Link>
-                            </RouterLink>
-                        </Tooltip>
-                    </Col>
-                </Row>
-            </>}
-            {isMobile && <>
-                <Col span={24}>
-                    {
-                        <>
-                            {OutputActionAndLabel()}
-                            <span style={{ marginLeft: "2%" }}></span>
-                            <EtherAmount raw={amount} fix={18}></EtherAmount>
-                        </>
-                    }
-                </Col>
-                <Col span={24}>
-                    <ArrowRightOutlined />
-                    <Tooltip title={to}>
-                        <RouterLink to={`/address/${to}`}>
-                            <Link style={{ maxWidth: "85%", marginLeft: "1%" }} ellipsis>{to}</Link>
-                        </RouterLink>
-                    </Tooltip>
-                </Col>
-            </>}
-            {
-                (lockIds instanceof Array) &&
-                lockIds.map(lockId => {
-                    return <>
-                        {
-                            lockId != '0' &&
-                            <Col span={24}>
-                                <img src={shape} style={{ width: "8px", marginTop: "-2px", marginRight: "4px" }} />
-                                <UnlockOutlined />
-                                <Text type='secondary' strong delete>[ID:{lockId}]</Text>
-                            </Col>
-                        }
-                    </>
-                })
-            }
-            {
-                lockId != "0" && !(lockIds instanceof Array) &&
-                <Col span={24}>
-                    <img src={shape} style={{ width: "8px", marginTop: "-2px", marginRight: "4px" }} />
-                    <Text type='secondary' strong>[ID:{lockId}]</Text>
-                    <Text>
-                        {
-                            lockDay > 0 &&
-                            <>
-                                (
-                                {
-                                    (isDeposit || isTransfer) && <LockOutlined />
-                                }
-                                {
-                                    (isFreeze || isVote) && <HourglassTwoTone />
-                                }
-                                {lockDay} Days)
-                            </>
-                        }
-                    </Text>
-                </Col>
-            }
-        </Row>
-    }
 
     return <>
         <Row>
@@ -422,6 +195,13 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                         {from}
                     </Paragraph>
                 </RouterLink>
+                {
+                    fromPropVO && <>
+                        [ <Text style={{ marginBottom: "10px" }}>
+                            <Address address={from} propVO={fromPropVO} style={{ hasLink: false, forceTag: true, noTip: true }} />
+                        </Text> ]
+                    </>
+                }
             </Col>
         </Row>
         <Divider style={{ margin: '18px 0px' }} />
@@ -440,7 +220,9 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                 </RouterLink>
                 {
                     toPropVO && <>
-                        ({toPropVO.tag})
+                        [ <Text style={{ marginBottom: "10px" }}>
+                            <Address address={to} propVO={toPropVO} style={{ hasLink: false, forceTag: true, noTip: true }} />
+                        </Text> ]
                     </>
                 }
                 {
@@ -453,10 +235,9 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                     </>
                 }
                 {
+                    // 渲染合约内部交易转账
                     !error && contractInternalTransactions &&
-                    <>
-                        {contractInternalTransactions.map(RenderContractInternalTransaction)}
-                    </>
+                    <TxInternalTxns contractInternalTransactions={contractInternalTransactions} />
                 }
             </Col>
         </Row>
@@ -510,64 +291,12 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
             // 节点奖励
             nodeRewards && nodeRewards.length > 0 &&
             <>
-                <Divider style={{ margin: '18px 0px' }} />
-                <Row>
-                    <Col xl={8} xs={24}>
-                        <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
-                            <QuestionCircleOutlined />
-                        </Tooltip>
-                        <Text strong style={{ marginLeft: "5px" }}>Node Rewards:  <Tag color="#77838f">{nodeRewards.length}</Tag></Text>
-                    </Col>
-                    <Col xl={16} xs={24}>
-                        <Row style={{ marginTop: "2px" }}>
-                            <Text strong style={{ marginRight: "5px" }}>SuperNode:</Text>
-                            {
-                                superNode && superNode.propVO &&
-                                <Tooltip title={superNode.address}>
-                                    <RouterLink to={`/address/${superNode.address}`}>
-                                        <Link>{superNode.propVO.tag}</Link>
-                                    </RouterLink>
-                                </Tooltip>
-                            }
-                            {
-                                superNode && !superNode.propVO &&
-                                <RouterLink to={`/address/${superNode.address}`}>
-                                    <Link>{superNode.address}</Link>
-                                </RouterLink>
-                            }
-                        </Row>
-                        {
-                            nodeRewards.filter(nodeReward => nodeReward.nodeType == 1)
-                                .map(nodeReward => RenderNodeReward(nodeReward))
-                        }
-                        <Row style={{ marginTop: "20px" }}>
-                            <Text strong style={{ marginRight: "5px" }}>MasterNode:</Text>
-                            {
-                                masterNode && masterNode.propVO &&
-                                <Tooltip title={masterNode.address}>
-                                    <RouterLink to={`/address/${masterNode.address}`}>
-                                        <Link>{masterNode.propVO.tag}</Link>
-                                    </RouterLink>
-                                </Tooltip>
-                            }
-                            {
-                                masterNode && !masterNode.propVO &&
-                                <RouterLink to={`/address/${masterNode.address}`}>
-                                    <Link>{masterNode.address}</Link>
-                                </RouterLink>
-                            }
-                        </Row>
-                        {
-                            nodeRewards.filter(nodeReward => nodeReward.nodeType == 2)
-                                .map(nodeReward => RenderNodeReward(nodeReward))
-                        }
-
-                    </Col>
-                </Row>
+                <TxNodeRewards nodeRewards={nodeRewards} />
             </>
         }
 
         {
+            // 节点注册|追加注册
             nodeRegisterActions && nodeRegisterActions.length > 0 && <>
                 <Divider style={{ margin: '18px 0px' }} />
                 <Row>
@@ -583,24 +312,10 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                 </Row>
             </>
         }
-
         {
             // SafeAccountManagerActions 锁仓这种数据.
             safeAccountManagerActions && safeAccountManagerActions.length > 0 &&
-            <>
-                <Divider style={{ margin: '18px 0px' }} />
-                <Row id="safeAccountManagerActions">
-                    <Col xl={8} xs={24}>
-                        <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
-                            <QuestionCircleOutlined />
-                        </Tooltip>
-                        <Text strong style={{ marginLeft: "5px" }}>AccountManager Actions</Text>
-                    </Col>
-                    <Col xl={16} xs={24}>
-                        {safeAccountManagerActions.map(RenderSafeAccountManagerAction)}
-                    </Col>
-                </Row>
-            </>
+            <TxSafeAccountManagerActions safeAccountManagerActions={safeAccountManagerActions} />
         }
 
         <Divider style={{ margin: '18px 0px' }} />

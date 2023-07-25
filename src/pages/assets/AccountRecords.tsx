@@ -294,7 +294,7 @@ export default () => {
                         }
                     </>
                 }}
-                width={110}
+                width={80}
                 sorter
             />
 
@@ -306,7 +306,7 @@ export default () => {
                         <Address address={address} propVO={addressPropVO} />
                     </>
                 }}
-                width={70}
+                width={80}
             />
 
             <Column title={<Text strong style={{ color: "#6c757e" }}>Member Of Node</Text>}
@@ -323,7 +323,7 @@ export default () => {
                         }
                     </>
                 }}
-                width={70}
+                width={80}
             />
 
             <Column title={<Text strong style={{ color: "#6c757e" }}>Vote For Node</Text>}
@@ -340,7 +340,7 @@ export default () => {
                         }
                     </>
                 }}
-                width={70}
+                width={80}
             />
 
             <Column title={<Text strong style={{ color: "#6c757e" }}>Create Time</Text>}

@@ -10,9 +10,9 @@ import { useEffect, useMemo, useState } from "react";
 import Transactions from "./Transactions";
 import ERC20Transfers from "./ERC20Transfers";
 import { fetchAddress } from "../../services/address";
-import { AddressVO, MasterNodeVO, SuperMasterNodeVO } from "../../services";
+import { AddressVO, MasterNodeVO, SuperNodeVO } from "../../services";
 import EtherAmount from "../../components/EtherAmount";
-import SuperMasterNode from "./SuperMasterNode";
+import SuperNode from "./SuperNode";
 import MasterNode from "./MasterNode";
 import NodeRewards from "./NodeRewards";
 import AccountRecords from "./AccountRecords";
@@ -198,7 +198,7 @@ export default function () {
             <Divider style={{ marginTop: "20px" }} />
             {
                 subType == "supernode" && prop &&
-                <SuperMasterNode {...JSON.parse(prop) as SuperMasterNodeVO} />
+                <SuperNode {...JSON.parse(prop) as SuperNodeVO} />
             }
             {
                 subType == "masternode" && prop &&

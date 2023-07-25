@@ -1,5 +1,5 @@
 import { Card, Typography, Tag, Input, Button, Space, Tooltip, Tabs, Row, Col, Divider, Modal, Descriptions, Badge } from 'antd';
-import { IncentivePlanVO, MasterNodeVO, SuperMasterNodeVO } from '../../services';
+import { IncentivePlanVO, MasterNodeVO, SuperNodeVO } from '../../services';
 import { Link as RouterLink } from 'react-router-dom';
 import EtherAmount from '../../components/EtherAmount';
 import { Pie } from '@ant-design/plots';
@@ -13,14 +13,15 @@ import {
 } from '@ant-design/icons';
 import { PresetStatusColorType } from 'antd/es/_util/colors';
 import { isMobile } from 'react-device-detect';
+import Address from '../../components/Address';
 
 const { Title, Text, Paragraph, Link } = Typography;
 
 export default (masterNode: MasterNodeVO) => {
 
-    const { id, ip, description, creator, enode, incentivePlan, stateInfo, lastRewardHeight, amount, founders } = masterNode;
-
+    const { id, ip, description, creator, enode, incentivePlan, stateInfo, lastRewardHeight, amount, founders ,addr } = masterNode;
     const nodeState = stateInfo.state;
+    const nodeAddress = addr.toLowerCase();
 
     function State(state: number) {
         let _state: {
@@ -121,9 +122,7 @@ export default (masterNode: MasterNodeVO) => {
 
                                                     </Col>
                                                     <Col xs={24} xl={10}>
-                                                        <RouterLink to={`/address/${addr.toLowerCase()}`}>
-                                                            {addr.toLowerCase()}
-                                                        </RouterLink>
+                                                        <Address address={addr.toLowerCase()} style={{hasLink:nodeAddress != addr.toLowerCase()}} />
                                                     </Col>
                                                     <Divider />
                                                 </Row>

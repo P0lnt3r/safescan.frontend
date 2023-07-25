@@ -9,6 +9,9 @@ import {
     ApartmentOutlined,      // 主节点
     ClusterOutlined,        // 超级节点
 } from '@ant-design/icons';
+import { useAddressProp } from "../state/application/hooks";
+import { useDispatch } from "react-redux";
+import { Application_Update_AddressPropMap } from "../state/application/action";
 
 const { Text, Link } = Typography;
 
@@ -16,12 +19,22 @@ export default ({ address, propVO, style }: {
     address: string,
     propVO?: AddressPropVO | undefined,
     style?: {
-        hasLink: boolean
+        hasLink?: boolean,
+        forceTag?: boolean,
+        noTip ?: boolean
     }
 }) => {
+    const _propVO = useAddressProp( address );
+    const dispatch = useDispatch();
     const { type, subType, tag, prop, remark } = useMemo(() => {
         if (propVO) {
+            if ( _propVO == undefined ){
+                dispatch( Application_Update_AddressPropMap([propVO]) );
+            }
             return propVO;
+        }
+        if ( _propVO != undefined ){
+            return _propVO;
         }
         return {
             type: undefined,
@@ -56,7 +69,7 @@ export default ({ address, propVO, style }: {
     return <>
         <Text>
             {RenderIcon()}
-            <Tooltip title={address}>
+            <Tooltip  title={ (style && style.noTip) ? "" : address }>
                 {
                     (style && !style.hasLink) && <>
                         {
@@ -65,8 +78,13 @@ export default ({ address, propVO, style }: {
                             </Text>
                         }
                         {
-                            !tag && <Text ellipsis style={{maxWidth:"90%"}}>
+                            !tag && !style.forceTag && <Text ellipsis style={{maxWidth:"90%"}}>
                                 {address}
+                            </Text>
+                        }
+                        {
+                            !tag && style.forceTag && <Text ellipsis strong style={{maxWidth:"90%"}}>
+                                {type?.toLocaleUpperCase()}
                             </Text>
                         }
                     </>

@@ -1,8 +1,8 @@
-import { GET, MasterNodeVO, NodeRegisterActionVO, NodeRewardVO, POST, PageQueryDTO, PageResponseVO, SuperMasterNodeVO } from "./index.d";
+import { GET, MasterNodeVO, NodeRegisterActionVO, NodeRewardVO, POST, PageQueryDTO, PageResponseVO, SuperNodeVO } from "./index.d";
 import config from "../config";
 const API_HOST = config.api_host;
 
-export async function fetchSuperMasterNodes( params : PageQueryDTO ) : Promise<PageResponseVO<SuperMasterNodeVO>> {
+export async function fetchSuperNodes( params : PageQueryDTO ) : Promise<PageResponseVO<SuperNodeVO>> {
     const serverResponse = await POST( `${API_HOST}/nodes/supermasternodes` , { ...params } );
     return serverResponse.data;
 }

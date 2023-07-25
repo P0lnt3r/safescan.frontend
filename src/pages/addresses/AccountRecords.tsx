@@ -295,7 +295,7 @@ export default ({ address }: { address: string }) => {
                         }
                     </>
                 }}
-                width={110}
+                width={80}
                 sorter
             />
             <Column title={<Text strong style={{ color: "#6c757e" }}>Member Of Node</Text>}
@@ -312,7 +312,7 @@ export default ({ address }: { address: string }) => {
                         }
                     </>
                 }}
-                width={70}
+                width={80}
             />
             <Column title={<Text strong style={{ color: "#6c757e" }}>Proxy MasterNode</Text>}
                 dataIndex="proxyMasternode"
@@ -328,7 +328,7 @@ export default ({ address }: { address: string }) => {
                         }
                     </>
                 }}
-                width={70}
+                width={80}
             />
             <Column title={<Text strong style={{ color: "#6c757e" }}>Vote For Node</Text>}
                 dataIndex="votedAddress"
@@ -344,7 +344,7 @@ export default ({ address }: { address: string }) => {
                         }
                     </>
                 }}
-                width={70}
+                width={80}
             />
 
             <Column title={<Text strong style={{ color: "#6c757e" }}>Lock Time</Text>}

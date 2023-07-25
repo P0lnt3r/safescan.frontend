@@ -242,11 +242,13 @@ export interface IncentivePlanVO {
     voter: number
 }
 
-export interface SuperMasterNodeVO {
-    id: number
+export interface SuperNodeVO {
+    rank:number,
+    id: number,
     amount: string,
     totalVoteNum: number,
     totalVoterAmount: number,
+    voteObtainedRate : string,
     createHeight: number,
     updateHeight: number,
     lastRewardHeight: number,

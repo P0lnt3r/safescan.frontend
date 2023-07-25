@@ -1,8 +1,8 @@
 
-import { Card, Table, Typography, Row, Col, Tooltip, PaginationProps, Badge } from 'antd';
+import { Card, Table, Typography, Row, Col, Tooltip, PaginationProps, Badge , Progress } from 'antd';
 import { useEffect, useState } from 'react';
 import { fetchAddressBalanceRank } from '../../services/address';
-import { AddressBalanceRankVO, SuperMasterNodeVO } from '../../services';
+import { AddressBalanceRankVO, SuperNodeVO } from '../../services';
 import type { ColumnsType } from 'antd/es/table';
 import EtherAmount from '../../components/EtherAmount';
 import { Link as RouterLink } from 'react-router-dom';
@@ -13,7 +13,7 @@ import {
     ApartmentOutlined
 } from '@ant-design/icons';
 import { format } from '../../utils/NumberFormat';
-import { fetchSuperMasterNodes } from '../../services/node';
+import { fetchSuperNodes } from '../../services/node';
 import { PresetStatusColorType } from 'antd/es/_util/colors';
 
 const { Title, Text, Link } = Typography;
@@ -23,7 +23,7 @@ export default () => {
 
     function paginationOnChange(page: number, pageSize: number) {
         pagination.current = page;
-        doFetchSuperMasterNodes();
+        doFetchSuperNodes();
     }
     const [pagination, setPagination] = useState<PaginationProps>({
         current: 1,
@@ -31,8 +31,8 @@ export default () => {
         showTotal: (total) => <>Total : {total}</>,
         onChange: paginationOnChange
     });
-    async function doFetchSuperMasterNodes() {
-        fetchSuperMasterNodes({
+    async function doFetchSuperNodes() {
+        fetchSuperNodes({
             current: pagination.current,
             pageSize: pagination.pageSize,
         }).then(data => {
@@ -46,11 +46,11 @@ export default () => {
             setTableData(data.records);
         })
     }
-    const [tableData, setTableData] = useState<SuperMasterNodeVO[]>([]);
+    const [tableData, setTableData] = useState<SuperNodeVO[]>([]);
 
     useEffect(() => {
         pagination.current = 1;
-        doFetchSuperMasterNodes();
+        doFetchSuperNodes();
     }, []);
 
     function State(state: number) {
@@ -71,14 +71,31 @@ export default () => {
 
     }
 
-    const columns: ColumnsType<SuperMasterNodeVO> = [
+    const columns: ColumnsType<SuperNodeVO> = [
         {
-            title: <Text strong style={{ color: "#6c757e" }}>ID</Text>,
-            dataIndex: 'id',
-            render: (id) => <>
-                {id}
+            title: <Text strong style={{ color: "#6c757e" }}>Rank</Text>,
+            dataIndex: 'rank',
+            render: (rank) => <>
+                {rank}
             </>,
-            width: 40,
+            width: 30,
+        },
+        {
+            title: <Text strong style={{ color: "#6c757e" }}>Vote Obtained</Text>,
+            dataIndex: 'amount',
+            render: (amount, superNode) => {
+                const { totalAmount , totalNum } = superNode.voteInfo;
+                return <>
+                    <Text strong>
+                        {<EtherAmount raw={totalNum} fix={18} ignoreLabel></EtherAmount>}
+                    </Text>
+                    <Text type='secondary' style={{fontSize:"12px",float:"right"}}>
+                        [{<EtherAmount raw={totalAmount} fix={18}></EtherAmount>}]
+                    </Text>
+                    <Progress percent={ Number(superNode.voteObtainedRate) * 100 } showInfo={true} />
+                </>
+            },
+            width: 120,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Address</Text>,
@@ -88,7 +105,7 @@ export default () => {
                     <Link>{address.toLowerCase()}</Link>
                 </RouterLink>
             </>,
-            width: 180,
+            width: 220,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Name</Text>,
@@ -96,7 +113,7 @@ export default () => {
             render: (description) => <>
                 {description}
             </>,
-            width: 140,
+            width: 150,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>IP</Text>,
@@ -104,8 +121,9 @@ export default () => {
             render: (ip) => <>
                 {ip}
             </>,
-            width: 140,
+            width: 30,
         },
+        
         {
             title: <Text strong style={{ color: "#6c757e" }}>Amount</Text>,
             dataIndex: 'amount',
@@ -114,7 +132,7 @@ export default () => {
                     {<EtherAmount raw={amount} fix={18}></EtherAmount>}
                 </Text>
             </>,
-            width: 140,
+            width: 150,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>State</Text>,
@@ -122,15 +140,17 @@ export default () => {
             render: (stateInfo) => <>
                 {State(stateInfo.state)}
             </>,
-            width: 140,
+            width: 30,
         },
     ];
 
 
     return (<>
-        <Title level={3}>Super Master Nodes</Title>
+        <Title level={3}>SuperNodes</Title>
+        [Text : What is SuperNode ? || How to create SuperNode...]
         <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
             pagination={pagination} rowKey={(txVO) => txVO.id}
+            style={{marginTop:"20px"}}
         />
     </>)
 

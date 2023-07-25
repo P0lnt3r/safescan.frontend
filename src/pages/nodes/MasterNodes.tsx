@@ -2,7 +2,7 @@
 import { Card, Table, Typography, Row, Col, Tooltip, PaginationProps, Badge } from 'antd';
 import { useEffect, useState } from 'react';
 import { fetchAddressBalanceRank } from '../../services/address';
-import { AddressBalanceRankVO, MasterNodeVO, SuperMasterNodeVO } from '../../services';
+import { AddressBalanceRankVO, MasterNodeVO, SuperNodeVO } from '../../services';
 import type { ColumnsType } from 'antd/es/table';
 import EtherAmount from '../../components/EtherAmount';
 import { Link as RouterLink } from 'react-router-dom';
@@ -13,7 +13,7 @@ import {
     ApartmentOutlined
 } from '@ant-design/icons';
 import { format } from '../../utils/NumberFormat';
-import { fetchMasterNodes, fetchSuperMasterNodes } from '../../services/node';
+import { fetchMasterNodes, fetchSuperNodes } from '../../services/node';
 import { PresetStatusColorType } from 'antd/es/_util/colors';
 
 const { Title, Text, Link } = Typography;
@@ -87,7 +87,7 @@ export default () => {
                     <Link>{address.toLowerCase()}</Link>
                 </RouterLink>
             </>,
-            width: 180,
+            width: 200,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Name</Text>,
@@ -95,7 +95,7 @@ export default () => {
             render: (description) => <>
                 {description}
             </>,
-            width: 140,
+            width: 160,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>IP</Text>,
@@ -103,7 +103,7 @@ export default () => {
             render: (ip) => <>
                 {ip}
             </>,
-            width: 140,
+            width: 40,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Amount</Text>,
@@ -121,15 +121,17 @@ export default () => {
             render: (stateInfo) => <>
                 {State(stateInfo.state)}
             </>,
-            width: 140,
+            width: 40,
         },
     ];
 
 
     return (<>
         <Title level={3}>MasterNodes</Title>
+        [Text : What is MasterNode ? || How to create MasterNode...]
         <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
             pagination={pagination} rowKey={(txVO) => txVO.id}
+            style={{marginTop:"20px"}}
         />
     </>)
 

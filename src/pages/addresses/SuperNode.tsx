@@ -1,5 +1,5 @@
 import { Card, Typography, Tag, Input, Button, Space, Tooltip, Tabs, Row, Col, Divider, Modal, Descriptions, Badge } from 'antd';
-import { IncentivePlanVO, SuperMasterNodeVO } from '../../services';
+import { IncentivePlanVO, SuperNodeVO } from '../../services';
 import { Link as RouterLink } from 'react-router-dom';
 import EtherAmount from '../../components/EtherAmount';
 import { Pie } from '@ant-design/plots';
@@ -13,12 +13,14 @@ import {
     TeamOutlined
 } from '@ant-design/icons';
 import { PresetStatusColorType } from 'antd/es/_util/colors';
+import Address from '../../components/Address';
 
 const { Title, Text, Paragraph, Link } = Typography;
 
-export default (superMasterNode: SuperMasterNodeVO) => {
-    const { id, ip, description, creator, enode, incentivePlan, stateInfo, lastRewardHeight, amount, founders, voteInfo } = superMasterNode;
+export default (superMasterNode: SuperNodeVO) => {
 
+    const { id, ip, description, creator, enode, incentivePlan, stateInfo, lastRewardHeight, amount, founders, voteInfo , addr } = superMasterNode;
+    const nodeAddress = addr.toLowerCase();
     const nodeState = stateInfo.state;
 
     function State(state: number) {
@@ -80,9 +82,9 @@ export default (superMasterNode: SuperMasterNodeVO) => {
                                 </Col>
                             </Row>
                             <Row style={{ marginTop: "10px" }}>
-                                <Col xl={6} xs={24}><Text strong>Vote Score:</Text></Col>
+                                <Col xl={6} xs={24}><Text strong>Vote Obtained:</Text></Col>
                                 <Col xl={18} xs={24}>
-                                    <Text><EtherAmount raw={voteInfo.totalNum} fix={18}></EtherAmount></Text>
+                                    <Text><EtherAmount raw={voteInfo.totalNum} fix={18} ignoreLabel></EtherAmount></Text>
                                 </Col>
                             </Row>
                             <Row style={{ marginTop: "10px" }}>
@@ -127,10 +129,9 @@ export default (superMasterNode: SuperMasterNodeVO) => {
                                                     Amount:{<EtherAmount raw={amount} fix={18} />}
                                                 </Text>
                                             </Col>
-                                            <Col xs={24} xl={10} style={{ textAlign: "center" }}>
-                                                <RouterLink to={`/address/${addr.toLowerCase()}`}>
-                                                    <Link>{addr.toLowerCase()}</Link>
-                                                </RouterLink>
+                                            <Col xs={0} xl={2}></Col>
+                                            <Col xs={24} xl={10}>
+                                                <Address address={addr.toLowerCase()} style={{hasLink:addr.toLowerCase() != nodeAddress}} />
                                             </Col>
                                             <Divider ></Divider>
                                         </Row>
@@ -145,16 +146,15 @@ export default (superMasterNode: SuperMasterNodeVO) => {
                                     return (<>
                                         <Row key={lockID}>
                                             <Divider></Divider>
-                                            <Col xs={24} xl={6}>
-                                                <RouterLink to={`/address/${addr.toLowerCase()}`}>
-                                                    <Link>{addr.toLowerCase()}</Link>
-                                                </RouterLink>
-                                            </Col>
-                                            <Col xs={24} xl={6}>
-                                                <Text type="secondary">[LockID:{lockID}]</Text>
+                                            <Col xs={24} xl={4}>
+                                                <Text type="secondary">[ID:{lockID}]</Text>
                                                 <Text strong style={{ float: "right" }}>
                                                     Amount:{<EtherAmount raw={amount} fix={18} />}
                                                 </Text>
+                                            </Col>
+                                            <Col xs={0} xl={2}></Col>
+                                            <Col xs={24} xl={10}>
+                                                <Address address={addr.toLowerCase()} style={{hasLink:addr.toLowerCase() != nodeAddress}} />
                                             </Col>
                                             <Divider ></Divider>
                                         </Row>
