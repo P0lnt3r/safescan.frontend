@@ -45,35 +45,38 @@ const MODILE_WIDTH = 1000;
 const Header: React.FC = () => {
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
-    const items: MenuItem[] = [
-        getItem(t('home').toString(), '', <HomeOutlined />),
-        getItem(t('blockchain').toString(), 'blockchain', <SecurityScanOutlined />, [
-            getItem('View Pending Transactions', '/txsPending'),
-            getItem('View Transactions', '/txs'),
-            getItem('View Internal Transactions', '/txsInternal'),
-            getItem('View Blocks', '/blocks'),
-        ]),
-        getItem("Nodes", 'supernodes', <ApartmentOutlined />, [
-            getItem('MasterNodes', '/nodes/masternodes'),
-            getItem('SuperNodes', '/nodes/supermasternodes'),
-        ]),
-        getItem(t('assets').toString(), 'assets', <WalletOutlined />, [
-            getItem('Account Records', '/assets/accountrecords'),
-            getItem('ERC20 Tokens', '/assets/erc20tokens'),
-            getItem('ERC20 Transfers', '/assets/erc20txns'),
-        ]),
-        getItem("Statistic", 'statistic', <AreaChartOutlined />, [
-            getItem('Top Account', '/accounts'),
-            getItem('Chart', '/charts'),
-        ]),
-        // getItem('Language', 'language', <SettingOutlined />, [
-        //     getItem('English', 'en'),
-        //     getItem('中文', 'zh'),
-        // ]),
-    ];
+
+    const items: MenuItem[] = useMemo( () => {
+        return [
+            getItem(t('home').toString(), '', <HomeOutlined />),
+            getItem(t('blockchain').toString(), 'blockchain', <SecurityScanOutlined />, [
+                getItem('View Pending Transactions', '/txsPending'),
+                getItem('View Transactions', '/txs'),
+                getItem('View Internal Transactions', '/txsInternal'),
+                getItem('View Blocks', '/blocks'),
+            ]),
+            getItem("Nodes", 'supernodes', <ApartmentOutlined />, [
+                getItem('MasterNodes', '/nodes/masternodes'),
+                getItem('SuperNodes', '/nodes/supermasternodes'),
+            ]),
+            getItem(t('assets').toString(), 'assets', <WalletOutlined />, [
+                getItem('Account Records', '/assets/accountrecords'),
+                getItem('ERC20 Tokens', '/assets/erc20tokens'),
+                getItem('ERC20 Transfers', '/assets/erc20txns'),
+            ]),
+            getItem("Statistic", 'statistic', <AreaChartOutlined />, [
+                getItem('Top Account', '/accounts'),
+                getItem('Chart', '/charts'),
+            ]),
+            // getItem('Language', 'language', <SettingOutlined />, [
+            //     getItem('English', 'en'),
+            //     getItem('中文', 'zh'),
+            // ]),
+        ]
+    } , [] );
+
     // submenu keys of first level
     const rootSubmenuKeys = ['blockchain', 'masternode', 'assets'];
-    
     const [isMobile, setIsMobile] = useState(window.innerWidth < MODILE_WIDTH);
     const [openMenu, setOpenMenu] = useState(window.innerWidth >= MODILE_WIDTH);
     const [openKeys, setOpenKeys] = useState(['']);

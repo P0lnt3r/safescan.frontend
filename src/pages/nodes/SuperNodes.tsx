@@ -92,7 +92,7 @@ export default () => {
                     <Text type='secondary' style={{fontSize:"12px",float:"right"}}>
                         [{<EtherAmount raw={totalAmount} fix={18}></EtherAmount>}]
                     </Text>
-                    <Progress percent={ Number(superNode.voteObtainedRate) * 100 } showInfo={true} />
+                    <Progress percent={ Number((Number(superNode.voteObtainedRate) * 100).toFixed(2)) } showInfo={true} />
                 </>
             },
             width: 120,
