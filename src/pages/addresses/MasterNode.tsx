@@ -9,19 +9,23 @@ import {
     UserOutlined,
     SolutionOutlined,
     HourglassTwoTone,
-    ClusterOutlined
+    ClusterOutlined,
+    LockOutlined,
+    UnlockOutlined,
 } from '@ant-design/icons';
 import { PresetStatusColorType } from 'antd/es/_util/colors';
 import { isMobile } from 'react-device-detect';
 import Address from '../../components/Address';
+import { useBlockNumber } from '../../state/application/hooks';
 
 const { Title, Text, Paragraph, Link } = Typography;
 
 export default (masterNode: MasterNodeVO) => {
 
-    const { id, ip, description, creator, enode, incentivePlan, stateInfo, lastRewardHeight, amount, founders ,addr } = masterNode;
+    const { id, ip, description, creator, enode, incentivePlan, stateInfo, lastRewardHeight, amount, founders, addr } = masterNode;
     const nodeState = stateInfo.state;
     const nodeAddress = addr.toLowerCase();
+    const blockNumber = useBlockNumber();
 
     function State(state: number) {
         let _state: {
@@ -105,24 +109,69 @@ export default (masterNode: MasterNodeVO) => {
 
                     <Row>
                         <Col span={24}>
-                            <Descriptions style={{ marginTop: "20px" }} layout="vertical" bordered>
+                            <Descriptions style={{ marginTop: "20px", maxWidth: "100%" }} layout="vertical" bordered>
                                 <Descriptions.Item span={3} label={<Text strong style={{ color: "#6c757e" }} >Founders ({founders.length})</Text>}>
                                     {
-                                        founders.map(({ lockID, addr, amount, height }) => {
+                                        founders.map(({ lockID, addr, amount, height, lockDay, unlockHeight, unfreezeHeight, releaseHeight }) => {
+                                            const hasLock = lockDay != undefined && lockDay > 0;
+                                            const isLocked = hasLock && unlockHeight && unlockHeight > blockNumber;
+                                            const isFreezed = (unfreezeHeight && unfreezeHeight > blockNumber)
+                                                || (releaseHeight && releaseHeight > blockNumber)
                                             return (<>
                                                 <Row key={lockID}>
                                                     <Divider></Divider>
                                                     <Col xs={24} xl={4}>
+                                                        {
+                                                            hasLock && isLocked && <LockOutlined />
+                                                        }
+                                                        {
+                                                            hasLock && !isLocked && <UnlockOutlined />
+                                                        }
+                                                        {
+                                                            isFreezed && <HourglassTwoTone />
+                                                        }
                                                         <Text type="secondary">[ID:{lockID}]</Text>
                                                         <Text strong style={{ float: "right" }}>
-                                                            Amount:{<EtherAmount raw={amount} fix={18} />}
+                                                            {
+                                                                isFreezed && <Text strong style={{ color: "rgb(6, 58, 156)" }}>
+                                                                    <EtherAmount raw={amount} fix={18} />
+                                                                </Text>
+                                                            }
+                                                            {
+                                                                !isFreezed && isLocked && <Text strong type="secondary" >
+                                                                    <EtherAmount raw={amount} fix={18} />
+                                                                </Text>
+                                                            }
+                                                            {
+                                                                !isFreezed && !isLocked && <Text strong type="success" >
+                                                                    <EtherAmount raw={amount} fix={18} />
+                                                                </Text>
+                                                            }
                                                         </Text>
                                                     </Col>
                                                     <Col xs={0} xl={2}>
 
                                                     </Col>
                                                     <Col xs={24} xl={10}>
-                                                        <Address address={addr.toLowerCase()} style={{hasLink:nodeAddress != addr.toLowerCase()}} />
+                                                        {
+                                                            addr.toLowerCase() == nodeAddress && <>
+                                                                <Tooltip title={addr.toLowerCase()}>
+                                                                    <Text code style={{ color: "orange" }}>SELF</Text>
+                                                                </Tooltip>
+                                                            </>
+                                                        }
+                                                        {
+                                                            addr.toLowerCase() != nodeAddress && <>
+                                                                {
+                                                                    !isMobile && <Address address={addr.toLowerCase()} />
+                                                                }
+                                                                {
+                                                                    isMobile && <>
+
+                                                                    </>
+                                                                }
+                                                            </>
+                                                        }
                                                     </Col>
                                                     <Divider />
                                                 </Row>

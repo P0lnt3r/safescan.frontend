@@ -234,6 +234,11 @@ export interface MemberInfoVO {
     addr: string,
     amount: string,
     height: number,
+
+    lockDay ?: number,
+    unlockHeight ?: number,
+    releaseHeight ?: number,
+    unfreezeHeight ?: number,
 }
 
 export interface IncentivePlanVO {

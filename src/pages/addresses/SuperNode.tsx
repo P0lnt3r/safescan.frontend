@@ -10,18 +10,23 @@ import {
     SolutionOutlined,
     HourglassTwoTone,
     ClusterOutlined,
-    TeamOutlined
+    TeamOutlined,
+    LockOutlined,
+    UnlockOutlined,
 } from '@ant-design/icons';
 import { PresetStatusColorType } from 'antd/es/_util/colors';
 import Address from '../../components/Address';
+import { useBlockNumber } from '../../state/application/hooks';
+import { isMobile } from 'react-device-detect';
 
 const { Title, Text, Paragraph, Link } = Typography;
 
 export default (superMasterNode: SuperNodeVO) => {
 
-    const { id, ip, description, creator, enode, incentivePlan, stateInfo, lastRewardHeight, amount, founders, voteInfo , addr } = superMasterNode;
+    const { id, ip, description, creator, enode, incentivePlan, stateInfo, lastRewardHeight, amount, founders, voteInfo, addr } = superMasterNode;
     const nodeAddress = addr.toLowerCase();
     const nodeState = stateInfo.state;
+    const blockNumber = useBlockNumber();
 
     function State(state: number) {
         let _state: {
@@ -72,7 +77,19 @@ export default (superMasterNode: SuperNodeVO) => {
                             <Row style={{ marginTop: "10px" }}>
                                 <Col xl={6} xs={24}><Text strong>Creator:</Text></Col>
                                 <Col xl={18} xs={24}>
-                                    <Text>{creator}</Text>
+                                    {
+                                        creator.toLowerCase() != nodeAddress &&
+                                        <>
+                                            <Address address={creator.toLowerCase()} style={{ hasLink: creator.toLowerCase() != nodeAddress }}></Address>
+                                        </>
+                                    }
+                                    {
+                                        creator.toLowerCase() == nodeAddress &&
+                                        <>
+                                            {creator.toLowerCase()}
+                                        </>
+                                    }
+
                                 </Col>
                             </Row>
                             <Row style={{ marginTop: "10px" }}>
@@ -116,22 +133,68 @@ export default (superMasterNode: SuperNodeVO) => {
 
                     <Descriptions style={{ marginTop: "20px" }} layout="vertical" bordered>
                         <Descriptions.Item span={3} label={<Text strong style={{ color: "#6c757e" }} >
-                            <TeamOutlined style={{marginRight:"5px"}} />Founders ({founders.length})
+                            <TeamOutlined style={{ marginRight: "5px" }} />Founders ({founders.length})
                         </Text>}>
                             {
-                                founders.map(({ lockID, addr, amount, height }) => {
+                                founders.map(({ lockID, addr, amount, height, lockDay, unlockHeight, unfreezeHeight, releaseHeight }) => {
+                                    const hasLock = lockDay != undefined && lockDay > 0;
+                                    const isLocked = hasLock && unlockHeight && unlockHeight > blockNumber;
+                                    const isFreezed = (unfreezeHeight && unfreezeHeight > blockNumber)
+                                        || (releaseHeight && releaseHeight > blockNumber)
                                     return (<>
                                         <Row key={lockID}>
                                             <Divider></Divider>
                                             <Col xs={24} xl={4}>
-                                                <Text type="secondary">[ID:{lockID}]</Text>
+                                                {
+                                                    hasLock && isLocked && <LockOutlined />
+                                                }
+                                                {
+                                                    hasLock && !isLocked && <UnlockOutlined />
+                                                }
+                                                {
+                                                    isFreezed && <HourglassTwoTone />
+                                                }
+                                                <Text strong>[ID:{lockID}]</Text>
                                                 <Text strong style={{ float: "right" }}>
-                                                    Amount:{<EtherAmount raw={amount} fix={18} />}
+                                                    {
+                                                        isFreezed && <Text strong style={{ color: "rgb(6, 58, 156)" }}>
+                                                            <EtherAmount raw={amount} fix={18} />
+                                                        </Text>
+                                                    }
+                                                    {
+                                                        !isFreezed && isLocked && <Text strong type="secondary" >
+                                                            <EtherAmount raw={amount} fix={18} />
+                                                        </Text>
+                                                    }
+                                                    {
+                                                        !isFreezed && !isLocked && <Text strong type="success" >
+                                                            <EtherAmount raw={amount} fix={18} />
+                                                        </Text>
+                                                    }
                                                 </Text>
                                             </Col>
+
                                             <Col xs={0} xl={2}></Col>
                                             <Col xs={24} xl={10}>
-                                                <Address address={addr.toLowerCase()} style={{hasLink:addr.toLowerCase() != nodeAddress}} />
+                                                {
+                                                    addr.toLowerCase() == nodeAddress && <>
+                                                        <Tooltip title={addr.toLowerCase()}>
+                                                            <Text code style={{ color: "orange" }}>SELF</Text>
+                                                        </Tooltip>
+                                                    </>
+                                                }
+                                                {
+                                                    addr.toLowerCase() != nodeAddress && <>
+                                                        {
+                                                            !isMobile && <Address address={addr.toLowerCase()} />
+                                                        }
+                                                        {
+                                                            isMobile && <>
+                                                                
+                                                            </>
+                                                        }
+                                                    </>
+                                                }
                                             </Col>
                                             <Divider ></Divider>
                                         </Row>
@@ -142,19 +205,64 @@ export default (superMasterNode: SuperNodeVO) => {
 
                         <Descriptions.Item span={3} label={<Text strong style={{ color: "#6c757e" }} >Voters ({voteInfo.voters.length})</Text>}>
                             {
-                                voteInfo.voters.map(({ lockID, addr, amount, height }) => {
+                                voteInfo.voters.map(({ lockID, addr, amount, height, lockDay, unlockHeight, unfreezeHeight, releaseHeight }) => {
+                                    const hasLock = lockDay != undefined && lockDay > 0;
+                                    const isLocked = hasLock && unlockHeight && unlockHeight > blockNumber;
+                                    const isFreezed = (unfreezeHeight && unfreezeHeight > blockNumber)
+                                        || (releaseHeight && releaseHeight > blockNumber)
                                     return (<>
                                         <Row key={lockID}>
                                             <Divider></Divider>
                                             <Col xs={24} xl={4}>
-                                                <Text type="secondary">[ID:{lockID}]</Text>
+                                                {
+                                                    hasLock && isLocked && <LockOutlined />
+                                                }
+                                                {
+                                                    hasLock && !isLocked && <UnlockOutlined />
+                                                }
+                                                {
+                                                    isFreezed && <HourglassTwoTone />
+                                                }
+                                                <Text strong>[ID:{lockID}]</Text>
                                                 <Text strong style={{ float: "right" }}>
-                                                    Amount:{<EtherAmount raw={amount} fix={18} />}
+                                                    {
+                                                        isFreezed && <Text strong style={{ color: "rgb(6, 58, 156)" }}>
+                                                            <EtherAmount raw={amount} fix={18} />
+                                                        </Text>
+                                                    }
+                                                    {
+                                                        !isFreezed && isLocked && <Text strong type="secondary" >
+                                                            <EtherAmount raw={amount} fix={18} />
+                                                        </Text>
+                                                    }
+                                                    {
+                                                        !isFreezed && !isLocked && <Text strong type="success" >
+                                                            <EtherAmount raw={amount} fix={18} />
+                                                        </Text>
+                                                    }
                                                 </Text>
                                             </Col>
                                             <Col xs={0} xl={2}></Col>
                                             <Col xs={24} xl={10}>
-                                                <Address address={addr.toLowerCase()} style={{hasLink:addr.toLowerCase() != nodeAddress}} />
+                                                {
+                                                    addr.toLowerCase() == nodeAddress && <>
+                                                        <Tooltip title={addr.toLowerCase()}>
+                                                            <Text code style={{ color: "orange" }}>SELF</Text>
+                                                        </Tooltip>
+                                                    </>
+                                                }
+                                                {
+                                                    addr.toLowerCase() != nodeAddress && <>
+                                                        {
+                                                            !isMobile && <Address address={addr.toLowerCase()} />
+                                                        }
+                                                        {
+                                                            isMobile && <>
+
+                                                            </>
+                                                        }
+                                                    </>
+                                                }
                                             </Col>
                                             <Divider ></Divider>
                                         </Row>
