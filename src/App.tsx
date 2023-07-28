@@ -17,6 +17,7 @@ import ERC20Transfers from './pages/assets/ERC20Transfers';
 import SuperNodes from './pages/nodes/SuperNodes';
 import MasterNodes from './pages/nodes/MasterNodes';
 import AccountRecords from './pages/assets/AccountRecords';
+import Chart from './pages/statistics/Chart';
 
 const { Content } = Layout;
 
@@ -42,6 +43,7 @@ function App() {
               <Route path="/assets/erc20txns" index element={<ERC20Transfers />} />
               <Route path="/nodes/supermasternodes" index element={<SuperNodes />} />
               <Route path="/nodes/masternodes" index element={<MasterNodes />} />
+              <Route path="/charts" index element={<Chart />} />
             </Routes>
           </div>
         </BrowserRouter>

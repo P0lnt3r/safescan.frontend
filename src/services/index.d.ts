@@ -384,3 +384,19 @@ export interface NodeRegisterActionVO {
     lockId: number
 }
 
+
+export interface TimestampStatisticVO {
+    date : string,
+    blockNumberStart : number,
+    blockNumberEnd : number,
+    totalTxns : number,
+    totalInternalTxns : number,
+    totalERC20Transfers : number,
+    totalContract : number,
+    totalSuperNodes : number,
+    totalMasterNodes : number,
+    totalRewards : string ,
+    totalSupply : string ,
+    totalLockAmount : string ,
+    totalFreezeAmount : string
+}

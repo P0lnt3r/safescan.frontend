@@ -9,7 +9,7 @@ const customizedMiddleware = getDefaultMiddleware({
     serializableCheck: false
 })
 
-const PERSISTED_KEYS: string[] = [ 'application.abis'  ]
+const PERSISTED_KEYS: string[] = [ ]
 const store = configureStore({
     reducer: {
         application,
