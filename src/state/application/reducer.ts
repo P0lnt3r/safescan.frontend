@@ -12,7 +12,7 @@ export interface IApplicationState {
     dbStoredBlockNumber: number,
 
     methodSignature?: Map<string, string>,
-    addressPropMap?: Map<string | undefined, AddressPropVO>
+    addressPropMap?: Map<string, AddressPropVO>
 
     latestBlocks: BlockVO[]
     latestTransactions: TransactionVO[]
@@ -100,7 +100,9 @@ export default createReducer(initialState, (builder) => {
         .addCase(Application_Update_AddressPropMap, (state, { payload }) => {
             payload.forEach(addressPropVO => {
                 const { address } = addressPropVO;
-                state.addressPropMap?.set(address, addressPropVO);
+                if (state.addressPropMap){
+                    state.addressPropMap.set(address, addressPropVO);
+                }
             });
         })
 

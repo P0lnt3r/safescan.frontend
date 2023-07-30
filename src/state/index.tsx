@@ -9,7 +9,7 @@ const customizedMiddleware = getDefaultMiddleware({
     serializableCheck: false
 })
 
-const PERSISTED_KEYS: string[] = [ ]
+const PERSISTED_KEYS: string[] = [ "application.blockNumber" ]
 const store = configureStore({
     reducer: {
         application,

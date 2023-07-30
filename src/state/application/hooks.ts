@@ -10,10 +10,14 @@ import { Application_Save_ABI } from './action';
 import { fetchAddressAbi } from '../../services/utils';
 import { AnyAction } from '@reduxjs/toolkit';
 
-export function useAddressProp(address: string | undefined): AddressPropVO | undefined {
+export function useAddressProp(address: string): AddressPropVO | undefined {
     return useSelector((state: AppState) => {
-        return state.application.addressPropMap?.get(address);
+        if ( state.application.addressPropMap ){
+            return state.application.addressPropMap?.get(address);
+        }
+        return undefined;
     });
+    // return undefined;
 }
 
 export function useAddressAbi( address : string ) : any | undefined {
