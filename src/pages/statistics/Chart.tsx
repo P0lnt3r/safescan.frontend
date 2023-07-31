@@ -56,7 +56,7 @@ export default () => {
                     </Card>
                 </Col>
                 <Col xl={12} xs={24} style={{ marginTop: "20px", padding: isMobile ? "0px" : "2px" }}>
-                    <Card title={"交易量"}>
+                    <Card title={"每日交易量"}>
                         <ChartTxns data={txnsChartData} />
                     </Card>
                 </Col>

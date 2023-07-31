@@ -19,6 +19,8 @@ import {
     ApartmentOutlined,
     UserOutlined,
     SolutionOutlined,
+    EnvironmentTwoTone,
+    LoadingOutlined,
 } from '@ant-design/icons';
 import { AddressPropVO, ContractInternalTransactionVO, ERC20TransferVO, EventLogVO, NodeRegisterActionVO, NodeRewardVO, SafeAccountManagerActionVO, TransactionVO } from '../../services';
 import { DateFormat } from '../../utils/DateUtil';
@@ -97,17 +99,32 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
             </Col>
             <Col xl={16} xs={24} style={{ marginTop: '14px' }}>
                 {
+                    // Confirmed....
                     confirmed == 1 && <Text strong>
                         <Paragraph copyable>{hash}</Paragraph>
                     </Text>
                 }
                 {
+                    // Unconfirmed
                     (confirmed == 0) && <>
                         <Tooltip title="Confirming">
                             <SyncOutlined spin style={{ float: "left", marginRight: "5px", marginTop: "5px" }} />
                         </Tooltip>
                         <Text underline italic style={{ float: "left" }}>
                             <Paragraph copyable>
+                                {hash}
+                            </Paragraph>
+                        </Text>
+                    </>
+                }
+                {
+                    // Pending ...
+                    confirmed == -1 && <>
+                        <Tooltip title="Pending">
+                            <LoadingOutlined style={{ float: "left", marginRight: "5px", marginTop: "5px" }} />
+                        </Tooltip>
+                        <Text italic style={{ float: "left" }}>
+                            <Paragraph copyable style={{ color: "gray" }}>
                                 {hash}
                             </Paragraph>
                         </Text>
@@ -125,45 +142,62 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
             </Col>
             <Col span={16}>
                 {
-                    status === 1 &&
+                    status == 1 &&
                     <Tag icon={<CheckCircleOutlined />} color="green">
                         Success
                     </Tag>
                 }
                 {
-                    status === 0 &&
+                    status == 0 &&
                     <Tag icon={<CloseCircleOutlined />} color="red">
                         Fail with error "{revertReason}"
                     </Tag>
                 }
-            </Col>
-        </Row>
-        <Divider style={{ margin: '18px 0px' }} />
-        <Row>
-            <Col span={8}>
-                <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
-                    <QuestionCircleOutlined />
-                </Tooltip>
-                <Text strong style={{ marginLeft: "5px" }}>Block</Text>
-            </Col>
-            <Col span={16}>
-                <BlockNumber blockNumber={blockNumber} confirmed={confirmed} />
-                <br />
                 {
-                    txVO?.confirmed == 1 &&
-                    <Text strong>
-                        {txVO && _blockNumber - blockNumber} Blocks Confirmed
-                    </Text>
-                }
-                {
-                    txVO?.confirmed == 0 && <>
-                        <Text italic>
-                            {txVO && _blockNumber - blockNumber} Blocks Confirmed
+                    // Pending ..
+                    status == -1 &&
+                    <Tag color="rgba(119,131,143,.1)">
+                        <EnvironmentTwoTone />
+                        <Text style={{ color: "#77838f" }}>
+                            Pending ...
                         </Text>
-                    </>
+                    </Tag>
                 }
             </Col>
         </Row>
+
+        {
+            txVO.blockNumber &&
+            <>
+                <Divider style={{ margin: '18px 0px' }} />
+                <Row>
+                    <Col span={8}>
+                        <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
+                            <QuestionCircleOutlined />
+                        </Tooltip>
+                        <Text strong style={{ marginLeft: "5px" }}>Block</Text>
+                    </Col>
+                    <Col span={16}>
+                        <BlockNumber blockNumber={blockNumber} confirmed={confirmed} />
+                        <br />
+                        {
+                            txVO?.confirmed == 1 &&
+                            <Text strong>
+                                {txVO && _blockNumber - blockNumber} Blocks Confirmed
+                            </Text>
+                        }
+                        {
+                            txVO?.confirmed == 0 && <>
+                                <Text italic>
+                                    {txVO && _blockNumber - blockNumber} Blocks Confirmed
+                                </Text>
+                            </>
+                        }
+                    </Col>
+                </Row>
+            </>
+        }
+
         <Divider style={{ margin: '18px 0px' }} />
         <Row>
             <Col span={8}>

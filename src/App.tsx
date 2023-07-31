@@ -18,6 +18,7 @@ import SuperNodes from './pages/nodes/SuperNodes';
 import MasterNodes from './pages/nodes/MasterNodes';
 import AccountRecords from './pages/assets/AccountRecords';
 import Chart from './pages/statistics/Chart';
+import PendingTxns from './pages/txs/PendingTxns';
 
 const { Content } = Layout;
 
@@ -37,6 +38,7 @@ function App() {
               <Route path="/txs" index element={<Txs />} />
               <Route path="/tx/:txHash" index element={<TxDetail />} />
               <Route path="/txsInternal" index element={<TxsInternal />} />
+              <Route path="/txsPending" index element={<PendingTxns />} />
               <Route path="/accounts" index element={<RankAddress />} />
               <Route path="/assets/accountrecords" index element={<AccountRecords />} />
               <Route path="/assets/erc20tokens" index element={<ERC20Tokens />} />

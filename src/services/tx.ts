@@ -20,6 +20,11 @@ export async function fetchTransactions(params: PageQueryDTO, dispatch?: (action
     return serverResponse.data;
 }
 
+export async function fetchPendingTransactions(params: PageQueryDTO ): Promise<PageResponseVO<TransactionVO>> {
+    const serverResponse = await POST(`${API_HOST}/txs/pending`, { ...params });
+    return serverResponse.data;
+}
+
 export async function fetchTransaction(hash: string): Promise<TransactionVO> {
     const serverResponse = await POST(`${API_HOST}/tx`, { hash: hash });
     return serverResponse.data;

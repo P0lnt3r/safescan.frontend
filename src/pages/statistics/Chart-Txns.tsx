@@ -2,6 +2,7 @@
 import { Line } from '@ant-design/plots';
 import { TimestampStatisticVO } from '../../services';
 import { useEffect, useState } from 'react';
+import { Area } from '@ant-design/plots';
 
 export interface TxnsType {
     date : string , 
@@ -24,7 +25,7 @@ export default ( { data } : {
     };
 
     return <>
-        <Line {...config} />
+        <Area {...config} />
     </>
 
 }
