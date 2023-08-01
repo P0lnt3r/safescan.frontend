@@ -4,6 +4,7 @@ import NavigateLink from '../../components/NavigateLink';
 import { EventLogVO } from '../../services';
 import { useMethodSignature } from '../../state/application/hooks';
 import { Abi_Method_Define, Abi_Method_Param } from '../../utils/decode';
+import { isMobile } from 'react-device-detect';
 
 const { Text } = Typography;
 
@@ -62,10 +63,10 @@ export default ({
         const decodeResult = hex != "0x" ? defaultAbiCoder.decode(abiTypes, hex) : undefined;
         return <>
             {decodeResult && decodeResult.map((result, index) => {
-                return <Row key={index} style={ 
-                        index === 0 ? { marginTop: "20px", paddingLeft: "20px", paddingRight: "20px" }
-                            : { paddingLeft: "20px", paddingRight: "20px" }
-                    }>
+                return <Row key={index} style={
+                    index === 0 ? { marginTop: "20px", paddingLeft: "1em", paddingRight: "1em" }
+                        : { paddingLeft: "1em", paddingRight: "1em" }
+                }>
                     <Col xl={2} xs={24}>
                         <Text type="secondary" strong>{data[index].name}:</Text>
                     </Col>
@@ -91,7 +92,7 @@ export default ({
                         <Col xl={2} xs={24}>
                             <Text strong>Address</Text>
                         </Col>
-                        <Col xl={22} xs={24}>
+                        <Col xl={22} xs={24} style={isMobile ? { letterSpacing: "-1px" } : {}}>
                             <NavigateLink path={`/address/${eventLog.address}`}>
                                 {eventLog.address}
                             </NavigateLink>
@@ -132,7 +133,7 @@ export default ({
                         <Col xl={2} xs={24} style={{ marginTop: "20px" }}>
                             <Text italic>Data</Text>
                         </Col>
-                        <Col xl={22} xs={24} style={{ backgroundColor: "#f8f9fa" , paddingBottom:"20px" }}>
+                        <Col xl={22} xs={24} style={{ backgroundColor: "#f8f9fa", paddingBottom: "20px" }}>
                             {
                                 abiMethodDefine ? EventLogData(eventLog.data, abiMethodDefine.data)
                                     :

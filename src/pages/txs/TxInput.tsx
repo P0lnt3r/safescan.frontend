@@ -4,10 +4,11 @@ import { defaultAbiCoder, Fragment, ParamType, Interface, FunctionFragment } fro
 import { useEffect, useMemo, useState } from 'react';
 import AddressTag from '../../components/AddressTag';
 import { DownOutlined, SmileOutlined } from '@ant-design/icons';
+import Address from '../../components/Address';
 
 
 const { TextArea } = Input;
-const { Title, Text, Paragraph } = Typography;
+const { Title, Text, Paragraph , Link } = Typography;
 
 export default ({ raw, methodId, fragment }: {
     raw: string
@@ -110,7 +111,7 @@ export default ({ raw, methodId, fragment }: {
                     </Row>
                     <Row style={{ "marginTop": "20px" }}>
                         <Col xl={4} xs={24}>
-                            <Text strong>MethodId</Text>
+                            <Text strong>Method ID</Text>
                         </Col>
                         <Col xl={20} xs={24}>
                             <Text>{methodId}</Text>
@@ -131,14 +132,14 @@ export default ({ raw, methodId, fragment }: {
                                 <Col xl={20} xs={24}>
                                     {
                                         type !== "array" ?
-                                            type === "address" ? <AddressTag address={value.toString()} sub={0} />
+                                            type === "address" ? <Address address={value.toString().toLowerCase()} ></Address>
                                                 : <Text>{value.toString()}</Text>
                                             : <>
                                                 { 
                                                     value.map( ( ele : any , index : number ) => {
                                                         return <Row key={index}>
                                                             {
-                                                                 <AddressTag address={ele.toString()} sub={0} />
+                                                                 <Address address={value.toString().toLowerCase()} ></Address>
                                                             }
                                                         </Row>
                                                     } )

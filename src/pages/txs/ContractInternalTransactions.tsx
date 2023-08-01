@@ -1,4 +1,4 @@
-import { Typography, Row, Col, Divider, Tooltip, Table, Space, Tag } from 'antd';
+import { Typography, Row, Col, Divider, Tooltip, Table, Space, Tag, List } from 'antd';
 import { defaultAbiCoder } from 'ethers/lib/utils';
 import NavigateLink from '../../components/NavigateLink';
 import { ContractInternalTransactionVO, EventLogVO } from '../../services';
@@ -19,6 +19,7 @@ import {
     ExportOutlined
 } from '@ant-design/icons';
 import { useCallback } from 'react';
+import { isMobile } from 'react-device-detect';
 
 const { Text, Link } = Typography;
 
@@ -32,7 +33,7 @@ export default ({
     to: string | undefined
 }) => {
 
-    const TypeTraceAddress = ({ level, status, type }: { level: number, status: number , type : string }) => {
+    const TypeTraceAddress = ({ level, status, type }: { level: number, status: number, type: string }) => {
         let content = `${type.toLowerCase()}_0`;
         for (let i = 0; i < level; i++) {
             content += "_1";
@@ -42,19 +43,28 @@ export default ({
             _level.push(i);
         }
         return <>
-            <img src={shape} width={"3%"} style={{ margin: "0.5%", marginTop: "-2%" }} />
             {
-                _level.map(() => <img src={shape2} width={"3%"} style={{ margin: "0.5%", marginTop: "-2%" }} />)
+                !isMobile && <>
+                    <img src={shape} width={"3%"} style={{ margin: "0.5%", marginTop: "-2%" }} />
+                    {
+                        _level.map(() => <img src={shape2} width={"3%"} style={{ margin: "0.5%", marginTop: "-2%" }} />)
+                    }
+
+                </>
             }
             {
-                status == 1 &&
-                <CheckCircleTwoTone style={{ marginLeft: "4px", marginRight: "4px" }} twoToneColor="#52c41a" />
+                <>
+                    {
+                        status == 1 &&
+                        <CheckCircleTwoTone style={{ marginLeft: "4px", marginRight: "4px" }} twoToneColor="#52c41a" />
+                    }
+                    {
+                        status == 0 &&
+                        <CloseCircleTwoTone style={{ marginLeft: "4px", marginRight: "4px" }} twoToneColor="red" />
+                    }
+                    {content}
+                </>
             }
-            {
-                status == 0 &&
-                <CloseCircleTwoTone style={{ marginLeft: "4px", marginRight: "4px" }} twoToneColor="red" />
-            }
-            {content}
         </>
     }
 
@@ -69,7 +79,7 @@ export default ({
             dataIndex: 'level',
             render: (level, txVO) => <TypeTraceAddress {...txVO}></TypeTraceAddress>,
             width: 150,
-            fixed:true
+            fixed: true
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>From</Text>,
@@ -156,10 +166,63 @@ export default ({
             produced {contractInternalTransactions?.length} Internal Transactions
         </Text>
 
-        <Table style={{ marginTop: "12px" }} columns={columns} dataSource={contractInternalTransactions} scroll={{ x: 800 }}
-            rowKey={(vo) => vo.id}
-            pagination={false}
-        />
+        <Row>
+            <Col xl={24} xs={0}>
+                <Table style={{ marginTop: "12px" }} columns={columns} dataSource={contractInternalTransactions} scroll={{ x: 800 }}
+                    rowKey={(vo) => vo.id}
+                    pagination={false}
+                />
+            </Col>
+            <Col xl={0} xs={24}>
+                <Divider style={{marginTop:"15px",marginBottom:"1px"}} />
+                <List
+                    dataSource={contractInternalTransactions}
+                    style={{paddingLeft:"2px",paddingRight:"2px"}}
+                    renderItem={(internalTx) => (
+                        <List.Item>
+                            <Row style={{lineHeight: "26px", fontSize: "14px", letterSpacing: "-1px"}}>
+                                <Col xs={16}>
+                                    <TypeTraceAddress {...internalTx} />
+                                </Col>
+                                <Col xs={8}>
+                                    <Text>
+                                        GasLimit:{format(internalTx.gas)}
+                                    </Text>
+                                </Col>
+                                <Col xs={24}>
+                                    <Text strong>From</Text>
+                                </Col>
+                                <Col xs={24}>
+                                    <RouterLink to={`/address/${internalTx.from}`}>
+                                        <Link ellipsis>
+                                            {internalTx.from}
+                                        </Link>
+                                    </RouterLink>
+                                </Col>
+                                <Col xs={24}>
+                                    <Text strong>To</Text>
+                                </Col>
+                                <Col xs={24}>
+                                    <RouterLink to={`/address/${internalTx.to}`}>
+                                        <Link ellipsis>
+                                            {internalTx.to}
+                                        </Link>
+                                    </RouterLink>
+                                </Col>
+                                <Col xs={24}>
+                                    <Text strong>Value</Text>
+                                </Col>
+                                <Col xs={24}>
+                                    <EtherAmount raw={internalTx.value} fix={18} />
+                                </Col>
+                            </Row>
+
+
+                        </List.Item>
+                    )}
+                />
+            </Col>
+        </Row>
 
     </>
 

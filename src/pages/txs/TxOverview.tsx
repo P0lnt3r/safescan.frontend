@@ -87,6 +87,9 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
             txFee, gasPriceGWEI, gasUsedRate
         }
     }, [gasPrice, gasUsed, gas]);
+
+    
+
     const functionFragment = useAddressFunctionFragment(to, methodId, useDispatch());
 
     return <>
@@ -107,26 +110,40 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                 {
                     // Unconfirmed
                     (confirmed == 0) && <>
-                        <Tooltip title="Confirming">
-                            <SyncOutlined spin style={{ float: "left", marginRight: "5px", marginTop: "5px" }} />
-                        </Tooltip>
-                        <Text underline italic style={{ float: "left" }}>
-                            <Paragraph copyable>
-                                {hash}
-                            </Paragraph>
+                        <Text italic>
+                            <Tooltip title="Confirming">
+                                <SyncOutlined spin style={{ float: "left", marginRight: "5px", marginTop: "5px" }} />
+                            </Tooltip>
+                            {
+                                isMobile && <>
+                                    <Paragraph copyable>{hash}</Paragraph>
+                                </>
+                            }
+                            {
+                                !isMobile && <Text underline>
+                                    <Paragraph copyable style={{ float: "left" }}>{hash}</Paragraph>
+                                </Text >
+                            }
                         </Text>
                     </>
                 }
                 {
                     // Pending ...
                     confirmed == -1 && <>
-                        <Tooltip title="Pending">
-                            <LoadingOutlined style={{ float: "left", marginRight: "5px", marginTop: "5px" }} />
-                        </Tooltip>
-                        <Text italic style={{ float: "left" }}>
-                            <Paragraph copyable style={{ color: "gray" }}>
-                                {hash}
-                            </Paragraph>
+                        <Text italic>
+                            <Tooltip title="Pending">
+                                <LoadingOutlined style={{ float: "left", marginRight: "5px", marginTop: "5px" }} />
+                            </Tooltip>
+                            {
+                                isMobile && <>
+                                    <Paragraph copyable style={{ color: "gray" }} >{hash}</Paragraph>
+                                </>
+                            }
+                            {
+                                !isMobile && <Text underline>
+                                    <Paragraph copyable style={{ float: "left", color: "gray" }}>{hash}</Paragraph>
+                                </Text >
+                            }
                         </Text>
                     </>
                 }
@@ -223,15 +240,19 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                 </Tooltip>
                 <Text strong style={{ marginLeft: "5px" }}>From</Text>
             </Col>
-            <Col xl={16} xs={24} style={{ marginTop: '14px' }}>
+            <Col xl={16} xs={24} >
                 <RouterLink to={`/address/${from}`}>
-                    <Paragraph copyable style={{ color: "rgba(52, 104, 171, 0.85)" }}>
+                    <Paragraph copyable
+                        style={isMobile ? {
+                            lineHeight: "26px", fontSize: "13.5px", letterSpacing: "-1px",
+                            color: "rgba(52, 104, 171, 0.85)"
+                        } : { color: "rgba(52, 104, 171, 0.85)" }}>
                         {from}
                     </Paragraph>
                 </RouterLink>
                 {
                     fromPropVO && <>
-                        [ <Text style={{ marginBottom: "10px" }}>
+                        [ <Text style={{ marginBottom: "5px" }}>
                             <Address address={from} propVO={fromPropVO} style={{ hasLink: false, forceTag: true, noTip: true }} />
                         </Text> ]
                     </>
@@ -248,13 +269,17 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
             </Col>
             <Col xl={16} xs={24} style={{ marginTop: '14px' }}>
                 <RouterLink to={`/address/${to}`}>
-                    <Paragraph copyable style={{ color: "rgba(52, 104, 171, 0.85)" }}>
+                    <Paragraph copyable
+                        style={isMobile ? {
+                            lineHeight: "26px", fontSize: "13.5px", letterSpacing: "-1px",
+                            color: "rgba(52, 104, 171, 0.85)"
+                        } : { color: "rgba(52, 104, 171, 0.85)" }}>
                         {to}
                     </Paragraph>
                 </RouterLink>
                 {
                     toPropVO && <>
-                        [ <Text style={{ marginBottom: "10px" }}>
+                        [ <Text style={{ marginBottom: "5px" }}>
                             <Address address={to} propVO={toPropVO} style={{ hasLink: false, forceTag: true, noTip: true }} />
                         </Text> ]
                     </>
