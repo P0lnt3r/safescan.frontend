@@ -1,5 +1,6 @@
 
-import { Card, Table, Typography, Progress, Tooltip } from 'antd';
+import { Card, Table, Typography, Progress, Tooltip, Row, Col } from 'antd';
+import { Avatar, Divider, List, Skeleton } from 'antd';
 import { PaginationConfig, PaginationProps } from 'antd/es/pagination';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { useCallback, useEffect, useState } from 'react';
@@ -12,11 +13,17 @@ import { Link as RouterLink } from 'react-router-dom';
 import EtherAmount from '../../components/EtherAmount';
 import { useDBStoredBlockNumber } from '../../state/application/hooks';
 import Address from '../../components/Address';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { isMobile } from 'react-device-detect';
 
 const { Title, Text, Link } = Typography;
 
+const DEFAULT_PAGE_SIZE = 20;
+
 export default function () {
+
   const { t } = useTranslation();
+
   const columns: ColumnsType<BlockVO> = [
     {
       key: 'number',
@@ -52,7 +59,7 @@ export default function () {
       render: (address, blockVO) => {
         const propVO = blockVO.minerPropVO;
         return <>
-          <Address address={address} propVO={propVO}/>
+          <Address address={address} propVO={propVO} />
         </>
       }
     },
@@ -94,11 +101,15 @@ export default function () {
     },
   ];
 
-  const doFetchBlocks = async () => {
+  const doFetchBlocks = async (current?: number) => {
     setLoading(true);
-    fetchBlocks({ current: pagination.current, pageSize: pagination.pageSize }).then((data) => {
+    fetchBlocks({ current: current ? current : pagination.current, pageSize: pagination.pageSize }).then((data) => {
       setLoading(false);
-      setTableData(data.records);
+      if (current) {
+        setTableData([...tableData, ...data.records]);
+      } else {
+        setTableData(data.records);
+      }
       const unconfirmed = [];
       data.records.forEach(blockVO => {
         if (blockVO.confirmed < 1) {
@@ -107,7 +118,7 @@ export default function () {
       });
       setConfirmed(data.total);
       setUnconfirmed(unconfirmed.length);
-      const onChange = (page : number, pageSize : number) => {
+      const onChange = (page: number, pageSize: number) => {
         pagination.pageSize = unconfirmed.length > 0 ? pageSize - unconfirmed.length : pageSize;
         pagination.current = page;
         doFetchBlocks();
@@ -137,7 +148,7 @@ export default function () {
   }
   const [pagination, setPagination] = useState<TablePaginationConfig>({
     current: 1,
-    pageSize: 20,
+    pageSize: DEFAULT_PAGE_SIZE,
     position: ["topRight", "bottomRight"],
     pageSizeOptions: [],
     responsive: true,
@@ -164,16 +175,91 @@ export default function () {
     </>
   }
 
+  function listHasMore(): boolean {
+    console.log("List Has More....!");
+    return true;
+  }
+
+  function listNext() {
+    if (pagination.current) {
+      pagination.pageSize = DEFAULT_PAGE_SIZE;
+      console.log("List Next , pageSize = " , pagination.pageSize)
+      doFetchBlocks(pagination.current + 1);
+    }
+  }
+
   return (
     <>
       <Title level={3}>Blocks</Title>
-      <Card>
-        <OutputTotal></OutputTotal>
-        <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
-          pagination={pagination}
-          rowKey={blockVO => blockVO.number}
-          loading={loading}
-        />
+      <Card style={{padding:"0px"}}>
+        <Row>
+          <Col xl={0} xs={0}>
+            <OutputTotal></OutputTotal>
+            <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
+              pagination={pagination}
+              rowKey={blockVO => blockVO.number}
+              loading={loading}
+            />
+          </Col>
+          <Col xl={24} xs={24}>
+            <div
+              id="scrollableDiv"
+              style={{
+                height: 600,
+                overflow: 'auto',
+                padding: '0 4px',
+              }}
+            >
+              <InfiniteScroll
+                dataLength={tableData.length}
+                next={listNext}
+                hasMore={listHasMore()}
+                loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+                endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
+                scrollableTarget="scrollableDiv"
+              >
+                <List
+                  dataSource={tableData}
+                  renderItem={(block) => {
+                    const { number, timestamp, miner, gasLimit, gasUsed, txns, reward, confirmed } = block;
+                    const rate = Math.round(Number(gasUsed) / Number(gasLimit) * 10000) / 100;
+                    return <>
+                      <List.Item key={number}>
+                        <Row style={{ width: "100%" }}>
+                          <Col span={12}>
+                            {
+                              confirmed == 1 ? <RouterLink to={`/block/${number}`}>{number}</RouterLink> :
+                                <RouterLink to={`/block/${number}`}>
+                                  <Link italic underline>{number}</Link>
+                                </RouterLink>
+                            }
+                          </Col>
+                          <Col span={12} style={{ textAlign: "right" }}>
+                            <Text>{DateFormat(Number(timestamp) * 1000)}</Text>
+                          </Col>
+                          <Col span={24}>
+                            <Address address={miner} />
+                          </Col>
+                          <Col span={24}>
+                            <Text>Gas <Text type="secondary">Uesd</Text>/Limit:
+                              <Text type="secondary">{format(gasUsed)}</Text>/{format(gasLimit)}</Text>
+                            <Progress style={{ width: "80%" }} percent={rate} showInfo={true} />
+                          </Col>
+                          <Col span={4}>
+                            <RouterLink to={`/txs?block=${number}`}>Txns : {txns}</RouterLink>
+                          </Col>
+                          <Col span={20} style={{ textAlign: "right" }}>
+                            <Text code><EtherAmount raw={reward} fix={18} /></Text>
+                          </Col>
+                        </Row>
+                      </List.Item>
+                    </>
+                  }}
+                />
+              </InfiniteScroll>
+            </div>
+          </Col>
+        </Row>
       </Card>
     </>
   )
