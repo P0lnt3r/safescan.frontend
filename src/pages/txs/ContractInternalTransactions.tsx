@@ -216,8 +216,6 @@ export default ({
                                     <EtherAmount raw={internalTx.value} fix={18} />
                                 </Col>
                             </Row>
-
-
                         </List.Item>
                     )}
                 />

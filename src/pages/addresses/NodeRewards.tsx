@@ -106,7 +106,7 @@ export default ({ address }: { address: string }) => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Txn Hash</Text>,
             dataIndex: 'transactionHash',
-            render: (txHash, txVO) => <TransactionHash blockNumber={txVO.blockNumber} txhash={txHash} sub={8}></TransactionHash>,
+            render: (txHash, txVO) => <TransactionHash blockNumber={txVO.blockNumber} txhash={txHash}></TransactionHash>,
             width: 180,
             fixed: 'left',
         },

@@ -7,10 +7,9 @@ const { Link } = Typography;
 
 
 export default (
-    { txhash, status, sub , blockNumber }: {
+    { txhash, status , blockNumber }: {
         txhash: string,
         status?: number,
-        sub: number,
         blockNumber? : number
     } ) => {
 

@@ -156,6 +156,7 @@ export interface ContractInternalTransactionVO {
     type: string,
     value: string,
     level: number,
+    timestamp : number,
     confirmed: number
 }
 

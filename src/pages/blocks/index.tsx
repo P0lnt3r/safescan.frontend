@@ -176,14 +176,15 @@ export default function () {
   }
 
   function listHasMore(): boolean {
-    console.log("List Has More....!");
+    if ( pagination.current && pagination.total ){
+      const totalPages = Math.floor( pagination.total / pagination.current )
+      return pagination.current < totalPages;
+    }
     return true;
   }
-
   function listNext() {
     if (pagination.current) {
       pagination.pageSize = DEFAULT_PAGE_SIZE;
-      console.log("List Next , pageSize = " , pagination.pageSize)
       doFetchBlocks(pagination.current + 1);
     }
   }
@@ -193,7 +194,7 @@ export default function () {
       <Title level={3}>Blocks</Title>
       <Card style={{padding:"0px"}}>
         <Row>
-          <Col xl={0} xs={0}>
+          <Col xl={24} xs={0}>
             <OutputTotal></OutputTotal>
             <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
               pagination={pagination}
@@ -201,7 +202,7 @@ export default function () {
               loading={loading}
             />
           </Col>
-          <Col xl={24} xs={24}>
+          <Col xl={0} xs={24}>
             <div
               id="scrollableDiv"
               style={{

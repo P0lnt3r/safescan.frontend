@@ -29,7 +29,7 @@ export default function () {
     {
       title: <Text strong style={{ color: "#6c757e" }}>Txn Hash</Text>,
       dataIndex: 'hash',
-      render: (val, txVO) => <><TransactionHash blockNumber={txVO.blockNumber} txhash={val} sub={8} status={txVO.status}></TransactionHash></>,
+      render: (val, txVO) => <><TransactionHash blockNumber={txVO.blockNumber} txhash={val} status={txVO.status}></TransactionHash></>,
       width: 180,
       fixed: 'left',
     },

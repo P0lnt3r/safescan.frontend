@@ -60,7 +60,7 @@ export default () => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Tx Hash</Text>,
             dataIndex: 'transactionHash',
-            render: (val, txVO) => <><TransactionHash txhash={val} sub={8} status={1}></TransactionHash></>,
+            render: (val, txVO) => <><TransactionHash txhash={val} status={1}></TransactionHash></>,
             width: 180,
             fixed: 'left',
         },

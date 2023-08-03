@@ -122,7 +122,7 @@ export default () => {
                         if (transactionHash && transactionHash == EMPTY_ADDRESS) {
                             return <Text strong>GENESIS</Text>
                         }
-                        return <TransactionHash txhash={transactionHash} sub={5}></TransactionHash>
+                        return <TransactionHash txhash={transactionHash}></TransactionHash>
                     }
                     return txHashRender();
                 },

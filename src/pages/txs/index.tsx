@@ -1,5 +1,5 @@
-import { Card, Table, Typography, Row, Col, Tooltip } from 'antd';
-import { PaginationProps } from 'antd/es/pagination';
+import { Card, Table, Typography, Row, Col, Tooltip, List, Progress } from 'antd';
+import { Avatar, Divider, Skeleton } from 'antd';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { useEffect, useMemo, useState } from 'react';
 import { TransactionVO } from '../../services';
@@ -17,6 +17,7 @@ import { JSBI } from '@uniswap/sdk';
 import { useBlockNumber, useDBStoredBlockNumber } from '../../state/application/hooks';
 import { format } from '../../utils/NumberFormat';
 import Address from '../../components/Address';
+import InfiniteScroll from 'react-infinite-scroll-component';
 const { Title, Text, Link } = Typography;
 
 const DEFAULT_PAGESIZE = 50;
@@ -24,7 +25,6 @@ const DEFAULT_PAGESIZE = 50;
 export default function () {
 
   const [searchParams] = useSearchParams();
-
   const blockNumber = useMemo(() => {
     try {
       return Number(searchParams.get("block"));
@@ -35,7 +35,6 @@ export default function () {
 
   const latestBlockNumber = useBlockNumber();
   const dbStoredBlockNumber = useDBStoredBlockNumber();
-
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
@@ -43,7 +42,7 @@ export default function () {
     {
       title: <Text strong style={{ color: "#6c757e" }}>Txn Hash</Text>,
       dataIndex: 'hash',
-      render: (val, txVO) => <><TransactionHash blockNumber={txVO.blockNumber} txhash={val} sub={8} status={txVO.status}></TransactionHash></>,
+      render: (val, txVO) => <><TransactionHash blockNumber={txVO.blockNumber} txhash={val} status={txVO.status}></TransactionHash></>,
       width: 180,
       fixed: 'left',
     },
@@ -63,7 +62,7 @@ export default function () {
             vo.confirmed == 1 && <RouterLink to={`/block/${blockNumber}`}>{blockNumber}</RouterLink>
           }
           {
-            vo.confirmed == 0 && 
+            vo.confirmed == 0 &&
             <RouterLink to={`/block/${blockNumber}`}>
               <Link italic underline>{blockNumber}</Link>
             </RouterLink>
@@ -133,14 +132,24 @@ export default function () {
     },
   ];
 
-  const doFetchTransactions = async () => {
+  const doFetchTransactions = async (current?: number) => {
     setLoading(true);
     fetchTransactions({
-      current: pagination.current, pageSize: pagination.pageSize,
+      current: current ? current : pagination.current, pageSize: pagination.pageSize,
       blockNumber: blockNumber > 0 ? blockNumber : undefined
     }, dispatch).then((data) => {
       setLoading(false);
-      setTableData(data.records);
+      if (current && current > 1) {
+        const loadedTxHashs = tableData.map((txVO) => {
+          return txVO.hash;
+        });
+        const prepareLoadTxs = data.records.filter((txVO) => {
+          return loadedTxHashs.indexOf(txVO.hash) == -1;
+        });
+        setTableData([...tableData, ...prepareLoadTxs]);
+      } else {
+        setTableData(data.records);
+      }
       const unconfirmed = [];
       data.records.forEach(tx => {
         if (tx.confirmed != 1) {
@@ -191,12 +200,16 @@ export default function () {
   const [unconfirmed, setUnconfirmed] = useState<number>(0);
   const [confirmed, setConfirmed] = useState<number>(0);
 
+  // useEffect(() => {
+  //   if (pagination.current == 1 && dbStoredBlockNumber != latestBlockNumber && unconfirmed >= 0) {
+  //     pagination.pageSize = DEFAULT_PAGESIZE;
+  //     doFetchTransactions();
+  //   }
+  // }, [latestBlockNumber, dbStoredBlockNumber, blockNumber]);
+
   useEffect(() => {
-    if (pagination.current == 1 && dbStoredBlockNumber != latestBlockNumber && unconfirmed >= 0) {
-      pagination.pageSize = DEFAULT_PAGESIZE;
-      doFetchTransactions();
-    }
-  }, [latestBlockNumber, dbStoredBlockNumber,blockNumber]);
+    doFetchTransactions();
+  }, []);
 
   function OutputTotal() {
     return <>
@@ -208,6 +221,20 @@ export default function () {
         </Text>
       }
     </>
+  }
+
+  function listHasMore(): boolean {
+    if (pagination.current && pagination.total) {
+      const totalPages = Math.floor(pagination.total / pagination.current)
+      return pagination.current < totalPages;
+    }
+    return true;
+  }
+  function listNext() {
+    if (pagination.current && !loading) {
+      pagination.pageSize = DEFAULT_PAGESIZE;
+      doFetchTransactions(pagination.current + 1);
+    }
   }
 
   return (
@@ -222,11 +249,87 @@ export default function () {
         }
       </Row>
       <Card>
-        <OutputTotal />
-        <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
-          pagination={pagination} rowKey={(txVO) => txVO.hash}
-          loading={loading}
-        />
+        <Row style={{ width: "100%" }}>
+          <Col xl={24} xs={0}>
+            <OutputTotal />
+            <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
+              pagination={pagination} rowKey={(txVO) => txVO.hash}
+              loading={loading}
+            />
+          </Col>
+          <Col xl={0} xs={24}>
+            <div
+              id="scrollableDiv"
+              style={{
+                height: 600,
+                overflow: 'auto',
+                padding: '0 4px',
+              }}
+            >
+              <InfiniteScroll
+                dataLength={tableData.length}
+                next={listNext}
+                hasMore={listHasMore()}
+                pullDownToRefresh
+                refreshFunction={() => {
+                  doFetchTransactions(1);
+                }}
+                releaseToRefreshContent={<Divider plain>Release to refresh</Divider>}
+                pullDownToRefreshContent={<Divider plain>Release to refresh</Divider>}
+                pullDownToRefreshThreshold={2}
+                loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+                endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
+                scrollableTarget="scrollableDiv"
+              >
+                <List
+                  dataSource={tableData}
+                  loading={loading}
+                  renderItem={(transaction) => {
+                    const { hash, blockNumber, timestamp, confirmed, value, status,
+                      from, fromPropVO, to, toPropVO, methodId } = transaction;
+                    return <>
+                      <List.Item key={hash}>
+                        <Row style={{ width: "100%" }}>
+                          <Col span={12}>
+                            {
+                              confirmed == 1 ? <RouterLink to={`/block/${blockNumber}`}>{blockNumber}</RouterLink> :
+                                <RouterLink to={`/block/${blockNumber}`}>
+                                  <Link italic underline>{blockNumber}</Link>
+                                </RouterLink>
+                            }
+                          </Col>
+                          <Col span={12} style={{ textAlign: "right" }}>
+                            <Text>{DateFormat(Number(timestamp) * 1000)}</Text>
+                          </Col>
+                          <Col span={24}>
+                            <Text strong style={{ marginRight: "2px" }}>Hash:</Text>
+                            <TransactionHash txhash={hash} status={status} blockNumber={blockNumber} />
+                          </Col>
+                          <Col span={24}>
+                            <Text strong style={{ marginRight: "2px" }}>From:</Text>
+                            <Address address={from} propVO={fromPropVO} />
+                          </Col>
+                          <Col span={24}>
+                            <ArrowRightOutlined style={{ marginRight: "5px" }} />
+                            <Text strong style={{ marginRight: "2px" }}>To:</Text>
+                            <Address address={to} propVO={toPropVO} />
+                          </Col>
+                          <Col span={24}>
+                            <Text style={{ textAlign: "left" }}>
+                              Method :<TxMethodId address={to} methodId={methodId}></TxMethodId>
+                            </Text>
+                            <Text code style={{ float: "right" }}><EtherAmount raw={value} fix={6} /></Text>
+                          </Col>
+                        </Row>
+                      </List.Item>
+                    </>
+                  }}
+                />
+              </InfiniteScroll>
+            </div>
+          </Col>
+        </Row>
+
       </Card>
 
     </>
