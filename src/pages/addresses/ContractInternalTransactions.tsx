@@ -20,12 +20,10 @@ const DEFAULT_PAGESIZE = 20;
 export default ({ address }: { address: string }) => {
 
     const { t } = useTranslation();
-
     const [tableData, setTableData] = useState<ContractInternalTransactionVO[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [unconfirmed, setUnconfirmed] = useState<number>(0);
     const [confirmed, setConfirmed] = useState<number>(0);
-
     const [pagination, setPagination] = useState<TablePaginationConfig>({
         current: 1,
         pageSize: DEFAULT_PAGESIZE,
@@ -43,7 +41,6 @@ export default ({ address }: { address: string }) => {
         }).then(data => {
             setLoading(false)
             setTableData(data.records);
-            console.log(data.records);
             const unconfirmed = [];
             data.records.forEach(tx => {
                 if (tx.confirmed != 1) {
