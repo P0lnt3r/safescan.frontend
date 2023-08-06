@@ -10,7 +10,16 @@ export function GWEI( raw : string ){
 }
 
 export function ETHER( raw : string , fixed ?: number ){
-    return CurrencyAmount.ether(raw).toFixed( 0);
+    return CurrencyAmount.ether(raw).toFixed( 0 );
+}
+
+export function ETHER_Combine( raws : string[] , fixed ?: number ){
+    let total = CurrencyAmount.ether("0");
+    for( let i in raws ){
+        total = CurrencyAmount.ether(raws[i]).add(total);  
+    }
+    let fixedVal = fixed ? total.toFixed(fixed) : total.toFixed(18);
+    return format(fixedVal);
 }
 
 export default ( { raw , fix , ignoreLabel } : { raw : string | bigint , fix?:number , ignoreLabel ?: boolean } ) => {

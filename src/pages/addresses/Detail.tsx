@@ -11,12 +11,14 @@ import Transactions from "./Transactions";
 import ERC20Transfers from "./ERC20Transfers";
 import { fetchAddress } from "../../services/address";
 import { AddressVO, MasterNodeVO, SuperNodeVO } from "../../services";
-import EtherAmount from "../../components/EtherAmount";
+import EtherAmount, { ETHER_Combine } from "../../components/EtherAmount";
 import SuperNode from "./SuperNode";
 import MasterNode from "./MasterNode";
 import NodeRewards from "./NodeRewards";
 import AccountRecords from "./AccountRecords";
 import ContractInternalTransactions from "./ContractInternalTransactions";
+
+import AddressTokens from "./AddressTokens";
 
 const { Title, Text, Paragraph, Link } = Typography;
 
@@ -73,6 +75,8 @@ export default function () {
         };
     }, [addressVO]);
 
+
+
     return (
         <>
             {
@@ -128,8 +132,22 @@ export default function () {
                 <Col style={{ marginTop: "15px", padding: "5px" }} xl={12} xs={24} >
                     <Card size="small" title={<Title level={5}>Overview</Title>}>
                         <Row>
-                            <Col xl={10} xs={24}><Text strong>Balance:</Text></Col>
-                            <Col xl={14} xs={24}>
+                            <Col xl={24} xs={24}><Text strong type="secondary">SAFE VALUE AMOUNT:</Text></Col>
+                            <Col xl={24} xs={24}>
+                                <Text strong>
+                                    {
+                                        addressVO && addressVO.balance && addressVO.balance.balance && <>
+                                            {
+                                                ETHER_Combine([addressVO.balance.balance, addressVO.balance.totalAmount], 18)
+                                            }
+                                        </>
+                                    }
+                                </Text>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col xl={24} xs={24}><Text strong type="secondary">BALANCE:</Text></Col>
+                            <Col xl={24} xs={24}>
                                 <Text strong>
                                     {
                                         addressVO && addressVO.balance && addressVO.balance.balance && <EtherAmount raw={addressVO.balance.balance} fix={18} />
@@ -137,9 +155,10 @@ export default function () {
                                 </Text>
                             </Col>
                         </Row>
+                        <Divider dashed><Text code type="secondary" strong>Account Manager</Text></Divider>
                         <Row>
-                            <Col xl={10} xs={24}><Text strong>TotalAmount:</Text></Col>
-                            <Col xl={14} xs={24}>
+                            <Col xl={10} xs={4}><Text strong>Total:</Text></Col>
+                            <Col xl={14} xs={20}>
                                 <Text strong>
                                     {
                                         addressVO && addressVO.balance && addressVO.balance.totalAmount && <EtherAmount raw={addressVO.balance.totalAmount} fix={18} />
@@ -148,8 +167,8 @@ export default function () {
                             </Col>
                         </Row>
                         <Row>
-                            <Col xl={10} xs={24}><Text strong>AvailabeAmount:</Text></Col>
-                            <Col xl={14} xs={24}>
+                            <Col xl={10} xs={4}><Text strong>Avail:</Text></Col>
+                            <Col xl={14} xs={20}>
                                 <Text strong>
                                     {
                                         addressVO && addressVO.balance && addressVO.balance.availableAmount && <EtherAmount raw={addressVO.balance.availableAmount} fix={18} />
@@ -158,8 +177,8 @@ export default function () {
                             </Col>
                         </Row>
                         <Row>
-                            <Col xl={10} xs={24}><Text strong>Lock Amount:</Text></Col>
-                            <Col xl={14} xs={24}>
+                            <Col xl={10} xs={4}><Text strong>Lock:</Text></Col>
+                            <Col xl={14} xs={20}>
                                 <Text strong>
                                     {
                                         addressVO && addressVO.balance && addressVO.balance.lockAmount && <EtherAmount raw={addressVO.balance.lockAmount} fix={18} />
@@ -168,13 +187,20 @@ export default function () {
                             </Col>
                         </Row>
                         <Row>
-                            <Col xl={10} xs={24}><Text strong>Freeze Amount:</Text></Col>
-                            <Col xl={14} xs={24}>
+                            <Col xl={10} xs={4}><Text strong>Freeze:</Text></Col>
+                            <Col xl={14} xs={20}>
                                 <Text strong>
                                     {
                                         addressVO && addressVO.balance && addressVO.balance.freezeAmount && <EtherAmount raw={addressVO.balance.freezeAmount} fix={18} />
                                     }
                                 </Text>
+                            </Col>
+                        </Row>
+                        <Divider dashed></Divider>
+                        <Row>
+                            <Col xl={24} xs={24}><Text strong type="secondary">TOKEN HOLDINGS:</Text></Col>
+                            <Col xl={24} xs={24}>
+                                <AddressTokens />
                             </Col>
                         </Row>
                     </Card>

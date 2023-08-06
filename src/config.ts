@@ -6,8 +6,8 @@ const config = {
     "dev":{
         native_label: "SAFE",
         block_confirmed : 6,
-        api_host:`http://${InnetHostPort}`,
-        ws_host:`ws://${InnetHostPort}/socket.io`
+        api_host:`http://${LocalHostPort}`,
+        ws_host:`ws://${LocalHostPort}/socket.io`
     },
     "test":{
         native_label: "SAFE",
@@ -17,5 +17,4 @@ const config = {
     }
 }
 
-
-export default config['test'];
+export default config['dev'];
