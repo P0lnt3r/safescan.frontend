@@ -1,22 +1,103 @@
-import { AutoComplete, Input, Cascader, Select, Button } from 'antd';
+import { AutoComplete, Input, Cascader, Select, Button, Row, Col, Tooltip } from 'antd';
+import { Card, Table, Typography, notification } from 'antd';
 import "./index.css"
 import {
     UserOutlined,
     CaretDownOutlined,
     WalletOutlined
 } from '@ant-design/icons';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { BaseOptionType } from 'antd/lib/select';
 import { DefaultOptionType } from 'antd/lib/cascader';
+import { AddressPropVO } from '../../services';
+import ERC20TokenAmount from '../../components/ERC20TokenAmount';
+import ERC20Logo from '../../components/ERC20Logo';
 
-export default () => {
+const { Title, Text } = Typography;
 
+export default ({ tokens }: {
+    tokens: {
+        token: string,
+        tokenPropVO: AddressPropVO,
+        balance: string
+    }[] | undefined
+}) => {
+
+    const RenderTokenAmount = (value: string, balance: string, { address, name, decimals, symbol }: {
+        address: string,
+        name: string,
+        decimals: number,
+        symbol: string
+    }) => ({
+        value,
+        label: (
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                }}
+            >
+                <Row>
+                    <Col span={24}>
+                        <ERC20Logo address={address} width='14px' />
+                        <Text style={{ marginLeft: "5px" }}>{name} ({symbol})</Text>
+                    </Col>
+                    <Col span={24}>
+                        <Text type='secondary'>
+                            <ERC20TokenAmount raw={balance} address={address}
+                                symbol={symbol} name={name} decimals={decimals} fixed={decimals} />
+                            <Text type='secondary'> {symbol}</Text>
+                        </Text>
+                    </Col>
+                </Row>
+            </div>
+        )
+    });
 
     const renderTitle = (title: string) => (
         <span>
             {title}
         </span>
     );
+
+    const _options = useMemo(() => {
+        const initOptions: BaseOptionType[] = [];
+        const filterOptions: BaseOptionType[] = [];
+        const categorys = new Map<string, { value: string, label: JSX.Element }[]>();
+        if (tokens) {
+            for (let i in tokens) {
+                const { token, balance, tokenPropVO } = tokens[i];
+                const { prop, subType, tag } = tokenPropVO;
+                if (prop) {
+                    const { name, decimals, symbol } = JSON.parse(prop) as { name: string, decimals: number, symbol: string };
+                    filterOptions.push({
+                        value: tag,
+                        label: RenderTokenAmount(token, balance, { address: token, name, decimals, symbol }).label,
+                    });
+                    if (!categorys.get(subType)) {
+                        categorys.set(subType, []);
+                    }
+                    categorys.get(subType)?.push(RenderTokenAmount(token, balance, { address: token, name, decimals, symbol }))
+                }
+            }
+            categorys.forEach((val, key) => {
+                initOptions.push({
+                    value: key,
+                    label: renderTitle(key),
+                    options: val
+                });
+            })
+        }
+        return {
+            initOptions,
+            filterOptions
+        };
+    }, [tokens])
+    const [options, setOptions] = useState<BaseOptionType[]>();
+
+    useEffect(() => {
+        setOptions(_options.initOptions)
+    }, [_options]);
 
     const renderItem = (title: string, count: number) => ({
         value: title,
@@ -33,72 +114,34 @@ export default () => {
         ),
     });
 
-    const [options, setOptions] = useState<BaseOptionType[]>();
-
-    const completeoptions = [
-        {
-            label: renderTitle('ERC20'),
-            options: [renderItem('USDT', 10000), renderItem('wBTC', 432), renderItem('wETH', 12311), renderItem('Dash', 10600)],
-            value: "erc20"
-        },
-        {
-            label: renderTitle('NFT'),
-            options: [renderItem('AntDesign UI FAQ', 60100), renderItem('AntDesign FAQ', 30010)],
-            value: "NFT"
-        }
-    ];
-
-    const filterOptions = [
-        {
-            value: "USDT",
-            label: renderItem('USDT', 10000).label
-        },
-        {
-            value: "wBTC",
-            label: renderItem('wBTC', 432).label
-        },
-        {
-            value: "wETH",
-            label: renderItem('wETH', 12311).label
-        },
-        {
-            value: "Dash",
-            label: renderItem('Dash', 10600).label
-        }
-    ]
-
-    useEffect(() => {
-        setOptions(completeoptions);
-    }, []);
-
     const handleInput = (event: any) => {
         if (event.target.value) {
-            setOptions(filterOptions);
+            setOptions(_options.filterOptions);
         } else {
-            setOptions(completeoptions);
+            setOptions(_options.initOptions);
         }
     }
-
-    const filter = (inputValue: string, path: DefaultOptionType[]) =>
-        path.some(
-            (option) => (option.label as string).toLowerCase().indexOf(inputValue.toLowerCase()) > -1,
-        );
 
     return <>
         <AutoComplete
             popupClassName="certain-category-search-dropdown"
-            dropdownMatchSelectWidth={500}
-            style={{ width: 280 }}
+            dropdownMatchSelectWidth
+            style={{ width: "280px", marginTop: "10px" }}
             options={options}
             filterOption={(inputValue, option) =>
                 option!.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
             }
         >
             <Input style={{
-                borderRadius:"0.5rem"
-            }} placeholder="37 Tokens" onInput={handleInput} suffix={<CaretDownOutlined />} />
+                borderRadius: "0.5rem"
+            }} placeholder={tokens?.length + " Tokens"} onInput={handleInput} suffix={<CaretDownOutlined />} />
+
         </AutoComplete>
-        <Button shape="circle" style={{marginLeft:"20px" , background:"#e9ecef" , borderColor:"#e9ecef" , borderRadius:"30%"}} 
-                icon={<WalletOutlined />} href="https://www.google.com" />    
+        <Tooltip title="View token holdings in more detail">
+            <Button shape="circle"
+                style={{ marginLeft: "20px", background: "#e9ecef", borderColor: "#e9ecef", borderRadius: "30%" }}
+                icon={<WalletOutlined />} />
+        </Tooltip>
+
     </>
 }

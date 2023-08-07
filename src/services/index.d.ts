@@ -216,6 +216,7 @@ export interface AddressVO {
     },
     tokens: {
         token: string,
+        tokenPropVO : AddressPropVO,
         balance: string
     }[]
 }

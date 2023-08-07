@@ -75,8 +75,6 @@ export default function () {
         };
     }, [addressVO]);
 
-
-
     return (
         <>
             {
@@ -200,7 +198,7 @@ export default function () {
                         <Row>
                             <Col xl={24} xs={24}><Text strong type="secondary">TOKEN HOLDINGS:</Text></Col>
                             <Col xl={24} xs={24}>
-                                <AddressTokens />
+                                <AddressTokens tokens={addressVO?.tokens} />
                             </Col>
                         </Row>
                     </Card>

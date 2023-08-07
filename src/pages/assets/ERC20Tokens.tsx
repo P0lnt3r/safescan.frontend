@@ -102,7 +102,7 @@ export default () => {
                         totalTransferAmount &&
                         <>
                             <ERC20TokenAmount address={vo.address} name={vo.name} symbol={vo.symbol}
-                                raw={totalTransferAmount} fixed={6} decimals={vo.decimals} />
+                                raw={totalTransferAmount} fixed={vo.decimals} decimals={vo.decimals} />
                             <Text style={{marginLeft:"5px"}}>{vo.symbol}</Text>
                         </>
                     }
