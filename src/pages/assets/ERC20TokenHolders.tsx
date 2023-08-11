@@ -1,4 +1,3 @@
-
 import { Card, Table, Typography, Row, Col, Tooltip, PaginationProps } from 'antd';
 import { useEffect, useState } from 'react';
 import { fetchAddressBalanceRank } from '../../services/address';
@@ -16,63 +15,46 @@ import { format } from '../../utils/NumberFormat';
 import { JSBI } from '@uniswap/sdk';
 import { useTranslation } from 'react-i18next';
 import { SorterResult } from 'antd/es/table/interface';
+import ERC20TokenAmount from '../../components/ERC20TokenAmount';
 const { Title, Text, Link } = Typography;
+
 const DEFAULT_PAGESIZE = 20;
 
-export default () => {
-
+export default ({ token }: { token: string }) => {
     const { t } = useTranslation();
-    const [pagination, setPagination] = useState<TablePaginationConfig>({
+    function paginationOnChange(current: number, pageSize: number) {
+        pagination.current = current;
+        doFetchTokenAddressBalanceRank();
+    }
+    const [pagination, setPagination] = useState<PaginationProps>({
         current: 1,
         pageSize: DEFAULT_PAGESIZE,
-        position: ["topRight", "bottomRight"],
-        pageSizeOptions: [],
-        responsive: true,
+        showTotal: (total) => <>Total : {total}</>,
+        onChange: paginationOnChange
     });
     const [tableData, setTableData] = useState<AddressBalanceRankVO[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const [tableQueryParams, setTableQueryParams] = useState<{
-        orderProp?: string | undefined,
-        orderMode?: string | undefined
-    }>({});
-
-    async function doFetchAddressBalanceRank() {
-        setLoading(true);
+    async function doFetchTokenAddressBalanceRank() {
         fetchAddressBalanceRank({
             current: pagination.current,
             pageSize: pagination.pageSize,
-            orderProp: tableQueryParams.orderProp,
-            orderMode: tableQueryParams.orderMode,
+            token: token
         }).then(data => {
-            setLoading(false);
             setPagination({
                 ...pagination,
                 current: data.current,
                 pageSize: data.pageSize,
                 total: data.total,
+                onChange: paginationOnChange,
             })
             setTableData(data.records);
         })
     }
-
     useEffect(() => {
         pagination.current = 1;
-        doFetchAddressBalanceRank();
+        doFetchTokenAddressBalanceRank();
     }, []);
 
-    const handleTableOnChange = (page: TablePaginationConfig, filter: any, sorter: any) => {
-        let _sorter = sorter as SorterResult<AddressBalanceRankVO>
-        const { field, order } = _sorter;
-        tableQueryParams.orderMode = order?.toString();
-        tableQueryParams.orderProp = field?.toString();
-        if (!order) {
-            tableQueryParams.orderMode = undefined;
-            tableQueryParams.orderProp = undefined;
-        }
-        pagination.current = page.current;
-        pagination.pageSize = page.pageSize
-        doFetchAddressBalanceRank();
-    }
 
     const columns: ColumnsType<AddressBalanceRankVO> = [
         {
@@ -99,46 +81,28 @@ export default () => {
             width: 140,
         },
         {
-            title: <Text strong style={{ color: "#6c757e" }}>Name Tag</Text>,
-            dataIndex: 'addressPropVO',
-            render: (addressProp) => <>{addressProp?.tag}</>,
-            width: 80,
-        },
-        {
-            title: <Text strong style={{ color: "#6c757e" }}>Total Balance</Text>,
-            dataIndex: 'totalBalance',
-            sorter: true,
-            defaultSortOrder:"descend",
-            render: (totalBalance) => {
+            title: <Text strong style={{ color: "#6c757e" }}>Balance</Text>,
+            dataIndex: 'balance',
+            render: (balance, vo) => {
+                const { tokenPropVO } = vo;
+                const erc20Prop = tokenPropVO && tokenPropVO.subType === "erc20" ? tokenPropVO?.prop : undefined;
+                const erc20 = erc20Prop ? JSON.parse(erc20Prop) : undefined;
                 return <>
-                    <Text strong><EtherAmount raw={totalBalance} fix={18} /></Text>
-                </>
-            },
-            width: 120,
-        },
-        {
-            title: <Text strong style={{ color: "#6c757e" }}>Lock Amount</Text>,
-            dataIndex: 'lockAmount',
-            sorter: true,
-            render: (lockAmount) => {
-                return <>
-                    <Text strong type="secondary">
-                        <EtherAmount raw={lockAmount} fix={18} />
-                    </Text>
+                    {
+                        vo.token && <ERC20TokenAmount address={vo.token} name={erc20.name} symbol={erc20.symbol}
+                            decimals={erc20.decimals} raw={balance} fixed={erc20.decimals} />
+                    }
                 </>
             },
             width: 120,
         },
     ];
 
-
-    return (<>
-        <Title level={3}>Top Accounts by SAFE Balance </Title>
+    return <>
         <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
             loading={loading}
-            onChange={handleTableOnChange}
             pagination={pagination} rowKey={(txVO) => txVO.address}
         />
-    </>)
+    </>
 
 }

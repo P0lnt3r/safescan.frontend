@@ -136,7 +136,7 @@ export default ({ address }: { address: string }) => {
                 return <>
                     <Row>
                         <Col span={20}>
-                            <Address address={from} propVO={fromPropVO} style={ {hasLink:false} } />
+                            <Address address={from} propVO={fromPropVO} style={ {hasLink} } />
                         </Col>
                         <Col span={4}>
                             {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { ERC20TransferVO } from "../../services";
-import { fetchAddressERC20Transfers } from "../../services/tx";
+import { fetchAddressERC20Transfers, fetchERC20Transfers } from "../../services/tx";
 import { Table, Typography, Row, Col, PaginationProps, Tooltip } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslation } from 'react-i18next';
@@ -12,12 +12,12 @@ import ERC20Logo from "../../components/ERC20Logo";
 
 const { Text, Link } = Typography;
 
-export default ({ address }: { address: string }) => {
+export default ({ tokenAddress }: { tokenAddress: string }) => {
 
     const { t } = useTranslation();
     function paginationOnChange(current: number, pageSize: number) {
         pagination.current = current;
-        doFetchAddressTransactions();
+        doFetchERC20TokenTransactions();
     }
     const [pagination, setPagination] = useState<PaginationProps>({
         current: 1,
@@ -28,11 +28,11 @@ export default ({ address }: { address: string }) => {
     const [tableData, setTableData] = useState<ERC20TransferVO[]>([]);
 
 
-    async function doFetchAddressTransactions() {
-        fetchAddressERC20Transfers({
+    async function doFetchERC20TokenTransactions() {
+        fetchERC20Transfers({
             current: pagination.current,
             pageSize: pagination.pageSize,
-            address: address
+            tokenAddress: tokenAddress
         }).then(data => {
             setPagination({
                 ...pagination,
@@ -47,8 +47,8 @@ export default ({ address }: { address: string }) => {
 
     useEffect(() => {
         pagination.current = 1;
-        doFetchAddressTransactions();
-    }, [address]);
+        doFetchERC20TokenTransactions();
+    }, [tokenAddress]);
 
     const columns: ColumnsType<ERC20TransferVO> = [
         {
@@ -75,24 +75,13 @@ export default ({ address }: { address: string }) => {
                             <Col span={20}>
                                 <Tooltip title={from}>
                                     {
-                                        address === from
-                                            ? <Text style={{ width: "80%" }} ellipsis>
-                                                {from}
-                                            </Text>
-                                            :
-                                            <RouterLink to={`/address/${from}`}>
-                                                <Link style={{ width: "80%" }} ellipsis>{from}</Link>
-                                            </RouterLink>
+                                        <RouterLink to={`/address/${from}`}>
+                                            <Link style={{ width: "80%" }} ellipsis>{from}</Link>
+                                        </RouterLink>
                                     }
                                 </Tooltip>
                             </Col>
-                            <Col span={4}>
-                                {
-                                    address === from
-                                        ? <Text code strong style={{ color: "orange" }}>OUT</Text>
-                                        : <Text code strong style={{ color: "green" }}>IN</Text>
-                                }
-                            </Col>
+
                         </Row>
                     </>
                 )
@@ -104,13 +93,9 @@ export default ({ address }: { address: string }) => {
             width: 180,
             render: (to) =>
                 <Tooltip title={to}>{
-                    address === to
-                        ? <Text style={{ width: "80%", marginLeft: "5px" }} ellipsis>
-                            {to}
-                        </Text>
-                        : <RouterLink to={`/address/${to}`}>
-                            <Link style={{ width: "80%", marginLeft: "5px" }} ellipsis>{to}</Link>
-                        </RouterLink>
+                    <RouterLink to={`/address/${to}`}>
+                        <Link style={{ width: "80%", marginLeft: "5px" }} ellipsis>{to}</Link>
+                    </RouterLink>
                 }</Tooltip>
         },
         {

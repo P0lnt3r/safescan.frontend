@@ -156,7 +156,7 @@ export interface ContractInternalTransactionVO {
     type: string,
     value: string,
     level: number,
-    timestamp : number,
+    timestamp: number,
     confirmed: number
 }
 
@@ -198,8 +198,10 @@ export interface AddressBalanceRankVO {
     balance: string,
     totalAmount: string,
     lockAmount: string,
-    freezeAmount : string,
-    totalBalance : string
+    freezeAmount: string,
+    totalBalance: string,
+    token ?: string , 
+    tokenPropVO ?: AddressPropVO
 }
 
 export interface AddressVO {
@@ -216,9 +218,25 @@ export interface AddressVO {
     },
     tokens: {
         token: string,
-        tokenPropVO : AddressPropVO,
+        tokenPropVO: AddressPropVO,
         balance: string
-    }[]
+    }[],
+    contract?: {
+        address: string,
+        creator: string,
+        creatorBlockNumber: number,
+        creatorTransactionHash: string,
+        creatorTimestamp: number,
+        selfDestructTransactionHash: string,
+        selfDestructBlockNumber: number,
+        selfDestructTimestamp: number
+    }
+    firstTxBlockNumber: number,
+    firstTxHash: string,
+    firstTxTimestamp: number,
+    latestTxBlockNumber: number,
+    latestTxHash: string,
+    latestTxTimestamp: number
 }
 
 export interface ERC20TokenVO {
@@ -237,10 +255,10 @@ export interface MemberInfoVO {
     amount: string,
     height: number,
 
-    lockDay ?: number,
-    unlockHeight ?: number,
-    releaseHeight ?: number,
-    unfreezeHeight ?: number,
+    lockDay?: number,
+    unlockHeight?: number,
+    releaseHeight?: number,
+    unfreezeHeight?: number,
 }
 
 export interface IncentivePlanVO {
@@ -250,12 +268,12 @@ export interface IncentivePlanVO {
 }
 
 export interface SuperNodeVO {
-    rank:number,
+    rank: number,
     id: number,
     amount: string,
     totalVoteNum: number,
     totalVoterAmount: number,
-    voteObtainedRate : string,
+    voteObtainedRate: string,
     createHeight: number,
     updateHeight: number,
     lastRewardHeight: number,
@@ -267,13 +285,13 @@ export interface SuperNodeVO {
     description: string,
     founders: MemberInfoVO[],
     incentivePlan: IncentivePlanVO,
-    stateInfo : {
-        state : number , 
-        height : number
-    } , 
-    voteInfo : {
-        totalAmount : string,
-        totalNum : string,
+    stateInfo: {
+        state: number,
+        height: number
+    },
+    voteInfo: {
+        totalAmount: string,
+        totalNum: string,
         height: number,
         voters: MemberInfoVO[]
     }
@@ -291,11 +309,11 @@ export interface MasterNodeVO {
     description: string,
     founders: MemberInfoVO[],
     incentivePlan: IncentivePlanVO,
-    stateInfo : {
-        state : number,
-        height : number
+    stateInfo: {
+        state: number,
+        height: number
     },
-    lastRewardHeight : number
+    lastRewardHeight: number
 }
 
 export interface NodeRewardVO {
@@ -317,7 +335,7 @@ export interface AccountRecordVO {
 
     lockId: number,
     address: string,
-    addressPropVO : AddressPropVO,
+    addressPropVO: AddressPropVO,
     amount: string,
     lockDay: number,
     startTxHash: string,
@@ -388,17 +406,17 @@ export interface NodeRegisterActionVO {
 
 
 export interface TimestampStatisticVO {
-    date : string,
-    blockNumberStart : number,
-    blockNumberEnd : number,
-    totalTxns : number,
-    totalInternalTxns : number,
-    totalERC20Transfers : number,
-    totalContract : number,
-    totalSuperNodes : number,
-    totalMasterNodes : number,
-    totalRewards : string ,
-    totalSupply : string ,
-    totalLockAmount : string ,
-    totalFreezeAmount : string
+    date: string,
+    blockNumberStart: number,
+    blockNumberEnd: number,
+    totalTxns: number,
+    totalInternalTxns: number,
+    totalERC20Transfers: number,
+    totalContract: number,
+    totalSuperNodes: number,
+    totalMasterNodes: number,
+    totalRewards: string,
+    totalSupply: string,
+    totalLockAmount: string,
+    totalFreezeAmount: string
 }

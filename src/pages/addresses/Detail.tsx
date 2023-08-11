@@ -19,6 +19,9 @@ import AccountRecords from "./AccountRecords";
 import ContractInternalTransactions from "./ContractInternalTransactions";
 
 import AddressTokens from "./AddressTokens";
+import Address from "../../components/Address";
+import TransactionHash from "../../components/TransactionHash";
+import { DateFormat } from "../../utils/DateUtil";
 
 const { Title, Text, Paragraph, Link } = Typography;
 
@@ -204,17 +207,92 @@ export default function () {
                     </Card>
                 </Col>
                 <Col style={{ marginTop: "15px", padding: "5px" }} xl={12} xs={24} >
-                    <Card size="small" title={<Title level={5}>More Informations</Title>}>
-                        <Row>
-                            <Col xl={10} xs={24}><Text strong>Name Tag:</Text></Col>
-                            <Col xl={14} xs={24}>
-                                <Text>
-                                    {
-                                        addressVO && addressVO.propVO && addressVO.propVO.tag
-                                    }
-                                </Text>
+                    <Card size="small" style={isMobile ? {} : { height: "410px" }} title={<Title level={5}>More Informations</Title>}>
+                        <Row style={{ marginTop: "15px" }}>
+                            <Col xl={6} xs={24}><Text strong>Name Tag</Text></Col>
+                            <Col xl={18} xs={24}>
+                                {
+                                    address && addressVO && addressVO.propVO &&
+                                    <>
+                                        <Address address={address} propVO={addressVO.propVO} style={{ hasLink: false }} />
+                                    </>
+                                }
                             </Col>
                         </Row>
+
+                        {
+                            type == "address" &&
+                            <>
+                                <Divider />
+                                <Row>
+                                    <Col xl={6} xs={24}><Text strong>Last Txn Appeared</Text></Col>
+                                    <Col xl={18} xs={24}>
+                                        {
+                                            address && addressVO && addressVO.latestTxHash &&
+                                            <Row>
+                                                <Col span={24}>
+                                                    <TransactionHash txhash={addressVO.latestTxHash} />
+                                                </Col>
+                                                <Col span={24}>
+                                                    <Text type="secondary">{DateFormat(addressVO.latestTxTimestamp * 1000)}</Text>
+                                                </Col>
+                                            </Row>
+                                        }
+                                    </Col>
+                                </Row>
+                                <Divider />
+                                <Row>
+                                    <Col xl={6} xs={24}><Text strong>First Txn Appeared</Text></Col>
+                                    <Col xl={18} xs={24}>
+                                        {
+                                            address && addressVO && addressVO.firstTxHash &&
+                                            <Row>
+                                                <Col span={24}>
+                                                    {
+                                                        addressVO.firstTxBlockNumber == 0 &&
+                                                        <Text strong>GENESIS</Text>
+                                                    }
+                                                    {
+                                                        addressVO.firstTxBlockNumber != 0 &&
+                                                        <TransactionHash txhash={addressVO.firstTxHash} />
+                                                    }
+                                                </Col>
+                                                <Col span={24}>
+                                                    <Text type="secondary">{DateFormat(addressVO.firstTxTimestamp * 1000)}</Text>
+                                                </Col>
+                                            </Row>
+                                        }
+                                    </Col>
+                                </Row>
+                            </>
+                        }
+
+                        {
+                            type == "contract" && <>
+                                <Divider />
+                                <Row>
+                                    <Col xl={6} xs={24}><Text strong>Contract Creator</Text></Col>
+                                    <Col xl={18} xs={24}>
+                                        {
+                                            address && addressVO && addressVO.contract &&
+                                            <Row>
+                                                <Col span={24}>
+                                                    <Address address={addressVO.contract.creator} />
+                                                </Col>
+                                                <Col span={24}>
+                                                    At Txn : <TransactionHash txhash={addressVO.contract.creatorTransactionHash} />
+                                                </Col>
+                                                <Col span={24}>
+                                                    <Text type="secondary">{DateFormat(addressVO.contract.creatorTimestamp * 1000)}</Text>
+                                                </Col>
+                                            </Row>
+                                        }
+                                    </Col>
+                                </Row>
+                            </>
+                        }
+
+
                     </Card>
                 </Col>
             </Row>

@@ -19,6 +19,7 @@ import MasterNodes from './pages/nodes/MasterNodes';
 import AccountRecords from './pages/assets/AccountRecords';
 import Chart from './pages/statistics/Chart';
 import PendingTxns from './pages/txs/PendingTxns';
+import Token from './pages/assets/Token';
 
 const { Content } = Layout;
 
@@ -46,6 +47,7 @@ function App() {
               <Route path="/nodes/supermasternodes" index element={<SuperNodes />} />
               <Route path="/nodes/masternodes" index element={<MasterNodes />} />
               <Route path="/charts" index element={<Chart />} />
+              <Route path="/token/:address" index element={<Token />} />
             </Routes>
           </div>
         </BrowserRouter>

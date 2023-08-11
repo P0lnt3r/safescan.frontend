@@ -50,7 +50,10 @@ export async function fetchAddressERC20Transfers(params: { address: string } | P
     return serverResponse.data;
 }
 
-export async function fetchERC20Transfers( params:PageQueryDTO ): Promise<PageResponseVO<ERC20TransferVO>> {
+export async function fetchERC20Transfers( params:PageQueryDTO | {
+    address ?: string , 
+    tokenAddress ?: string
+} ): Promise<PageResponseVO<ERC20TransferVO>> {
     const serverResponse = await POST(`${API_HOST}/txs/erc20`, { ...params });
     return serverResponse.data;
 }
