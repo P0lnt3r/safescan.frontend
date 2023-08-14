@@ -79,7 +79,7 @@ export default () => {
             title: <Text strong style={{ color: "#6c757e" }}>Rank</Text>,
             dataIndex: 'rank',
             render: (rank) => <Text strong>{rank}</Text >,
-            width: 40,
+            width: 30,
             fixed: 'left',
         },
         {
@@ -102,19 +102,19 @@ export default () => {
             title: <Text strong style={{ color: "#6c757e" }}>Name Tag</Text>,
             dataIndex: 'addressPropVO',
             render: (addressProp) => <>{addressProp?.tag}</>,
-            width: 80,
+            width: 70,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Total Balance</Text>,
             dataIndex: 'totalBalance',
             sorter: true,
-            defaultSortOrder:"descend",
+            defaultSortOrder: "descend",
             render: (totalBalance) => {
                 return <>
-                    <Text strong><EtherAmount raw={totalBalance} fix={18} /></Text>
+                    <Text strong><EtherAmount raw={totalBalance} fix={4} /></Text>
                 </>
             },
-            width: 120,
+            width: 80,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Lock Amount</Text>,
@@ -123,14 +123,55 @@ export default () => {
             render: (lockAmount) => {
                 return <>
                     <Text strong type="secondary">
-                        <EtherAmount raw={lockAmount} fix={18} />
+                        <EtherAmount raw={lockAmount} fix={4} />
                     </Text>
                 </>
             },
-            width: 120,
+            width: 80,
+        },
+        {
+            title: <Text strong style={{ color: "#6c757e" }}>Before 24H</Text>,
+            dataIndex: 'changeBefore30D',
+            render: (changeBefore30D, vo) => {
+                const changeAmount = JSBI.BigInt(changeBefore30D);
+                const hasChange = !JSBI.EQ(changeAmount, 0);
+                const changeUp = JSBI.GT(changeAmount, 0);
+                const changeDown = JSBI.GT(changeAmount, 0);
+                return <>
+                    <Row>
+                        {
+                            hasChange && <>
+                                <Col span={24}>
+                                    <Text strong style={{ color: changeUp ? "green" : "red" }}>
+                                        {changeUp && "+"}
+                                        <EtherAmount raw={changeAmount.toString()} fix={6} />
+                                    </Text>
+                                </Col>
+                                <Col span={24}>
+                                    <Text strong style={{ fontSize: "12px", color: changeUp ? "green" : "red" }}>
+                                        {changeUp && "+"}
+                                        <span>{vo.changeBefore30DPercent}</span>
+                                    </Text>
+                                </Col>
+                            </>
+                        }
+                        {
+                            !hasChange && <>
+                                <Col span={24}>
+                                    <Text strong type='secondary'>
+                                        {changeUp && "+"}
+                                        <EtherAmount raw={changeAmount.toString()} fix={4} />
+                                    </Text>
+                                </Col>
+                            </>
+                        }
+                    </Row>
+
+                </>
+            },
+            width: 80,
         },
     ];
-
 
     return (<>
         <Title level={3}>Top Accounts by SAFE Balance </Title>

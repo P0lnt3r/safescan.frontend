@@ -201,7 +201,14 @@ export interface AddressBalanceRankVO {
     freezeAmount: string,
     totalBalance: string,
     token ?: string , 
-    tokenPropVO ?: AddressPropVO
+    tokenPropVO ?: AddressPropVO,
+
+    changeBefore24H ?: string
+    changeBefore24HPercent ?: string
+    changeBefore7D ?: string
+    changeBefore7DPercent ?: string
+    changeBefore30D ?: string
+    changeBefore30DPercent ?: string
 }
 
 export interface AddressVO {
