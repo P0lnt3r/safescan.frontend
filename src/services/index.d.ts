@@ -228,22 +228,24 @@ export interface AddressVO {
         tokenPropVO: AddressPropVO,
         balance: string
     }[],
-    contract?: {
-        address: string,
-        creator: string,
-        creatorBlockNumber: number,
-        creatorTransactionHash: string,
-        creatorTimestamp: number,
-        selfDestructTransactionHash: string,
-        selfDestructBlockNumber: number,
-        selfDestructTimestamp: number
-    }
+    contract?: ContractVO , 
     firstTxBlockNumber: number,
     firstTxHash: string,
     firstTxTimestamp: number,
     latestTxBlockNumber: number,
     latestTxHash: string,
     latestTxTimestamp: number
+}
+
+export interface ContractVO {
+    address: string,
+    creator: string,
+    creatorBlockNumber: number,
+    creatorTransactionHash: string,
+    creatorTimestamp: number,
+    selfDestructTransactionHash: string,
+    selfDestructBlockNumber: number,
+    selfDestructTimestamp: number
 }
 
 export interface ERC20TokenVO {
@@ -426,4 +428,10 @@ export interface TimestampStatisticVO {
     totalSupply: string,
     totalLockAmount: string,
     totalFreezeAmount: string
+}
+
+export interface TokenInfoVO {
+    address : string , 
+    contractVO : ContractVO , 
+    erc20TokenVO : ERC20TokenVO
 }

@@ -93,7 +93,7 @@ export default ({ token }: { token: string }) => {
                             <Text strong>
                                 <ERC20TokenAmount address={vo.token} name={erc20.name} symbol={erc20.symbol}
                                     decimals={erc20.decimals} raw={balance} fixed={erc20.decimals} />
-                                <span style={{marginLeft:"5px"}}>{erc20.symbol}</span>    
+                                <span style={{ marginLeft: "5px" }}>{erc20.symbol}</span>
                             </Text>
                         </>
                     }
@@ -142,8 +142,9 @@ export default ({ token }: { token: string }) => {
                             !hasChange && <>
                                 <Col span={24}>
                                     <Text strong type='secondary'>
-                                        {changeUp && "+"}
-                                        <EtherAmount raw={changeAmount.toString()} fix={4} />
+                                        <ERC20TokenAmount address={vo.address} name={erc20.name} symbol={erc20.symbol}
+                                            decimals={erc20.decimals} raw={changeBefore30D} fixed={erc20.decimals} />
+                                        <span style={{ marginLeft: "5px" }}>{erc20.symbol}</span>
                                     </Text>
                                 </Col>
                             </>
