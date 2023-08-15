@@ -44,7 +44,7 @@ export default ({ address, contractVO, erc20TokenVO }: {
                                 <ERC20TokenAmount raw={erc20TokenVO.totalTransferAmount} address={address}
                                     decimals={erc20TokenVO.decimals} name={erc20TokenVO.name} symbol={erc20TokenVO.symbol}
                                     fixed={erc20TokenVO.decimals} />
-                                <span style={{marginLeft:"5px"}}>{erc20TokenVO.symbol}</span>    
+                                <span style={{ marginLeft: "5px" }}>{erc20TokenVO.symbol}</span>
                             </Text>
 
                         </Col>
@@ -72,7 +72,10 @@ export default ({ address, contractVO, erc20TokenVO }: {
                     <Row style={{ marginTop: "15px" }}>
                         <Col xl={6} xs={24}><Text strong>Total Supply:</Text></Col>
                         <Col xl={18} xs={24}>
-
+                            <ERC20TokenAmount raw={erc20TokenVO.totalSupply} address={address}
+                                decimals={erc20TokenVO.decimals} name={erc20TokenVO.name} symbol={erc20TokenVO.symbol}
+                                fixed={erc20TokenVO.decimals} />
+                            <span style={{ marginLeft: "5px" }}>{erc20TokenVO.symbol}</span>
                         </Col>
                     </Row>
                     <Row style={{ marginTop: "15px" }}>

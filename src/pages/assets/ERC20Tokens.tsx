@@ -60,7 +60,7 @@ export default () => {
             dataIndex: 'address',
             render: (address, vo) => {
                 return <>
-                    <RouterLink to={`/address/${address}`}>
+                    <RouterLink to={`/token/${address}`}>
                         <ERC20Logo address={address} />
                         <Link ellipsis style={{ width: '80%', marginLeft: "5px" }}>
                             {vo.name}({vo.symbol})

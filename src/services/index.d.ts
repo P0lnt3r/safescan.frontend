@@ -256,6 +256,7 @@ export interface ERC20TokenVO {
     holders: number,
     totalTransfers: number,
     totalTransferAmount: string,
+    totalSupply : string
 }
 
 export interface MemberInfoVO {

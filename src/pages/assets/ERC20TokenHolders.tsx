@@ -106,6 +106,9 @@ export default ({ token }: { token: string }) => {
             title: <Text strong style={{ color: "#6c757e" }}>Before 24H</Text>,
             dataIndex: 'changeBefore30D',
             render: (changeBefore30D, vo) => {
+                if ( !changeBefore30D ){
+                    changeBefore30D = vo.balance;
+                }
                 let changeDown = false;
                 if (changeBefore30D.indexOf("-") >= 0) {
                     changeBefore30D = changeBefore30D.substring(changeBefore30D.indexOf("-") + 1);
@@ -132,7 +135,7 @@ export default ({ token }: { token: string }) => {
                                 </Col>
                                 <Col span={24}>
                                     <Text strong style={{ fontSize: "12px", color: changeUp ? "green" : "red" }}>
-                                        {changeUp && "+"}
+                                        { vo.changeBefore30DPercent && changeUp && "+"}
                                         <span>{vo.changeBefore30DPercent}</span>
                                     </Text>
                                 </Col>
