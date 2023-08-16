@@ -81,6 +81,16 @@ export default ({ token }: { token: string }) => {
             width: 140,
         },
         {
+            title: <Text strong style={{ color: "#6c757e" }}>Percentage</Text>,
+            dataIndex: 'percentage',
+            render: (percentage, addressBalanceRankVO: AddressBalanceRankVO) => <>
+                {
+                    percentage
+                }
+            </>,
+            width: 140,
+        },
+        {
             title: <Text strong style={{ color: "#6c757e" }}>Balance</Text>,
             dataIndex: 'balance',
             render: (balance, vo) => {
@@ -126,7 +136,7 @@ export default ({ token }: { token: string }) => {
                             hasChange && <>
                                 <Col span={24}>
                                     <Text strong style={{ color: changeUp ? "green" : "red" }}>
-                                        {changeUp && "+"}
+                                        {changeUp   && "+"}
                                         {changeDown && "-"}
                                         <ERC20TokenAmount address={vo.address} name={erc20.name} symbol={erc20.symbol}
                                             decimals={erc20.decimals} raw={changeBefore30D} fixed={erc20.decimals} />

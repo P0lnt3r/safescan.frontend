@@ -133,23 +133,34 @@ export default () => {
             title: <Text strong style={{ color: "#6c757e" }}>Before 24H</Text>,
             dataIndex: 'changeBefore30D',
             render: (changeBefore30D, vo) => {
+
+                if ( !changeBefore30D ){
+                    changeBefore30D = vo.balance;
+                }
+                let changeDown = false;
+                if (changeBefore30D.indexOf("-") >= 0) {
+                    changeBefore30D = changeBefore30D.substring(changeBefore30D.indexOf("-") + 1);
+                    changeDown = true;
+                }
                 const changeAmount = JSBI.BigInt(changeBefore30D);
                 const hasChange = !JSBI.EQ(changeAmount, 0);
-                const changeUp = JSBI.GT(changeAmount, 0);
-                const changeDown = JSBI.GT(changeAmount, 0);
-                return <>
+                const changeUp = hasChange && !changeDown;
+
+                return <>  
+
                     <Row>
                         {
                             hasChange && <>
                                 <Col span={24}>
                                     <Text strong style={{ color: changeUp ? "green" : "red" }}>
-                                        {changeUp && "+"}
+                                        {changeUp   && "+"}
+                                        {changeDown && "-"}
                                         <EtherAmount raw={changeAmount.toString()} fix={6} />
                                     </Text>
                                 </Col>
                                 <Col span={24}>
                                     <Text strong style={{ fontSize: "12px", color: changeUp ? "green" : "red" }}>
-                                        {changeUp && "+"}
+                                        {vo.changeBefore30DPercent && changeUp && "+"}
                                         <span>{vo.changeBefore30DPercent}</span>
                                     </Text>
                                 </Col>
@@ -159,7 +170,6 @@ export default () => {
                             !hasChange && <>
                                 <Col span={24}>
                                     <Text strong type='secondary'>
-                                        {changeUp && "+"}
                                         <EtherAmount raw={changeAmount.toString()} fix={4} />
                                     </Text>
                                 </Col>

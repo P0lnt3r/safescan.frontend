@@ -131,12 +131,16 @@ export interface AddressPropVO {
 
 export interface ERC20TransferVO {
     from: string
+    fromPropVO : AddressPropVO
     timestamp: integer
     to: string
+    toPropVO : AddressPropVo
     token: string
     tokenPropVO: AddressPropVO | null
     transactionHash: string
     value: string
+    confirmed : number
+    blockNumber : number
 }
 
 export interface ContractInternalTransactionVO {

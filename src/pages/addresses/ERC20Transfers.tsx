@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { ERC20TransferVO } from "../../services";
 import { fetchAddressERC20Transfers } from "../../services/tx";
-import { Table, Typography, Row, Col, PaginationProps, Tooltip } from 'antd';
+import { Table, Typography, Row, Col, PaginationProps, Tooltip, TablePaginationConfig } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslation } from 'react-i18next';
 import TransactionHash from '../../components/TransactionHash';
@@ -9,52 +9,85 @@ import { DateFormat } from '../../utils/DateUtil';
 import { Link as RouterLink } from 'react-router-dom';
 import ERC20TokenAmount from "../../components/ERC20TokenAmount";
 import ERC20Logo from "../../components/ERC20Logo";
+import { format } from "../../utils/NumberFormat";
 
 const { Text, Link } = Typography;
+const DEFAULT_PAGESIZE = 20;
 
 export default ({ address }: { address: string }) => {
 
     const { t } = useTranslation();
-    function paginationOnChange(current: number, pageSize: number) {
-        pagination.current = current;
-        doFetchAddressTransactions();
-    }
-    const [pagination, setPagination] = useState<PaginationProps>({
-        current: 1,
-        pageSize: 10,
-        showTotal: (total) => <>Total : {total}</>,
-        onChange: paginationOnChange
-    });
+
     const [tableData, setTableData] = useState<ERC20TransferVO[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [unconfirmed, setUnconfirmed] = useState<number>(0);
+    const [confirmed, setConfirmed] = useState<number>(0);
 
+    const [pagination, setPagination] = useState<TablePaginationConfig>({
+        current: 1,
+        pageSize: DEFAULT_PAGESIZE,
+        position: ["topRight", "bottomRight"],
+        pageSizeOptions: [],
+        responsive: true,
+    });
 
-    async function doFetchAddressTransactions() {
+    async function doFetchAddressERC20Transactions() {
+        setLoading(true)
         fetchAddressERC20Transfers({
             current: pagination.current,
             pageSize: pagination.pageSize,
             address: address
         }).then(data => {
-            setPagination({
-                ...pagination,
-                current: data.current,
-                pageSize: data.pageSize,
-                total: data.total,
-                onChange: paginationOnChange,
-            })
+            setLoading(false)
             setTableData(data.records);
+            const unconfirmed = [];
+            data.records.forEach(tx => {
+                if (tx.confirmed != 1) {
+                    unconfirmed.push(tx);
+                }
+            })
+            setConfirmed(data.total);
+            setUnconfirmed(unconfirmed.length);
+            const onChange = (page: number, pageSize: number) => {
+                pagination.pageSize = unconfirmed.length > 0 ? pageSize - unconfirmed.length : pageSize;
+                pagination.current = page;
+                doFetchAddressERC20Transactions();
+            }
+            if (pagination.current == 1) {
+                const total = data.total;
+                const dbSize = data.pageSize;
+                const dbPages = Math.floor(total / dbSize);
+                const uiTotal = (dbPages * unconfirmed.length) + total;
+                setPagination({
+                    ...pagination,
+                    current: data.current,
+                    total: uiTotal,
+                    pageSize: data.records.length,
+                    onChange: onChange
+                })
+            } else {
+                setPagination({
+                    ...pagination,
+                    current: data.current,
+                    total: data.total,
+                    pageSize: data.pageSize,
+                    onChange: onChange
+                })
+            }
         })
     }
 
     useEffect(() => {
         pagination.current = 1;
-        doFetchAddressTransactions();
+        pagination.pageSize = DEFAULT_PAGESIZE;
+        doFetchAddressERC20Transactions();
     }, [address]);
 
     const columns: ColumnsType<ERC20TransferVO> = [
         {
             title: <>{t('Txn Hash')}</>,
             dataIndex: 'transactionHash',
-            render: (val, txVO) => <><TransactionHash txhash={val} status={1}></TransactionHash></>,
+            render: (val, txVO) => <><TransactionHash blockNumber={txVO.blockNumber} txhash={val} status={1}></TransactionHash></>,
             width: 180,
             fixed: 'left',
         },
@@ -143,7 +176,7 @@ export default ({ address }: { address: string }) => {
                     <div style={{ fontSize: '14px' }}>
                         {
                             tokenPropVO && <>
-                                <RouterLink to={`/address/${tokenPropVO.address}`}>
+                                <RouterLink to={`/token/${tokenPropVO.address}`}>
                                     <ERC20Logo address={tokenPropVO.address} />
                                     <Link href='#' ellipsis style={{ width: '80%', marginLeft: "5px" }}>
                                         {erc20.name}({erc20.symbol})
@@ -157,8 +190,21 @@ export default ({ address }: { address: string }) => {
         },
     ];
 
+    function OutputTotal() {
+        return <>
+            {
+                confirmed != unconfirmed && <Text strong style={{ color: "#6c757e" }}>Total of {
+                    confirmed && <>{format(confirmed + "")}</>
+                } ERC20 Transfers
+                    {unconfirmed > 0 && <Text> and {unconfirmed} unconfirmed</Text>}
+                </Text>
+            }
+        </>
+    }
+
     return <>
-        <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
+        <OutputTotal></OutputTotal>
+        <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }} loading={loading}
             pagination={pagination} rowKey={(vo) => vo.transactionHash}
         />
     </>
