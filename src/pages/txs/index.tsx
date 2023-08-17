@@ -20,7 +20,7 @@ import Address from '../../components/Address';
 import InfiniteScroll from 'react-infinite-scroll-component';
 const { Title, Text, Link } = Typography;
 
-const DEFAULT_PAGESIZE = 50;
+const DEFAULT_PAGESIZE = 20;
 
 export default function () {
 

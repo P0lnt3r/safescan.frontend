@@ -12,17 +12,19 @@ import { DefaultOptionType } from 'antd/lib/cascader';
 import { AddressPropVO } from '../../services';
 import ERC20TokenAmount from '../../components/ERC20TokenAmount';
 import ERC20Logo from '../../components/ERC20Logo';
+import { useNavigate } from 'react-router-dom';
 
 const { Title, Text } = Typography;
 
-export default ({ tokens }: {
+export default ({ tokens , address }: {
     tokens: {
         token: string,
         tokenPropVO: AddressPropVO,
         balance: string
-    }[] | undefined
+    }[] | undefined , 
+    address : string | undefined
 }) => {
-
+    const navigate = useNavigate();
     const RenderTokenAmount = (value: string, balance: string, { address, name, decimals, symbol }: {
         address: string,
         name: string,
@@ -140,7 +142,11 @@ export default ({ tokens }: {
         <Tooltip title="View token holdings in more detail">
             <Button shape="circle"
                 style={{ marginLeft: "20px", background: "#e9ecef", borderColor: "#e9ecef", borderRadius: "30%" }}
-                icon={<WalletOutlined />} />
+                icon={<WalletOutlined />}
+                onClick={ () => {
+                    navigate(`/tokenholdings?a=${address}`);
+                } }
+                />
         </Tooltip>
 
     </>

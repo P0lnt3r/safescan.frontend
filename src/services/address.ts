@@ -1,14 +1,19 @@
-import { AddressBalanceRankVO, AddressPropVO, AddressVO, POST,GET, PageQueryDTO, PageResponseVO } from "./index.d";
+import { AddressBalanceRankVO, AddressPropVO, AddressVO, POST,GET, PageQueryDTO, PageResponseVO, ERC20AddressBalanceVO } from "./index.d";
 import config from "../config";
 const API_HOST = config.api_host;
 
-export async function fectAllAddressProp( ) : Promise< AddressPropVO[] > {
+export async function fectAllAddressProp() : Promise< AddressPropVO[] > {
     const serverResponse = await POST( `${API_HOST}/addresses/prop`);
     return serverResponse.data;
 }
 
 export async function fetchAddressBalanceRank( params : { token ?: string } | PageQueryDTO ) : Promise< PageResponseVO<AddressBalanceRankVO> >{
     const serverResponse = await POST( `${API_HOST}/addresses/rank` , params );
+    return serverResponse.data;
+}
+
+export async function fetchAddressERC20Balance( params : { address:string } | PageQueryDTO ) : Promise< PageResponseVO<ERC20AddressBalanceVO> >{
+    const serverResponse = await POST( `${API_HOST}/assets/addressERC20` , params );
     return serverResponse.data;
 }
 
