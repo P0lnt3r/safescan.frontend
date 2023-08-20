@@ -1,5 +1,5 @@
 import { AutoComplete, Input, Cascader, Select, Button, Row, Col, Tooltip } from 'antd';
-import { Card, Table, Typography, notification } from 'antd';
+import { Card, Table, Typography, notification , Tag } from 'antd';
 import "./index.css"
 import {
     UserOutlined,
@@ -16,15 +16,23 @@ import { useNavigate } from 'react-router-dom';
 
 const { Title, Text } = Typography;
 
-export default ({ tokens , address }: {
+export default ({ tokens, address, erc721TokenAssetCounts }: {
     tokens: {
         token: string,
         tokenPropVO: AddressPropVO,
         balance: string
-    }[] | undefined , 
-    address : string | undefined
+    }[] | undefined,
+    erc721TokenAssetCounts: {
+        token: string,
+        tokenPropVO: AddressPropVO,
+        tokenAssetCount: number
+    }[] | undefined,
+    address: string | undefined,
 }) => {
     const navigate = useNavigate();
+    const totalTokens = (tokens ? tokens.length : 0 )
+                      + (erc721TokenAssetCounts ? erc721TokenAssetCounts.length : 0);
+
     const RenderTokenAmount = (value: string, balance: string, { address, name, decimals, symbol }: {
         address: string,
         name: string,
@@ -56,6 +64,37 @@ export default ({ tokens , address }: {
         )
     });
 
+    const RenderTokenAssetCount = (value: string, count: number, { address, name, symbol }: {
+        address: string,
+        name: string,
+        symbol: string
+    }) => ({
+        value,
+        label: (
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                }}
+            >
+                <Row style={{width:"100%"}}>
+                    <Col span={24}>
+                        <ERC20Logo address={address} width='14px' />
+                        <Text style={{ marginLeft: "5px" }}>{name} {symbol}</Text>
+                        
+                    </Col>
+                    <Col span={24} >
+                        <Text type='secondary'>
+                            <Text type='secondary'>{symbol}</Text>
+                        </Text>
+                        <Tag style={{float:"right" , borderRadius:"12px"}} >ERC-721</Tag>
+                        <Tag style={{float:"right" , borderRadius:"12px"}} color="#108ee9">x{count}</Tag>
+                    </Col>
+                </Row>
+            </div>
+        )
+    })
+
     const renderTitle = (title: string) => (
         <span>
             {title}
@@ -73,7 +112,7 @@ export default ({ tokens , address }: {
                 if (prop) {
                     const { name, decimals, symbol } = JSON.parse(prop) as { name: string, decimals: number, symbol: string };
                     filterOptions.push({
-                        value: tag,
+                        value: `${name}(${symbol})`,
                         label: RenderTokenAmount(token, balance, { address: token, name, decimals, symbol }).label,
                     });
                     if (!categorys.get(subType)) {
@@ -82,14 +121,31 @@ export default ({ tokens , address }: {
                     categorys.get(subType)?.push(RenderTokenAmount(token, balance, { address: token, name, decimals, symbol }))
                 }
             }
-            categorys.forEach((val, key) => {
-                initOptions.push({
-                    value: key,
-                    label: renderTitle(key),
-                    options: val
-                });
-            })
         }
+        if (erc721TokenAssetCounts) {
+            for (let i in erc721TokenAssetCounts) {
+                const { token, tokenAssetCount, tokenPropVO } = erc721TokenAssetCounts[i];
+                const { prop, subType, tag } = tokenPropVO;
+                if (prop) {
+                    const { name, decimals, symbol } = JSON.parse(prop) as { name: string, decimals: number, symbol: string };
+                    filterOptions.push({
+                        value: `${name}(${symbol})`,
+                        label: RenderTokenAssetCount(token, tokenAssetCount, { address: token, name, symbol }).label,
+                    });
+                    if (!categorys.get(subType)) {
+                        categorys.set(subType, []);
+                    }
+                    categorys.get(subType)?.push(RenderTokenAssetCount(token, tokenAssetCount, { address: token, name, symbol }))
+                }
+            }
+        }
+        categorys.forEach((val, key) => {
+            initOptions.push({
+                value: key,
+                label: renderTitle(key),
+                options: val
+            });
+        })
         return {
             initOptions,
             filterOptions
@@ -136,17 +192,17 @@ export default ({ tokens , address }: {
         >
             <Input style={{
                 borderRadius: "0.5rem"
-            }} placeholder={tokens?.length + " Tokens"} onInput={handleInput} suffix={<CaretDownOutlined />} />
+            }} placeholder={totalTokens + " Tokens"} onInput={handleInput} suffix={<CaretDownOutlined />} />
 
         </AutoComplete>
         <Tooltip title="View token holdings in more detail">
             <Button shape="circle"
                 style={{ marginLeft: "20px", background: "#e9ecef", borderColor: "#e9ecef", borderRadius: "30%" }}
                 icon={<WalletOutlined />}
-                onClick={ () => {
+                onClick={() => {
                     navigate(`/tokenholdings?a=${address}`);
-                } }
-                />
+                }}
+            />
         </Tooltip>
 
     </>

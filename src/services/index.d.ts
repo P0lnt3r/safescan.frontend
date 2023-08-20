@@ -243,6 +243,11 @@ export interface AddressVO {
         tokenPropVO: AddressPropVO,
         balance: string
     }[],
+    erc721TokenAssetCounts : {
+        token : string , 
+        tokenPropVO : AddressPropVO,
+        tokenAssetCount : number
+    }[],
     contract?: ContractVO , 
     firstTxBlockNumber: number,
     firstTxHash: string,
@@ -450,4 +455,27 @@ export interface TokenInfoVO {
     address : string , 
     contractVO : ContractVO , 
     erc20TokenVO : ERC20TokenVO
+}
+
+export interface ERC721TokenVO {
+    address: string,
+    name: string,
+    symbol: string,
+    holders: number,
+    totalTransfers: number,
+    totalAssets : number
+}
+
+export interface ERC721TransferVO {
+    from: string
+    fromPropVO : AddressPropVO
+    timestamp: integer
+    to: string
+    toPropVO : AddressPropVo
+    token: string
+    tokenPropVO: AddressPropVO | null
+    transactionHash: string
+    tokenId: string
+    confirmed : number
+    blockNumber : number
 }

@@ -17,7 +17,6 @@ import MasterNode from "./MasterNode";
 import NodeRewards from "./NodeRewards";
 import AccountRecords from "./AccountRecords";
 import ContractInternalTransactions from "./ContractInternalTransactions";
-
 import AddressTokens from "./AddressTokens";
 import Address from "../../components/Address";
 import TransactionHash from "../../components/TransactionHash";
@@ -201,7 +200,7 @@ export default function () {
                         <Row>
                             <Col xl={24} xs={24}><Text strong type="secondary">TOKEN HOLDINGS:</Text></Col>
                             <Col xl={24} xs={24}>
-                                <AddressTokens tokens={addressVO?.tokens} address={address} />
+                                <AddressTokens tokens={addressVO?.tokens} address={address} erc721TokenAssetCounts={addressVO?.erc721TokenAssetCounts} />
                             </Col>
                         </Row>
                     </Card>
