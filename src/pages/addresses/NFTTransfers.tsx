@@ -1,32 +1,24 @@
-
-import { Card, Table, Typography, Row, Col, Tooltip, PaginationProps } from 'antd';
-import { useEffect, useState } from 'react';
-import { fetchAddressBalanceRank } from '../../services/address';
-import { AddressBalanceRankVO, ERC721TokenVO, ERC721TransferVO } from '../../services';
-import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
-import EtherAmount from '../../components/EtherAmount';
-import { Link as RouterLink } from 'react-router-dom';
-import {
-    UserOutlined,
-    FileTextOutlined,
-    SafetyOutlined,
-    ApartmentOutlined
-} from '@ant-design/icons';
-import { format } from '../../utils/NumberFormat';
-import { fetchERC721Tokens } from '../../services/assets';
-import { fetchERC721Transfers, fetchTransactions } from '../../services/tx';
+import { useEffect, useState } from "react"
+import { ERC20TransferVO, ERC721TransferVO } from "../../services";
+import { fetchAddressERC20Transfers, fetchERC721Transfers } from "../../services/tx";
+import { Table, Typography, Row, Col, PaginationProps, Tooltip, TablePaginationConfig, Button, Tag } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
+import { useTranslation } from 'react-i18next';
 import TransactionHash from '../../components/TransactionHash';
 import { DateFormat } from '../../utils/DateUtil';
-import ERC20Logo from '../../components/ERC20Logo';
-import { useTranslation } from 'react-i18next';
-import TxMethodId from '../../components/TxMethodId';
-import Address from '../../components/Address';
-import NFTLogo from '../../components/NFTLogo';
+import { Link as RouterLink } from 'react-router-dom';
+import ERC20TokenAmount from "../../components/ERC20TokenAmount";
+import ERC20Logo from "../../components/ERC20Logo";
+import { format } from "../../utils/NumberFormat";
+import NFT_PLACEHOLDER from "../../images/nft-placeholder.svg";
+import NFTLogo from "../../components/NFTLogo";
+import Address from "../../components/Address";
+import TxMethodId from "../../components/TxMethodId";
 
-const { Title, Text, Link } = Typography;
+const { Text, Link } = Typography;
 const DEFAULT_PAGESIZE = 20;
 
-export default () => {
+export default ({ address }: { address: string }) => {
 
     const { t } = useTranslation();
     const [tableData, setTableData] = useState<ERC721TransferVO[]>([]);
@@ -42,11 +34,12 @@ export default () => {
         responsive: true,
     });
 
-    async function doFetchERC721Transfers() {
+    async function doFetchAddressERC721Transactions() {
         setLoading(true)
         fetchERC721Transfers({
             current: pagination.current,
             pageSize: pagination.pageSize,
+            address: address
         }).then(data => {
             setLoading(false)
             setTableData(data.records);
@@ -61,7 +54,7 @@ export default () => {
             const onChange = (page: number, pageSize: number) => {
                 pagination.pageSize = unconfirmed.length > 0 ? pageSize - unconfirmed.length : pageSize;
                 pagination.current = page;
-                doFetchERC721Transfers();
+                doFetchAddressERC721Transactions();
             }
             if (pagination.current == 1) {
                 const total = data.total;
@@ -90,8 +83,8 @@ export default () => {
     useEffect(() => {
         pagination.current = 1;
         pagination.pageSize = DEFAULT_PAGESIZE;
-        doFetchERC721Transfers();
-    }, []);
+        doFetchAddressERC721Transactions();
+    }, [address]);
 
     const columns: ColumnsType<ERC721TransferVO> = [
         {
@@ -105,7 +98,7 @@ export default () => {
             title: <Text strong style={{ color: "#6c757e" }}>Method ID</Text>,
             dataIndex: 'methodId',
             width: 120,
-            render: (methodId, vo) => <>
+            render: (methodId , vo) => <>
                 <TxMethodId methodId={methodId} address={vo.toContract} subType={vo.toContractPropVO.subType} />
             </>
         },
@@ -122,7 +115,29 @@ export default () => {
             render: (from, txVO) => {
                 return (
                     <>
-                        <Address address={from} propVO={txVO.fromPropVO} />
+                        <Row>
+                            <Col span={20}>
+                                <Tooltip title={from}>
+                                    {
+                                        address === from
+                                            ? <Text style={{ width: "80%" }} ellipsis>
+                                                {from}
+                                            </Text>
+                                            :
+                                            <RouterLink to={`/address/${from}`}>
+                                                <Link style={{ width: "80%" }} ellipsis>{from}</Link>
+                                            </RouterLink>
+                                    }
+                                </Tooltip>
+                            </Col>
+                            <Col span={4}>
+                                {
+                                    address === from
+                                        ? <Text code strong style={{ color: "orange" }}>OUT</Text>
+                                        : <Text code strong style={{ color: "green" }}>IN</Text>
+                                }
+                            </Col>
+                        </Row>
                     </>
                 )
             }
@@ -132,7 +147,7 @@ export default () => {
             dataIndex: 'to',
             width: 160,
             render: (to, vo) =>
-                <Address address={to} propVO={vo.toPropVO}></Address >
+                <Address address={to} propVO={vo.toPropVO} style={{ hasLink: to != address }} ></Address >
 
         },
         {
@@ -192,13 +207,11 @@ export default () => {
         </>
     }
 
-    return (<>
-        <Title level={3}>ERC721 Token Transfers</Title>
-        <Card>
-            <OutputTotal></OutputTotal>
-            <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
-                pagination={pagination}
-            />
-        </Card>
-    </>)
+    return <>
+        <OutputTotal></OutputTotal>
+        <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }} loading={loading}
+            pagination={pagination} rowKey={(vo) => vo.transactionHash}
+        />
+    </>
+
 }

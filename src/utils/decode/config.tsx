@@ -1,6 +1,7 @@
 import { ABI_DECODE_DEF } from ".";
 import { FormatTypes, Fragment, Interface } from 'ethers/lib/utils';
 import IERC20 from "../../abi/IERC20.json";
+import IERC721 from "../../abi/IERC721.json";
 import SystemContractAbiConfig from './SystemContractAbi';
 
 /*
@@ -50,7 +51,7 @@ export enum CommonAbiType {
 
 export const CommonAbi_Config: { [type in CommonAbiType]: any } = {
     "erc20": IERC20,
-    "erc721": IERC20
+    "erc721": IERC721
 }
 
 export function getCommonFragment(type: CommonAbiType, hex: string) {

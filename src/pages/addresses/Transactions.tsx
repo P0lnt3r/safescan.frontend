@@ -112,7 +112,7 @@ export default ({ address }: { address: string }) => {
             title: <Text strong style={{ color: "#6c757e" }}>Method</Text>,
             dataIndex: 'methodId',
             width: 100,
-            render: (methodId, txVO) => <TxMethodId methodId={methodId} address={txVO.to} />
+            render: (methodId, txVO) => <TxMethodId methodId={methodId} address={txVO.to} subType={txVO.toPropVO?.subType} />
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Block</Text>,

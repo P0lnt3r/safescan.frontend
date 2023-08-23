@@ -88,9 +88,7 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
         }
     }, [gasPrice, gasUsed, gas]);
 
-    
-
-    const functionFragment = useAddressFunctionFragment(to, methodId, useDispatch());
+    const functionFragment = useAddressFunctionFragment(to, methodId, useDispatch() , toPropVO?.subType );
 
     return <>
         <Row>

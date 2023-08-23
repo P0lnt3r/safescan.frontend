@@ -21,6 +21,7 @@ import AddressTokens from "./AddressTokens";
 import Address from "../../components/Address";
 import TransactionHash from "../../components/TransactionHash";
 import { DateFormat } from "../../utils/DateUtil";
+import NFTTransfers from "./NFTTransfers";
 
 const { Title, Text, Paragraph, Link } = Typography;
 
@@ -53,6 +54,11 @@ export default function () {
                 key: 'erc20-transactions',
                 label: `ERC20 Transactions`,
                 children: address && <ERC20Transfers address={address}></ERC20Transfers>,
+            },
+            {
+                key: 'nft-transfers',
+                label: `NFT Transfers`,
+                children: address && <NFTTransfers address={address}></NFTTransfers>,
             },
         ]
     }, [address]);

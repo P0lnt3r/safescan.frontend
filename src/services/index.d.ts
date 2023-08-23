@@ -471,7 +471,9 @@ export interface ERC721TransferVO {
     fromPropVO : AddressPropVO
     timestamp: integer
     to: string
-    toPropVO : AddressPropVo
+    toPropVO : AddressPropVo,
+    toContract: string,
+    toContractPropVO : AddressPropVO
     token: string
     tokenPropVO: AddressPropVO | null
     transactionHash: string

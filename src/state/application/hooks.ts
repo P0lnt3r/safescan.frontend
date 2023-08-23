@@ -4,7 +4,7 @@ import { AddressPropVO, BlockVO, StatisticVO, TransactionVO } from '../../servic
 import { Abi_Method_Define } from '../../utils/decode';
 import ParseABIDefine from '../../utils/decode/ParseABIDefine';
 import { AppState } from '../index';
-import { FormatTypes, Interface , Fragment } from 'ethers/lib/utils';
+import { FormatTypes, Interface, Fragment } from 'ethers/lib/utils';
 import { CommonAbiType, getCommonFragment, getFragment } from '../../utils/decode/config';
 import { Application_Save_ABI } from './action';
 import { fetchAddressAbi } from '../../services/utils';
@@ -12,7 +12,7 @@ import { AnyAction } from '@reduxjs/toolkit';
 
 export function useAddressProp(address: string): AddressPropVO | undefined {
     return useSelector((state: AppState) => {
-        if ( state.application.addressPropMap ){
+        if (state.application.addressPropMap) {
             return state.application.addressPropMap?.get(address);
         }
         return undefined;
@@ -20,7 +20,7 @@ export function useAddressProp(address: string): AddressPropVO | undefined {
     // return undefined;
 }
 
-export function useAddressAbi( address : string ) : any | undefined {
+export function useAddressAbi(address: string): any | undefined {
     return useSelector((state: AppState) => state.application.abiMap?.get(address));
 }
 
@@ -28,15 +28,15 @@ export function useBlockNumber(): number {
     return useSelector((state: AppState) => state.application.blockNumber);
 }
 
-export function useBlockTimestamp() : number {
+export function useBlockTimestamp(): number {
     return useSelector((state: AppState) => state.application.latestTimestamp);
 }
 
-export function useDBStoredBlockNumber() : number {
+export function useDBStoredBlockNumber(): number {
     return useSelector((state: AppState) => state.application.dbStoredBlockNumber);
 }
 
-export function useStatistic() : StatisticVO | undefined{
+export function useStatistic(): StatisticVO | undefined {
     return useSelector((state: AppState) => state.application.statistic);
 }
 
@@ -48,21 +48,25 @@ export function useLatestTransactions(): TransactionVO[] {
     return useSelector((state: AppState) => state.application.latestTransactions);
 }
 
-export function useMethodIdName( address : string , methodId : string ) : string {
-    return useSelector( ( state : AppState ) => {
-        if ( ! methodId  ){
+export function useMethodIdName(address: string, methodId: string, subType?: string): string {
+    return useSelector((state: AppState) => {
+        if (!methodId) {
             return "Transfer";
         }
         const addressAbiJson = state.application.abiMap?.get(address);
         if (addressAbiJson) {
-            const byAddressAbi = getFragment( addressAbiJson , methodId );
-            if ( byAddressAbi ){
+            const byAddressAbi = getFragment(addressAbiJson, methodId);
+            if (byAddressAbi) {
                 return byAddressAbi.name;
             }
         }
         const addressPropVO = state.application.addressPropMap?.get(address);
-        if (addressPropVO && addressPropVO.subType in CommonAbiType) {
-            const byCommonAbi = getCommonFragment( addressPropVO.subType as CommonAbiType , methodId );
+        if ((addressPropVO && addressPropVO.subType in CommonAbiType)
+            || subType) {
+            const _subTpye = subType ? subType :
+                (addressPropVO && addressPropVO.subType);
+
+            const byCommonAbi = getCommonFragment(_subTpye as CommonAbiType, methodId);
             if (byCommonAbi) {
                 return byCommonAbi.name;
             }
@@ -76,16 +80,17 @@ export function useMethodIdName( address : string , methodId : string ) : string
     });
 }
 
-export function useAddressFunctionFragment(address: string, hex: string, dispatch: (action: AnyAction) => any): Fragment | undefined {
+export function useAddressFunctionFragment(
+    address: string, hex: string, dispatch: (action: AnyAction) => any, subType?: string): Fragment | undefined {
     return useSelector((state: AppState) => {
-        if ( !hex || hex.length < 10 ){
+        if (!hex || hex.length < 10) {
             return undefined;
         }
         const isFunction = hex.length === 10;
         const addressAbiJson = state.application.abiMap?.get(address);
         if (addressAbiJson) {
-            const byAddressAbi = getFragment( addressAbiJson , hex );
-            if ( byAddressAbi ){
+            const byAddressAbi = getFragment(addressAbiJson, hex);
+            if (byAddressAbi) {
                 return byAddressAbi;
             }
         }
@@ -95,8 +100,11 @@ export function useAddressFunctionFragment(address: string, hex: string, dispatc
             })
         }
         const addressPropVO = state.application.addressPropMap?.get(address);
-        if (addressPropVO && addressPropVO.subType in CommonAbiType) {
-            const byCommonAbi = getCommonFragment( addressPropVO.subType as CommonAbiType , hex );
+        if ((addressPropVO && addressPropVO.subType in CommonAbiType)
+            || subType) {
+            const _subTpye = subType ? subType :
+                (addressPropVO && addressPropVO.subType);
+            const byCommonAbi = getCommonFragment(_subTpye as CommonAbiType, hex);
             if (byCommonAbi) {
                 return byCommonAbi;
             }
