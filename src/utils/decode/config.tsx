@@ -1,7 +1,9 @@
 import { ABI_DECODE_DEF } from ".";
 import { FormatTypes, Fragment, Interface } from 'ethers/lib/utils';
+
 import IERC20 from "../../abi/IERC20.json";
 import IERC721 from "../../abi/IERC721.json";
+import IERC1155 from "../../abi/IERC1155.json";
 import SystemContractAbiConfig from './SystemContractAbi';
 
 /*
@@ -46,18 +48,21 @@ export const SysContractABI: { [address in SystemContract]: string } = {
 
 export enum CommonAbiType {
     ERC20 = "erc20",
-    ERC721 = "erc721"
+    ERC721 = "erc721",
+    ERC1155 = "erc1155"
 }
 
 export const CommonAbi_Config: { [type in CommonAbiType]: any } = {
     "erc20": IERC20,
-    "erc721": IERC721
+    "erc721": IERC721,
+    "erc1155": IERC1155
 }
 
 export function getCommonFragment(type: CommonAbiType, hex: string) {
     const abi = CommonAbi_Config[type];
     return getFragment(abi, hex);
 }
+
 
 export function getFragment(abi: any, hex: string): Fragment | undefined {
     const isFunction = hex.length == 10;
@@ -70,7 +75,6 @@ export function getFragment(abi: any, hex: string): Fragment | undefined {
     }
     return undefined;
 }
-
 
 
 

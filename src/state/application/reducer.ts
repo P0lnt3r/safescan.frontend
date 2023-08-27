@@ -2,7 +2,7 @@ import { createReducer } from '@reduxjs/toolkit';
 import { AbiMethodSignatureVO, AddressAbiVO, AddressPropVO, BlockVO, StatisticVO, TransactionVO } from '../../services';
 import { Application_Init, Application_Notification, Application_Save_ABI, Application_Update_AbiMethodSignature, Application_Update_AddressPropMap, Application_Update_BlockchainContext, NotificationType } from './action';
 import { FormatTypes, Interface, Fragment } from 'ethers/lib/utils';
-import { SysContractABI, SystemContract } from '../../utils/decode/config';
+import { CommonAbiType, CommonAbi_Config, SysContractABI, SystemContract } from '../../utils/decode/config';
 import { add } from 'date-fns';
 
 export interface IApplicationState {
@@ -55,6 +55,14 @@ export default createReducer(initialState, (builder) => {
                 address ,
                 abi : SysContractABI[address as SystemContract]
             } )
+        }
+        for ( const address in CommonAbi_Config){
+            state.abis.push( {
+                address ,
+                abi : JSON.stringify(CommonAbi_Config[address as CommonAbiType])
+            } )
+            
+            console.log("common abi:" , JSON.stringify(CommonAbi_Config[address as CommonAbiType]))
         }
         state.abis.forEach(({ address, abi }) => {
             ////////////////////////////////////////////////////////////////////////////////////////////////

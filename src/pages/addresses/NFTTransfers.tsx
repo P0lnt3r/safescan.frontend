@@ -156,7 +156,7 @@ export default ({ address }: { address: string }) => {
             width: 180,
             render: (tokenId, erc721TransferVO) => {
                 const { tokenPropVO } = erc721TransferVO;
-                const erc721Prop = tokenPropVO && tokenPropVO.subType === "erc721" ? tokenPropVO?.prop : undefined;
+                const erc721Prop = tokenPropVO && (tokenPropVO.subType == "erc721" || tokenPropVO.subType == "erc1155") ? tokenPropVO?.prop : undefined;
                 const erc721 = erc721Prop ? JSON.parse(erc721Prop) : undefined;
                 return (
                     <div style={{ fontSize: '14px' }}>

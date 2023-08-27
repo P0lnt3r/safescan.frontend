@@ -8,7 +8,7 @@ import Address from '../../components/Address';
 
 
 const { TextArea } = Input;
-const { Title, Text, Paragraph , Link } = Typography;
+const { Title, Text, Paragraph, Link } = Typography;
 
 export default ({ raw, methodId, fragment }: {
     raw: string
@@ -31,9 +31,9 @@ export default ({ raw, methodId, fragment }: {
     }, [raw, fragment]);
 
     const [showAbiDecode, setShowAbiDecode] = useState<boolean>(fragment ? true : false);
-    useEffect( () => {
+    useEffect(() => {
         fragment && setShowAbiDecode(true);
-    } , [fragment] );
+    }, [fragment]);
 
 
     const menu = (
@@ -92,6 +92,10 @@ export default ({ raw, methodId, fragment }: {
         return decodeResult;
     }, [raw, fragment])
 
+    const RenderInputParamValues = (values: any[]) => {
+
+    }
+
     return (<>
         {
             showAbiDecode ? <>
@@ -131,19 +135,20 @@ export default ({ raw, methodId, fragment }: {
                                 </Col>
                                 <Col xl={20} xs={24}>
                                     {
-                                        type !== "array" ?
-                                            type === "address" ? <Address address={value.toString().toLowerCase()} ></Address>
+                                        type != "array" ?
+                                            type == "address" ? <Address address={value.toString().toLowerCase()} ></Address>
                                                 : <Text>{value.toString()}</Text>
                                             : <>
-                                                { 
-                                                    value.map( ( ele : any , index : number ) => {
+                                                {value.toString()}
+                                                {/* {
+                                                    value.map((ele: any, index: number) => {
                                                         return <Row key={index}>
                                                             {
-                                                                 <Address address={value.toString().toLowerCase()} ></Address>
+                                                                <Address address={value.toString().toLowerCase()} ></Address>
                                                             }
                                                         </Row>
-                                                    } )
-                                                }
+                                                    })
+                                                } */}
                                             </>
                                     }
                                 </Col>
