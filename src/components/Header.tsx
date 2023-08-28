@@ -63,8 +63,8 @@ const Header: React.FC = () => {
                 getItem('Account Records', '/assets/accountrecords'),
                 getItem('ERC20 Tokens', '/assets/erc20tokens'),
                 getItem('ERC20 Transfers', '/assets/erc20txns'),
-                getItem('ERC721 Tokens', '/assets/erc721tokens'),
-                getItem('ERC721 Transfers', '/assets/erc721txns'),
+                getItem('NFT Tokens', '/assets/nft-tokens'),
+                getItem('NFT Transfers', '/assets/nft-transfers'),
             ]),
             getItem("Statistic", 'statistic', <AreaChartOutlined />, [
                 getItem('Top Account', '/accounts'),

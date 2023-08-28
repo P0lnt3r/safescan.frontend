@@ -1,8 +1,8 @@
 
-import { Card, Table, Typography, Row, Col, Tooltip, PaginationProps } from 'antd';
+import { Card, Table, Typography, Row, Col, Tooltip, PaginationProps, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import { fetchAddressBalanceRank } from '../../services/address';
-import { AddressBalanceRankVO, ERC721TokenVO, ERC721TransferVO } from '../../services';
+import { AddressBalanceRankVO, NftTokenVO, NftTransferVO } from '../../services';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import EtherAmount from '../../components/EtherAmount';
 import { Link as RouterLink } from 'react-router-dom';
@@ -29,7 +29,7 @@ const DEFAULT_PAGESIZE = 20;
 export default () => {
 
     const { t } = useTranslation();
-    const [tableData, setTableData] = useState<ERC721TransferVO[]>([]);
+    const [tableData, setTableData] = useState<NftTransferVO[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [unconfirmed, setUnconfirmed] = useState<number>(0);
     const [confirmed, setConfirmed] = useState<number>(0);
@@ -93,7 +93,7 @@ export default () => {
         doFetchERC721Transfers();
     }, []);
 
-    const columns: ColumnsType<ERC721TransferVO> = [
+    const columns: ColumnsType<NftTransferVO> = [
         {
             title: <Text strong style={{ color: "#6c757e" }}>Txn Hash</Text>,
             dataIndex: 'transactionHash',
@@ -134,6 +134,25 @@ export default () => {
             render: (to, vo) =>
                 <Address address={to} propVO={vo.toPropVO}></Address >
 
+        },
+        {
+            title: <Text strong style={{ color: "#6c757e" }}>Type</Text>,
+            dataIndex: 'tokenType',
+            width: 80,
+            render: (tokenType, vo) => {
+                let showText = tokenType;
+                if ( tokenType == "erc721" ){
+                    showText = "ERC-721"
+                }
+                if ( tokenType == "erc1155" ){
+                    showText = "ERC-1155"
+                }
+                return <>
+                    <Tag style={{
+                        height:"30px",lineHeight:"28px",borderRadius:"10px"
+                    }}>{showText}</Tag>
+                </>
+            }
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Item</Text>,
@@ -193,7 +212,7 @@ export default () => {
     }
 
     return (<>
-        <Title level={3}>ERC721 Token Transfers</Title>
+        <Title level={3}>NFT Transfers</Title>
         <Card>
             <OutputTotal></OutputTotal>
             <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}

@@ -1,9 +1,9 @@
 
 
-import { Card, Table, Typography, Row, Col, Tooltip, PaginationProps } from 'antd';
+import { Card, Table, Typography, Row, Col, Tooltip, PaginationProps, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import { fetchAddressBalanceRank } from '../../services/address';
-import { AddressBalanceRankVO, ERC20TokenVO, ERC721TokenVO } from '../../services';
+import { AddressBalanceRankVO, ERC20TokenVO, NftTokenVO } from '../../services';
 import type { ColumnsType } from 'antd/es/table';
 import EtherAmount from '../../components/EtherAmount';
 import { Link as RouterLink } from 'react-router-dom';
@@ -47,14 +47,14 @@ export default () => {
             setTableData(data.records);
         })
     }
-    const [tableData, setTableData] = useState<ERC721TokenVO[]>([]);
+    const [tableData, setTableData] = useState<NftTokenVO[]>([]);
 
     useEffect(() => {
         pagination.current = 1;
         doFetchERC721Tokens();
     }, []);
 
-    const columns: ColumnsType<ERC721TokenVO> = [
+    const columns: ColumnsType<NftTokenVO> = [
         {
             title: <Text strong style={{ color: "#6c757e" }}>Token</Text>,
             dataIndex: 'address',
@@ -66,6 +66,26 @@ export default () => {
                             {vo.name}({vo.symbol})
                         </Link>
                     </RouterLink>
+                </>
+            },
+            width: 40,
+            fixed: 'left',
+        },
+        {
+            title: <Text strong style={{ color: "#6c757e" }}>Type</Text>,
+            dataIndex: 'type',
+            render: (tokenType, vo) => {
+                let showText = tokenType;
+                if ( tokenType == "erc721" ){
+                    showText = "ERC-721"
+                }
+                if ( tokenType == "erc1155" ){
+                    showText = "ERC-1155"
+                }
+                return <>
+                    <Tag style={{
+                        height:"30px",lineHeight:"28px",borderRadius:"10px"
+                    }}>{showText}</Tag>
                 </>
             },
             width: 40,
@@ -94,7 +114,7 @@ export default () => {
             fixed: 'left',
         },
         {
-            title: <Text strong style={{ color: "#6c757e" }}>Total Asets</Text>,
+            title: <Text strong style={{ color: "#6c757e" }}>Total Assets</Text>,
             dataIndex: 'totalAssets',
             render: (totalAssets, vo) => {
                 return <>
@@ -107,7 +127,7 @@ export default () => {
     ];
 
     return (<>
-        <Title level={3}>ERC721 Tokens</Title>
+        <Title level={3}>NFT Tokens</Title>
         <Card>
             <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
                 pagination={pagination}

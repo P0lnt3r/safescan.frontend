@@ -1,4 +1,4 @@
-import { TransactionVO, PageQueryDTO, PageResponseVO, POST, EventLogVO, ERC20TransferVO, AddressPropVO, ContractInternalTransactionVO, ERC721TransferVO } from "./index.d";
+import { TransactionVO, PageQueryDTO, PageResponseVO, POST, EventLogVO, ERC20TransferVO, AddressPropVO, ContractInternalTransactionVO, NftTransferVO } from "./index.d";
 import config from "../config";
 import { useDispatch } from "react-redux";
 import { AnyAction } from "@reduxjs/toolkit";
@@ -61,7 +61,7 @@ export async function fetchERC20Transfers( params:PageQueryDTO | {
 export async function fetchERC721Transfers( params:PageQueryDTO | {
     address ?: string , 
     tokenAddress ?: string
-} ): Promise<PageResponseVO<ERC721TransferVO>> {
+} ): Promise<PageResponseVO<NftTransferVO>> {
     const serverResponse = await POST(`${API_HOST}/txs/erc721`, { ...params });
     return serverResponse.data;
 }

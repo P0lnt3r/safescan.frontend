@@ -13,6 +13,8 @@ import ERC20TokenTransfers from "./ERC20TokenTransfers";
 import ERC20TokenHolders from "./ERC20TokenHolders";
 import { fetchToken } from "../../services/assets";
 import TokenERC20 from "./Token-ERC20";
+import TokenNFT from "./Token-NFT";
+import NftTokenTransfers from "./NftTokenTransfers";
 const { Title, Text, Paragraph, Link } = Typography;
 
 export default () => {
@@ -28,25 +30,43 @@ export default () => {
     }, [address]);
 
     const items: TabsProps['items'] = useMemo(() => {
-        return [
-            {
-                key: 'transfers',
-                label: "Transfers",
-                children: address && <ERC20TokenTransfers tokenAddress={address} />,
-            },
-            {
-                key: 'holders',
-                label: "Holders",
-                children: address && <ERC20TokenHolders token={address} />,
-            },
-        ]
-    }, [address]);
+        if ( address && tokenInfo?.erc20TokenVO && tokenInfo.erc20TokenVO.address ){
+            return [
+                {
+                    key: 'transfers',
+                    label: "Transfers",
+                    children: <ERC20TokenTransfers tokenAddress={address} />,
+                },
+                {
+                    key: 'holders',
+                    label: "Holders",
+                    children: <ERC20TokenHolders token={address} />,
+                },
+            ]
+        }else if ( address && tokenInfo?.nftTokenVO && tokenInfo.nftTokenVO.address ){
+            return [
+                {
+                    key: 'transfers',
+                    label: "Transfers",
+                    children: <NftTokenTransfers tokenAddress={address} />,
+                },
+                {
+                    key: 'holders',
+                    label: "Holders",
+                    children: address && <ERC20TokenHolders token={address} />,
+                },
+            ]
+        }
+    }, [address , tokenInfo]);
 
     return <>
         
         <Divider style={{ margin: '0px 0px' }} />
         {
-            tokenInfo?.erc20TokenVO && <TokenERC20 {...tokenInfo} />
+            tokenInfo?.erc20TokenVO && tokenInfo.erc20TokenVO.address && <TokenERC20 {...tokenInfo} />
+        }
+        {
+            tokenInfo?.erc20TokenVO && tokenInfo.nftTokenVO.address && <TokenNFT {...tokenInfo} />
         }
 
         <Divider style={{ margin: '20px 0px' }} />

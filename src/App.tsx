@@ -21,8 +21,8 @@ import Chart from './pages/statistics/Chart';
 import PendingTxns from './pages/txs/PendingTxns';
 import Token from './pages/assets/Token';
 import AddressTokenHoldings from './pages/addresses/AddressTokenHoldings';
-import ERC721Tokens from './pages/assets/ERC721Tokens';
-import ERC721Transfers from './pages/assets/ERC721Transfers';
+import NftTransfers from './pages/assets/NftTransfers';
+import NftTokens from './pages/assets/NftTokens';
 
 const { Content } = Layout;
 
@@ -46,9 +46,9 @@ function App() {
               <Route path="/accounts" index element={<RankAddress />} />
               <Route path="/assets/accountrecords" index element={<AccountRecords />} />
               <Route path="/assets/erc20tokens" index element={<ERC20Tokens />} />
-              <Route path="/assets/erc721tokens" index element={<ERC721Tokens />} />
+              <Route path="/assets/nft-tokens" index element={<NftTokens />} />
               <Route path="/assets/erc20txns" index element={<ERC20Transfers />} />
-              <Route path="/assets/erc721txns" index element={<ERC721Transfers />} />
+              <Route path="/assets/nft-transfers" index element={<NftTransfers />} /> 
               <Route path="/nodes/supermasternodes" index element={<SuperNodes />} />
               <Route path="/nodes/masternodes" index element={<MasterNodes />} />
               <Route path="/charts" index element={<Chart />} />

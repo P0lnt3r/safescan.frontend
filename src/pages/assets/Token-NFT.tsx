@@ -8,18 +8,19 @@ import { DateFormat } from "../../utils/DateUtil";
 import type { TabsProps } from 'antd';
 import { useEffect, useMemo, useState } from "react";
 import { fetchERC20Transfers } from "../../services/tx";
-import { ContractVO, ERC20TokenVO, ERC20TransferVO, TokenInfoVO } from "../../services";
+import { ContractVO, ERC20TokenVO, ERC20TransferVO, NftTokenVO, TokenInfoVO } from "../../services";
 import ERC20Transfers from "./ERC20Transfers";
 import ERC20TokenTransfers from "./ERC20TokenTransfers";
 import ERC20TokenHolders from "./ERC20TokenHolders";
 import { fetchToken } from "../../services/assets";
 import ERC20TokenAmount from "../../components/ERC20TokenAmount";
+import NumberFormat, { format } from "../../utils/NumberFormat";
 const { Title, Text, Paragraph, Link } = Typography;
 
-export default ({ address, contractVO, erc20TokenVO }: {
+export default ({ address, contractVO, nftTokenVO }: {
     address: string,
     contractVO: ContractVO,
-    erc20TokenVO: ERC20TokenVO
+    nftTokenVO: NftTokenVO
 }) => {
     return <>
         <Row>
@@ -34,19 +35,13 @@ export default ({ address, contractVO, erc20TokenVO }: {
                     <Row style={{ marginTop: "15px" }}>
                         <Col xl={6} xs={24}><Text strong>Holders:</Text></Col>
                         <Col xl={18} xs={24}>
-                            {erc20TokenVO.holders}
+                            {format(nftTokenVO.holders+"")}
                         </Col>
                     </Row>
                     <Row style={{ marginTop: "15px" }}>
-                        <Col xl={6} xs={24}><Text strong>Transfer Amounts:</Text></Col>
+                        <Col xl={6} xs={24}><Text strong>Total Transfers:</Text></Col>
                         <Col xl={18} xs={24}>
-                            <Text strong>
-                                <ERC20TokenAmount raw={erc20TokenVO.totalTransferAmount} address={address}
-                                    decimals={erc20TokenVO.decimals} name={erc20TokenVO.name} symbol={erc20TokenVO.symbol}
-                                    fixed={erc20TokenVO.decimals} />
-                                <span style={{ marginLeft: "5px" }}>{erc20TokenVO.symbol}</span>
-                            </Text>
-
+                            {format(nftTokenVO.totalTransfers+"")}
                         </Col>
                     </Row>
                     <Row style={{ marginTop: "15px" }}>
@@ -72,16 +67,13 @@ export default ({ address, contractVO, erc20TokenVO }: {
                     <Row style={{ marginTop: "15px" }}>
                         <Col xl={6} xs={24}><Text strong>Total Supply:</Text></Col>
                         <Col xl={18} xs={24}>
-                            <ERC20TokenAmount raw={erc20TokenVO.totalSupply} address={address}
-                                decimals={erc20TokenVO.decimals} name={erc20TokenVO.name} symbol={erc20TokenVO.symbol}
-                                fixed={erc20TokenVO.decimals} />
-                            <span style={{ marginLeft: "5px" }}>{erc20TokenVO.symbol}</span>
+                            {format(nftTokenVO.totalAssets+"")}
                         </Col>
                     </Row>
                     <Row style={{ marginTop: "15px" }}>
                         <Col xl={6} xs={24}><Text strong>Name:</Text></Col>
                         <Col xl={18} xs={24}>
-                            {erc20TokenVO.name}
+                            {nftTokenVO.name}
                         </Col>
                     </Row>
                     <Row style={{ marginTop: "15px" }}>
@@ -91,13 +83,7 @@ export default ({ address, contractVO, erc20TokenVO }: {
                                 address &&
                                 <ERC20Logo address={address} />
                             }
-                            <Text style={{ marginLeft: "5px" }}>{erc20TokenVO.symbol}</Text>
-                        </Col>
-                    </Row>
-                    <Row style={{ marginTop: "15px" }}>
-                        <Col xl={6} xs={24}><Text strong>Decimals:</Text></Col>
-                        <Col xl={18} xs={24}>
-                            {erc20TokenVO.decimals}
+                            <Text style={{ marginLeft: "5px" }}>{nftTokenVO.symbol}</Text>
                         </Col>
                     </Row>
                     <Row style={{ marginTop: "15px" }}>

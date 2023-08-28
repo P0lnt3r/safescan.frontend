@@ -131,16 +131,16 @@ export interface AddressPropVO {
 
 export interface ERC20TransferVO {
     from: string
-    fromPropVO : AddressPropVO
+    fromPropVO: AddressPropVO
     timestamp: integer
     to: string
-    toPropVO : AddressPropVo
+    toPropVO: AddressPropVo
     token: string
     tokenPropVO: AddressPropVO | null
     transactionHash: string
     value: string
-    confirmed : number
-    blockNumber : number
+    confirmed: number
+    blockNumber: number
 }
 
 export interface ContractInternalTransactionVO {
@@ -204,26 +204,26 @@ export interface AddressBalanceRankVO {
     lockAmount: string,
     freezeAmount: string,
     totalBalance: string,
-    token ?: string , 
-    tokenPropVO ?: AddressPropVO,
-    changeBefore24H ?: string
-    changeBefore24HPercent ?: string
-    changeBefore7D ?: string
-    changeBefore7DPercent ?: string
-    changeBefore30D ?: string
-    changeBefore30DPercent ?: string
+    token?: string,
+    tokenPropVO?: AddressPropVO,
+    changeBefore24H?: string
+    changeBefore24HPercent?: string
+    changeBefore7D?: string
+    changeBefore7DPercent?: string
+    changeBefore30D?: string
+    changeBefore30DPercent?: string
 }
 
 export interface ERC20AddressBalanceVO {
-    balance : string , 
-    token : string , 
-    tokenPropVO : AddressPropVO,
-    changeBefore24H ?: string
-    changeBefore24HPercent ?: string
-    changeBefore7D ?: string
-    changeBefore7DPercent ?: string
-    changeBefore30D ?: string
-    changeBefore30DPercent ?: string
+    balance: string,
+    token: string,
+    tokenPropVO: AddressPropVO,
+    changeBefore24H?: string
+    changeBefore24HPercent?: string
+    changeBefore7D?: string
+    changeBefore7DPercent?: string
+    changeBefore30D?: string
+    changeBefore30DPercent?: string
 }
 
 export interface AddressVO {
@@ -243,12 +243,12 @@ export interface AddressVO {
         tokenPropVO: AddressPropVO,
         balance: string
     }[],
-    erc721TokenAssetCounts : {
-        token : string , 
-        tokenPropVO : AddressPropVO,
-        tokenAssetCount : number
+    erc721TokenAssetCounts: {
+        token: string,
+        tokenPropVO: AddressPropVO,
+        tokenAssetCount: number
     }[],
-    contract?: ContractVO , 
+    contract?: ContractVO,
     firstTxBlockNumber: number,
     firstTxHash: string,
     firstTxTimestamp: number,
@@ -276,7 +276,7 @@ export interface ERC20TokenVO {
     holders: number,
     totalTransfers: number,
     totalTransferAmount: string,
-    totalSupply : string
+    totalSupply: string
 }
 
 export interface MemberInfoVO {
@@ -452,32 +452,35 @@ export interface TimestampStatisticVO {
 }
 
 export interface TokenInfoVO {
-    address : string , 
-    contractVO : ContractVO , 
-    erc20TokenVO : ERC20TokenVO
+    address: string,
+    contractVO: ContractVO,
+    erc20TokenVO: ERC20TokenVO,
+    nftTokenVO: NftTokenVO
 }
 
-export interface ERC721TokenVO {
+export interface NftTokenVO {
     address: string,
     name: string,
     symbol: string,
     holders: number,
     totalTransfers: number,
-    totalAssets : number
+    totalAssets: number,
+    type:string
 }
 
-export interface ERC721TransferVO {
+export interface NftTransferVO {
     from: string
-    fromPropVO : AddressPropVO
+    fromPropVO: AddressPropVO
     timestamp: integer
     to: string
-    toPropVO : AddressPropVo,
+    toPropVO: AddressPropVo,
     toContract: string,
-    toContractPropVO : AddressPropVO
+    toContractPropVO: AddressPropVO
     token: string
     tokenPropVO: AddressPropVO | null
     transactionHash: string
     tokenId: string
-    confirmed : number
-    blockNumber : number
+    confirmed: number
+    blockNumber: number
+    tokenType: string
 }
