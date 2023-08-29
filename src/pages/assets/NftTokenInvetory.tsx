@@ -10,10 +10,9 @@ import { fetchNftTokenInventory } from '../../services/assets';
 import { NftTokenAssetVO } from '../../services';
 
 const { Text, Link, Paragraph } = Typography;
-const DEFAULT_PAGESIZE = 50;
+const DEFAULT_PAGESIZE = 30;
 
 export default ({ token }: { token: string }) => {
-
     const { t } = useTranslation();
     const [loading, setLoading] = useState<boolean>(false);
     const [listData, setListData] = useState<NftTokenAssetVO[]>([]);
@@ -36,8 +35,14 @@ export default ({ token }: { token: string }) => {
             pageSize: pagination.pageSize
         }).then(data => {
             setLoading(false);
+            setPagination({
+                ...pagination,
+                current: data.current,
+                pageSize: data.pageSize,
+                total: data.total,
+                onChange: paginationOnChange,
+            })
             setListData(data.records);
-            console.log(data)
         })
     }
 
@@ -49,13 +54,7 @@ export default ({ token }: { token: string }) => {
         <List
             loading={loading}
             grid={{
-                gutter: 16,
-                xs: 2,
-                sm: 2,
-                md: 4,
-                lg: 4,
-                xl: 6,
-                xxl: 6,
+                gutter: 16,xs: 2,sm: 2,md: 4,lg: 4,xl: 6,xxl: 6,
             }}
             dataSource={listData}
             pagination={pagination}
@@ -102,7 +101,6 @@ export default ({ token }: { token: string }) => {
                                     </Row>
                                 </Col>
                             }
-
                         </Row>
 
                     </Card>
