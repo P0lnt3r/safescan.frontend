@@ -15,6 +15,8 @@ import { fetchToken } from "../../services/assets";
 import TokenERC20 from "./Token-ERC20";
 import TokenNFT from "./Token-NFT";
 import NftTokenTransfers from "./NftTokenTransfers";
+import NftTokenHolders from "./NftTokenHolders";
+import NftTokenInvetory from "./NftTokenInvetory";
 const { Title, Text, Paragraph, Link } = Typography;
 
 export default () => {
@@ -48,12 +50,17 @@ export default () => {
                 {
                     key: 'transfers',
                     label: "Transfers",
-                    children: <NftTokenTransfers tokenAddress={address} />,
+                    children: <NftTokenTransfers token={address} />,
                 },
                 {
                     key: 'holders',
                     label: "Holders",
-                    children: address && <ERC20TokenHolders token={address} />,
+                    children: address && <NftTokenHolders token={address} />,
+                },
+                {
+                    key: 'inventory',
+                    label: "Inventory",
+                    children: address && <NftTokenInvetory token={address} />,
                 },
             ]
         }

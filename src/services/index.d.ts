@@ -465,7 +465,7 @@ export interface NftTokenVO {
     holders: number,
     totalTransfers: number,
     totalAssets: number,
-    type:string
+    type: string
 }
 
 export interface NftTransferVO {
@@ -483,4 +483,21 @@ export interface NftTransferVO {
     confirmed: number
     blockNumber: number
     tokenType: string
+}
+
+export interface NftTokenHoldRankVO {
+
+    token: string,
+    owner: string,
+    ownerPropVO: AddressPropVO,
+    rank: number,
+    tokenHoldCount: number,
+    percentage:string
+
+}
+
+export interface NftTokenAssetVO {
+    token : string , 
+    owner : string ,
+    tokenId : string , 
 }

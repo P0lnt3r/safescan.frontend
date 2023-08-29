@@ -17,7 +17,7 @@ import NFTLogo from "../../components/NFTLogo";
 const { Text, Link } = Typography;
 const DEFAULT_PAGESIZE = 20;
 
-export default ({ tokenAddress }: { tokenAddress: string }) => {
+export default ({ token }: { token : string }) => {
 
     const { t } = useTranslation();
     const [tableData, setTableData] = useState<NftTransferVO[]>([]);
@@ -38,7 +38,7 @@ export default ({ tokenAddress }: { tokenAddress: string }) => {
         fetchERC721Transfers({
             current: pagination.current,
             pageSize: pagination.pageSize,
-            tokenAddress: tokenAddress
+            tokenAddress: token
         }).then(data => {
             setLoading(false)
             setTableData(data.records);
@@ -83,7 +83,7 @@ export default ({ tokenAddress }: { tokenAddress: string }) => {
         pagination.current = 1;
         pagination.pageSize = DEFAULT_PAGESIZE;
         doFetchNFTTokenTransactions();
-    }, [tokenAddress]);
+    }, [token]);
 
 
     const columns: ColumnsType<NftTransferVO> = [
