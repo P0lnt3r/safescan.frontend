@@ -7,6 +7,7 @@ import {
 import { isMobile } from "react-device-detect";
 import { Link as RouterLink } from "react-router-dom";
 import AddressTokenHoldingsERC20 from "./AddressTokenHoldings-ERC20";
+import AddressTokenHoldingsNFT from "./AddressTokenHoldings-NFT";
 
 const { Title, Text, Paragraph, Link } = Typography;
 
@@ -34,16 +35,17 @@ export default () => {
                 </Row>
             </Col>
         </Row>
-
         <Divider style={{ margin: '0px 0px' }} />
-
         <Row style={{ marginTop: "20px" }}>
-            <Col span={24}>
-                <Title level={5}>Assets in Wallet(47)</Title>
-            </Col>
             <Col span={24}>
                 {
                     address && <AddressTokenHoldingsERC20 address={address} />
+                }
+            </Col>
+            <Divider style={{ margin: '0px 0px' }} />
+            <Col style={{ marginTop: "20px" }} span={24}>
+                {
+                    address && <AddressTokenHoldingsNFT address={address} />
                 }
             </Col>
         </Row>

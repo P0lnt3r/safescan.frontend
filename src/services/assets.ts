@@ -22,8 +22,8 @@ export async function fetchNftTokenHoldRank( token : string , params : PageQuery
     return serverResponse.data;
 }
 
-export async function fetchNftTokenInventory( token : string , params : PageQueryDTO ) : Promise<PageResponseVO<NftTokenAssetVO>>{
-    const serverResponse = await POST( `${API_HOST}/assets/${token}/inventory` , {...params} );
+export async function fetchNftTokenInventory( params : { token : string , address : string } | PageQueryDTO ) : Promise<PageResponseVO<NftTokenAssetVO>>{
+    const serverResponse = await POST( `${API_HOST}/assets/inventory` , {...params} );
     return serverResponse.data;
 }
 

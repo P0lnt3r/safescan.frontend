@@ -30,9 +30,10 @@ export default ({ token }: { token: string }) => {
 
     async function doFetchTokenInventory() {
         setLoading(true);
-        fetchNftTokenInventory(token, {
+        fetchNftTokenInventory({
             current: pagination.current,
-            pageSize: pagination.pageSize
+            pageSize: pagination.pageSize,
+            token : token
         }).then(data => {
             setLoading(false);
             setPagination({

@@ -197,6 +197,9 @@ export default ({ address }: { address: string }) => {
     ];
 
     return <>
+        <Col span={24}>
+            <Title level={5}>Assets in Wallet({tableData.length})</Title>
+        </Col>
         <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
             loading={loading}
             pagination={pagination} rowKey={(vo) => vo.token}

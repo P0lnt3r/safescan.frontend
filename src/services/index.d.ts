@@ -500,4 +500,6 @@ export interface NftTokenAssetVO {
     token : string , 
     owner : string ,
     tokenId : string , 
+    tokenType : string ,
+    tokenPropVO : AddressPropVO
 }
