@@ -23,6 +23,7 @@ import Token from './pages/assets/Token';
 import AddressTokenHoldings from './pages/addresses/AddressTokenHoldings';
 import NftTransfers from './pages/assets/NftTransfers';
 import NftTokens from './pages/assets/NftTokens';
+import Nft from './pages/assets/Nft';
 
 const { Content } = Layout;
 
@@ -54,6 +55,7 @@ function App() {
               <Route path="/charts" index element={<Chart />} />
               <Route path="/token/:address" index element={<Token />} />
               <Route path="/tokenholdings" index element={<AddressTokenHoldings />} />
+              <Route path="/nft/:token/:tokenId" index element={<Nft />} />
             </Routes>
           </div>
         </BrowserRouter>

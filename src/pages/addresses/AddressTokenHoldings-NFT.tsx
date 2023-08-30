@@ -1,6 +1,6 @@
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import './index.css';
-import { Card, Col, List, PaginationProps, Row, Tag, Tooltip, Typography , Badge} from 'antd';
+import { Card, Col, List, PaginationProps, Row, Tag, Tooltip, Typography, Badge } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { set } from 'date-fns';
@@ -14,6 +14,7 @@ const DEFAULT_PAGESIZE = 12;
 export default ({ address }: { address: string }) => {
 
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false);
     const [listData, setListData] = useState<NftTokenAssetVO[]>([]);
 
@@ -67,27 +68,33 @@ export default ({ address }: { address: string }) => {
                         <Card className='nft_item'>
                             <Row>
                                 <Col span={24} style={{ textAlign: 'center', marginBottom: "24px" }}>
-                                <Badge.Ribbon text={
-                                    <Text strong style={{fontSize:"10px" , color:"white"}}>
-                                        {NFT_Type_Label(tokenAsset.tokenType)}
-                                    </Text>
-                                } color={ tokenAsset.tokenType == "erc721" ? "cyan" : "green" } 
-                                    style={{right:"48px",top:"-10px",lineHeight:"18px"}}>
-                                    <img src='https://storage.googleapis.com/nftimagebucket/tokens/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/1553.png'></img>
-                                </Badge.Ribbon>
+                                    <Badge.Ribbon text={
+                                        <Text strong style={{ fontSize: "10px", color: "white" }}>
+                                            {NFT_Type_Label(tokenAsset.tokenType)}
+                                        </Text>
+                                    } color={tokenAsset.tokenType == "erc721" ? "cyan" : "green"}
+                                        style={{ top: "-10px", lineHeight: "18px" }}>
+                                        <img src='https://storage.googleapis.com/nftimagebucket/tokens/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/1553.png'
+                                                style={{
+                                                    cursor:"pointer"
+                                                }}
+                                                onClick={() => {
+                                                    navigate(`/nft/${tokenAsset.token}/${tokenAsset.tokenId}`)
+                                                }}></img>
+                                    </Badge.Ribbon>
                                 </Col>
                                 <Col span={24}>
                                     <Text strong type='secondary' style={{ marginRight: "5px" }}>Token:</Text>
                                     <Tooltip title={tokenAsset.token}>
                                         <RouterLink to={`/token/${tokenAsset.token}`}>
-                                            <Link ellipsis>{ tokenAsset.tokenPropVO.prop && JSON.parse(tokenAsset.tokenPropVO.prop).name }</Link>
+                                            <Link ellipsis>{tokenAsset.tokenPropVO.prop && JSON.parse(tokenAsset.tokenPropVO.prop).name}</Link>
                                         </RouterLink>
                                     </Tooltip>
                                 </Col>
                                 <Col span={24}>
                                     <Text strong type='secondary' style={{ marginRight: "5px" }}>Token ID:</Text>
                                     <Tooltip title={tokenAsset.tokenId}>
-                                        <RouterLink to={``}>
+                                        <RouterLink to={`/nft/${tokenAsset.token}/${tokenAsset.tokenId}`}>
                                             <Link ellipsis>{tokenAsset.tokenId}</Link>
                                         </RouterLink>
                                     </Tooltip>
