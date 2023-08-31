@@ -1,4 +1,4 @@
-import { AbiMethodSignatureVO, AddressAbiVO, ERC20TokenVO, GET, POST, PageQueryDTO, PageResponseVO, TokenInfoVO, NftTokenVO, NftTokenHoldRankVO, NftTokenAssetVO } from "./index.d";
+import { AbiMethodSignatureVO, AddressAbiVO, ERC20TokenVO, GET, POST, PageQueryDTO, PageResponseVO, TokenInfoVO, NftTokenVO, NftTokenHoldRankVO, NftTokenAssetVO, NftAssetVO } from "./index.d";
 import config from "../config";
 const API_HOST = config.api_host;
 
@@ -26,4 +26,14 @@ export async function fetchNftTokenInventory( params : { token : string , addres
     const serverResponse = await POST( `${API_HOST}/assets/inventory` , {...params} );
     return serverResponse.data;
 }
+
+export async function fetchNftAsset( token : string , tokenId : string ) : Promise<NftAssetVO> {
+    const serverResponse = await POST( `${API_HOST}/assets/nft/${token}/${tokenId}` , {} );
+    return serverResponse.data;
+}
+
+
+
+
+
 

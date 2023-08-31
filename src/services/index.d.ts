@@ -482,7 +482,8 @@ export interface NftTransferVO {
     tokenId: string
     confirmed: number
     blockNumber: number
-    tokenType: string
+    tokenType: string,
+    tokenValue : string
 }
 
 export interface NftTokenHoldRankVO {
@@ -501,5 +502,15 @@ export interface NftTokenAssetVO {
     owner : string ,
     tokenId : string , 
     tokenType : string ,
-    tokenPropVO : AddressPropVO
+    tokenPropVO : AddressPropVO,
+    value : string,
+    tokenURI: string
+}
+
+
+export interface NftAssetVO {
+    contractVO : ContractVO , 
+    nftTokenVO : NftTokenVO , 
+    nftTokenAssetVO : NftTokenAssetVO,
+    mintTxn : TransactionVO
 }

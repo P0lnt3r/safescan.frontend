@@ -1,6 +1,6 @@
 
 
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import './index.css';
 import { Card, Col, List, PaginationProps, Row, Tooltip, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +14,7 @@ const DEFAULT_PAGESIZE = 30;
 
 export default ({ token }: { token: string }) => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false);
     const [listData, setListData] = useState<NftTokenAssetVO[]>([]);
 
@@ -64,12 +65,18 @@ export default ({ token }: { token: string }) => {
                     <Card className='nft_item'>
                         <Row>
                             <Col span={24} style={{ textAlign: 'center', marginBottom: "24px" }}>
-                                <img src='https://storage.googleapis.com/nftimagebucket/tokens/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/1553.png'></img>
+                                <img src='https://storage.googleapis.com/nftimagebucket/tokens/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/1553.png'
+                                     style={{
+                                        cursor:"pointer"
+                                     }}
+                                     onClick={()=>{
+                                        navigate(`/nft/${tokenAsset.token}/${tokenAsset.tokenId}`);
+                                     }}></img>
                             </Col>
                             <Col span={24}>
                                 <Text strong type='secondary' style={{ marginRight: "5px" }}>Token ID:</Text>
                                 <Tooltip title={tokenAsset.tokenId}>
-                                    <RouterLink to={``}>
+                                    <RouterLink to={`/nft/${tokenAsset.token}/${tokenAsset.tokenId}`}>
                                         <Link ellipsis>{tokenAsset.tokenId}</Link>
                                     </RouterLink>
                                 </Tooltip>
