@@ -1,4 +1,4 @@
-import { useParams } from "react-router"
+import { useNavigate, useParams } from "react-router"
 import { Row, Col, Card, Typography, Divider, Tabs } from "antd"
 import ERC20Logo from "../../components/ERC20Logo";
 import Address from "../../components/Address";
@@ -20,7 +20,7 @@ import NFT_PLACEHOLDER from "../../images/nft-placeholder.svg";
 import { NFT_Type_Label } from "../../utils/NFTUtils";
 import NftTransfers from "./Nft-Transfers";
 import { format } from "../../utils/NumberFormat";
-import NFTHuge from "../../components/NFTHuge";
+import NFTHuge, { NFT_URI_SIZE } from "../../components/NFTHuge";
 
 const { Title, Text, Paragraph, Link } = Typography;
 
@@ -28,6 +28,7 @@ export default () => {
 
     const { token, tokenId } = useParams();
     const [nftAssetVo, setNftAssetVO] = useState<NftAssetVO>();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (token && tokenId) {
@@ -42,7 +43,9 @@ export default () => {
                 <Card size="small" style={{ padding: "2%", width: "100%", textAlign: "center" }}>
                     {
                         nftAssetVo?.nftTokenAssetVO &&
-                        <NFTHuge uri={nftAssetVo?.nftTokenAssetVO.tokenURI} />
+                        <NFTHuge uri={nftAssetVo?.nftTokenAssetVO.tokenURI} 
+                                 size={NFT_URI_SIZE.LARGE} 
+                                 />
                     }
                 </Card>
             </Col>

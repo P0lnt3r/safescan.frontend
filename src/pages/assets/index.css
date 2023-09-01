@@ -1,4 +1,8 @@
 
+.nft_item {
+    box-shadow: 0 .5rem 1.2rem rgba(230, 233, 240, 0.2);
+}
+
 .nft_item:hover {
     box-shadow: 0 16px 32px 0 rgba(48, 55, 66, 0.15);
 }
