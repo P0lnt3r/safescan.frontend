@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { set } from 'date-fns';
 import { fetchNftTokenInventory } from '../../services/assets';
 import { NftTokenAssetVO } from '../../services';
-import NFTHuge, { NFT_URI_SIZE } from '../../components/NFTHuge';
+import NFT_URI_IMG, { NFT_URI_IMG_SIZE } from '../../components/NFT_URI_IMG';
 
 const { Text, Link, Paragraph } = Typography;
 const DEFAULT_PAGESIZE = 30;
@@ -35,7 +35,7 @@ export default ({ token }: { token: string }) => {
         fetchNftTokenInventory({
             current: pagination.current,
             pageSize: pagination.pageSize,
-            token : token
+            token: token
         }).then(data => {
             setLoading(false);
             setPagination({
@@ -57,7 +57,7 @@ export default ({ token }: { token: string }) => {
         <List
             loading={loading}
             grid={{
-                gutter: 16,xs: 2,sm: 2,md: 4,lg: 4,xl: 6,xxl: 6,
+                gutter: 16, xs: 2, sm: 2, md: 4, lg: 4, xl: 6, xxl: 6,
             }}
             dataSource={listData}
             pagination={pagination}
@@ -66,18 +66,11 @@ export default ({ token }: { token: string }) => {
                     <Card className='nft_item'>
                         <Row>
                             <Col span={24} style={{ textAlign: 'center', marginBottom: "24px" }}>
-                                {/* <img src='https://storage.googleapis.com/nftimagebucket/tokens/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/1553.png'
-                                     style={{
-                                        cursor:"pointer"
-                                     }}
-                                     onClick={()=>{
-                                        navigate(`/nft/${tokenAsset.token}/${tokenAsset.tokenId}`);
-                                     }}></img> */}
-                                     <NFTHuge uri='https://storage.googleapis.com/nftimagebucket/tokens/0x2cf6be9aac1c7630d5a23af88c28275c70eb8819/preview/3241.png' 
-                                              size={NFT_URI_SIZE.MIDDLE} 
-                                              onClick={()=>{
-                                                navigate(`/nft/${tokenAsset.token}/${tokenAsset.tokenId}`)
-                                              }}/>
+                                <NFT_URI_IMG uri={tokenAsset.tokenURI}
+                                    size={NFT_URI_IMG_SIZE.MIDDLE}
+                                    onClick={() => {
+                                        navigate(`/nft/${tokenAsset.token}/${tokenAsset.tokenId}`)
+                                    }} />
                             </Col>
                             <Col span={24}>
                                 <Text strong type='secondary' style={{ marginRight: "5px" }}>Token ID:</Text>

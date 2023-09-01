@@ -7,6 +7,7 @@ import { set } from 'date-fns';
 import { fetchNftTokenInventory } from '../../services/assets';
 import { NftTokenAssetVO } from '../../services';
 import { NFT_Type_Label } from '../../utils/NFTUtils';
+import NFT_URI_IMG, { NFT_URI_IMG_SIZE } from '../../components/NFT_URI_IMG';
 
 const { Text, Link, Paragraph, Title } = Typography;
 const DEFAULT_PAGESIZE = 12;
@@ -74,13 +75,11 @@ export default ({ address }: { address: string }) => {
                                         </Text>
                                     } color={tokenAsset.tokenType == "erc721" ? "cyan" : "green"}
                                         style={{ top: "-10px", lineHeight: "18px" }}>
-                                        <img src='https://storage.googleapis.com/nftimagebucket/tokens/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/1553.png'
-                                                style={{
-                                                    cursor:"pointer"
-                                                }}
-                                                onClick={() => {
-                                                    navigate(`/nft/${tokenAsset.token}/${tokenAsset.tokenId}`)
-                                                }}></img>
+                                        <NFT_URI_IMG uri={tokenAsset.tokenURI}
+                                            size={NFT_URI_IMG_SIZE.MIDDLE}
+                                            onClick={() => {
+                                                navigate(`/nft/${tokenAsset.token}/${tokenAsset.tokenId}`)
+                                            }} />
                                     </Badge.Ribbon>
                                 </Col>
                                 <Col span={24}>

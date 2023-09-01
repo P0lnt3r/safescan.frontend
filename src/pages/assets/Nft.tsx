@@ -20,7 +20,7 @@ import NFT_PLACEHOLDER from "../../images/nft-placeholder.svg";
 import { NFT_Type_Label } from "../../utils/NFTUtils";
 import NftTransfers from "./Nft-Transfers";
 import { format } from "../../utils/NumberFormat";
-import NFTHuge, { NFT_URI_SIZE } from "../../components/NFTHuge";
+import NFT_URI_IMG, { NFT_URI_IMG_SIZE } from "../../components/NFT_URI_IMG";
 
 const { Title, Text, Paragraph, Link } = Typography;
 
@@ -34,24 +34,22 @@ export default () => {
         if (token && tokenId) {
             fetchNftAsset(token, tokenId).then(data => setNftAssetVO(data))
         }
-
     }, [token, tokenId])
 
     return <>
         <Row>
             <Col style={{ marginTop: "15px", padding: "5px" }} xl={10} xs={24} >
-                <Card size="small" style={{ padding: "2%", width: "100%", textAlign: "center" }}>
+                <Card size="small" style={{ padding: "2%", width: "100%", textAlign: "center" , height:"528px" }}>
                     {
                         nftAssetVo?.nftTokenAssetVO &&
-                        <NFTHuge uri={nftAssetVo?.nftTokenAssetVO.tokenURI} 
-                                 size={NFT_URI_SIZE.LARGE} 
-                                 />
+                        <NFT_URI_IMG uri={nftAssetVo?.nftTokenAssetVO.tokenURI}
+                            size={NFT_URI_IMG_SIZE.LARGE}
+                        />
                     }
                 </Card>
             </Col>
             <Col style={{ marginTop: "15px", padding: "5px" }} xl={14} xs={24} >
                 <Title level={2}>{nftAssetVo?.nftTokenVO.name}</Title>
-
                 <Title level={5}>
                     {
                         nftAssetVo?.nftTokenVO &&
@@ -62,9 +60,7 @@ export default () => {
                             </RouterLink>
                             <Text>#{tokenId}</Text>
                         </>
-
                     }
-
                 </Title>
                 <Card size="small" style={{ fontSize: "16px", marginTop: "22px" }} title={<Title level={5}>Details</Title>}>
                     <Row style={{ marginTop: "15px" }}>

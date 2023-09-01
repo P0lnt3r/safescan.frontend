@@ -2,7 +2,7 @@ import { MouseEventHandler, useMemo, useState } from "react"
 import NFT_PLACEHOLDER from "../images/nft-placeholder.svg";
 import { sign } from "crypto";
 
-export enum NFT_URI_SIZE {
+export enum NFT_URI_IMG_SIZE {
     LARGE = "large",
     MIDDLE = "middle",
     SMALL = "small"
@@ -10,18 +10,18 @@ export enum NFT_URI_SIZE {
 
 export default ({ uri, size, onClick }: {
     uri: string | undefined,
-    size: NFT_URI_SIZE,
+    size: NFT_URI_IMG_SIZE,
     onClick?: MouseEventHandler | undefined
 }) => {
-    const [showDefault, setShowDefault] = useState<boolean>(uri == undefined);
+    const [showDefault, setShowDefault] = useState<boolean>( (uri == undefined || uri == "") );
     const { wrapperHeight, imgHeight } = useMemo(() => {
-        if (size == NFT_URI_SIZE.LARGE) {
+        if ( size == NFT_URI_IMG_SIZE.LARGE ) {
             return {
-                wrapperHeight: "450px",
+                wrapperHeight: "460px",
                 imgHeight: "128px"
             }
         }
-        if (size == NFT_URI_SIZE.MIDDLE) {
+        if ( size == NFT_URI_IMG_SIZE.MIDDLE ) {
             return {
                 wrapperHeight: "200px",
                 imgHeight: "64px",
