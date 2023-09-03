@@ -13,7 +13,7 @@ import {
     ApartmentOutlined
 } from '@ant-design/icons';
 import { format } from '../../utils/NumberFormat';
-import { fetchERC721Tokens } from '../../services/assets';
+import { fetchNftTokens } from '../../services/assets';
 import { fetchERC721Transfers, fetchTransactions } from '../../services/tx';
 import TransactionHash from '../../components/TransactionHash';
 import { DateFormat } from '../../utils/DateUtil';

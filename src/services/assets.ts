@@ -7,8 +7,8 @@ export async function fetchERC20Tokens( params : PageQueryDTO ) : Promise<PageRe
     return serverResponse.data;
 }
 
-export async function fetchERC721Tokens( params : PageQueryDTO ) : Promise<PageResponseVO<NftTokenVO>> {
-    const serverResponse = await POST( `${API_HOST}/assets/erc721tokens` , { ...params } );
+export async function fetchNftTokens( params : PageQueryDTO ) : Promise<PageResponseVO<NftTokenVO>> {
+    const serverResponse = await POST( `${API_HOST}/assets/nftTokens` , { ...params } );
     return serverResponse.data;
 }
 

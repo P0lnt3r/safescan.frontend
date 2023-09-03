@@ -14,7 +14,7 @@ import {
     ApartmentOutlined
 } from '@ant-design/icons';
 import { format } from '../../utils/NumberFormat';
-import { fetchERC20Tokens, fetchERC721Tokens } from '../../services/assets';
+import { fetchERC20Tokens, fetchNftTokens } from '../../services/assets';
 import ERC20Logo from '../../components/ERC20Logo';
 import ERC20TokenAmount from '../../components/ERC20TokenAmount';
 
@@ -24,7 +24,7 @@ export default () => {
 
     function paginationOnChange(page: number, pageSize: number) {
         pagination.current = page;
-        doFetchERC721Tokens();
+        doFetchNftTokens();
     }
     const [pagination, setPagination] = useState<PaginationProps>({
         current: 1,
@@ -32,8 +32,8 @@ export default () => {
         showTotal: (total) => <>Total : {total}</>,
         onChange: paginationOnChange
     });
-    async function doFetchERC721Tokens() {
-        fetchERC721Tokens({
+    async function doFetchNftTokens() {
+        fetchNftTokens({
             current: pagination.current,
             pageSize: pagination.pageSize,
         }).then(data => {
@@ -51,7 +51,7 @@ export default () => {
 
     useEffect(() => {
         pagination.current = 1;
-        doFetchERC721Tokens();
+        doFetchNftTokens();
     }, []);
 
     const columns: ColumnsType<NftTokenVO> = [

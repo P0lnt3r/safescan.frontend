@@ -5,6 +5,7 @@ import { AnyAction } from "@reduxjs/toolkit";
 import { Application_Update_AddressPropMap } from "../state/application/action";
 const API_HOST = config.api_host;
 
+
 export async function fetchTransactions(params: PageQueryDTO, dispatch?: (action: AnyAction) => any): Promise<PageResponseVO<TransactionVO>> {
     const serverResponse = await POST(`${API_HOST}/txs`, { ...params });
     const pageVO = serverResponse.data as PageResponseVO<TransactionVO>;
@@ -25,7 +26,7 @@ export async function fetchPendingTransactions(params: PageQueryDTO ): Promise<P
     return serverResponse.data;
 }
 
-export async function fetchTransaction(hash: string): Promise<TransactionVO> {
+export async function fetchTransaction( hash: string ): Promise<TransactionVO> {
     const serverResponse = await POST(`${API_HOST}/tx`, { hash: hash });
     return serverResponse.data;
 }
@@ -66,7 +67,6 @@ export async function fetchERC721Transfers( params:PageQueryDTO | {
     const serverResponse = await POST(`${API_HOST}/txs/erc721`, { ...params });
     return serverResponse.data;
 }
-
 
 export async function fetchTxContractInternalTransactions(txHash: string): Promise<ContractInternalTransactionVO[]> {
     const serverResponse = await POST(`${API_HOST}/txs/contract_txs`, { transactionHash: txHash });
