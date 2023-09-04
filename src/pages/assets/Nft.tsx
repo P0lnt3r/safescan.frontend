@@ -39,7 +39,7 @@ export default () => {
     return <>
         <Row>
             <Col style={{ marginTop: "15px", padding: "5px" }} xl={10} xs={24} >
-                <Card size="small" style={{ padding: "2%", width: "100%", textAlign: "center" , height:"528px" }}>
+                <Card size="small" style={{ padding: "2%", width: "100%", textAlign: "center", height: "528px" }}>
                     {
                         nftAssetVo?.nftTokenAssetVO &&
                         <NFT_URI_IMG uri={nftAssetVo?.nftTokenAssetVO.tokenURI}
@@ -63,14 +63,19 @@ export default () => {
                     }
                 </Title>
                 <Card size="small" style={{ fontSize: "16px", marginTop: "22px" }} title={<Title level={5}>Details</Title>}>
-                    <Row style={{ marginTop: "15px" }}>
-                        <Col xl={6} xs={24}><Text strong type="secondary">Owner:</Text></Col>
-                        <Col xl={18} xs={24}>
-                            {
-                                nftAssetVo?.nftTokenAssetVO.owner
-                            }
-                        </Col>
-                    </Row>
+                    {
+                        nftAssetVo?.nftTokenAssetVO.tokenType == "erc721"
+                        &&
+                        <Row style={{ marginTop: "15px" }}>
+                            <Col xl={6} xs={24}><Text strong type="secondary">Owner:</Text></Col>
+                            <Col xl={18} xs={24}>
+                                {
+                                    nftAssetVo?.nftTokenAssetVO.owner
+                                }
+                            </Col>
+                        </Row>
+                    }
+
                     <Row style={{ marginTop: "15px" }}>
                         <Col xl={6} xs={24}><Text strong type="secondary">Contract Address:</Text></Col>
                         <Col xl={18} xs={24}>
@@ -108,7 +113,7 @@ export default () => {
                         <Row style={{ marginTop: "15px" }}>
                             <Col xl={6} xs={24}><Text strong type="secondary">Token Quanlity:</Text></Col>
                             <Col xl={18} xs={24}>
-                                {nftAssetVo.nftTokenAssetVO.value}
+                                {nftAssetVo.nftTokenAssetVO.tokenValue}
                             </Col>
                         </Row>
                     }
@@ -116,7 +121,9 @@ export default () => {
                     <Row style={{ marginTop: "15px" }}>
                         <Col xl={6} xs={24}><Text strong type="secondary">Token URI:</Text></Col>
                         <Col xl={18} xs={24}>
-                            {nftAssetVo?.nftTokenAssetVO.tokenURI}
+                            <Link italic href={nftAssetVo?.nftTokenAssetVO.tokenURI} target="_blank">
+                                {nftAssetVo?.nftTokenAssetVO.tokenURI}
+                            </Link>
                         </Col>
                     </Row>
                     <Row style={{ marginTop: "15px" }}>

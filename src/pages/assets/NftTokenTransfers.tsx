@@ -1,25 +1,27 @@
 import { useEffect, useState } from "react"
 import { ERC20TransferVO, NftTransferVO } from "../../services";
-import { fetchAddressERC20Transfers, fetchERC20Transfers, fetchERC721Transfers } from "../../services/tx";
+import { fetchAddressERC20Transfers, fetchERC20Transfers, fetchNftTransfers } from "../../services/tx";
 import { Table, Typography, Row, Col, PaginationProps, Tooltip, TablePaginationConfig, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslation } from 'react-i18next';
 import TransactionHash from '../../components/TransactionHash';
 import { DateFormat } from '../../utils/DateUtil';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import ERC20TokenAmount from "../../components/ERC20TokenAmount";
 import ERC20Logo from "../../components/ERC20Logo";
 import { format } from "../../utils/NumberFormat";
 import TxMethodId from "../../components/TxMethodId";
 import Address from "../../components/Address";
 import NFTLogo from "../../components/NFTLogo";
+import NFT_URI_IMG, { NFT_URI_IMG_SIZE } from "../../components/NFT_URI_IMG";
 
 const { Text, Link } = Typography;
 const DEFAULT_PAGESIZE = 20;
 
-export default ({ token }: { token : string }) => {
+export default ({ token }: { token: string }) => {
 
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const [tableData, setTableData] = useState<NftTransferVO[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [unconfirmed, setUnconfirmed] = useState<number>(0);
@@ -35,10 +37,10 @@ export default ({ token }: { token : string }) => {
 
     async function doFetchNFTTokenTransactions() {
         setLoading(true)
-        fetchERC721Transfers({
+        fetchNftTransfers({
             current: pagination.current,
             pageSize: pagination.pageSize,
-            tokenAddress: token
+            token: token
         }).then(data => {
             setLoading(false)
             setTableData(data.records);
@@ -149,37 +151,35 @@ export default ({ token }: { token : string }) => {
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Item</Text>,
-            dataIndex: 'tokenId',
+            dataIndex: 'tokenURI',
             width: 180,
-            render: (tokenId, erc721TransferVO) => {
-                const { tokenPropVO } = erc721TransferVO;
-                const erc721Prop = tokenPropVO && (tokenPropVO.subType == "erc721" || tokenPropVO.subType == "erc1155") ? tokenPropVO?.prop : undefined;
-                const erc721 = erc721Prop ? JSON.parse(erc721Prop) : undefined;
+            render: (tokenURI, nftTransferVO) => {
+                const { tokenId, tokenPropVO, token } = nftTransferVO;
+                const nftProp = tokenPropVO && (tokenPropVO.subType == "erc721" || tokenPropVO.subType == "erc1155") ? tokenPropVO?.prop : undefined;
+                const nft = nftProp ? JSON.parse(nftProp) : undefined;
                 return (
                     <div style={{ fontSize: '14px' }}>
                         {
                             tokenPropVO && <>
                                 <Row style={{ width: "100%" }}>
                                     <Col span={4}>
-                                        <NFTLogo />
+                                        <NFT_URI_IMG size={NFT_URI_IMG_SIZE.SMALL} uri={tokenURI} />
                                     </Col>
                                     <Col span={20}>
                                         <Col span={24}>
-                                            <Tooltip title={`${erc721.symbol}#${tokenId}`}>
-                                                <RouterLink to="/">
+                                            <Tooltip title={`${nft.symbol}#${tokenId}`}>
+                                                <RouterLink to={`/nft/${token}/${tokenId}`}>
                                                     <Link href='#' ellipsis style={{ width: '80%', marginLeft: "5px" }}>
-                                                        {erc721.symbol}#{tokenId}
+                                                        {nft.symbol}#{tokenId}
                                                     </Link>
                                                 </RouterLink>
                                             </Tooltip>
                                         </Col>
                                         <Col span={24}>
-                                            <Tooltip title={`${erc721TransferVO.token}|${erc721.name}`}>
-                                                <RouterLink to="/">
-                                                    <Text type="secondary" ellipsis style={{ width: '80%', marginLeft: "5px" }}>
-                                                        {erc721.name}({erc721.symbol})
-                                                    </Text>
-                                                </RouterLink>
+                                            <Tooltip title={`${token}|${nft.name}`}>
+                                                <Text type="secondary" ellipsis style={{ width: '80%', marginLeft: "5px" }}>
+                                                    {nft.name}({nft.symbol})
+                                                </Text>
                                             </Tooltip>
                                         </Col>
                                     </Col>
@@ -198,7 +198,7 @@ export default ({ token }: { token : string }) => {
             {
                 confirmed != unconfirmed && <Text strong style={{ color: "#6c757e" }}>Total of {
                     confirmed && <>{format(confirmed + "")}</>
-                } ERC20 Transfers
+                } NFT Transfers
                     {unconfirmed > 0 && <Text> and {unconfirmed} unconfirmed</Text>}
                 </Text>
             }

@@ -59,12 +59,12 @@ export async function fetchERC20Transfers( params:PageQueryDTO | {
     return serverResponse.data;
 }
 
-export async function fetchERC721Transfers( params:PageQueryDTO | {
+export async function fetchNftTransfers( params:PageQueryDTO | {
     address ?: string , 
-    tokenAddress ?: string,
+    token ?: string,
     tokenId ?: string
 } ): Promise<PageResponseVO<NftTransferVO>> {
-    const serverResponse = await POST(`${API_HOST}/txs/erc721`, { ...params });
+    const serverResponse = await POST(`${API_HOST}/txs/nft`, { ...params });
     return serverResponse.data;
 }
 

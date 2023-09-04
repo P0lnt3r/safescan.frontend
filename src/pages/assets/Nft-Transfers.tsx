@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { ERC20TransferVO, NftTransferVO } from "../../services";
-import { fetchAddressERC20Transfers, fetchERC20Transfers, fetchERC721Transfers } from "../../services/tx";
+import { fetchAddressERC20Transfers, fetchERC20Transfers, fetchNftTransfers } from "../../services/tx";
 import { Table, Typography, Row, Col, PaginationProps, Tooltip, TablePaginationConfig, Tag, Card  , Divider} from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslation } from 'react-i18next';
@@ -39,10 +39,10 @@ export default ({ token, tokenId, tokenType }: {
 
     async function doFetchNFTTokenTransactions() {
         setLoading(true)
-        fetchERC721Transfers({
+        fetchNftTransfers({
             current: pagination.current,
             pageSize: pagination.pageSize,
-            tokenAddress: token,
+            token: token,
             tokenId: tokenId
         }).then(data => {
             setLoading(false)
@@ -147,7 +147,7 @@ export default ({ token, tokenId, tokenType }: {
             {
                 confirmed != unconfirmed && <Text strong style={{ color: "#6c757e" }}>Total of {
                     confirmed && <>{format(confirmed + "")}</>
-                } ERC20 Transfers
+                } NFT Transfers
                     {unconfirmed > 0 && <Text> and {unconfirmed} unconfirmed</Text>}
                 </Text>
             }

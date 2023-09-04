@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { ERC20TransferVO, NftTransferVO } from "../../services";
-import { fetchAddressERC20Transfers, fetchERC721Transfers } from "../../services/tx";
+import { fetchAddressERC20Transfers, fetchNftTransfers } from "../../services/tx";
 import { Table, Typography, Row, Col, PaginationProps, Tooltip, TablePaginationConfig, Button, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +14,7 @@ import NFT_PLACEHOLDER from "../../images/nft-placeholder.svg";
 import NFTLogo from "../../components/NFTLogo";
 import Address from "../../components/Address";
 import TxMethodId from "../../components/TxMethodId";
+import NFT_URI_IMG, { NFT_URI_IMG_SIZE } from "../../components/NFT_URI_IMG";
 
 const { Text, Link } = Typography;
 const DEFAULT_PAGESIZE = 20;
@@ -36,7 +37,7 @@ export default ({ address }: { address: string }) => {
 
     async function doFetchAddressERC721Transactions() {
         setLoading(true)
-        fetchERC721Transfers({
+        fetchNftTransfers({
             current: pagination.current,
             pageSize: pagination.pageSize,
             address: address
@@ -98,7 +99,7 @@ export default ({ address }: { address: string }) => {
             title: <Text strong style={{ color: "#6c757e" }}>Method ID</Text>,
             dataIndex: 'methodId',
             width: 120,
-            render: (methodId , vo) => <>
+            render: (methodId, vo) => <>
                 <TxMethodId methodId={methodId} address={vo.toContract} subType={vo.toContractPropVO.subType} />
             </>
         },
@@ -156,50 +157,50 @@ export default ({ address }: { address: string }) => {
             width: 80,
             render: (tokenType, vo) => {
                 let showText = tokenType;
-                if ( tokenType == "erc721" ){
+                if (tokenType == "erc721") {
                     showText = "ERC-721"
                 }
-                if ( tokenType == "erc1155" ){
+                if (tokenType == "erc1155") {
                     showText = "ERC-1155"
                 }
                 return <>
                     <Tag style={{
-                        height:"30px",lineHeight:"28px",borderRadius:"10px"
+                        height: "30px", lineHeight: "28px", borderRadius: "10px"
                     }}>{showText}</Tag>
                 </>
             }
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Item</Text>,
-            dataIndex: 'tokenId',
+            dataIndex: 'tokenURI',
             width: 180,
-            render: (tokenId, erc721TransferVO) => {
-                const { tokenPropVO } = erc721TransferVO;
-                const erc721Prop = tokenPropVO && (tokenPropVO.subType == "erc721" || tokenPropVO.subType == "erc1155") ? tokenPropVO?.prop : undefined;
-                const erc721 = erc721Prop ? JSON.parse(erc721Prop) : undefined;
+            render: (tokenURI, nftTransferVO) => {
+                const { tokenId, tokenPropVO, token } = nftTransferVO;
+                const nftProp = tokenPropVO && (tokenPropVO.subType == "erc721" || tokenPropVO.subType == "erc1155") ? tokenPropVO?.prop : undefined;
+                const nft = nftProp ? JSON.parse(nftProp) : undefined;
                 return (
                     <div style={{ fontSize: '14px' }}>
                         {
                             tokenPropVO && <>
                                 <Row style={{ width: "100%" }}>
                                     <Col span={4}>
-                                        <NFTLogo />
+                                        <NFT_URI_IMG size={NFT_URI_IMG_SIZE.SMALL} uri={tokenURI} />
                                     </Col>
                                     <Col span={20}>
                                         <Col span={24}>
-                                            <Tooltip title={`${erc721.symbol}#${tokenId}`}>
-                                                <RouterLink to="/">
+                                            <Tooltip title={`${nft.symbol}#${tokenId}`}>
+                                                <RouterLink to={`/nft/${token}/${tokenId}`}>
                                                     <Link href='#' ellipsis style={{ width: '80%', marginLeft: "5px" }}>
-                                                        {erc721.symbol}#{tokenId}
+                                                        {nft.symbol}#{tokenId}
                                                     </Link>
                                                 </RouterLink>
                                             </Tooltip>
                                         </Col>
                                         <Col span={24}>
-                                            <Tooltip title={`${erc721TransferVO.token}|${erc721.name}`}>
-                                                <RouterLink to="/">
+                                            <Tooltip title={`${token}|${nft.name}`}>
+                                                <RouterLink to={`/token/${token}`}>
                                                     <Text type="secondary" ellipsis style={{ width: '80%', marginLeft: "5px" }}>
-                                                        {erc721.name}({erc721.symbol})
+                                                        {nft.name}({nft.symbol})
                                                     </Text>
                                                 </RouterLink>
                                             </Tooltip>

@@ -28,8 +28,8 @@ export default ({ uri, size, onClick }: {
             }
         }
         return {
-            wrapperHeight: "",
-            imgHeight: ""
+            wrapperHeight: "48px",
+            imgHeight: "40px"
         }
     }, [size]);
 
