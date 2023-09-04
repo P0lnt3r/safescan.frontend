@@ -139,7 +139,7 @@ export default () => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Type</Text>,
             dataIndex: 'tokenType',
-            width: 80,
+            width: 100,
             render: (tokenType, vo) => {
                 let showText = tokenType;
                 if (tokenType == "erc721") {
@@ -152,6 +152,13 @@ export default () => {
                     <Tag style={{
                         height: "30px", lineHeight: "28px", borderRadius: "10px"
                     }}>{showText}</Tag>
+                    {
+                        tokenType == "erc1155" && <>
+                            <Tag style={{
+                                height: "30px", lineHeight: "28px", borderRadius: "10px", float:"right"
+                            }}>x{vo.tokenValue}</Tag>
+                        </>
+                    }
                 </>
             }
         },

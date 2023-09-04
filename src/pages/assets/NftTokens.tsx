@@ -76,15 +76,15 @@ export default () => {
             dataIndex: 'type',
             render: (tokenType, vo) => {
                 let showText = tokenType;
-                if ( tokenType == "erc721" ){
+                if (tokenType == "erc721") {
                     showText = "ERC-721"
                 }
-                if ( tokenType == "erc1155" ){
+                if (tokenType == "erc1155") {
                     showText = "ERC-1155"
                 }
                 return <>
                     <Tag style={{
-                        height:"30px",lineHeight:"28px",borderRadius:"10px"
+                        height: "30px", lineHeight: "28px", borderRadius: "10px"
                     }}>{showText}</Tag>
                 </>
             },
