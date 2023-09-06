@@ -22,7 +22,7 @@ import {
     EnvironmentTwoTone,
     LoadingOutlined,
 } from '@ant-design/icons';
-import { AddressPropVO, ContractInternalTransactionVO, ERC20TransferVO, EventLogVO, NodeRegisterActionVO, NodeRewardVO, SafeAccountManagerActionVO, TransactionVO } from '../../services';
+import { AddressPropVO, ContractInternalTransactionVO, ERC20TransferVO, EventLogVO, NftTransferVO, NodeRegisterActionVO, NodeRewardVO, SafeAccountManagerActionVO, TransactionVO } from '../../services';
 import { DateFormat } from '../../utils/DateUtil';
 import EtherAmount, { GWEI } from '../../components/EtherAmount';
 import JSBI from 'jsbi';
@@ -41,17 +41,20 @@ import Address from '../../components/Address';
 import TxNodeRewards from './TxNodeRewards';
 import TxSafeAccountManagerActions from './TxSafeAccountManagerActions';
 import TxInternalTxns from './TxInternalTxns';
+import NftTokenTransfers from '../assets/NftTokenTransfers';
+import TxNftTransfers from './TxNftTransfers';
 
 const { Text, Paragraph, Link } = Typography;
 
-export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeRewards, safeAccountManagerActions, nodeRegisterActions }:
+export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeRewards, safeAccountManagerActions, nodeRegisterActions , nftTransfers}:
     {
         txVO: TransactionVO,
         contractInternalTransactions: ContractInternalTransactionVO[] | undefined,
         erc20Transfers: ERC20TransferVO[] | undefined,
         nodeRewards: NodeRewardVO[] | undefined,
         safeAccountManagerActions: SafeAccountManagerActionVO[] | undefined,
-        nodeRegisterActions: NodeRegisterActionVO[] | undefined
+        nodeRegisterActions: NodeRegisterActionVO[] | undefined,
+        nftTransfers: NftTransferVO[] | undefined
     }) => {
 
     const {
@@ -343,6 +346,12 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                 </Row>
             </>
         }
+
+        {
+            nftTransfers && nftTransfers.length > 0 && <TxNftTransfers nftTransfers={nftTransfers} />
+        }
+
+        
 
         {
             // 节点奖励

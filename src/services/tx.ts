@@ -78,7 +78,13 @@ export async function fetchTxERC20Transfers(txHash: string): Promise<ERC20Transf
     return serverResponse.data;
 }
 
+export async function fetchTxNftTransfers(txHash: string): Promise<NftTransferVO[]> {
+    const serverResponse = await POST(`${API_HOST}/txs/${txHash}/nft`);
+    return serverResponse.data;
+}
+
 export async function fetchContractInternalTransactions(params: PageQueryDTO): Promise<PageResponseVO<ContractInternalTransactionVO>> {
     const serverResponse = await POST(`${API_HOST}/txs/internal`, { ...params });
     return serverResponse.data;
 }
+

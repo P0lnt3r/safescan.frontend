@@ -99,13 +99,13 @@ export default () => {
             title: <Text strong style={{ color: "#6c757e" }}>Txn Hash</Text>,
             dataIndex: 'transactionHash',
             render: (val, txVO) => <><TransactionHash blockNumber={txVO.blockNumber} txhash={val} status={1}></TransactionHash></>,
-            width: 180,
+            width: 150,
             fixed: 'left',
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Method ID</Text>,
             dataIndex: 'methodId',
-            width: 120,
+            width: 100,
             render: (methodId, vo) => <>
                 <TxMethodId methodId={methodId} address={vo.toContract} subType={vo.toContractPropVO.subType} />
             </>
@@ -119,7 +119,7 @@ export default () => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>From</Text>,
             dataIndex: 'from',
-            width: 160,
+            width: 150,
             render: (from, txVO) => {
                 return (
                     <>
@@ -131,7 +131,7 @@ export default () => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>To</Text>,
             dataIndex: 'to',
-            width: 160,
+            width: 150,
             render: (to, vo) =>
                 <Address address={to} propVO={vo.toPropVO}></Address >
 
@@ -139,7 +139,7 @@ export default () => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Type</Text>,
             dataIndex: 'tokenType',
-            width: 100,
+            width: 120,
             render: (tokenType, vo) => {
                 let showText = tokenType;
                 if (tokenType == "erc721") {

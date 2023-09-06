@@ -6,8 +6,8 @@ import { Tabs, Row, Col, Divider } from 'antd';
 import type { TabsProps } from 'antd';
 import TxOverview from "./TxOverview";
 import EventLogs from "./EventLogs";
-import { fetchEventLogs, fetchTransaction, fetchTxContractInternalTransactions, fetchTxERC20Transfers } from "../../services/tx";
-import { ContractInternalTransactionVO, ERC20TransferVO, EventLogVO, NodeRegisterActionVO, NodeRewardVO, SafeAccountManagerActionVO, TransactionVO } from "../../services";
+import { fetchEventLogs, fetchTransaction, fetchTxContractInternalTransactions, fetchTxERC20Transfers, fetchTxNftTransfers } from "../../services/tx";
+import { ContractInternalTransactionVO, ERC20TransferVO, EventLogVO, NftTransferVO, NodeRegisterActionVO, NodeRewardVO, SafeAccountManagerActionVO, TransactionVO } from "../../services";
 import ContractInternalTransactions from "./ContractInternalTransactions";
 import { fetchTxNodeRegisterActionss, fetchTxNodeRewards } from "../../services/node";
 import SystemContractAbi from "../../utils/decode/SystemContractAbi";
@@ -29,6 +29,7 @@ export default function () {
     const [nodeRewards, setNodeRewards] = useState<NodeRewardVO[]>();
     const [safeAccountManagerActions, setSafeAccountManagerActions] = useState<SafeAccountManagerActionVO[]>();
     const [nodeRegisterActions , setNodeRegisterActions] = useState<NodeRegisterActionVO[]>();
+    const [nftTransfers , setNftTransfers] = useState<NftTransferVO[]>();
     const blockNumber = useBlockNumber();
 
     useEffect(() => {
@@ -65,6 +66,7 @@ export default function () {
             setSafeAccountManagerActions(safeAccountManagerActions)
         })
         fetchTxNodeRegisterActionss(txHash).then( nodeRegisterActions => setNodeRegisterActions(nodeRegisterActions) );
+        fetchTxNftTransfers(txHash).then(setNftTransfers);
     }
 
     const hasEventLogs = useMemo(() => {
@@ -86,6 +88,7 @@ export default function () {
                     nodeRewards={nodeRewards}
                     safeAccountManagerActions={safeAccountManagerActions}
                     nodeRegisterActions={nodeRegisterActions}
+                    nftTransfers={nftTransfers}
                 />,
         },
         {
