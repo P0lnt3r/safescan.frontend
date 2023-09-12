@@ -525,7 +525,7 @@ export interface AnalyticTransaction {
 
 export interface AddressAnaliyic {
     address : string , 
-    analyticTransactions : AnalyticTransaction[]
+    transactions : AnalyticTransaction[]
 }
 
 
