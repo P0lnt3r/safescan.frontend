@@ -3,41 +3,56 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { Area } from '@ant-design/plots';
 import { AnalyticTransaction } from '../../services';
+import { DateFormat, GetIntervalDays } from '../../utils/DateUtil';
 
 export default ( {
     transactions
 } : {
     transactions : AnalyticTransaction[]
 } ) => {
-    console.log( "transactions" , transactions )
-    const chart : [{
-        date : string , 
-        value : number , 
-        field : string
-    }]= [{date:"",value:0,field:""}];
-    transactions.forEach( transaction => {
-        const { time , transactions , uniqueIncomingAddresses , uniqueOutgoingAddresses } = transaction;
-        chart.push({
-            date : time , 
-            field : "transactions",
-            value : transactions
+    const data : any[] = [];
+    const _transactions : AnalyticTransaction[] = [];
+    for( let i = 0 ; i<transactions.length; i++ ){
+        const { time } = transactions[i];
+        if ( i > 0 ){
+            const prevTime = transactions[i- 1].time;
+            const intervalDays = GetIntervalDays( prevTime , time );
+            if ( intervalDays.length > 0 ){
+                for(let j in intervalDays){
+                    const _time = intervalDays[j];
+                    _transactions.push({
+                        time : _time,
+                        transactions : 0,
+                        uniqueIncomingAddresses : 0,
+                        uniqueOutgoingAddresses : 0
+                    })
+                }
+            }
+        }
+        _transactions.push(transactions[i]);
+    }
+    for( let i = 0; i<_transactions.length; i++ ){
+        const _time = _transactions[i].time.indexOf(" ") > 0 ? _transactions[i].time.substring(0,_transactions[i].time.indexOf(" "))
+                        : _transactions[i].time;
+        data.push({
+            date: _time,
+            field: "transactions",
+            value: _transactions[i].transactions
         });
-        chart.push({
-            date : time , 
-            field : "uniqueIncomingAddresses",
-            value : uniqueIncomingAddresses
+        data.push({
+            date: _time,
+            field: "uniqueIncomingAddresses",
+            value: _transactions[i].uniqueIncomingAddresses
         });
-        chart.push({
-            date : time , 
-            field : "uniqueOutgoingAddresses",
-            value : uniqueOutgoingAddresses
+        data.push({
+            date: _time,
+            field: "uniqueOutgoingAddresses",
+            value: _transactions[i].uniqueOutgoingAddresses
         });
-    });
-    console.log("wocaocaocao" , chart);
-    const [data, setData] = useState([]);
-   
+    }
+
     const config = {
-      data : chart ,
+      data,
       xField: 'date',
       yField: 'value',
       seriesField: 'field',

@@ -1,4 +1,5 @@
 import format from 'date-fns/format';
+import addDays from 'date-fns/addDays';
 
 export function DateFormat( time : number | undefined ) : string {
     if ( time ){
@@ -6,6 +7,19 @@ export function DateFormat( time : number | undefined ) : string {
     }
     return "";
 }
+
+export function GetIntervalDays( start : string , end : string ) : string[] {
+    let dateStart = new Date(start);
+    const dateEnd = new Date(end);
+    const result : string[] = [];
+    dateStart = addDays(dateStart , 1);
+    while( dateStart.getTime() < dateEnd.getTime() ){
+        result.push( format(dateStart, 'yyyy-MM-dd') )
+        dateStart = addDays(dateStart , 1);
+    }
+    return result;
+}
+
 
 export function DateFormatBeforeNow( time : number | undefined ) : {
     day : number,
