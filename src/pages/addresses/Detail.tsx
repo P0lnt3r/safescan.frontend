@@ -22,6 +22,7 @@ import Address from "../../components/Address";
 import TransactionHash from "../../components/TransactionHash";
 import { DateFormat } from "../../utils/DateUtil";
 import NFTTransfers from "./NFTTransfers";
+import AddressAnalytics from "./AddressAnalytics";
 
 const { Title, Text, Paragraph, Link } = Typography;
 
@@ -59,6 +60,11 @@ export default function () {
                 key: 'nft-transfers',
                 label: `NFT Transfers`,
                 children: address && <NFTTransfers address={address}></NFTTransfers>,
+            },
+            {
+                key: 'analytics',
+                label: `Analytics`,
+                children: address && <AddressAnalytics address={address}></AddressAnalytics>,
             },
         ]
     }, [address]);

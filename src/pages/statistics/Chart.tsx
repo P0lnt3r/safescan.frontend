@@ -24,7 +24,6 @@ export default () => {
         setLoading(true);
         fetchAll().then(data => {
             setLoading(false);
-
             // 解析代币流动性图表数据
             const _circulationChartData: CirculationType[] = [];
             data.forEach(timestampStatistic => {
@@ -32,7 +31,6 @@ export default () => {
                 _circulationChartData.push(supply, lock, freeze);
             })
             setCirculationChartData(_circulationChartData)
-
             // 解析交易量图表数据.
             const _txnsChartData: TxnsType[] = [];
             data.forEach(timestampStatistic => {
@@ -50,12 +48,12 @@ export default () => {
         <Title level={3}>Blockchain Charts</Title>
         <Card loading={loading}>
             <Row>
-                <Col xl={12} xs={24} style={{ marginTop: "20px", padding: isMobile ? "0px" : "2px" }}>
+                <Col xl={8} xs={24} style={{ marginTop: "20px", padding: isMobile ? "0px" : "2px" }}>
                     <Card title={"代币流动性"}>
                         <ChartCirculation data={circulationChartData} />
                     </Card>
                 </Col>
-                <Col xl={12} xs={24} style={{ marginTop: "20px", padding: isMobile ? "0px" : "2px" }}>
+                <Col xl={8} xs={24} style={{ marginTop: "20px", padding: isMobile ? "0px" : "2px" }}>
                     <Card title={"每日交易量"}>
                         <ChartTxns data={txnsChartData} />
                     </Card>

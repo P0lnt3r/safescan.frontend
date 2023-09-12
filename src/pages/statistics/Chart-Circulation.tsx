@@ -51,7 +51,7 @@ export default ({ data }: {
     };
 
     return <>
-        <Line {...config} />
+        <Line style={{height:"200px"}} {...config} />
     </>
 
 }

@@ -515,3 +515,18 @@ export interface NftAssetVO {
     nftTokenAssetVO : NftTokenAssetVO,
     mintTxn : TransactionVO
 }
+
+export interface AnalyticTransaction {
+    transactions : number , 
+    uniqueIncomingAddresses : number , 
+    uniqueOutgoingAddresses : number , 
+    time : string
+}
+
+export interface AddressAnaliyic {
+    address : string , 
+    analyticTransactions : AnalyticTransaction[]
+}
+
+
+
