@@ -21,12 +21,11 @@ export default ({ address }: { address: string }) => {
     } , [address] );
 
     const items: TabsProps['items'] = useMemo(() => {
-        console.log("AddressAnalytic >>" ,  addressAnalytic)
         return [
             {
                 key: 'safeBalance',
                 label: "SAFE Balance",
-                children: address && <AddressAnalyticsBalances></AddressAnalyticsBalances>,
+                children: address && addressAnalytic && addressAnalytic.balances && <AddressAnalyticsBalances balances={addressAnalytic.balances} />,
             },
             {
                 key: 'transactions',
@@ -36,17 +35,17 @@ export default ({ address }: { address: string }) => {
             {
                 key: 'txnFees',
                 label: "Txn Fees",
-                children: address && <AddressAnalyticsTxnFees></AddressAnalyticsTxnFees>,
+                children: address && addressAnalytic && addressAnalytic.txnFees && <AddressAnalyticsTxnFees txnFees={addressAnalytic.txnFees}></AddressAnalyticsTxnFees>,
             },
             {
                 key: 'safeTransfers',
                 label: `SAFE Transfers`,
-                children: address && <AddressAnalyticsTransfers></AddressAnalyticsTransfers>,
+                children: address && addressAnalytic && addressAnalytic.balances && <AddressAnalyticsTransfers balances={addressAnalytic.balances}></AddressAnalyticsTransfers>,
             },
             {
                 key: 'tokenTransfers',
                 label: `Token Transfers`,
-                children: address && <AddressAnalyticsTokenTransfers></AddressAnalyticsTokenTransfers>,
+                children: address && addressAnalytic && addressAnalytic.tokenTransfers && <AddressAnalyticsTokenTransfers tokenTransfers={addressAnalytic.tokenTransfers}></AddressAnalyticsTokenTransfers>,
             },
         ]
     }, [address,addressAnalytic]);

@@ -36,17 +36,17 @@ export default ( {
                         : _transactions[i].time;
         data.push({
             date: _time,
-            field: "transactions",
+            field: "Safe Network Transactions",
             value: _transactions[i].transactions
         });
         data.push({
             date: _time,
-            field: "uniqueIncomingAddresses",
+            field: "Unique Incoming Address",
             value: _transactions[i].uniqueIncomingAddresses
         });
         data.push({
             date: _time,
-            field: "uniqueOutgoingAddresses",
+            field: "Unique Outgoing Address",
             value: _transactions[i].uniqueOutgoingAddresses
         });
     }
@@ -56,6 +56,17 @@ export default ( {
       xField: 'date',
       yField: 'value',
       seriesField: 'field',
+      xAxis: {
+        tickCount: 5,
+      },
+      animation: false,
+      slider: {
+        start: 0,
+        end: 1,
+        trendCfg: {
+          isArea: true,
+        },
+      },
     };
   
     return <Area {...config} />;

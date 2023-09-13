@@ -10,7 +10,7 @@ export function GWEI( raw : string ){
 }
 
 export function ETHER( raw : string , fixed ?: number ){
-    return CurrencyAmount.ether(raw).toFixed( 0 );
+    return CurrencyAmount.ether(raw).toFixed( fixed );
 }
 
 export function ETHER_Combine( raws : string[] , fixed ?: number ){

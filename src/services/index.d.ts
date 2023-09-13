@@ -483,8 +483,8 @@ export interface NftTransferVO {
     confirmed: number
     blockNumber: number
     tokenType: string,
-    tokenValue : string,
-    tokenURI : string 
+    tokenValue: string,
+    tokenURI: string
 }
 
 export interface NftTokenHoldRankVO {
@@ -494,38 +494,60 @@ export interface NftTokenHoldRankVO {
     ownerPropVO: AddressPropVO,
     rank: number,
     tokenHoldCount: number,
-    percentage:string
+    percentage: string
 
 }
 
 export interface NftTokenAssetVO {
-    token : string , 
-    owner : string ,
-    tokenId : string , 
-    tokenType : string ,
-    tokenPropVO : AddressPropVO,
-    tokenValue : string,
+    token: string,
+    owner: string,
+    tokenId: string,
+    tokenType: string,
+    tokenPropVO: AddressPropVO,
+    tokenValue: string,
     tokenURI: string
 }
 
 
 export interface NftAssetVO {
-    contractVO : ContractVO , 
-    nftTokenVO : NftTokenVO , 
-    nftTokenAssetVO : NftTokenAssetVO,
-    mintTxn : TransactionVO
+    contractVO: ContractVO,
+    nftTokenVO: NftTokenVO,
+    nftTokenAssetVO: NftTokenAssetVO,
+    mintTxn: TransactionVO
 }
 
 export interface AnalyticTransaction {
-    transactions : number , 
-    uniqueIncomingAddresses : number , 
-    uniqueOutgoingAddresses : number , 
+    transactions: number,
+    uniqueIncomingAddresses: number,
+    uniqueOutgoingAddresses: number,
+    time: string
+}
+
+export interface AnalyticTxnFee {
+    spent: string,
+    used: string,
+    time: string
+}
+
+export interface AnalyticBalance {
+    send: string,
+    received: string,
+    balance: string,
+    time: string
+}
+
+export interface AnalyticTokenTransfer {
+    tokenTransfers: number,
+    tokenContractCount: number,
     time : string
 }
 
 export interface AddressAnaliyic {
-    address : string , 
-    transactions : AnalyticTransaction[]
+    address: string,
+    transactions: AnalyticTransaction[],
+    txnFees: AnalyticTxnFee[],
+    balances: AnalyticBalance[],
+    tokenTransfers : AnalyticTokenTransfer[]
 }
 
 
