@@ -23,6 +23,7 @@ export default ({ balances }: {
                         time: _time,
                         send: "0",
                         received: "0",
+                        blockReward:"0",
                         balance: balances[i - 1].balance
                     })
                 }

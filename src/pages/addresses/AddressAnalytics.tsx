@@ -21,33 +21,44 @@ export default ({ address }: { address: string }) => {
     } , [address] );
 
     const items: TabsProps['items'] = useMemo(() => {
-        return [
-            {
+
+        const _items = [];
+        if ( address && addressAnalytic && addressAnalytic.balances && addressAnalytic.balances.length > 0 ){
+            _items.push({
                 key: 'safeBalance',
                 label: "SAFE Balance",
-                children: address && addressAnalytic && addressAnalytic.balances && <AddressAnalyticsBalances balances={addressAnalytic.balances} />,
-            },
-            {
+                children: <AddressAnalyticsBalances balances={addressAnalytic.balances} />,
+            })
+        }
+        if (address && addressAnalytic && addressAnalytic.transactions && addressAnalytic.transactions.length > 0){
+            _items.push({
                 key: 'transactions',
                 label: "Transactions",
-                children: address && addressAnalytic && addressAnalytic.transactions && <AddressAnalyticsTransactions transactions={addressAnalytic.transactions} ></AddressAnalyticsTransactions>,
-            },
-            {
+                children: <AddressAnalyticsTransactions transactions={addressAnalytic.transactions} />,
+            })
+        }
+        if (address && addressAnalytic && addressAnalytic.txnFees && addressAnalytic.txnFees.length > 0 ){
+            _items.push({
                 key: 'txnFees',
                 label: "Txn Fees",
-                children: address && addressAnalytic && addressAnalytic.txnFees && <AddressAnalyticsTxnFees txnFees={addressAnalytic.txnFees}></AddressAnalyticsTxnFees>,
-            },
-            {
+                children: <AddressAnalyticsTxnFees txnFees={addressAnalytic.txnFees} />,
+            });
+        }
+        if (address && addressAnalytic && addressAnalytic.balances && addressAnalytic.balances.length > 0){
+            _items.push({
                 key: 'safeTransfers',
                 label: `SAFE Transfers`,
-                children: address && addressAnalytic && addressAnalytic.balances && <AddressAnalyticsTransfers balances={addressAnalytic.balances}></AddressAnalyticsTransfers>,
-            },
-            {
+                children: <AddressAnalyticsTransfers balances={addressAnalytic.balances}/>,
+            })
+        }
+        if ( address && addressAnalytic && addressAnalytic.tokenTransfers && addressAnalytic.tokenTransfers.length > 0 ){
+            _items.push({
                 key: 'tokenTransfers',
                 label: `Token Transfers`,
-                children: address && addressAnalytic && addressAnalytic.tokenTransfers && <AddressAnalyticsTokenTransfers tokenTransfers={addressAnalytic.tokenTransfers}></AddressAnalyticsTokenTransfers>,
-            },
-        ]
+                children: <AddressAnalyticsTokenTransfers tokenTransfers={addressAnalytic.tokenTransfers} />,
+            })
+        }
+        return _items;
     }, [address,addressAnalytic]);
 
     return <>

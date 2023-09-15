@@ -8,7 +8,9 @@ import { GetIntervalDays } from '../../utils/DateUtil';
 export default ({ tokenTransfers }: {
   tokenTransfers: AnalyticTokenTransfer[]
 }) => {
-  // const data: any[] = [];
+
+  console.log("TokenTransfers >>" , tokenTransfers)
+
   const _tokenTransfers: AnalyticTokenTransfer[] = [];
   for (let i = 0; i < tokenTransfers.length; i++) {
     const { time } = tokenTransfers[i];

@@ -23,6 +23,7 @@ export default ({ balances }: {
             time: _time,
             send: "0",
             received: "0",
+            blockReward: "0",
             balance: balances[i - 1].balance
           })
         }
@@ -37,6 +38,11 @@ export default ({ balances }: {
       date: _time,
       field: "Send (SAFE)",
       value: Number.parseFloat(ETHER(_balances[i].send,18))
+    });
+    data.push({
+      date: _time,
+      field: "BlockReward (SAFE)",
+      value: Number.parseFloat(ETHER(_balances[i].blockReward ? _balances[i].blockReward : "0",18))
     });
     data.push({
       date: _time,

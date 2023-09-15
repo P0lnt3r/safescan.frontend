@@ -533,6 +533,7 @@ export interface AnalyticBalance {
     send: string,
     received: string,
     balance: string,
+    blockReward: string,
     time: string
 }
 
