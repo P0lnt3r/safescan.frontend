@@ -8,6 +8,7 @@ import AddressAnalyticsTransfers from './AddressAnalytics-Transfers';
 import AddressAnalyticsTokenTransfers from './AddressAnalytics-TokenTransfers';
 import { fetchAddressAnalytic } from '../../services/address';
 import { AddressAnaliyic } from '../../services';
+import AddressAnalyticsNodeRewards from './AddressAnalytics-NodeRewards';
 
 export default ({ address }: { address: string }) => {
 
@@ -56,6 +57,13 @@ export default ({ address }: { address: string }) => {
                 key: 'tokenTransfers',
                 label: `Token Transfers`,
                 children: <AddressAnalyticsTokenTransfers tokenTransfers={addressAnalytic.tokenTransfers} />,
+            })
+        }
+        if ( address && addressAnalytic && addressAnalytic.nodeRewards && addressAnalytic.nodeRewards.length > 0 ){
+            _items.push({
+                key: 'nodeRewards',
+                label: `Node Rewards`,
+                children: <AddressAnalyticsNodeRewards nodeRewards={addressAnalytic.nodeRewards} />,
             })
         }
         return _items;

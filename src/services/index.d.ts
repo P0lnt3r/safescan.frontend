@@ -543,12 +543,19 @@ export interface AnalyticTokenTransfer {
     time : string
 }
 
+export interface AnalyticNodeReward {
+    rewardAmount : string,
+    rewardCount : number,
+    time : string
+}
+
 export interface AddressAnaliyic {
     address: string,
     transactions: AnalyticTransaction[],
     txnFees: AnalyticTxnFee[],
     balances: AnalyticBalance[],
-    tokenTransfers : AnalyticTokenTransfer[]
+    tokenTransfers : AnalyticTokenTransfer[],
+    nodeRewards : AnalyticNodeReward[]
 }
 
 

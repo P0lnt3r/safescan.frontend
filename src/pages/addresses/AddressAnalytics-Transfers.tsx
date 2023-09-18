@@ -4,12 +4,18 @@ import { Column } from '@ant-design/plots';
 import { AnalyticBalance } from '../../services';
 import { GetIntervalDays } from '../../utils/DateUtil';
 import { ETHER } from '../../components/EtherAmount';
+import { Typography, Row, Col } from 'antd'
 
+const { Text } = Typography;
 
 export default ({ balances }: {
   balances: AnalyticBalance[]
 }) => {
-  const data: any[] = [];
+  const data: {
+    date: string,
+    field: string,
+    value: number
+  }[] = [];
   const _balances: AnalyticBalance[] = [];
   for (let i = 0; i < balances.length; i++) {
     const { time } = balances[i];
@@ -34,20 +40,21 @@ export default ({ balances }: {
   for (let i = 0; i < _balances.length; i++) {
     const _time = _balances[i].time.indexOf(" ") > 0 ? _balances[i].time.substring(0, _balances[i].time.indexOf(" "))
       : _balances[i].time;
+    
+    data.push({
+      date: _time,
+      field: "Received (SAFE)",
+      value: Number.parseFloat(ETHER(_balances[i].received, 18))
+    });
     data.push({
       date: _time,
       field: "Send (SAFE)",
-      value: Number.parseFloat(ETHER(_balances[i].send,18))
+      value: Number.parseFloat(ETHER(_balances[i].send, 18))
     });
     data.push({
       date: _time,
       field: "BlockReward (SAFE)",
-      value: Number.parseFloat(ETHER(_balances[i].blockReward ? _balances[i].blockReward : "0",18))
-    });
-    data.push({
-      date: _time,
-      field: "Received (SAFE)",
-      value:  Number.parseFloat(ETHER(_balances[i].received,18))
+      value: Number.parseFloat(ETHER(_balances[i].blockReward ? _balances[i].blockReward : "0", 18))
     });
   }
 
@@ -66,5 +73,20 @@ export default ({ balances }: {
       },
     },
   };
-  return <Column {...config} />;
+  return <>
+    <Row style={{ marginTop: "10px", marginBottom: "10px", width: "100%" }}>
+      <Col span={12}>
+        <Text strong style={{ float: "left" }}>Time Series: SAFE Transaction Fees Spent and Used</Text>
+      </Col>
+      <Col span={12}>
+        {
+          data.length > 1 &&
+          <Text strong type='secondary' style={{ float: "right" }}>
+            {data[0].date} ~ {data[data.length - 1].date}
+          </Text>
+        }
+      </Col>
+    </Row>
+    <Column {...config} />
+  </>
 }

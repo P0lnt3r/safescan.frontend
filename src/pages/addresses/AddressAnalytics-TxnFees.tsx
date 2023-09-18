@@ -5,19 +5,26 @@ import { AnalyticTxnFee } from '../../services';
 import { GetIntervalDays } from '../../utils/DateUtil';
 import EtherAmount, { ETHER, GWEI } from '../../components/EtherAmount';
 import { JSBI } from '@uniswap/sdk';
+import { Typography, Row, Col } from 'antd'
 
+const { Text } = Typography;
 
 export default ({ txnFees }: {
   txnFees: AnalyticTxnFee[]
 }) => {
 
-  const data: any[] = [];
+  const data: {
+    date: string,
+    field: string,
+    value: number
+  }[] = [];
   const _txnFees: AnalyticTxnFee[] = [];
 
   let totalSpent = JSBI.BigInt("0");
-  let totalUsed  = JSBI.BigInt("0");
+  let totalUsed = JSBI.BigInt("0");
+
   for (let i = 0; i < txnFees.length; i++) {
-    const { time , spent , used } = txnFees[i];
+    const { time, spent, used } = txnFees[i];
     if (i > 0) {
       const prevTime = txnFees[i - 1].time;
       const intervalDays = GetIntervalDays(prevTime, time);
@@ -32,12 +39,10 @@ export default ({ txnFees }: {
         }
       }
     }
-    totalSpent = JSBI.add( totalSpent , JSBI.BigInt(spent) ); 
-    totalUsed = JSBI.add( totalUsed , JSBI.BigInt(used) ); 
+    totalSpent = JSBI.add(totalSpent, JSBI.BigInt(spent));
+    totalUsed = JSBI.add(totalUsed, JSBI.BigInt(used));
     _txnFees.push(txnFees[i]);
   }
-
-  console.log("Total Spend :" , ETHER(totalSpent.toString()));
 
   for (let i = 0; i < _txnFees.length; i++) {
     const _time = _txnFees[i].time.indexOf(" ") > 0 ? _txnFees[i].time.substring(0, _txnFees[i].time.indexOf(" "))
@@ -50,10 +55,10 @@ export default ({ txnFees }: {
     data.push({
       date: _time,
       field: "Used (GWei)",
-      value: Number.parseFloat(GWEI(_txnFees[i].used)) 
+      value: Number.parseFloat(GWEI(_txnFees[i].used))
     });
   }
-  
+
   const config = {
     data,
     isGroup: true,
@@ -62,7 +67,7 @@ export default ({ txnFees }: {
     seriesField: 'field',
 
     /** 设置颜色 */
-    color: ['#1ca9e6', '#f88c24'],
+    color: ['rgb(144,237,125)', '#f88c24'],
     animation: false,
     slider: {
       start: 0,
@@ -70,28 +75,40 @@ export default ({ txnFees }: {
       trendCfg: {
         isArea: true,
       },
-    },
+    }
 
-    /** 设置间距 */
-    // marginRatio: 0.1,
-    // label: {
-    //   // 可手动配置 label 数据标签位置
-    //   position: 'middle',
-    //   // 'top', 'middle', 'bottom'
-    //   // 可配置附加的布局方法
-    //   layout: [
-    //     // 柱形图数据标签位置自动调整
-    //     {
-    //       type: 'interval-adjust-position',
-    //     }, // 数据标签防遮挡
-    //     {
-    //       type: 'interval-hide-overlap',
-    //     }, // 数据标签文颜色自动调整
-    //     {
-    //       type: 'adjust-color',
-    //     },
-    //   ],
-    // },
   };
-  return <Column {...config} />;
+  return <>
+    <Row style={{ marginTop: "10px", marginBottom: "10px", width: "100%" }}>
+      <Col span={12}>
+        <Text strong style={{ float: "left" }}>Time Series: SAFE Transaction Fees Spent and Used</Text>
+      </Col>
+      <Col span={12}>
+        {
+          data.length > 1 &&
+          <Text strong type='secondary' style={{ float: "right" }}>
+            {data[0].date} ~ {data[data.length - 1].date}
+          </Text>
+        }
+      </Col>
+    </Row>
+    <Row style={{
+      marginTop: "20px", marginBottom: "30px", width: "100%",
+      borderTop: "1px solid #e9ecef", borderBottom: "1px solid #e9ecef"
+    }}>
+      <Col span={12} style={{ paddingTop: "10px", paddingBottom: "10px" }}>
+        <Text strong>Total Fees Spent (As a Sender)</Text><br />
+        <Text type='secondary' strong><EtherAmount raw={totalSpent.toString()} fix={18}></EtherAmount></Text><br />
+      </Col>
+      <Col span={12} style={{
+        borderLeft: "1px solid #e9ecef",
+        paddingTop: "10px", paddingBottom: "10px",
+        paddingLeft: "10px"
+      }}>
+        <Text strong>Total Fees Used (As a recipient)</Text><br />
+        <Text type='secondary' strong><EtherAmount raw={totalUsed.toString()} fix={18}></EtherAmount></Text><br />
+      </Col>
+    </Row>
+    <Column {...config} />
+  </>;
 }
