@@ -24,6 +24,7 @@ import AddressTokenHoldings from './pages/addresses/AddressTokenHoldings';
 import NftTransfers from './pages/assets/NftTransfers';
 import NftTokens from './pages/assets/NftTokens';
 import Nft from './pages/assets/Nft';
+import Charts from './pages/statistics/Charts';
 
 const { Content } = Layout;
 
@@ -52,7 +53,7 @@ function App() {
               <Route path="/assets/nft-transfers" index element={<NftTransfers />} /> 
               <Route path="/nodes/supermasternodes" index element={<SuperNodes />} />
               <Route path="/nodes/masternodes" index element={<MasterNodes />} />
-              <Route path="/charts" index element={<Chart />} />
+              <Route path="/charts" index element={<Charts />} />
               <Route path="/token/:address" index element={<Token />} />
               <Route path="/tokenholdings" index element={<AddressTokenHoldings />} />
               <Route path="/nft/:token/:tokenId" index element={<Nft />} />
