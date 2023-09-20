@@ -32,7 +32,6 @@ export function parseCirculationChartData(timestampStatistic: TimestampStatistic
 export default ({ data }: {
     data: CirculationType[]
 }) => {
-
     const config = {
         data,
         xField: 'date',

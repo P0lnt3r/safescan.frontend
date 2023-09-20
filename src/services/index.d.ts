@@ -442,6 +442,7 @@ export interface TimestampStatisticVO {
     totalTxns: number,
     totalInternalTxns: number,
     totalERC20Transfers: number,
+    totalAddress : number,
     totalContract: number,
     totalSuperNodes: number,
     totalMasterNodes: number,

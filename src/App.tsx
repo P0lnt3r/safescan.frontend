@@ -17,7 +17,6 @@ import ERC20Transfers from './pages/assets/ERC20Transfers';
 import SuperNodes from './pages/nodes/SuperNodes';
 import MasterNodes from './pages/nodes/MasterNodes';
 import AccountRecords from './pages/assets/AccountRecords';
-import Chart from './pages/statistics/Chart';
 import PendingTxns from './pages/txs/PendingTxns';
 import Token from './pages/assets/Token';
 import AddressTokenHoldings from './pages/addresses/AddressTokenHoldings';

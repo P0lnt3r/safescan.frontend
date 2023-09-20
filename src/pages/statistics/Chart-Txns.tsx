@@ -12,7 +12,6 @@ export interface TxnsType {
 export default ( { data } : {
     data : TxnsType[]
 } ) => {
-
     const config = {
         data,
         xField: 'date',
@@ -23,9 +22,7 @@ export default ( { data } : {
         },
         smooth: true,
     };
-
     return <>
-        <Area {...config} />
+        <Area style={{height:"200px"}} {...config} />
     </>
-
 }
