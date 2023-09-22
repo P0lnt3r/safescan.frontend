@@ -1,15 +1,15 @@
-import { CurrencyAmount } from '@uniswap/sdk';
+import { BigintIsh, CurrencyAmount } from '@uniswap/sdk';
 import config from '../config';
 import { Typography } from 'antd';
 import { format } from '../utils/NumberFormat'
 const NATIVE_LABEL = config.native_label;
 const { Text } = Typography;
 
-export function GWEI( raw : string ){
-    return format(CurrencyAmount.ether(raw).multiply("1000000000").toFixed(18))
+export function GWEI( raw : BigintIsh  , fixed ?: number){
+    return format(CurrencyAmount.ether(raw).multiply("1000000000").toFixed( fixed ? fixed : 18 ))
 }
 
-export function ETHER( raw : string , fixed ?: number ){
+export function ETHER( raw : BigintIsh , fixed ?: number ){
     return CurrencyAmount.ether(raw).toFixed( fixed );
 }
 

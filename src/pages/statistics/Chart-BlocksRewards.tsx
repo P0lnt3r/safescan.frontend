@@ -1,24 +1,23 @@
 
-import { Line } from '@ant-design/plots';
 import { DualAxes } from '@ant-design/plots';
 
-export interface MasternodesChartType {
-    date: string,
-    count: number,
-    rewards: number
+export interface BlocksRewardsChartType{
+    date : string , 
+    blocks : number , 
+    rewards : number
 }
 
-export default ({ masternodesChartData, config }: {
-    masternodesChartData?: MasternodesChartType[],
-    config?: any
-}) => {
+export default ( {blocksRewards , config} : {
+    blocksRewards ?: BlocksRewardsChartType[] , 
+    config ?: any
+} ) => {
 
     const _config = {
         ...config,
-        data: [masternodesChartData, masternodesChartData],
+        data: [blocksRewards, blocksRewards],
         padding: 'auto',
         xField: 'date',
-        yField: ['count', 'rewards'],
+        yField: ['blocks', 'rewards'],
         xAxis: {
             tickCount: 5,
         },

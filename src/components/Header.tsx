@@ -68,7 +68,7 @@ const Header: React.FC = () => {
             ]),
             getItem("Statistic", 'statistic', <AreaChartOutlined />, [
                 getItem('Top Account', '/accounts'),
-                getItem('Chart', '/charts'),
+                getItem('Charts', '/charts'),
             ]),
             // getItem('Language', 'language', <SettingOutlined />, [
             //     getItem('English', 'en'),

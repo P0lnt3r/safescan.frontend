@@ -447,9 +447,14 @@ export interface TimestampStatisticVO {
     totalSuperNodes: number,
     totalMasterNodes: number,
     totalRewards: string,
+    totalSupernodeRewards : string,
+    totalMasternodeRewards : string,
     totalSupply: string,
     totalLockAmount: string,
-    totalFreezeAmount: string
+    totalFreezeAmount: string,
+    totalGas : string,
+    totalGasBurnAmount : string,
+    avgBlockTime : string
 }
 
 export interface TokenInfoVO {
