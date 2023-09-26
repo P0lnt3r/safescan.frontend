@@ -4,15 +4,17 @@ import { TimestampStatisticVO } from '../../services';
 import { useEffect, useState } from 'react';
 import { Area } from '@ant-design/plots';
 
-export interface TxnsType {
+export interface TxnsChartType {
     date : string , 
     txns : number
 }
 
-export default ( { data } : {
-    data : TxnsType[]
+export default ( { data , config } : {
+    data : TxnsChartType[] , 
+    config ?: any 
 } ) => {
-    const config = {
+    const _config = {
+        ...config,
         data,
         xField: 'date',
         yField: 'txns',
@@ -23,6 +25,6 @@ export default ( { data } : {
         smooth: true,
     };
     return <>
-        <Area style={{height:"200px"}} {...config} />
+        <Area {..._config} />
     </>
 }

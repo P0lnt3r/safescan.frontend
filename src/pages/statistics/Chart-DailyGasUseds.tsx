@@ -12,7 +12,6 @@ export default ({ gasUseds, config }: {
     gasUseds?: GasUsedsChartType[],
     config?: any
 }) => {
-
     const data = useMemo(() => {
         if ( ! gasUseds ){
             return [];
@@ -24,9 +23,7 @@ export default ({ gasUseds, config }: {
             _data.push({date , value : burn , type : "Burn (GWei)"})
         })
         return _data;
-
     }, [gasUseds]);
-
     const _config = {
         ...config,
         data,
@@ -36,7 +33,6 @@ export default ({ gasUseds, config }: {
         seriesField: 'type',
        
     };
-
     return <Column {..._config} />;
 
 }

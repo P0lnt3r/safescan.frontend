@@ -24,6 +24,14 @@ import NftTransfers from './pages/assets/NftTransfers';
 import NftTokens from './pages/assets/NftTokens';
 import Nft from './pages/assets/Nft';
 import Charts from './pages/statistics/Charts';
+import PageChartCirculation from './pages/statistics/Page-Chart-Circulation';
+import PageChartTxns from './pages/statistics/Page-Chart-Txns';
+import PageChartAddresses from './pages/statistics/Page-Chart-Addresses';
+import PageChartBlocksRewards from './pages/statistics/Page-Chart-BlocksRewards';
+import PageChartGasUseds from './pages/statistics/Page-Chart-GasUseds';
+import PageChartAverageBlockTimes from './pages/statistics/Page-Chart-AverageBlockTimes';
+import PageChartMasternodes from './pages/statistics/Page-Chart-Masternodes';
+import PageChartSupernodes from './pages/statistics/Page-Chart-Supernodes';
 
 const { Content } = Layout;
 
@@ -53,6 +61,14 @@ function App() {
               <Route path="/nodes/supermasternodes" index element={<SuperNodes />} />
               <Route path="/nodes/masternodes" index element={<MasterNodes />} />
               <Route path="/charts" index element={<Charts />} />
+              <Route path="/charts/circulation" index element={<PageChartCirculation />} />
+              <Route path="/charts/txns" index element={<PageChartTxns />} />
+              <Route path="/charts/addresses" index element={<PageChartAddresses />} />
+              <Route path="/charts/blocksrewards" index element={<PageChartBlocksRewards />} />
+              <Route path="/charts/gasuseds" index element={<PageChartGasUseds />} />
+              <Route path="/charts/avgblocktimes" index element={<PageChartAverageBlockTimes />} />
+              <Route path="/charts/masternodes" index element={<PageChartMasternodes />} />
+              <Route path="/charts/supernodes" index element={<PageChartSupernodes />} />
               <Route path="/token/:address" index element={<Token />} />
               <Route path="/tokenholdings" index element={<AddressTokenHoldings />} />
               <Route path="/nft/:token/:tokenId" index element={<Nft />} />

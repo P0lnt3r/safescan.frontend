@@ -2,29 +2,21 @@
 import { Area } from '@ant-design/plots';
 import { useEffect, useMemo, useState } from 'react';
 
-export interface AddressesType {
+export interface AddressesChartType {
     date : string , 
     count : number
 }
 
 export default ( { data , config} : {
-    data ?: AddressesType[] ,
+    data : AddressesChartType[] ,
     config : {} 
 } ) => {
 
-    console.log("Addresses ChartData : " , data)
-    const chartData = useMemo( () => {
-        return data ? data : [];
-    } , [data] );
-
     const _config =  {
         ...config,
-        data : chartData,
+        data,
         xField: 'date',
         yField: 'count',
-        xAxis: {
-            range: [0, 1],
-        },
     };
 
     return <>

@@ -2,7 +2,7 @@ import { Line } from '@ant-design/plots';
 import { TimestampStatisticVO } from '../../services';
 import { ETHER } from '../../components/EtherAmount';
 
-export interface CirculationType {
+export interface CirculationChartType {
     date: string,
     value: number,
     category: string
@@ -29,10 +29,12 @@ export function parseCirculationChartData(timestampStatistic: TimestampStatistic
     }
 }
 
-export default ({ data }: {
-    data: CirculationType[]
+export default ({ data , config }: {
+    data: CirculationChartType[],
+    config : any
 }) => {
-    const config = {
+    const _config = {
+        ...config,
         data,
         xField: 'date',
         yField: 'value',
@@ -50,7 +52,7 @@ export default ({ data }: {
     };
 
     return <>
-        <Line style={{height:"200px"}} {...config} />
+        <Line {..._config} />
     </>
 
 }
