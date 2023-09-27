@@ -19,7 +19,6 @@ export function ChecksumAddress(address: string): string {
     address = address.toLowerCase().replace('0x', '');
     const hash = utils.keccak256('0x' + address).substring(2);
     let checksumAddress = '0x';
-
     for (let i = 0; i < address.length; i++) {
         if (parseInt(hash[i], 16) >= 8) {
             checksumAddress += address[i].toUpperCase();
@@ -27,7 +26,6 @@ export function ChecksumAddress(address: string): string {
             checksumAddress += address[i];
         }
     }
-
     return checksumAddress;
 }
 

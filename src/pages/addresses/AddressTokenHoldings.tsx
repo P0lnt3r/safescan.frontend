@@ -40,7 +40,7 @@ export default () => {
                     <Text type="secondary" strong
                         style={
                             isMobile ? { lineHeight: "30px", fontSize: "14px", letterSpacing: "-1px" }
-                                : { fontSize: "18px", lineHeight: "36px" }
+                                : { fontSize: "16px", lineHeight: "36px" }
                         }>
                         <RouterLink to={`/address/${address}`}>
                             <Paragraph copyable style={{ color: "rgba(52, 104, 171, 0.85)" }}>
