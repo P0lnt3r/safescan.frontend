@@ -12,21 +12,10 @@ import { useAddressProp } from "../state/application/hooks";
 import { useDispatch } from "react-redux";
 import { Application_Update_AddressPropMap } from "../state/application/action";
 import { utils } from 'ethers';
-
 const { Text, Link } = Typography;
 
 export function ChecksumAddress(address: string): string {
-    address = address.toLowerCase().replace('0x', '');
-    const hash = utils.keccak256('0x' + address).substring(2);
-    let checksumAddress = '0x';
-    for (let i = 0; i < address.length; i++) {
-        if (parseInt(hash[i], 16) >= 8) {
-            checksumAddress += address[i].toUpperCase();
-        } else {
-            checksumAddress += address[i];
-        }
-    }
-    return checksumAddress;
+    return utils.getAddress(address);
 }
 
 export default ({ address, propVO, style }: {
