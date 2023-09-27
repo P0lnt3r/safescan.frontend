@@ -70,7 +70,6 @@ export default function () {
     }, [address]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [addressVO, setAddressVO] = useState<AddressVO>();
-
     useEffect(() => {
         if (address) {
             fetchAddress(address).then(data => {

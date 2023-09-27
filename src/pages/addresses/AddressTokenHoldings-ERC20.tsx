@@ -19,7 +19,6 @@ import ERC20TokenAmount from '../../components/ERC20TokenAmount';
 import ERC20Logo from '../../components/ERC20Logo';
 
 const { Title, Text, Link } = Typography;
-
 const DEFAULT_PAGESIZE = 10;
 
 export default ({ address }: { address: string }) => {

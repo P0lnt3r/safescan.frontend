@@ -56,7 +56,7 @@ export default ({ address }: { address: string }) => {
     const [pagination, setPagination] = useState<TablePaginationConfig>({
         current: 1,
         pageSize: DEFAULT_PAGESIZE,
-        position: ["topRight", "bottomRight"],
+        position: ["bottomRight"],
         pageSizeOptions: [],
         responsive: true,
     });
@@ -226,10 +226,6 @@ export default ({ address }: { address: string }) => {
     };
 
     return <>
-        <Button onClick={() => {
-            pagination.current = 1;
-            doFetchAddressAccountRecords();
-        }}>Refresh</Button>
         <Table dataSource={tableData} scroll={{ x: 800 }}
             expandable={{
                 expandedRowRender, rowExpandable: (accountRecordVO) => {
