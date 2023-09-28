@@ -26,3 +26,8 @@ export async function fetchTxNodeRegisterActionss( txHash : string ) : Promise<N
     const serverResponse = await POST( `${API_HOST}/noderegisters/${txHash}` , {} );
     return serverResponse.data;
 }
+
+export async function fetchMasternodeRegisterActions( params : PageQueryDTO ) : Promise<PageResponseVO<NodeRegisterActionVO>>{
+    const serverResponse = await POST( `${API_HOST}/noderegisters/masternode` , params );
+    return serverResponse.data;
+}

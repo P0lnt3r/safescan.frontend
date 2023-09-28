@@ -1,5 +1,5 @@
 
-import { Card, Table, Typography, Row, Col, Tooltip, PaginationProps, Badge } from 'antd';
+import { Card, Table, Typography, Row, Col, Tooltip, PaginationProps, Badge, Divider, TabsProps, Tabs } from 'antd';
 import { useEffect, useState } from 'react';
 import { fetchAddressBalanceRank } from '../../services/address';
 import { AddressBalanceRankVO, MasterNodeVO, SuperNodeVO } from '../../services';
@@ -15,6 +15,7 @@ import {
 import { format } from '../../utils/NumberFormat';
 import { fetchMasterNodes, fetchSuperNodes } from '../../services/node';
 import { PresetStatusColorType } from 'antd/es/_util/colors';
+import MasternodesRegisters from './MasternodesRegisters';
 
 const { Title, Text, Link } = Typography;
 
@@ -126,13 +127,30 @@ export default () => {
     ];
 
 
+    const items: TabsProps['items'] = [
+        {
+            key: 'registers',
+            label: 'Registers',
+            children: <MasternodesRegisters />,
+        },
+        {
+            key: 'stateUpdateEvents',
+            label: 'State Update Events',
+            children: '[State Update Events:<Table:List>]',
+        },
+    ];
+
     return (<>
-        <Title level={3}>MasterNodes</Title>
+        <Title level={3}>Safe4 Network Masternodes</Title>
         [Text : What is MasterNode ? || How to create MasterNode...]
         <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
             pagination={pagination} rowKey={(txVO) => txVO.id}
-            style={{marginTop:"20px"}}
+            style={{ marginTop: "20px" }}
         />
+        <Divider style={{ margin: '20px 0px' }} />
+        <Card>
+            <Tabs defaultActiveKey="1" items={items}/>
+        </Card>
     </>)
 
 

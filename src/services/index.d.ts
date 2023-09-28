@@ -431,7 +431,8 @@ export interface NodeRegisterActionVO {
     operator: string,
     amount: string,
     lockDays: number,
-    lockId: number
+    lockId: number,
+    confirmed : number
 }
 
 

@@ -92,7 +92,7 @@ export default () => {
                     </Text>
                 </div>
             </Col>
-            <Col span={4} style={{
+            <Col span={5} style={{
                 marginLeft: "15px"
             }}>
                 <div style={{
@@ -111,7 +111,7 @@ export default () => {
                         [Avail]
                         {
                             addressVO && addressVO.balance && addressVO.balance.availableAmount &&
-                            <Text style={{ float: "right" }}>
+                            <Text type="success" style={{ float: "right" }}>
                                 <EtherAmount raw={addressVO.balance.availableAmount} fix={18} />
                             </Text>
                         }
@@ -121,7 +121,7 @@ export default () => {
                         [Lock]
                         {
                             addressVO && addressVO.balance && addressVO.balance.lockAmount &&
-                            <Text style={{ float: "right" }}>
+                            <Text type="secondary" style={{ float: "right" }}>
                                 <EtherAmount raw={addressVO.balance.lockAmount} fix={18} />
                             </Text>
                         }
@@ -131,10 +131,9 @@ export default () => {
                         [Freeze]
                         {
                             addressVO && addressVO.balance && addressVO.balance.freezeAmount &&
-                            <Text style={{ float: "right" }}>
+                            <Text style={{ float: "right",color: "rgb(6, 58, 156)" }}>
                                 <EtherAmount raw={addressVO.balance.freezeAmount} fix={18} />
                             </Text>
-
                         }
                     </Text>
                 </div>
