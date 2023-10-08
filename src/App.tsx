@@ -32,6 +32,7 @@ import PageChartGasUseds from './pages/statistics/Page-Chart-GasUseds';
 import PageChartAverageBlockTimes from './pages/statistics/Page-Chart-AverageBlockTimes';
 import PageChartMasternodes from './pages/statistics/Page-Chart-Masternodes';
 import PageChartSupernodes from './pages/statistics/Page-Chart-Supernodes';
+import Node_Detail from './pages/nodes/Node_Detail';
 
 const { Content } = Layout;
 
@@ -58,8 +59,9 @@ function App() {
               <Route path="/assets/nft-tokens" index element={<NftTokens />} />
               <Route path="/assets/erc20txns" index element={<ERC20Transfers />} />
               <Route path="/assets/nft-transfers" index element={<NftTransfers />} /> 
-              <Route path="/nodes/supermasternodes" index element={<SuperNodes />} />
+              <Route path="/nodes/supernodes" index element={<SuperNodes />} />
               <Route path="/nodes/masternodes" index element={<MasterNodes />} />
+              <Route path="/node/:address" index element={<Node_Detail />} />
               <Route path="/charts" index element={<Charts />} />
               <Route path="/charts/circulation" index element={<PageChartCirculation />} />
               <Route path="/charts/txns" index element={<PageChartTxns />} />

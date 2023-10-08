@@ -12,8 +12,6 @@ import ERC20Transfers from "./ERC20Transfers";
 import { fetchAddress } from "../../services/address";
 import { AddressVO, MasterNodeVO, SuperNodeVO } from "../../services";
 import EtherAmount, { ETHER_Combine } from "../../components/EtherAmount";
-import SuperNode from "./SuperNode";
-import MasterNode from "./MasterNode";
 import NodeRewards from "./NodeRewards";
 import AccountRecords from "./AccountRecords";
 import ContractInternalTransactions from "./ContractInternalTransactions";
@@ -306,16 +304,7 @@ export default function () {
                     </Card>
                 </Col>
             </Row>
-
-            <Divider style={{ marginTop: "20px" }} />
-            {
-                subType == "supernode" && prop &&
-                <SuperNode {...JSON.parse(prop) as SuperNodeVO} />
-            }
-            {
-                subType == "masternode" && prop &&
-                <MasterNode {...JSON.parse(prop) as MasterNodeVO} />
-            }
+            
             <Divider style={{ marginTop: "20px" }} />
 
             <Card>

@@ -55,9 +55,9 @@ const Header: React.FC = () => {
                 getItem('View Internal Transactions', '/txsInternal'),
                 getItem('View Blocks', '/blocks'),
             ]),
-            getItem("Nodes", 'supernodes', <ApartmentOutlined />, [
-                getItem('MasterNodes', '/nodes/masternodes'),
-                getItem('SuperNodes', '/nodes/supermasternodes'),
+            getItem("Nodes", 'nodes', <ApartmentOutlined />, [
+                getItem('Masternodes', '/nodes/masternodes'),
+                getItem('Supernodes', '/nodes/supernodes'),
             ]),
             getItem(t('assets').toString(), 'assets', <WalletOutlined />, [
                 getItem('Account Records', '/assets/accountrecords'),
