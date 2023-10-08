@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import { NodeRegisterActionVO } from "../../services";
-import { fetchMasternodeRegisterActions } from "../../services/node";
+import { NodeRegisterActionVO, SNVoteActionVO } from "../../services";
+import { fetchSNVoteActions, fetchSupernodeRegisterActions } from "../../services/node";
 import { TablePaginationConfig, Table, Typography, Row, Col, Tooltip } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import TransactionHash from "../../components/TransactionHash";
@@ -16,7 +16,7 @@ const DEFAULT_PAGESIZE = 20;
 
 export default () => {
     const [loading, setLoading] = useState<boolean>(false);
-    const [tableData, setTableData] = useState<NodeRegisterActionVO[]>([]);
+    const [tableData, setTableData] = useState<SNVoteActionVO[]>([]);
     const [unconfirmed, setUnconfirmed] = useState<number>(0);
     const [confirmed, setConfirmed] = useState<number>(0);
     const [pagination, setPagination] = useState<TablePaginationConfig>({
@@ -27,9 +27,9 @@ export default () => {
         responsive: true,
     });
 
-    const doFetchMasternodeResgiterActions = () => {
+    const doFetchSNVoteActions = () => {
         setLoading(true);
-        fetchMasternodeRegisterActions({
+        fetchSNVoteActions({
             current: pagination.current,
             pageSize: pagination.pageSize
         }).then(data => {
@@ -46,7 +46,7 @@ export default () => {
             const onChange = (page: number, pageSize: number) => {
                 pagination.pageSize = unconfirmed.length > 0 ? pageSize - unconfirmed.length : pageSize;
                 pagination.current = page;
-                doFetchMasternodeResgiterActions();
+                doFetchSNVoteActions();
             }
             if (pagination.current == 1) {
                 const total = data.total;
@@ -73,10 +73,10 @@ export default () => {
     }
 
     useEffect(() => {
-        doFetchMasternodeResgiterActions();
+        doFetchSNVoteActions();
     }, []);
 
-    const columns: ColumnsType<NodeRegisterActionVO> = [
+    const columns: ColumnsType<SNVoteActionVO> = [
         {
             title: <Text strong style={{ color: "#6c757e" }}>Txn Hash</Text>,
             dataIndex: 'transactionHash',
@@ -85,8 +85,8 @@ export default () => {
             fixed: 'left',
         },
         {
-            title: <Text strong style={{ color: "#6c757e" }}>Register Type</Text>,
-            dataIndex: 'registerType',
+            title: <Text strong style={{ color: "#6c757e" }}>Action</Text>,
+            dataIndex: 'action',
             render: (val, vo) => <>
                 {val}
             </>,
@@ -110,28 +110,28 @@ export default () => {
             render: (val) => <>{DateFormat(val * 1000)}</>
         },
         {
-            title: <Text strong style={{ color: "#6c757e" }}>Operator</Text>,
-            dataIndex: 'operator',
+            title: <Text strong style={{ color: "#6c757e" }}>Voter</Text>,
+            dataIndex: 'voterAddress',
             width: 150,
-            render: (operator, vo) => {
+            render: (voter, vo) => {
                 return <>
-                    <Address address={operator} propVO={vo.operatorPropVO} />
+                    <Address address={voter} propVO={vo.voterAddressPropVO}/>
                 </>
             }
         },
         {
-            title: <Text strong style={{ color: "#6c757e" }}>Masternode</Text>,
-            dataIndex: 'address',
+            title: <Text strong style={{ color: "#6c757e" }}>Supernode</Text>,
+            dataIndex: 'targetAddress',
             width: 150,
             render: (address, vo) => {
                 return <>
-                    <Address address={address} propVO={vo.addressPropVO}/>
+                    <Address address={address} propVO={vo.targetAddressPropVO} />
                 </>
             }
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Amount</Text>,
-            dataIndex: 'amount',
+            dataIndex: 'amountWeight',
             width: 100,
             render: (amount) => <Text strong><EtherAmount raw={amount.toString()} fix={6} /></Text>
         },

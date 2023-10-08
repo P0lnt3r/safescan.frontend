@@ -12,7 +12,7 @@ import { useAddressProp } from "../state/application/hooks";
 import { useDispatch } from "react-redux";
 import { Application_Update_AddressPropMap } from "../state/application/action";
 import { utils } from 'ethers';
-const { Text, Link } = Typography;
+const { Text, Link , Paragraph } = Typography;
 
 export function ChecksumAddress(address: string): string {
     return utils.getAddress(address);
@@ -68,11 +68,13 @@ export default ({ address, propVO, style }: {
         return <>
         </>
     }
+    const checksumAddress = ChecksumAddress(address);
+    const ellipsisAddress = checksumAddress.substring(0, 8) + "..." + checksumAddress.substring(checksumAddress.length - 8);
 
     return <>
         <Text>
             {RenderIcon()}
-            <Tooltip title={(style && style.noTip) ? "" : address}>
+            <Tooltip style={{float:"left"}} title={(style && style.noTip) ? "" : checksumAddress}>
                 {
                     (style && !style.hasLink) && <>
                         {
@@ -94,7 +96,7 @@ export default ({ address, propVO, style }: {
                 }
                 {
                     (!style || style.hasLink == true) && <>
-                        <RouterLink to={`/address/${address}`}>
+                        <RouterLink to={`/address/${checksumAddress}`}>
                             {
                                 tag && <Link ellipsis style={{ maxWidth: "90%" }}>
                                     {tag}
@@ -102,13 +104,15 @@ export default ({ address, propVO, style }: {
                             }
                             {
                                 !tag && <Link ellipsis style={{ maxWidth: "90%" }}>
-                                    {address}
+                                    {ellipsisAddress}
                                 </Link>
                             }
                         </RouterLink>
                     </>
                 }
             </Tooltip>
+            <Paragraph style={{ height: "0px" , display:"inline-block"}} copyable={{ text: checksumAddress }}>
+            </Paragraph>
         </Text>
     </>
 

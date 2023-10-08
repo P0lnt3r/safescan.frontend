@@ -428,7 +428,9 @@ export interface NodeRegisterActionVO {
     nodeType: string,
     registerType: string,
     address: string,
+    addressPropVO : AddressPropVO,
     operator: string,
+    operatorPropVO : AddressPropVO,
     amount: string,
     lockDays: number,
     lockId: number,
@@ -565,5 +567,19 @@ export interface AddressAnaliyic {
     nodeRewards : AnalyticNodeReward[]
 }
 
+export interface SNVoteActionVO {
+    action: string,
+    amountWeight: string,
+    blockNumber: number,
+    eventLogIndex: number,
+    lockId: number,
+    targetAddress: string,
+    targetAddressPropVO : AddressPropVO,
+    timestamp: number,
+    transactionHash: string
+    voterAddress: string,
+    voterAddressPropVO : AddressPropVO,
+    confirmed : number
+}
 
 

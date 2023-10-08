@@ -1,5 +1,5 @@
 
-import { Card, Table, Typography, Row, Col, Tooltip, PaginationProps, Badge , Progress } from 'antd';
+import { Card, Table, Typography, Row, Col, Tooltip, PaginationProps, Badge, Progress, TabsProps, Tabs, Divider } from 'antd';
 import { useEffect, useState } from 'react';
 import { fetchAddressBalanceRank } from '../../services/address';
 import { AddressBalanceRankVO, SuperNodeVO } from '../../services';
@@ -15,8 +15,11 @@ import {
 import { format } from '../../utils/NumberFormat';
 import { fetchSuperNodes } from '../../services/node';
 import { PresetStatusColorType } from 'antd/es/_util/colors';
+import SupernodesRegisters from './SupernodesRegisters';
+import { ChecksumAddress } from '../../components/Address';
+import SupernodesVoteActions from './SupernodesVoteActions';
 
-const { Title, Text, Link } = Typography;
+const { Title, Text, Link , Paragraph } = Typography;
 
 
 export default () => {
@@ -84,75 +87,103 @@ export default () => {
             title: <Text strong style={{ color: "#6c757e" }}>Vote Obtained</Text>,
             dataIndex: 'amount',
             render: (amount, superNode) => {
-                const { totalAmount , totalNum } = superNode.voteInfo;
+                const { totalAmount, totalNum } = superNode.voteInfo;
                 return <>
                     <Text strong>
                         {<EtherAmount raw={totalNum} fix={18} ignoreLabel></EtherAmount>}
                     </Text>
-                    <Text type='secondary' style={{fontSize:"12px",float:"right"}}>
+                    <Text type='secondary' style={{ fontSize: "12px", float: "right"}}>
                         [{<EtherAmount raw={totalAmount} fix={18}></EtherAmount>}]
                     </Text>
-                    <Progress percent={ Number((Number(superNode.voteObtainedRate) * 100).toFixed(2)) } showInfo={true} />
+                    <Progress style={{width:"90%"}} percent={Number((Number(superNode.voteObtainedRate) * 100).toFixed(2))} showInfo={true} />
                 </>
             },
-            width: 120,
+            width: 180,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Address</Text>,
             dataIndex: 'addr',
-            render: (address) => <>
-                <RouterLink to={`/address/${address.toLowerCase()}`}>
-                    <Link>{address.toLowerCase()}</Link>
-                </RouterLink>
-            </>,
-            width: 220,
+            render: (address) => {
+                let checksumAddress = ChecksumAddress(address)
+                return <>
+                    <RouterLink to={`/address/${checksumAddress}`}>
+                        <Link>{checksumAddress}</Link>
+                    </RouterLink>
+                    <Paragraph style={{
+                        display:"inline-block"
+                    }} copyable={{text:checksumAddress}}></Paragraph>
+                    
+                </>
+            },
+        width: 280,
         },
-        {
-            title: <Text strong style={{ color: "#6c757e" }}>Name</Text>,
-            dataIndex: 'description',
+{
+    title: <Text strong style={{ color: "#6c757e" }}>Name</Text>,
+        dataIndex: 'description',
             render: (description) => <>
                 {description}
             </>,
-            width: 150,
+                width: 150,
         },
-        {
-            title: <Text strong style={{ color: "#6c757e" }}>IP</Text>,
-            dataIndex: 'ip',
+{
+    title: <Text strong style={{ color: "#6c757e" }}>IP</Text>,
+        dataIndex: 'ip',
             render: (ip) => <>
                 {ip}
             </>,
-            width: 30,
+                width: 30,
         },
-        
-        {
-            title: <Text strong style={{ color: "#6c757e" }}>Amount</Text>,
-            dataIndex: 'amount',
+
+{
+    title: <Text strong style={{ color: "#6c757e" }}>Amount</Text>,
+        dataIndex: 'amount',
             render: (amount) => <>
                 <Text strong>
                     {<EtherAmount raw={amount} fix={18}></EtherAmount>}
                 </Text>
             </>,
-            width: 150,
+                width: 150,
         },
-        {
-            title: <Text strong style={{ color: "#6c757e" }}>State</Text>,
-            dataIndex: 'stateInfo',
+{
+    title: <Text strong style={{ color: "#6c757e" }}>State</Text>,
+        dataIndex: 'stateInfo',
             render: (stateInfo) => <>
                 {State(stateInfo.state)}
             </>,
-            width: 30,
+                width: 30,
         },
     ];
 
+const items: TabsProps['items'] = [
+    {
+        key: 'registers',
+        label: 'Registers',
+        children: <SupernodesRegisters />,
+    },
+    {
+        key: 'votes',
+        label: 'Votes',
+        children: <SupernodesVoteActions></SupernodesVoteActions>,
+    },
+    {
+        key: 'stateUpdateEvents',
+        label: 'State Update Events',
+        children: '[State Update Events:<Table:List>]',
+    },
+];
 
-    return (<>
-        <Title level={3}>SuperNodes</Title>
-        [Text : What is SuperNode ? || How to create SuperNode...]
-        <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
-            pagination={pagination} rowKey={(txVO) => txVO.id}
-            style={{marginTop:"20px"}}
-        />
-    </>)
+return (<>
+    <Title level={3}>SuperNodes</Title>
+    [Text : What is SuperNode ? || How to create SuperNode...]
+    <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
+        pagination={pagination} rowKey={(txVO) => txVO.id}
+        style={{ marginTop: "20px" }}
+    />
+    <Divider style={{ margin: '20px 0px' }} />
+    <Card>
+        <Tabs defaultActiveKey="1" items={items} />
+    </Card>
+</>)
 
 
 }

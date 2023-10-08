@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { NodeRegisterActionVO } from "../../services";
-import { fetchMasternodeRegisterActions } from "../../services/node";
+import { fetchSupernodeRegisterActions } from "../../services/node";
 import { TablePaginationConfig, Table, Typography, Row, Col, Tooltip } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import TransactionHash from "../../components/TransactionHash";
@@ -27,9 +27,9 @@ export default () => {
         responsive: true,
     });
 
-    const doFetchMasternodeResgiterActions = () => {
+    const doFetchSupernodeResgiterActions = () => {
         setLoading(true);
-        fetchMasternodeRegisterActions({
+        fetchSupernodeRegisterActions({
             current: pagination.current,
             pageSize: pagination.pageSize
         }).then(data => {
@@ -46,7 +46,7 @@ export default () => {
             const onChange = (page: number, pageSize: number) => {
                 pagination.pageSize = unconfirmed.length > 0 ? pageSize - unconfirmed.length : pageSize;
                 pagination.current = page;
-                doFetchMasternodeResgiterActions();
+                doFetchSupernodeResgiterActions();
             }
             if (pagination.current == 1) {
                 const total = data.total;
@@ -73,8 +73,22 @@ export default () => {
     }
 
     useEffect(() => {
-        doFetchMasternodeResgiterActions();
+        doFetchSupernodeResgiterActions();
     }, []);
+
+    function RenderAddress(address: string) {
+        let _addr = ChecksumAddress(address);
+        _addr = _addr.substring(0, 8) + "..." + _addr.substring(_addr.length - 8);
+        return <Row>
+            <Tooltip title={address}>
+                <Text>
+                    {_addr}
+                </Text>
+            </Tooltip>
+            <Paragraph style={{ float: "right", height: "0px" }} copyable={{ text: address }}>
+            </Paragraph>
+        </Row>;
+    }
 
     const columns: ColumnsType<NodeRegisterActionVO> = [
         {
@@ -115,17 +129,17 @@ export default () => {
             width: 150,
             render: (operator, vo) => {
                 return <>
-                    <Address address={operator} propVO={vo.operatorPropVO} />
+                    <Address address={operator} />
                 </>
             }
         },
         {
-            title: <Text strong style={{ color: "#6c757e" }}>Masternode</Text>,
+            title: <Text strong style={{ color: "#6c757e" }}>Supernode</Text>,
             dataIndex: 'address',
             width: 150,
             render: (address, vo) => {
                 return <>
-                    <Address address={address} propVO={vo.addressPropVO}/>
+                    <Address address={address} />
                 </>
             }
         },

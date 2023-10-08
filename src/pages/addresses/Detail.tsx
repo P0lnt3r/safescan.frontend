@@ -28,7 +28,7 @@ const { Title, Text, Paragraph, Link } = Typography;
 
 export default function () {
 
-    const { address } = useParams();
+    const address = useParams().address?.toLocaleLowerCase();
     const items: TabsProps['items'] = useMemo(() => {
         return [
             {
