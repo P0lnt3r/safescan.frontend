@@ -33,6 +33,7 @@ import PageChartAverageBlockTimes from './pages/statistics/Page-Chart-AverageBlo
 import PageChartMasternodes from './pages/statistics/Page-Chart-Masternodes';
 import PageChartSupernodes from './pages/statistics/Page-Chart-Supernodes';
 import Node_Detail from './pages/nodes/Node_Detail';
+import AccountRecord from './pages/assets/AccountRecord';
 
 const { Content } = Layout;
 
@@ -55,6 +56,7 @@ function App() {
               <Route path="/txsPending" index element={<PendingTxns />} />
               <Route path="/accounts" index element={<RankAddress />} />
               <Route path="/assets/accountrecords" index element={<AccountRecords />} />
+              <Route path="/assets/accountrecords/:recordId" index element={<AccountRecord />} />
               <Route path="/assets/erc20tokens" index element={<ERC20Tokens />} />
               <Route path="/assets/nft-tokens" index element={<NftTokens />} />
               <Route path="/assets/erc20txns" index element={<ERC20Transfers />} />

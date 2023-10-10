@@ -16,3 +16,14 @@ export async function fetchTxSafeAccountManagerAction( txHash : string ) : Promi
     const serverResponse = await POST( `${API_HOST}/accountmanager/${txHash}` ,{} );
     return serverResponse.data;
 }
+
+export async function fetchSafeAccountManagerActions( params : { recordId : string } | PageQueryDTO ) : Promise< PageResponseVO< SafeAccountManagerActionVO > > {
+    const serverResponse = await POST( `${API_HOST}/accountmanager/actions` , params );
+    return serverResponse.data;
+}
+
+export async function fetchAccountRecordById( id : string ) : Promise< AccountRecordVO > {
+    const serverResponse = await POST( `${API_HOST}/accountRecords/${id}` ,{} );
+    return serverResponse.data;
+}
+

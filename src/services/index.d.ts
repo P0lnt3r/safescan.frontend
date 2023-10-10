@@ -418,6 +418,7 @@ export interface SafeAccountManagerActionVO {
     amount: string,
     lockDay: number,
     lockId: string,
+    confirmed : number
 }
 
 export interface NodeRegisterActionVO {

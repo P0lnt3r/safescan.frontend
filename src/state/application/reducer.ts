@@ -61,8 +61,7 @@ export default createReducer(initialState, (builder) => {
                 address ,
                 abi : JSON.stringify(CommonAbi_Config[address as CommonAbiType])
             } )
-            
-            console.log("common abi:" , JSON.stringify(CommonAbi_Config[address as CommonAbiType]))
+            // console.log("common abi:" , JSON.stringify(CommonAbi_Config[address as CommonAbiType]))
         }
         state.abis.forEach(({ address, abi }) => {
             ////////////////////////////////////////////////////////////////////////////////////////////////
