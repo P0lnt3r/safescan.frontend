@@ -19,7 +19,7 @@ import SupernodesRegisters from './SupernodesRegisters';
 import { ChecksumAddress } from '../../components/Address';
 import SupernodesVoteActions from './SupernodesVoteActions';
 
-const { Title, Text, Link , Paragraph } = Typography;
+const { Title, Text, Link, Paragraph } = Typography;
 
 
 export default () => {
@@ -81,7 +81,7 @@ export default () => {
             render: (rank) => <>
                 {rank}
             </>,
-            width: 30,
+            width: 50,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Vote Obtained</Text>,
@@ -92,13 +92,13 @@ export default () => {
                     <Text strong>
                         {<EtherAmount raw={totalNum} fix={18} ignoreLabel></EtherAmount>}
                     </Text>
-                    <Text type='secondary' style={{ fontSize: "12px", float: "right"}}>
+                    <Text type='secondary' style={{ fontSize: "12px", float: "right" }}>
                         [{<EtherAmount raw={totalAmount} fix={18}></EtherAmount>}]
                     </Text>
-                    <Progress style={{width:"90%"}} percent={Number((Number(superNode.voteObtainedRate) * 100).toFixed(2))} showInfo={true} />
+                    <Progress style={{ width: "90%" }} percent={Number((Number(superNode.voteObtainedRate) * 100).toFixed(2))} showInfo={true} />
                 </>
             },
-            width: 180,
+            width: 150,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Address</Text>,
@@ -107,83 +107,81 @@ export default () => {
                 let checksumAddress = ChecksumAddress(address)
                 return <>
                     <RouterLink to={`/address/${checksumAddress}`}>
-                        <Link>{checksumAddress}</Link>
+                        <Link style={{ lineHeight: "42px" }}>{checksumAddress}</Link>
                     </RouterLink>
                     <Paragraph style={{
-                        display:"inline-block"
-                    }} copyable={{text:checksumAddress}}></Paragraph>
-                    
+                        display: "inline-block"
+                    }} copyable={{ text: checksumAddress }}></Paragraph>
                 </>
             },
-        width: 280,
+            width: 300,
         },
-{
-    title: <Text strong style={{ color: "#6c757e" }}>Name</Text>,
-        dataIndex: 'description',
+        {
+            title: <Text strong style={{ color: "#6c757e" }}>Name</Text>,
+            dataIndex: 'description',
             render: (description) => <>
                 {description}
             </>,
-                width: 150,
+            width: 130,
         },
-{
-    title: <Text strong style={{ color: "#6c757e" }}>IP</Text>,
-        dataIndex: 'ip',
+        {
+            title: <Text strong style={{ color: "#6c757e" }}>IP</Text>,
+            dataIndex: 'ip',
             render: (ip) => <>
                 {ip}
             </>,
-                width: 30,
+            width: 20,
         },
-
-{
-    title: <Text strong style={{ color: "#6c757e" }}>Amount</Text>,
-        dataIndex: 'amount',
+        {
+            title: <Text strong style={{ color: "#6c757e" }}>Amount</Text>,
+            dataIndex: 'amount',
             render: (amount) => <>
                 <Text strong>
                     {<EtherAmount raw={amount} fix={18}></EtherAmount>}
                 </Text>
             </>,
-                width: 150,
+            width: 150,
         },
-{
-    title: <Text strong style={{ color: "#6c757e" }}>State</Text>,
-        dataIndex: 'stateInfo',
+        {
+            title: <Text strong style={{ color: "#6c757e" }}>State</Text>,
+            dataIndex: 'stateInfo',
             render: (stateInfo) => <>
                 {State(stateInfo.state)}
             </>,
-                width: 30,
+            width: 10,
         },
     ];
 
-const items: TabsProps['items'] = [
-    {
-        key: 'registers',
-        label: 'Registers',
-        children: <SupernodesRegisters />,
-    },
-    {
-        key: 'votes',
-        label: 'Votes',
-        children: <SupernodesVoteActions></SupernodesVoteActions>,
-    },
-    {
-        key: 'stateUpdateEvents',
-        label: 'State Update Events',
-        children: '[State Update Events:<Table:List>]',
-    },
-];
+    const items: TabsProps['items'] = [
+        {
+            key: 'registers',
+            label: 'Registers',
+            children: <SupernodesRegisters />,
+        },
+        {
+            key: 'votes',
+            label: 'Votes',
+            children: <SupernodesVoteActions></SupernodesVoteActions>,
+        },
+        {
+            key: 'stateUpdateEvents',
+            label: 'State Update Events',
+            children: '[State Update Events:<Table:List>]',
+        },
+    ];
 
-return (<>
-    <Title level={3}>SuperNodes</Title>
-    [Text : What is SuperNode ? || How to create SuperNode...]
-    <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
-        pagination={pagination} rowKey={(txVO) => txVO.id}
-        style={{ marginTop: "20px" }}
-    />
-    <Divider style={{ margin: '20px 0px' }} />
-    <Card>
-        <Tabs defaultActiveKey="1" items={items} />
-    </Card>
-</>)
+    return (<>
+        <Title level={3}>SuperNodes</Title>
+        [Text : What is SuperNode ? || How to create SuperNode...]
+        <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
+            pagination={pagination} rowKey={(txVO) => txVO.id}
+            style={{ marginTop: "20px" }}
+        />
+        <Divider style={{ margin: '20px 0px' }} />
+        <Card>
+            <Tabs defaultActiveKey="1" items={items} />
+        </Card>
+    </>)
 
 
 }

@@ -81,7 +81,7 @@ export default () => {
             title: <Text strong style={{ color: "#6c757e" }}>Txn Hash</Text>,
             dataIndex: 'transactionHash',
             render: (val, vo) => <><TransactionHash blockNumber={vo.blockNumber} txhash={val}></TransactionHash></>,
-            width: 180,
+            width: 160,
             fixed: 'left',
         },
         {
@@ -96,7 +96,7 @@ export default () => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Block</Text>,
             dataIndex: 'blockNumber',
-            width: 80,
+            width: 60,
             render: (blockNumber, vo) => {
                 return <>
                     <BlockNumber blockNumber={blockNumber} confirmed={vo.confirmed}></BlockNumber>
@@ -112,7 +112,7 @@ export default () => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Voter</Text>,
             dataIndex: 'voterAddress',
-            width: 150,
+            width: 140,
             render: (voter, vo) => {
                 return <>
                     <Address address={voter} propVO={vo.voterAddressPropVO}/>
@@ -122,7 +122,7 @@ export default () => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Supernode</Text>,
             dataIndex: 'targetAddress',
-            width: 150,
+            width: 140,
             render: (address, vo) => {
                 return <>
                     <Address address={address} propVO={vo.targetAddressPropVO} />
@@ -132,14 +132,16 @@ export default () => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Amount</Text>,
             dataIndex: 'amountWeight',
-            width: 100,
-            render: (amount) => <Text strong><EtherAmount raw={amount.toString()} fix={6} /></Text>
+            width: 80,
+            render: (amount) => <Text strong><EtherAmount raw={amount.toString()} fix={6} ignoreLabel /></Text>
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Account Record ID</Text>,
             dataIndex: 'lockId',
-            width: 120,
-            render: (lockId) => <Text strong>{lockId}</Text>
+            width: 80,
+            render: (lockId) => <RouterLink to={`/assets/accountRecords/${lockId}`}>
+                <Link strong>{lockId}</Link>
+            </RouterLink>
         },
     ]
 

@@ -20,7 +20,7 @@ export default function () {
     const blockNumber = useBlockNumber();
     return (
         <>
-            <div style={{ padding: '1%' }}>
+            <div>
                 <Statistics />                
             </div>
             <LatestBlockTransactions />

@@ -112,7 +112,7 @@ export default () => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Operator</Text>,
             dataIndex: 'operator',
-            width: 150,
+            width: 140,
             render: (operator, vo) => {
                 return <>
                     <Address address={operator} propVO={vo.operatorPropVO} />
@@ -122,7 +122,7 @@ export default () => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Masternode</Text>,
             dataIndex: 'address',
-            width: 150,
+            width: 140,
             render: (address, vo) => {
                 return <>
                     <Address address={address} propVO={vo.addressPropVO}/>
@@ -138,8 +138,10 @@ export default () => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Account Record ID</Text>,
             dataIndex: 'lockId',
-            width: 120,
-            render: (lockId) => <Text strong>{lockId}</Text>
+            width: 70,
+            render: (lockId) => <RouterLink to={`/assets/accountRecords/${lockId}`}>
+                <Link strong>{lockId}</Link>
+            </RouterLink>
         },
     ]
 

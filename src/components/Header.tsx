@@ -48,8 +48,8 @@ const Header: React.FC = () => {
 
     const items: MenuItem[] = useMemo( () => {
         return [
-            getItem(t('home').toString(), '', <HomeOutlined />),
-            getItem(t('blockchain').toString(), 'blockchain', <SecurityScanOutlined />, [
+            getItem( "Home" , '', <HomeOutlined />),
+            getItem( "Blockchain" , 'blockchain', <SecurityScanOutlined />, [
                 getItem('View Pending Transactions', '/txsPending'),
                 getItem('View Transactions', '/txs'),
                 getItem('View Internal Transactions', '/txsInternal'),
@@ -59,7 +59,7 @@ const Header: React.FC = () => {
                 getItem('Masternodes', '/nodes/masternodes'),
                 getItem('Supernodes', '/nodes/supernodes'),
             ]),
-            getItem(t('assets').toString(), 'assets', <WalletOutlined />, [
+            getItem("Assets", 'assets', <WalletOutlined />, [
                 getItem('Account Records', '/assets/accountrecords'),
                 getItem('ERC20 Tokens', '/assets/erc20tokens'),
                 getItem('ERC20 Transfers', '/assets/erc20txns'),
@@ -98,9 +98,9 @@ const Header: React.FC = () => {
     };
 
     return (
-        <div style={{ backgroundColor: "white", padding: '1%', marginBottom: '5px' }}>
-            <Row>
-                <Col span={2} style={{ height: '48px', paddingLeft: '2%' }} >
+        <div style={{ backgroundColor: "white", padding: '1% 0%', marginBottom: '5px' }}>
+            <Row style={{paddingLeft:"7%",paddingRight:"7%"}}>
+                <Col span={2} style={{ height: '48px' }} >
                     <img src={SAFE_LOGO} style={{ display: "block", maxHeight: "100%" }}></img>
                 </Col>
                 <Col span={isMobile ? 20 : 10}>
@@ -132,7 +132,7 @@ const Header: React.FC = () => {
                                             setOpenMenu(!openMenu);   
                                         }
                                     }}
-                                    style={{ float:'right',width:isMobile ? "100%" : "615px" }}
+                                    style={{ float:'right',width:isMobile ? "100%" : "615px" , borderBottom:"0px solid #f0f0f0" }}
                                     items={items}
                                 />
                             </span>

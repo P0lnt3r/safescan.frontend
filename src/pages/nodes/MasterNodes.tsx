@@ -16,8 +16,9 @@ import { format } from '../../utils/NumberFormat';
 import { fetchMasterNodes, fetchSuperNodes } from '../../services/node';
 import { PresetStatusColorType } from 'antd/es/_util/colors';
 import MasternodesRegisters from './MasternodesRegisters';
+import { ChecksumAddress } from '../../components/Address';
 
-const { Title, Text, Link } = Typography;
+const { Title, Text, Link, Paragraph } = Typography;
 
 
 export default () => {
@@ -78,17 +79,25 @@ export default () => {
             render: (id) => <>
                 {id}
             </>,
-            width: 40,
+            width: 50,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Address</Text>,
             dataIndex: 'addr',
-            render: (address) => <>
-                <RouterLink to={`/address/${address.toLowerCase()}`}>
-                    <Link>{address.toLowerCase()}</Link>
-                </RouterLink>
-            </>,
-            width: 200,
+            render: (address) => {
+                let checksumAddress = ChecksumAddress(address)
+                return <>
+                    <Text>
+                        <RouterLink  to={`/node/${checksumAddress}`}>
+                            <Link style={{lineHeight:"42px"}}>{checksumAddress}</Link>
+                        </RouterLink>
+                        <Paragraph style={{
+                            display: "inline-block"
+                        }} copyable={{ text: checksumAddress }}></Paragraph>
+                    </Text>
+                </>
+            },
+            width: 250,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Name</Text>,
@@ -96,7 +105,7 @@ export default () => {
             render: (description) => <>
                 {description}
             </>,
-            width: 160,
+            width: 150,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>IP</Text>,
@@ -149,7 +158,7 @@ export default () => {
         />
         <Divider style={{ margin: '20px 0px' }} />
         <Card>
-            <Tabs defaultActiveKey="1" items={items}/>
+            <Tabs defaultActiveKey="1" items={items} />
         </Card>
     </>)
 

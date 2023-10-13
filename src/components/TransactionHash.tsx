@@ -34,11 +34,11 @@ export default (
             <RouterLink to={`/tx/${txhash}`}>
                 {
                     blockNumber && blockNumber > dbStoredBlockNumber &&
-                    <Link italic underline ellipsis style={{width:'80%' , marginLeft:"2px"}}>{txhash}</Link>
+                    <Link italic underline ellipsis style={{width:'90%' , marginLeft:"2px"}}>{txhash}</Link>
                 }
                 {
                     ((blockNumber && blockNumber <= dbStoredBlockNumber) || !blockNumber) &&
-                    <Link ellipsis style={{width:'80%' , marginLeft:"2px"}}>{txhash}</Link>
+                    <Link ellipsis style={{width:'90%' , marginLeft:"2px"}}>{txhash}</Link>
                 }
             </RouterLink>
         </Tooltip>

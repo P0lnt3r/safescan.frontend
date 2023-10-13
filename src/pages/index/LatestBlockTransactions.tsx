@@ -27,7 +27,7 @@ export default function () {
     return (
         <>
             <Row>
-                <Col className="gutter-row" span={24} xl={12} style={{ padding: '1%' }}>
+                <Col className="gutter-row" span={24} xl={12} style={{ paddingTop:"1%",paddingRight:"1%" }}>
                     <Card title="Latest Blocks">
                         <List
                             itemLayout="horizontal"
@@ -114,7 +114,7 @@ export default function () {
                     </Card>
                 </Col>
 
-                <Col className="gutter-row" span={24} xl={12} style={{ padding: '1%' }}>
+                <Col className="gutter-row" span={24} xl={12} style={{ paddingTop:"1%",paddingLeft:"1%" }}>
                     <Card title="Latest Transactions">
                         <List
                             itemLayout="horizontal"

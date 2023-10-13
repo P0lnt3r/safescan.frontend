@@ -31,14 +31,15 @@ import Address from "../../components/Address";
 import BlockNumber from "../../components/BlockNumber";
 
 const { Text, Link, Title } = Typography;
-const DEFAULT_PAGESIZE = 20;
+const DEFAULT_PAGESIZE = 10;
 const EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
 
 export function RenderAccountRecordAmount(accountRecord: AccountRecordVO, blockNumber: number) {
-    const { amount, lockDay, unlockTimestamp, unfreezeHeight, releaseHeight } = accountRecord;
+    const { amount, lockDay, unlockTimestamp, unfreezeHeight, releaseHeight, withdrawHeight, withdrawTimestamp, withdrawTxHash } = accountRecord;
     const hasLock = lockDay > 0;
     const isLocked = hasLock && !unlockTimestamp;
     const isFreezed = (blockNumber < unfreezeHeight || blockNumber < releaseHeight);
+    const isWithdrawed = withdrawHeight && withdrawHeight > 0;
     return <>
         {
             isFreezed && <Text strong style={{ color: "rgb(6, 58, 156)" }}>
@@ -51,28 +52,54 @@ export function RenderAccountRecordAmount(accountRecord: AccountRecordVO, blockN
             </Text>
         }
         {
-            !isFreezed && !isLocked && <Text strong type="success" >
+            !isFreezed && !isLocked && !isWithdrawed && <Text strong type="success" >
                 <EtherAmount raw={amount} />
             </Text>
+        }
+        {
+            isWithdrawed && <>
+                <Text delete style={{color:"#dfdfdf"}}>
+                    <EtherAmount raw={amount} />
+                </Text>
+            </>
         }
     </>
 }
 
-export function RenderAccountRecordId(accountRecord: AccountRecordVO, blockNumber: number, options: { showID?: boolean }) {
-    const { lockId, unlockTimestamp, lockDay, unfreezeHeight, releaseHeight } = accountRecord;
+export function RenderAccountRecordId(accountRecord: AccountRecordVO, blockNumber: number, options?: {
+    showID?: boolean,
+    hasLink?: boolean
+}) {
+    const { lockId, unlockTimestamp, lockDay, unfreezeHeight, releaseHeight , withdrawHeight } = accountRecord;
     return <>
         {
             (!unlockTimestamp && lockDay > 0) && <LockOutlined />
         }
         {
-            unlockTimestamp && <UnlockOutlined />
+            unlockTimestamp && !withdrawHeight && <UnlockOutlined />
         }
         {
             (blockNumber < unfreezeHeight || blockNumber < releaseHeight) &&
             <HourglassTwoTone />
         }
         {
-            (options && options.showID) && <>{lockId}</>
+            !options && <>
+                <RouterLink to={`/assets/accountRecords/${lockId}`}>
+                    <Link strong>{lockId}</Link>
+                </RouterLink>
+            </>
+        }
+        {
+            options && options.showID && !options.hasLink && <>
+                <Text strong>{lockId}</Text>
+            </>
+        }
+        {
+            options && options.showID && !options.hasLink && <>
+                <RouterLink to={`/assets/accountRecords/${lockId}`}>
+                    <Link strong>{lockId}</Link>
+                </RouterLink>
+            </>
         }
     </>
 }
@@ -103,10 +130,10 @@ function RenderMemberOfNode(accountRecord: AccountRecordVO) {
     const isEmpty = EMPTY_ADDRESS == specialAddress;
     return <>
         <Row>
-            <Col span={4}>
+            <Col span={6}>
                 <Text strong>Node:</Text>
             </Col>
-            <Col span={20}>
+            <Col span={18}>
                 {
                     isEmpty && <Text type="secondary">[EMPTY]</Text>
                 }
@@ -116,21 +143,23 @@ function RenderMemberOfNode(accountRecord: AccountRecordVO) {
             </Col>
         </Row>
         <Row>
-            <Col span={4}>
+            <Col span={6}>
                 <Text strong>Txn:</Text>
             </Col>
-            <Col span={20}>
+            <Col span={18}>
                 {
-                    registerActionTxHash &&
-                    <TransactionHash txhash={registerActionTxHash}></TransactionHash>
+                    registerActionTxHash && <TransactionHash txhash={registerActionTxHash}></TransactionHash>
+                }
+                {
+                    !isEmpty && !registerActionTxHash && <Text strong>GENESIS</Text>
                 }
             </Col>
-        </Row>
+        </Row >
         <Row>
-            <Col span={4}>
+            <Col span={6}>
                 <Text strong>Unfreeze:</Text>
             </Col>
-            <Col span={20}>
+            <Col span={18}>
                 <Tooltip title={unfreezeHeight}>
                     {
                         !unfreezeTimestamp &&
@@ -151,15 +180,16 @@ function RenderMemberOfNode(accountRecord: AccountRecordVO) {
 function RenderVoteForNode(accountRecord: AccountRecordVO) {
     const {
         votedAddress, votedAddressPropVO, voteAction, voteActionTxHash,
-        voteHeight, voteTimestamp, releaseHeight, releaseTimestamp
+        voteHeight, voteTimestamp, releaseHeight, releaseTimestamp,
+        withdrawTxHash
     } = accountRecord;
-    const isEmpty = EMPTY_ADDRESS == votedAddress;
+    const isEmpty = withdrawTxHash != null || EMPTY_ADDRESS == votedAddress;
     return <>
         <Row>
-            <Col span={4}>
+            <Col span={6}>
                 <Text strong>Node:</Text>
             </Col>
-            <Col span={20}>
+            <Col span={18}>
                 {
                     isEmpty && <Text type="secondary">[EMPTY]</Text>
                 }
@@ -169,30 +199,30 @@ function RenderVoteForNode(accountRecord: AccountRecordVO) {
             </Col>
         </Row>
         <Row>
-            <Col span={4}>
+            <Col span={6}>
                 <Text strong>Txn:</Text>
             </Col>
-            <Col span={20}>
+            <Col span={18}>
                 {
-                    voteActionTxHash &&
+                    voteActionTxHash && !isEmpty &&
                     <TransactionHash txhash={voteActionTxHash}></TransactionHash>
                 }
             </Col>
         </Row>
         <Row>
-            <Col span={4}>
+            <Col span={6}>
                 <Text strong>Unfreeze:</Text>
             </Col>
-            <Col span={20}>
+            <Col span={18}>
                 <Tooltip title={releaseHeight}>
                     {
-                        !releaseTimestamp &&
+                        !releaseTimestamp && !isEmpty &&
                         <Text strong style={{ color: "rgb(6, 58, 156)" }}>
                             <BlockNumberFormatTime blockNumber={releaseHeight} />
                         </Text>
                     }
                     {
-                        releaseTimestamp &&
+                        releaseTimestamp && !isEmpty &&
                         <Text type="success">{DateFormat(releaseTimestamp * 1000)}</Text>
                     }
                 </Tooltip>
@@ -213,7 +243,7 @@ export default () => {
     const [pagination, setPagination] = useState<TablePaginationConfig>({
         current: 1,
         pageSize: DEFAULT_PAGESIZE,
-        position: ["topRight"],
+        position: ["bottomRight"],
         pageSizeOptions: [],
         responsive: true,
     });
@@ -347,21 +377,20 @@ export default () => {
                     </Row>
                     <Divider style={{ marginTop: "12px" }} />
                     <Row>
-                        <Col span={4}>
+                        <Col span={6}>
                             <Text strong>Owner:</Text>
                         </Col>
-                        <Col span={20}>
+                        <Col span={18}>
                             {
-                                accountRecord?.address &&
-                                <Address address={accountRecord?.address} />
+                                accountRecord && <Address address={accountRecord.address} />
                             }
                         </Col>
                     </Row>
                     <Row>
-                        <Col span={4}>
+                        <Col span={6}>
                             <Text strong>Amount:</Text>
                         </Col>
-                        <Col span={20}>
+                        <Col span={18}>
                             {
                                 accountRecord?.amount && <>
                                     {RenderAccountRecordId(accountRecord, blockNumber, { showID: false })}
@@ -372,10 +401,10 @@ export default () => {
                         </Col>
                     </Row>
                     <Row>
-                        <Col span={4}>
+                        <Col span={6}>
                             <Text strong>Unlock:</Text>
                         </Col>
-                        <Col span={20}>
+                        <Col span={18}>
                             {
                                 accountRecord && <>
                                     {RenderAccountRecordUnlockHeight(accountRecord)}
@@ -383,6 +412,27 @@ export default () => {
                             }
                         </Col>
                     </Row>
+                    {
+                        accountRecord && accountRecord.withdrawTimestamp &&
+                        <Row>
+                            <Col span={6}>
+                                <Text strong>Withdraw:</Text>
+                            </Col>
+                            <Col span={18}>
+                                {
+                                    accountRecord && <Text strong underline>
+                                        <Tooltip title={accountRecord.withdrawHeight}>
+                                            <RouterLink to={`/tx/${accountRecord.withdrawTxHash}`}>
+                                                <Text>
+                                                    {DateFormat(accountRecord.withdrawTimestamp * 1000)}
+                                                </Text>
+                                            </RouterLink>
+                                        </Tooltip>
+                                    </Text>
+                                }
+                            </Col>
+                        </Row>
+                    }
                 </Card>
             </Col>
             <Col span={8} style={{ padding: "10px" }}>

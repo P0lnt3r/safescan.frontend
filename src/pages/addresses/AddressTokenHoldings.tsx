@@ -58,7 +58,7 @@ export default () => {
             </Col>
         </Row>
         <Row>
-            <Col span={4}>
+            <Col span={6}>
                 <div style={{
                     height: "120px",
                     borderRight: "1px solid #dfd2d2"
@@ -72,11 +72,11 @@ export default () => {
                                     ETHER_Combine([addressVO.balance.balance, addressVO.balance.totalAmount], 18)
                                 }
                             </>
-                        }
+                        } SAFE
                     </Text>
                 </div>
             </Col>
-            <Col span={4} style={{
+            <Col span={6} style={{
                 marginLeft: "15px"
             }}>
                 <div style={{
@@ -92,7 +92,7 @@ export default () => {
                     </Text>
                 </div>
             </Col>
-            <Col span={5} style={{
+            <Col span={6} style={{
                 marginLeft: "15px"
             }}>
                 <div style={{

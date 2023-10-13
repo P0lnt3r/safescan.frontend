@@ -29,6 +29,7 @@ import { FilterValue, SorterResult, TableCurrentDataSource, TablePaginationConfi
 import { DataSourceItemType } from "antd/lib/auto-complete";
 import { useBlockNumber } from "../../state/application/hooks";
 import Address from "../../components/Address";
+import { RenderAccountRecordAmount, RenderAccountRecordId } from "./AccountRecord";
 
 const { Text, Link, Title } = Typography;
 const { Column, ColumnGroup } = Table;
@@ -46,7 +47,7 @@ interface ExpandedAccountRecordDataType {
     unfreezeHeight: number
     unfreezeTimestamp: number
 }
-const DEFAULT_PAGESIZE = 20;
+const DEFAULT_PAGESIZE = 10;
 
 export default () => {
 
@@ -56,7 +57,7 @@ export default () => {
     const [pagination, setPagination] = useState<TablePaginationConfig>({
         current: 1,
         pageSize: DEFAULT_PAGESIZE,
-        position: ["topRight", "bottomRight"],
+        position: ["bottomRight"],
         pageSizeOptions: [],
         responsive: true,
     });
@@ -108,21 +109,25 @@ export default () => {
     const expandedRowRender = (accountRecord: AccountRecordVO) => {
         const columns: TableColumnsType<ExpandedAccountRecordDataType> = [
             {
-                title: 'Type', dataIndex: 'type', key: 'type', width: 150, render: (type) => {
+                title: 'Type', dataIndex: 'type', key: 'type', width: 120, render: (type) => {
                     return <>
                         <Text strong style={{ color: "#6c757e" }}>{type}</Text>
                     </>
                 }
             },
-            { title: 'Action', dataIndex: 'action', key: 'action', width: 150 },
+            { title: 'Action', dataIndex: 'action', key: 'action', width: 120 },
             {
-                title: 'Transaction Hash', dataIndex: 'transactionHash', width: 400,
+                title: 'Transaction Hash', dataIndex: 'transactionHash', width: 200,
                 render: (transactionHash) => {
                     const txHashRender = () => {
                         if (transactionHash && transactionHash == EMPTY_ADDRESS) {
-                            return <Text strong>GENESIS</Text>
+                            return <div style={{ width: "400px" }}>
+                                <Text strong>GENESIS</Text>
+                            </div>
                         }
-                        return <TransactionHash txhash={transactionHash}></TransactionHash>
+                        return <div style={{ width: "400px" }}>
+                            <TransactionHash txhash={transactionHash}></TransactionHash>
+                        </div>
                     }
                     return txHashRender();
                 },
@@ -132,7 +137,10 @@ export default () => {
                 render: (nodeAddress, expandedAccountRecord) => {
                     const hasLink = true;
                     return <>
-                        <Address address={nodeAddress} propVO={expandedAccountRecord.nodeAddressPropVO} style={{hasLink}} />
+                        <div style={{width:"250px"}}>
+                            <Address address={nodeAddress} propVO={expandedAccountRecord.nodeAddressPropVO} style={{ hasLink }} />
+                        </div>
+
                     </>
                 },
             },
@@ -175,11 +183,11 @@ export default () => {
             proxyHeight, proxyTimestamp,
 
             votedAddress, votedAddressPropVO, voteAction, voteActionTxHash,
-            voteHeight, voteTimestamp, releaseHeight, releaseTimestamp
+            voteHeight, voteTimestamp, releaseHeight, releaseTimestamp,
 
         } = accountRecord;
         const data: ExpandedAccountRecordDataType[] = [];
-        if (specialAddress != EMPTY_ADDRESS) {
+        if (specialAddress != EMPTY_ADDRESS ) {
             data.push({
                 key: "",
                 type: "Member",
@@ -193,7 +201,7 @@ export default () => {
                 unfreezeTimestamp
             });
         }
-        if (votedAddress != EMPTY_ADDRESS) {
+        if (votedAddress != EMPTY_ADDRESS ) {
             data.push({
                 key: "",
                 type: "Vote",
@@ -207,7 +215,7 @@ export default () => {
                 unfreezeTimestamp: releaseTimestamp
             })
         }
-        if (proxyMasternode != undefined && proxyMasternode != EMPTY_ADDRESS) {
+        if (proxyMasternode != undefined && proxyMasternode != EMPTY_ADDRESS ) {
             data.push({
                 key: "",
                 type: "Proxy",
@@ -225,22 +233,21 @@ export default () => {
     };
 
     return <>
-        <Button onClick={() => {
-            pagination.current = 1;
-            doFetchAccountRecords();
-        }}>Refresh</Button>
+        <Title level={3}>Account Records</Title>
         <Table dataSource={tableData} scroll={{ x: 800 }}
             expandable={{
                 expandedRowRender, rowExpandable: (accountRecordVO) => {
                     const {
                         specialAddress,
                         proxyMasternode,
-                        votedAddress
+                        votedAddress,
+                        withdrawTxHash
                     } = accountRecordVO;
                     return (
                         (specialAddress != undefined && specialAddress != EMPTY_ADDRESS)
                         || (proxyMasternode != undefined && proxyMasternode != EMPTY_ADDRESS)
                         || (votedAddress != undefined && votedAddress != EMPTY_ADDRESS)
+                        && !withdrawTxHash
                     )
                 }
             }}
@@ -250,51 +257,26 @@ export default () => {
             <Column title={<Text strong style={{ color: "#6c757e" }}>ID</Text>}
                 dataIndex="lockId"
                 render={(lockId, accountRecord: AccountRecordVO) => {
-                    const { unlockTimestamp, lockDay, unfreezeHeight, releaseHeight } = accountRecord;
                     return <>
                         {
-                            (!unlockTimestamp && lockDay > 0) && <LockOutlined />
+                            RenderAccountRecordId(accountRecord, blockNumber)
                         }
-                        {
-                            unlockTimestamp && <UnlockOutlined />
-                        }
-                        {
-                            (blockNumber < unfreezeHeight || blockNumber < releaseHeight) &&
-                            <HourglassTwoTone />
-                        }
-                        {lockId}
                     </>
                 }}
                 sorter
-                width={60}
+                width={50}
                 fixed
             />
             <Column title={<Text strong style={{ color: "#6c757e" }}>Amount</Text>}
                 dataIndex="amount"
                 render={(amount, accountRecord: AccountRecordVO) => {
-                    const { lockDay, unlockTimestamp, unfreezeHeight, releaseHeight } = accountRecord;
-                    const hasLock = lockDay > 0;
-                    const isLocked = hasLock && !unlockTimestamp;
-                    const isFreezed = (blockNumber < unfreezeHeight || blockNumber < releaseHeight);
                     return <>
                         {
-                            isFreezed && <Text strong style={{ color: "rgb(6, 58, 156)" }}>
-                                <EtherAmount raw={amount} />
-                            </Text>
-                        }
-                        {
-                            !isFreezed && isLocked && <Text strong type="secondary" >
-                                <EtherAmount raw={amount} />
-                            </Text>
-                        }
-                        {
-                            !isFreezed && !isLocked && <Text strong type="success" >
-                                <EtherAmount raw={amount} />
-                            </Text>
+                            RenderAccountRecordAmount(accountRecord, blockNumber)
                         }
                     </>
                 }}
-                width={80}
+                width={60}
                 sorter
             />
 
@@ -302,9 +284,8 @@ export default () => {
                 dataIndex="address"
                 render={(address, accountRecord: AccountRecordVO) => {
                     const { addressPropVO } = accountRecord;
-                    return <>
-                        <Address address={address} propVO={addressPropVO} />
-                    </>
+                    const isWithdrawed = accountRecord.withdrawTxHash != undefined;
+                    return <Address address={address} propVO={addressPropVO} style={ {color : isWithdrawed ? "#dfdfdf" : undefined , hasLink:true}  } />
                 }}
                 width={80}
             />
@@ -312,14 +293,14 @@ export default () => {
             <Column title={<Text strong style={{ color: "#6c757e" }}>Member Of Node</Text>}
                 dataIndex="specialAddress"
                 render={(specialAddress, accountRecord: AccountRecordVO) => {
-                    const isEmpty = specialAddress == EMPTY_ADDRESS;
+                    const isEmpty = specialAddress == EMPTY_ADDRESS || accountRecord.withdrawTxHash;
                     const hasLink = true;
                     return <>
                         {
                             isEmpty && <Text type="secondary">[EMPTY]</Text>
                         }
                         {
-                            !isEmpty && <Address address={specialAddress} propVO={accountRecord.nodeAddressPropVO} style={{hasLink}} />
+                            !isEmpty && <Address address={specialAddress} propVO={accountRecord.nodeAddressPropVO} style={{ hasLink }} />
                         }
                     </>
                 }}
@@ -329,14 +310,14 @@ export default () => {
             <Column title={<Text strong style={{ color: "#6c757e" }}>Vote For Node</Text>}
                 dataIndex="votedAddress"
                 render={(votedAddress, accountRecord: AccountRecordVO) => {
-                    const isEmpty = votedAddress == EMPTY_ADDRESS;
+                    const isEmpty = votedAddress == EMPTY_ADDRESS || accountRecord.withdrawTxHash;
                     const hasLink = true;
                     return <>
                         {
                             isEmpty && <Text type="secondary">[EMPTY]</Text>
                         }
                         {
-                            !isEmpty && <Address address={votedAddress} propVO={accountRecord.votedAddressPropVO} style={{hasLink}} />
+                            !isEmpty && <Address address={votedAddress} propVO={accountRecord.votedAddressPropVO} style={{ hasLink }} />
                         }
                     </>
                 }}
@@ -346,37 +327,32 @@ export default () => {
             <Column title={<Text strong style={{ color: "#6c757e" }}>Create Time</Text>}
                 dataIndex="startHeight"
                 render={(startHeight, accountRecord: AccountRecordVO) => {
+                    const isWithdrawed = accountRecord.withdrawTxHash != undefined;
                     return <>
                         <Tooltip title={startHeight}>
                             <RouterLink to={`/tx/${accountRecord.startTxHash}`}>
-                                <Link ellipsis>{DateFormat(accountRecord.startTimestamp * 1000)}</Link>
+                                <Link ellipsis style={ isWithdrawed ? { color : "#dfdfdf" } : {} } >{DateFormat(accountRecord.startTimestamp * 1000)}</Link>
                             </RouterLink>
                         </Tooltip>
                     </>
                 }}
-                width={80}
-            />
-            <Column title={<Text strong style={{ color: "#6c757e" }}>Lock Day</Text>}
-                dataIndex="lockDay"
-                render={(lockDay) => {
-                    return <Text>{lockDay}</Text>
-                }}
-                width={40}
+                width={60}
             />
             <Column title={<Text strong style={{ color: "#6c757e" }}>Unlock</Text>}
                 dataIndex="unlockHeight"
                 render={(unlockHeight, accountRecord: AccountRecordVO) => {
                     const unlockTimestamp = accountRecord.unlockTimestamp;
+                    const isWithdrawed = accountRecord.withdrawTxHash != undefined;
                     return <>
                         <Tooltip title={unlockHeight}>
                             {
-                                !unlockTimestamp && <Text strong type="secondary">
+                                !unlockTimestamp && <Text style={ isWithdrawed ? { color : "#dfdfdf" } : {} } strong type="secondary">
                                     <BlockNumberFormatTime blockNumber={unlockHeight} />
                                 </Text>
                             }
                             {
                                 unlockTimestamp &&
-                                <Text type="success" strong>{DateFormat(unlockTimestamp * 1000)}</Text>
+                                <Text style={ isWithdrawed ? { color : "#dfdfdf" } : {} } type="success" strong>{DateFormat(unlockTimestamp * 1000)}</Text>
                             }
                         </Tooltip>
                     </>

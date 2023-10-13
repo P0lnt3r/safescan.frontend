@@ -24,7 +24,8 @@ export default ({ address, propVO, style }: {
     style?: {
         hasLink?: boolean,
         forceTag?: boolean,
-        noTip?: boolean
+        noTip?: boolean,
+        color?: string
     }
 }) => {
     const _propVO = useAddressProp(address);
@@ -71,6 +72,13 @@ export default ({ address, propVO, style }: {
     const checksumAddress = ChecksumAddress(address);
     const ellipsisAddress = checksumAddress.substring(0, 8) + "..." + checksumAddress.substring(checksumAddress.length - 8);
 
+    const textStyle : any = {
+        maxWidth:"90%"
+    }
+    if ( style && style.color ){
+        textStyle.color = style.color;
+    }
+
     return <>
         <Text>
             {RenderIcon()}
@@ -78,17 +86,17 @@ export default ({ address, propVO, style }: {
                 {
                     (style && !style.hasLink) && <>
                         {
-                            tag && <Text ellipsis style={{ maxWidth: "90%" }}>
+                            tag && <Text ellipsis style={ textStyle }>
                                 {tag}
                             </Text>
                         }
                         {
-                            !tag && !style.forceTag && <Text ellipsis style={{ maxWidth: "90%" }}>
-                                {address}
+                            !tag && !style.forceTag && <Text ellipsis style={ textStyle }>
+                                {ellipsisAddress}
                             </Text>
                         }
                         {
-                            !tag && style.forceTag && <Text ellipsis strong style={{ maxWidth: "90%" }}>
+                            !tag && style.forceTag && <Text ellipsis strong style={ textStyle }>
                                 {type?.toLocaleUpperCase()}
                             </Text>
                         }
@@ -98,12 +106,12 @@ export default ({ address, propVO, style }: {
                     (!style || style.hasLink == true) && <>
                         <RouterLink to={`/address/${checksumAddress}`}>
                             {
-                                tag && <Link ellipsis style={{ maxWidth: "90%" }}>
+                                tag && <Link ellipsis style={ textStyle }>
                                     {tag}
                                 </Link>
                             }
                             {
-                                !tag && <Link ellipsis style={{ maxWidth: "90%" }}>
+                                !tag && <Link ellipsis style={ textStyle }>
                                     {ellipsisAddress}
                                 </Link>
                             }
