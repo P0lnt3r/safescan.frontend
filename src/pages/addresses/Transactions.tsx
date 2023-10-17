@@ -105,7 +105,7 @@ export default ({ address }: { address: string }) => {
             dataIndex: 'hash',
             key: 'hash',
             render: (val, txVO) => <><TransactionHash blockNumber={txVO.blockNumber} txhash={val} status={txVO.status}></TransactionHash></>,
-            width: 150,
+            width: 140,
             fixed: 'left',
         },
         {
@@ -117,7 +117,7 @@ export default ({ address }: { address: string }) => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Block</Text>,
             dataIndex: 'blockNumber',
-            width: 80,
+            width: 70,
             render: (blockNumber,txVO) => <BlockNumber blockNumber={blockNumber} confirmed={txVO.confirmed}></BlockNumber> 
         },
         {
@@ -129,7 +129,7 @@ export default ({ address }: { address: string }) => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>From</Text>,
             dataIndex: 'from',
-            width: 150,
+            width: 160,
             render: (from, txVO) => {
                 const { fromPropVO } = txVO;
                 const hasLink = !(address == from);
@@ -165,7 +165,7 @@ export default ({ address }: { address: string }) => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Value</Text>,
             dataIndex: 'value',
-            width: 150,
+            width: 120,
             render: (value) => <Text strong><EtherAmount raw={value} /></Text>
         },
         // {

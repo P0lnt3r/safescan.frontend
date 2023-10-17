@@ -16,6 +16,7 @@ import { format } from '../../utils/NumberFormat';
 import { JSBI } from '@uniswap/sdk';
 import { useTranslation } from 'react-i18next';
 import { SorterResult } from 'antd/es/table/interface';
+import Address, { ChecksumAddress } from '../../components/Address';
 const { Title, Text, Link } = Typography;
 const DEFAULT_PAGESIZE = 20;
 
@@ -93,15 +94,19 @@ export default () => {
                     </>
                 }
                 <RouterLink to={`/address/${address}`}>
-                    <Link>{address}</Link>
+                    <Link>{ChecksumAddress(address)}</Link>
                 </RouterLink>
             </>,
             width: 140,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Name Tag</Text>,
-            dataIndex: 'addressPropVO',
-            render: (addressProp) => <>{addressProp?.tag}</>,
+            dataIndex: 'tag',
+            render: (tag, vo) => <>
+                {
+                    vo.addressPropVO && <Address address={vo.address} propVO={vo.addressPropVO} style={{ hasLink: false }}></Address>
+                }
+            </>,
             width: 70,
         },
         {
@@ -131,37 +136,34 @@ export default () => {
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Before 24H</Text>,
-            dataIndex: 'changeBefore30D',
-            render: (changeBefore30D, vo) => {
-
-                if ( !changeBefore30D ){
-                    changeBefore30D = vo.balance;
+            dataIndex: 'changeBefore24H',
+            render: (changeBefore, vo) => {
+                if (!changeBefore) {
+                    changeBefore = vo.balance;
                 }
                 let changeDown = false;
-                if (changeBefore30D.indexOf("-") >= 0) {
-                    changeBefore30D = changeBefore30D.substring(changeBefore30D.indexOf("-") + 1);
+                if (changeBefore.indexOf("-") >= 0) {
+                    changeBefore = changeBefore.substring(changeBefore.indexOf("-") + 1);
                     changeDown = true;
                 }
-                const changeAmount = JSBI.BigInt(changeBefore30D);
+                const changeAmount = JSBI.BigInt(changeBefore);
                 const hasChange = !JSBI.EQ(changeAmount, 0);
                 const changeUp = hasChange && !changeDown;
-
-                return <>  
-
+                return <>
                     <Row>
                         {
                             hasChange && <>
                                 <Col span={24}>
                                     <Text strong style={{ color: changeUp ? "green" : "red" }}>
-                                        {changeUp   && "+"}
+                                        {changeUp && "+"}
                                         {changeDown && "-"}
                                         <EtherAmount raw={changeAmount.toString()} fix={6} />
                                     </Text>
                                 </Col>
                                 <Col span={24}>
                                     <Text strong style={{ fontSize: "12px", color: changeUp ? "green" : "red" }}>
-                                        {vo.changeBefore30DPercent && changeUp && "+"}
-                                        <span>{vo.changeBefore30DPercent}</span>
+                                        {vo.changeBefore24HPercent && changeUp && "+"}
+                                        <span>{vo.changeBefore24HPercent}</span>
                                     </Text>
                                 </Col>
                             </>

@@ -104,38 +104,42 @@ export default () => {
             dataIndex: 'blockNumber',
             render: (blockNumber, txVO) => <BlockNumber blockNumber={blockNumber} confirmed={txVO.confirmed}></BlockNumber>,
             fixed: true,
-            width: 100
+            width: 80
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Date</Text>,
             dataIndex: 'timestamp',
             render: (val) => <>{DateFormat(val * 1000)}</>,
-            width: 180
+            width: 160
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Parent Txn Hash</Text>,
             dataIndex: 'transactionHash',
             render: (val, txVO) => <TransactionHash txhash={val} status={txVO.status} blockNumber={txVO.blockNumber}></TransactionHash>,
+            width:240,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Type</Text>,
             dataIndex: 'type',
             render: (val, txVO) => <>{val}</>,
-            width: 140
+            width: 80
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>From</Text>,
             dataIndex: 'from',
+            width:200,
             render: (from, txVO) => <Address address={from} propVO={txVO.fromPropVO} />,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>To</Text>,
             dataIndex: 'to',
+            width:200,
             render: (to, txVO) => <Address address={to} propVO={txVO.toPropVO} />,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Value</Text>,
             dataIndex: 'value',
+            width:220,
             render: (val, txVO) => <>
                 <Text strong><EtherAmount raw={val} fix={18} /></Text>
             </>,

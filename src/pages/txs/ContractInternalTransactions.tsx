@@ -20,6 +20,7 @@ import {
 } from '@ant-design/icons';
 import { useCallback } from 'react';
 import { isMobile } from 'react-device-detect';
+import Address, { ChecksumAddress } from '../../components/Address';
 
 const { Text, Link } = Typography;
 
@@ -87,11 +88,7 @@ export default ({
             render: (from, txVO) =>
                 <Row>
                     <Col span={22}>
-                        <Tooltip title={from}>
-                            <RouterLink to={`/address/${from}`}>
-                                <Link ellipsis>{from}</Link>
-                            </RouterLink>
-                        </Tooltip>
+                        <Address address={from} propVO={txVO.fromPropVO} />
                     </Col>
                     <Col span={2} >
                         <ArrowRightOutlined />
@@ -114,11 +111,7 @@ export default ({
                         </Col>
                     }
                     <Col span={22}>
-                        <Tooltip title={to}>
-                            <RouterLink to={`/address/${to}`}>
-                                <Link ellipsis>{to}</Link>
-                            </RouterLink>
-                        </Tooltip>
+                        <Address address={to} propVO={txVO.toPropVO} />
                     </Col>
                 </Row>
             ,
@@ -147,20 +140,20 @@ export default ({
     return <>
         <Text>
             The contract call <Text strong>From
-                {from && <Tooltip title={from} color='black'><RouterLink to={`/address/${from}`}>
+                {from && <Tooltip title={from} color='black'><RouterLink to={`/address/${ChecksumAddress(from)}`}>
                     <Link ellipsis style={{
                         marginLeft: "4px",
                         marginRight: "4px",
-                        width: "200px"
-                    }}>{from}</Link>
+                        width: "240px"
+                    }}>{ChecksumAddress(from)}</Link>
                 </RouterLink></Tooltip>}
                 To
-                {to && <Tooltip title={to} color='black'><RouterLink to={`/address/${to}`}>
+                {to && <Tooltip title={to} color='black'><RouterLink to={`/address/${ChecksumAddress(to)}`}>
                     <Link ellipsis style={{
                         marginLeft: "4px",
                         marginRight: "4px",
-                        width: "200px"
-                    }}>{to}</Link>
+                        width: "240px"
+                    }}>{ChecksumAddress(to)}</Link>
                 </RouterLink></Tooltip>}
             </Text>
             produced {contractInternalTransactions?.length} Internal Transactions
@@ -174,13 +167,13 @@ export default ({
                 />
             </Col>
             <Col xl={0} xs={24}>
-                <Divider style={{marginTop:"15px",marginBottom:"1px"}} />
+                <Divider style={{ marginTop: "15px", marginBottom: "1px" }} />
                 <List
                     dataSource={contractInternalTransactions}
-                    style={{paddingLeft:"2px",paddingRight:"2px"}}
+                    style={{ paddingLeft: "2px", paddingRight: "2px" }}
                     renderItem={(internalTx) => (
                         <List.Item>
-                            <Row style={{lineHeight: "26px", fontSize: "14px", letterSpacing: "-1px"}}>
+                            <Row style={{ lineHeight: "26px", fontSize: "14px", letterSpacing: "-1px" }}>
                                 <Col xs={16}>
                                     <TypeTraceAddress {...internalTx} />
                                 </Col>

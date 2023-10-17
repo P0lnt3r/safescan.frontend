@@ -105,7 +105,8 @@ export interface TransactionVO {
     error: string,
     revertReason: string,
     hasInternalError: number,
-    confirmed: number
+    confirmed: number,
+    callType:number
 }
 
 export interface EventLogVO {

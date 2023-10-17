@@ -96,7 +96,9 @@ export function useAddressFunctionFragment(
         }
         if (!addressAbiJson) {
             fetchAddressAbi({ address }).then((data) => {
-                dispatch(Application_Save_ABI(data));
+                if ( data.length != 0 ){
+                    dispatch(Application_Save_ABI(data));
+                }
             })
         }
         const addressPropVO = state.application.addressPropMap?.get(address);

@@ -47,7 +47,7 @@ interface ExpandedAccountRecordDataType {
     unfreezeHeight: number
     unfreezeTimestamp: number
 }
-const DEFAULT_PAGESIZE = 10;
+const DEFAULT_PAGESIZE = 20;
 
 export default () => {
 

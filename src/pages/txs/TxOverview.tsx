@@ -37,7 +37,7 @@ import ERC20Logo from '../../components/ERC20Logo';
 import { isMobile } from 'react-device-detect';
 import BlockNumber from '../../components/BlockNumber';
 import TxNodeRegisterActions from './TxNodeRegisterActions';
-import Address from '../../components/Address';
+import Address, { ChecksumAddress } from '../../components/Address';
 import TxNodeRewards from './TxNodeRewards';
 import TxSafeAccountManagerActions from './TxSafeAccountManagerActions';
 import TxInternalTxns from './TxInternalTxns';
@@ -46,7 +46,7 @@ import TxNftTransfers from './TxNftTransfers';
 
 const { Text, Paragraph, Link } = Typography;
 
-export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeRewards, safeAccountManagerActions, nodeRegisterActions , nftTransfers}:
+export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeRewards, safeAccountManagerActions, nodeRegisterActions, nftTransfers }:
     {
         txVO: TransactionVO,
         contractInternalTransactions: ContractInternalTransactionVO[] | undefined,
@@ -56,7 +56,6 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
         nodeRegisterActions: NodeRegisterActionVO[] | undefined,
         nftTransfers: NftTransferVO[] | undefined
     }) => {
-
     const {
         blockHash,
         blockNumber,
@@ -76,7 +75,8 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
         error,
         revertReason,
         hasInternalError,
-        confirmed
+        confirmed,
+        callType
     } = txVO
     const _blockNumber = useBlockNumber();
     const { txFee, gasPriceGWEI, gasUsedRate } = useMemo(() => {
@@ -91,7 +91,7 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
         }
     }, [gasPrice, gasUsed, gas]);
 
-    const functionFragment = useAddressFunctionFragment(to, methodId, useDispatch() , toPropVO?.subType );
+    const functionFragment = useAddressFunctionFragment(to, methodId, useDispatch(), toPropVO?.subType);
 
     return <>
         <Row>
@@ -242,13 +242,13 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                 <Text strong style={{ marginLeft: "5px" }}>From</Text>
             </Col>
             <Col xl={16} xs={24} >
-                <RouterLink to={`/address/${from}`}>
+                <RouterLink to={`/address/${ChecksumAddress(from)}`}>
                     <Paragraph copyable
                         style={isMobile ? {
                             lineHeight: "26px", fontSize: "13.5px", letterSpacing: "-1px",
                             color: "rgba(52, 104, 171, 0.85)"
                         } : { color: "rgba(52, 104, 171, 0.85)" }}>
-                        {from}
+                        {ChecksumAddress(from)}
                     </Paragraph>
                 </RouterLink>
                 {
@@ -269,25 +269,30 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                 <Text strong style={{ marginLeft: "5px" }}>To</Text>
             </Col>
             <Col xl={16} xs={24} style={{ marginTop: '14px' }}>
-                <RouterLink to={`/address/${to}`}>
+                <RouterLink to={`/address/${ChecksumAddress(to)}`}>
                     <Paragraph copyable
                         style={isMobile ? {
                             lineHeight: "26px", fontSize: "13.5px", letterSpacing: "-1px",
                             color: "rgba(52, 104, 171, 0.85)"
                         } : { color: "rgba(52, 104, 171, 0.85)" }}>
-                        {to}
+                        {ChecksumAddress(to)}
                     </Paragraph>
                 </RouterLink>
                 {
                     toPropVO && <>
                         [ <Text style={{ marginBottom: "5px" }}>
                             <Address address={to} propVO={toPropVO} style={{ hasLink: false, forceTag: true, noTip: true }} />
-                        </Text> ]
+                        </Text> {
+                            callType == 1 && !error && <Text>
+                                - Created
+                            </Text>
+                        }]
                     </>
                 }
                 {
                     error &&
                     <>
+                        <br />
                         <img src={shape} style={{ width: "8px", marginTop: "-8px", marginRight: "4px" }} />
                         <Text type="danger">Warning! Error encountered during contract execution [
                             <Text type="danger" strong>{error}</Text>
@@ -351,7 +356,7 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
             nftTransfers && nftTransfers.length > 0 && <TxNftTransfers nftTransfers={nftTransfers} />
         }
 
-        
+
 
         {
             // 节点奖励

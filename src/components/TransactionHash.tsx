@@ -17,9 +17,9 @@ export default (
 
     const tipIcon = (status?: number) => {
         if (status == 1) {
-            return <CheckCircleTwoTone twoToneColor="#52c41a" />
+            return <></>
         } else if (status == 0) {
-            return <ExclamationCircleTwoTone twoToneColor="#52c41a" />
+            return <ExclamationCircleTwoTone twoToneColor="red" />
         }
         return <></>
     }

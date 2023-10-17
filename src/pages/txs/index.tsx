@@ -113,23 +113,23 @@ export default function () {
       width: 100,
       render: (value) => <Text strong><EtherAmount raw={value.toString()} fix={6} /></Text>
     },
-    {
-      title: <Text strong style={{ color: "#6c757e" }}>Txn Fee</Text>,
-      dataIndex: 'txFee',
-      width: 100,
-      render: (_, txVO) => {
-        const { gasPrice, gasUsed } = txVO;
-        const txFee = (gasPrice && gasUsed) ? JSBI.multiply(
-          JSBI.BigInt(gasPrice),
-          JSBI.BigInt(gasUsed)
-        ).toString() : "0";
-        return <>
-          <Text type="secondary">
-            <EtherAmount raw={txFee.toString()} fix={6} ignoreLabel />
-          </Text>
-        </>
-      }
-    },
+    // {
+    //   title: <Text strong style={{ color: "#6c757e" }}>Txn Fee</Text>,
+    //   dataIndex: 'txFee',
+    //   width: 100,
+    //   render: (_, txVO) => {
+    //     const { gasPrice, gasUsed } = txVO;
+    //     const txFee = (gasPrice && gasUsed) ? JSBI.multiply(
+    //       JSBI.BigInt(gasPrice),
+    //       JSBI.BigInt(gasUsed)
+    //     ).toString() : "0";
+    //     return <>
+    //       <Text type="secondary">
+    //         <EtherAmount raw={txFee.toString()} fix={6} ignoreLabel />
+    //       </Text>
+    //     </>
+    //   }
+    // },
   ];
 
   const doFetchTransactions = async (current?: number) => {

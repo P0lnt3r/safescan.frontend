@@ -66,7 +66,7 @@ export default function () {
     {
       title: <Text strong style={{ color: "#6c757e" }}>Difficulty</Text>,
       dataIndex: 'difficulty',
-      width: 80,
+      width: 100,
       render: (difficulty, blockVO) => {
         return <>
           <Text>{difficulty}</Text>
