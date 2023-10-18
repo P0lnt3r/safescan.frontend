@@ -165,7 +165,7 @@ export default () => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Item</Text>,
             dataIndex: 'tokenURI',
-            width: 180,
+            width: 150,
             render: (tokenURI, nftTransferVO) => {
                 const { tokenId, tokenPropVO, token } = nftTransferVO;
                 const nftProp = tokenPropVO && (tokenPropVO.subType == "erc721" || tokenPropVO.subType == "erc1155") ? tokenPropVO?.prop : undefined;

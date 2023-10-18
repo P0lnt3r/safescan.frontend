@@ -109,13 +109,13 @@ export default ({ token, tokenId, tokenType }: {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Date Time</Text>,
             dataIndex: 'timestamp',
-            width: 120,
+            width: 150,
             render: (val) => <>{DateFormat(val * 1000)}</>
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>From</Text>,
             dataIndex: 'from',
-            width: 160,
+            width: 150,
             render: (from, txVO) => {
                 return (
                     <>
@@ -127,7 +127,7 @@ export default ({ token, tokenId, tokenType }: {
         {
             title: <Text strong style={{ color: "#6c757e" }}>To</Text>,
             dataIndex: 'to',
-            width: 160,
+            width: 150,
             render: (to, vo) =>
                 <Address address={to} propVO={vo.toPropVO}></Address >
 
@@ -137,7 +137,7 @@ export default ({ token, tokenId, tokenType }: {
         columns.push({
             title: <Text strong style={{ color: "#6c757e" }}>Value</Text>,
             dataIndex: 'tokenValue',
-            width: 160,
+            width: 150,
             render: (tokenValue, vo) => <>{tokenValue}</>
         });
     }

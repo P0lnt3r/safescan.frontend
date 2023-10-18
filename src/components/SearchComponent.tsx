@@ -38,6 +38,7 @@ const isValidInput = (input: string): {
 export default () => {
     const navigate = useNavigate();
     const [inputError, setInputError] = useState<string>();
+    const [inputContent,setInputContent] = useState<string>();
 
     const handleInputSearch = (input: string) => {
         const {
@@ -48,6 +49,7 @@ export default () => {
             return;
         }
         setInputError("");
+        setInputContent("");
         if (isBlockNumber) {
             navigate(`/block/${input}`)
         }
@@ -64,6 +66,8 @@ export default () => {
             size='large'
             placeholder="Input Address/TxHash" enterButton
             onSearch={handleInputSearch}
+            value={inputContent}
+            onChange={(e) => setInputContent(e.target.value)}
         />
         {
             inputError &&

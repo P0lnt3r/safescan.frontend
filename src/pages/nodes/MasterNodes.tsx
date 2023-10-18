@@ -1,6 +1,6 @@
 
-import { Card, Table, Typography, Row, Col, Tooltip, PaginationProps, Badge, Divider, TabsProps, Tabs } from 'antd';
-import { useEffect, useState } from 'react';
+import { Card, Table, Typography, Row, Col, Tooltip, PaginationProps, Badge, Divider, TabsProps, Tabs, Input, Space, Button, InputRef } from 'antd';
+import { useEffect, useRef, useState } from 'react';
 import { fetchAddressBalanceRank } from '../../services/address';
 import { AddressBalanceRankVO, MasterNodeVO, SuperNodeVO } from '../../services';
 import type { ColumnsType } from 'antd/es/table';
@@ -10,7 +10,8 @@ import {
     UserOutlined,
     FileTextOutlined,
     SafetyOutlined,
-    ApartmentOutlined
+    ApartmentOutlined,
+    SearchOutlined
 } from '@ant-design/icons';
 import { format } from '../../utils/NumberFormat';
 import { fetchMasterNodes, fetchSuperNodes } from '../../services/node';
@@ -23,6 +24,8 @@ const { Title, Text, Link, Paragraph } = Typography;
 
 export default () => {
 
+    const addressSearchInput = useRef<InputRef>(null);
+
     function paginationOnChange(page: number, pageSize: number) {
         pagination.current = page;
         doFetchMasterNodes();
@@ -33,10 +36,16 @@ export default () => {
         showTotal: (total) => <>Total : {total}</>,
         onChange: paginationOnChange
     });
+
+    const [tableQueryParams, setTableQueryParams] = useState<{
+        address?: string
+    }>({});
+
     async function doFetchMasterNodes() {
         fetchMasterNodes({
             current: pagination.current,
             pageSize: pagination.pageSize,
+            address: tableQueryParams.address
         }).then(data => {
             setPagination({
                 ...pagination,
@@ -88,8 +97,8 @@ export default () => {
                 let checksumAddress = ChecksumAddress(address)
                 return <>
                     <Text>
-                        <RouterLink  to={`/node/${checksumAddress}`}>
-                            <Link style={{lineHeight:"42px"}}>{checksumAddress}</Link>
+                        <RouterLink to={`/node/${checksumAddress}`}>
+                            <Link style={{ lineHeight: "42px" }}>{checksumAddress}</Link>
                         </RouterLink>
                         <Paragraph style={{
                             display: "inline-block"
@@ -98,6 +107,46 @@ export default () => {
                 </>
             },
             width: 250,
+            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => <>
+                <div style={{ padding: 8 , width:"400px",height:"100px"}} onKeyDown={(e) => e.stopPropagation()}>
+                    <Text strong>Address</Text>
+                    <Input ref={addressSearchInput}
+                        value={tableQueryParams.address}
+                        onChange={(e) => {
+                            setTableQueryParams({
+                                ...tableQueryParams,
+                                address: e.target.value
+                            })
+                        }}
+                        style={{ marginBottom: 8, display: 'block' }}
+                    />
+                        <Button
+                            type="primary"
+                            icon={<SearchOutlined />}
+                            size="small"
+                            style={{ width: 90, float: "left" }}
+                            onClick={() => {
+                                pagination.current = 1;
+                                close();
+                                doFetchMasterNodes();
+                            }}
+                        >
+                            Search
+                        </Button>
+                        <Button
+                            size="small"
+                            style={{ width: 90, float: "right" }}
+                            onClick={() => {
+                                tableQueryParams.address = undefined;
+                                pagination.current = 1;
+                                doFetchMasterNodes();
+                                close();
+                            }}
+                        >
+                            Reset
+                        </Button>
+                </div>
+            </>
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Name</Text>,
@@ -151,6 +200,7 @@ export default () => {
 
     return (<>
         <Title level={3}>Safe4 Network Masternodes</Title>
+        <br />
         [Text : What is MasterNode ? || How to create MasterNode...]
         <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
             pagination={pagination} rowKey={(txVO) => txVO.id}

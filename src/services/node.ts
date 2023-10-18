@@ -7,7 +7,7 @@ export async function fetchSuperNodes( params : PageQueryDTO ) : Promise<PageRes
     return serverResponse.data;
 }
 
-export async function fetchMasterNodes( params : PageQueryDTO ) : Promise<PageResponseVO<MasterNodeVO>>{
+export async function fetchMasterNodes( params : PageQueryDTO | {address ?: string} ) : Promise<PageResponseVO<MasterNodeVO>>{
     const serverResponse = await POST( `${API_HOST}/nodes/masternodes` , { ...params } );
     return serverResponse.data;
 }
