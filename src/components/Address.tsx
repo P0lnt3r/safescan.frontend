@@ -15,7 +15,7 @@ import { utils } from 'ethers';
 const { Text, Link , Paragraph } = Typography;
 
 export function ChecksumAddress(address: string): string {
-    return utils.getAddress(address);
+    return address ? utils.getAddress(address) : ""
 }
 
 export default ({ address, propVO, style }: {

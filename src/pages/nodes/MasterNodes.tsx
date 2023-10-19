@@ -1,5 +1,5 @@
 
-import { Card, Table, Typography, Row, Col, Tooltip, PaginationProps, Badge, Divider, TabsProps, Tabs, Input, Space, Button, InputRef } from 'antd';
+import { Card, Table, Typography, Row, Col, Tooltip, PaginationProps, Badge, Divider, TabsProps, Tabs, Input, Space, Button, InputRef, Tag } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { fetchAddressBalanceRank } from '../../services/address';
 import { AddressBalanceRankVO, MasterNodeVO, SuperNodeVO } from '../../services';
@@ -11,7 +11,8 @@ import {
     FileTextOutlined,
     SafetyOutlined,
     ApartmentOutlined,
-    SearchOutlined
+    SearchOutlined,
+    CloseCircleOutlined
 } from '@ant-design/icons';
 import { format } from '../../utils/NumberFormat';
 import { fetchMasterNodes, fetchSuperNodes } from '../../services/node';
@@ -24,8 +25,6 @@ const { Title, Text, Link, Paragraph } = Typography;
 
 export default () => {
 
-    const addressSearchInput = useRef<InputRef>(null);
-
     function paginationOnChange(page: number, pageSize: number) {
         pagination.current = page;
         doFetchMasterNodes();
@@ -36,16 +35,17 @@ export default () => {
         showTotal: (total) => <>Total : {total}</>,
         onChange: paginationOnChange
     });
-
     const [tableQueryParams, setTableQueryParams] = useState<{
-        address?: string
+        address?: string,
+        name?: string,
+        ip?: string
     }>({});
 
     async function doFetchMasterNodes() {
         fetchMasterNodes({
             current: pagination.current,
             pageSize: pagination.pageSize,
-            address: tableQueryParams.address
+            ...tableQueryParams
         }).then(data => {
             setPagination({
                 ...pagination,
@@ -108,9 +108,9 @@ export default () => {
             },
             width: 250,
             filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => <>
-                <div style={{ padding: 8 , width:"400px",height:"100px"}} onKeyDown={(e) => e.stopPropagation()}>
+                <div style={{ padding: 8, width: "400px", height: "100px" }} onKeyDown={(e) => e.stopPropagation()}>
                     <Text strong>Address</Text>
-                    <Input ref={addressSearchInput}
+                    <Input 
                         value={tableQueryParams.address}
                         onChange={(e) => {
                             setTableQueryParams({
@@ -120,31 +120,28 @@ export default () => {
                         }}
                         style={{ marginBottom: 8, display: 'block' }}
                     />
-                        <Button
-                            type="primary"
-                            icon={<SearchOutlined />}
-                            size="small"
-                            style={{ width: 90, float: "left" }}
-                            onClick={() => {
-                                pagination.current = 1;
-                                close();
-                                doFetchMasterNodes();
-                            }}
-                        >
-                            Search
-                        </Button>
-                        <Button
-                            size="small"
-                            style={{ width: 90, float: "right" }}
-                            onClick={() => {
-                                tableQueryParams.address = undefined;
-                                pagination.current = 1;
-                                doFetchMasterNodes();
-                                close();
-                            }}
-                        >
-                            Reset
-                        </Button>
+                    <Button
+                        type="primary"
+                        icon={<SearchOutlined />}
+                        size="small"
+                        style={{ width: 90, float: "left" }}
+                        onClick={() => {
+                            closePropSearch();
+                            close();
+                        }}
+                    >
+                        Search
+                    </Button>
+                    <Button
+                        size="small"
+                        style={{ width: 90, float: "right" }}
+                        onClick={() => {
+                            closePropSearch("address")
+                            close();
+                        }}
+                    >
+                        Reset
+                    </Button>
                 </div>
             </>
         },
@@ -155,6 +152,43 @@ export default () => {
                 {description}
             </>,
             width: 150,
+            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => <>
+                <div style={{ padding: 8, width: "400px", height: "100px" }} onKeyDown={(e) => e.stopPropagation()}>
+                    <Text strong>Name</Text>
+                    <Input
+                        value={tableQueryParams.name}
+                        onChange={(e) => {
+                            setTableQueryParams({
+                                ...tableQueryParams,
+                                name: e.target.value
+                            })
+                        }}
+                        style={{ marginBottom: 8, display: 'block' }}
+                    />
+                    <Button
+                        type="primary"
+                        icon={<SearchOutlined />}
+                        size="small"
+                        style={{ width: 90, float: "left" }}
+                        onClick={() => {
+                            closePropSearch();
+                            close();
+                        }}
+                    >
+                        Search
+                    </Button>
+                    <Button
+                        size="small"
+                        style={{ width: 90, float: "right" }}
+                        onClick={() => {
+                            closePropSearch("name")
+                            close();
+                        }}
+                    >
+                        Reset
+                    </Button>
+                </div>
+            </>
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>IP</Text>,
@@ -163,6 +197,43 @@ export default () => {
                 {ip}
             </>,
             width: 40,
+            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => <>
+                <div style={{ padding: 8, width: "400px", height: "100px" }} onKeyDown={(e) => e.stopPropagation()}>
+                    <Text strong>Address</Text>
+                    <Input 
+                        value={tableQueryParams.ip}
+                        onChange={(e) => {
+                            setTableQueryParams({
+                                ...tableQueryParams,
+                                ip: e.target.value
+                            })
+                        }}
+                        style={{ marginBottom: 8, display: 'block' }}
+                    />
+                    <Button
+                        type="primary"
+                        icon={<SearchOutlined />}
+                        size="small"
+                        style={{ width: 90, float: "left" }}
+                        onClick={() => {
+                            closePropSearch();
+                            close();
+                        }}
+                    >
+                        Search
+                    </Button>
+                    <Button
+                        size="small"
+                        style={{ width: 90, float: "right" }}
+                        onClick={() => {
+                            closePropSearch("ip")
+                            close();
+                        }}
+                    >
+                        Reset
+                    </Button>
+                </div>
+            </>
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Amount</Text>,
@@ -198,10 +269,64 @@ export default () => {
         },
     ];
 
+    const closePropSearch = ( prop ?: string ) => {
+        if ( prop == "address" ){
+            tableQueryParams.address = undefined;
+        }
+        if ( prop == "ip" ){
+            tableQueryParams.ip = undefined;
+        }
+        if ( prop == "name" ){
+            tableQueryParams.name = undefined;
+        }
+        pagination.current = 1;
+        doFetchMasterNodes();
+    }
+
     return (<>
         <Title level={3}>Safe4 Network Masternodes</Title>
         <br />
         [Text : What is MasterNode ? || How to create MasterNode...]
+        <Divider />
+        {
+            (tableQueryParams.address || tableQueryParams.ip || tableQueryParams.name) &&
+            <Row style={{
+                background: "white"
+            }}>
+                <div style={{
+                    width: "100%",
+                }}>
+                    <Divider dashed />
+                    <Text style={{ marginLeft: "5px", marginRight: "5px" }}>Filters:</Text>
+                    <Space size={[0, 8]} wrap>
+                        {
+                            tableQueryParams.address &&
+                            <Tag closable={true} onClose={() => closePropSearch("address")}>
+                                Address:{tableQueryParams.address}
+                            </Tag>
+                        }
+                    </Space>
+                    <Space size={[0, 8]} wrap>
+                        {
+                            tableQueryParams.ip &&
+                            <Tag closable={true} onClose={() => closePropSearch("ip")}>
+                                Ip:{tableQueryParams.ip}
+                            </Tag>
+                        }
+                    </Space>
+                    <Space size={[0, 8]} wrap>
+                        {
+                            tableQueryParams.name &&
+                            <Tag closable={true} onClose={() => closePropSearch("name")}>
+                                Name:{tableQueryParams.name}
+                            </Tag>
+                        }
+                    </Space>
+                    <Divider dashed />
+                </div>
+            </Row>
+        }
+
         <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
             pagination={pagination} rowKey={(txVO) => txVO.id}
             style={{ marginTop: "20px" }}
