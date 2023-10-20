@@ -197,7 +197,7 @@ export default ({ address }: { address: string }) => {
 
     return <>
         <Col span={24}>
-            <Title level={5}>Assets in Wallet({tableData.length})</Title>
+            <Title level={5}>Assets in Wallet()</Title>
         </Col>
         <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
             loading={loading}

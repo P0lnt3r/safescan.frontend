@@ -2,7 +2,7 @@
 import { useParams } from "react-router"
 import { Row, Col, Card, Typography, Divider, Tabs } from "antd"
 import ERC20Logo from "../../components/ERC20Logo";
-import Address from "../../components/Address";
+import Address, { ChecksumAddress } from "../../components/Address";
 import TransactionHash from "../../components/TransactionHash";
 import { DateFormat } from "../../utils/DateUtil";
 import type { TabsProps } from 'antd';
@@ -28,7 +28,7 @@ export default ({ address, contractVO, erc20TokenVO }: {
                     <Row style={{ marginTop: "15px" }}>
                         <Col xl={6} xs={24}><Text strong>Contract:</Text></Col>
                         <Col xl={18} xs={24}>
-                            {address}
+                            {ChecksumAddress(address)}
                         </Col>
                     </Row>
                     <Row style={{ marginTop: "15px" }}>
@@ -57,7 +57,9 @@ export default ({ address, contractVO, erc20TokenVO }: {
                                     <Address address={contractVO.creator} />
                                 </Col>
                                 <Col span={24}>
-                                    At Txn : <TransactionHash txhash={contractVO.creatorTransactionHash} />
+                                    <Text>
+                                        At Txn: <Text style={{width:"60%"}}><TransactionHash txhash={contractVO.creatorTransactionHash} /></Text>
+                                    </Text>
                                 </Col>
                                 <Col span={24}>
                                     <Text type="secondary">{DateFormat(contractVO.creatorTimestamp * 1000)}</Text>
@@ -68,7 +70,7 @@ export default ({ address, contractVO, erc20TokenVO }: {
                 </Card>
             </Col>
             <Col style={{ marginTop: "15px", padding: "5px" }} xl={12} xs={24} >
-                <Card size="small" style={{height:"258px"}} title={<Title level={5}>Profile Summary</Title>}>
+                <Card size="small" style={{ height: "258px" }} title={<Title level={5}>Profile Summary</Title>}>
                     <Row style={{ marginTop: "15px" }}>
                         <Col xl={6} xs={24}><Text strong>Total Supply:</Text></Col>
                         <Col xl={18} xs={24}>

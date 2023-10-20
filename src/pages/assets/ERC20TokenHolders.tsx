@@ -16,6 +16,7 @@ import { JSBI } from '@uniswap/sdk';
 import { useTranslation } from 'react-i18next';
 import { SorterResult } from 'antd/es/table/interface';
 import ERC20TokenAmount from '../../components/ERC20TokenAmount';
+import Address from '../../components/Address';
 const { Title, Text, Link } = Typography;
 
 const DEFAULT_PAGESIZE = 20;
@@ -68,17 +69,9 @@ export default ({ token }: { token: string }) => {
             title: <Text strong style={{ color: "#6c757e" }}>Address</Text>,
             dataIndex: 'address',
             render: (address, addressBalanceRankVO: AddressBalanceRankVO) => <>
-                {
-                    addressBalanceRankVO.addressPropVO?.type == 'contract' &&
-                    <>
-                        <Tooltip title="Contract"><FileTextOutlined style={{ marginRight: "5px" }} /></Tooltip>
-                    </>
-                }
-                <RouterLink to={`/address/${address}`}>
-                    <Link>{address}</Link>
-                </RouterLink>
+                <Address address={address} propVO={addressBalanceRankVO.addressPropVO} style={{ellipsis:false,hasLink:true}}></Address>
             </>,
-            width: 140,
+            width: 180,
         },
         
         {

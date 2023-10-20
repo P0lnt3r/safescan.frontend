@@ -10,6 +10,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import ERC20TokenAmount from "../../components/ERC20TokenAmount";
 import ERC20Logo from "../../components/ERC20Logo";
 import { format } from "../../utils/NumberFormat";
+import Address from "../../components/Address";
 
 const { Text, Link } = Typography;
 const DEFAULT_PAGESIZE = 20;
@@ -102,36 +103,14 @@ export default ({ tokenAddress }: { tokenAddress: string }) => {
             title: "From",
             dataIndex: 'from',
             width: 180,
-            render: (from, txVO) => {
-                return (
-                    <>
-                        <Row>
-                            <Col span={20}>
-                                <Tooltip title={from}>
-                                    {
-                                        <RouterLink to={`/address/${from}`}>
-                                            <Link style={{ width: "80%" }} ellipsis>{from}</Link>
-                                        </RouterLink>
-                                    }
-                                </Tooltip>
-                            </Col>
-
-                        </Row>
-                    </>
-                )
-            }
+            render: (from, txVO) => <Address address={from} propVO={txVO.fromPropVO} />
         },
         {
             title: 'To',
             dataIndex: 'to',
             width: 180,
-            render: (to) =>
-                <Tooltip title={to}>{
-                    <RouterLink to={`/address/${to}`}>
-                        <Link style={{ width: "80%", marginLeft: "5px" }} ellipsis>{to}</Link>
-                    </RouterLink>
-                }</Tooltip>
-        },
+            render: (to, txVO) => <Address address={to} propVO={txVO.fromPropVO} />
+            },
         {
             title: 'Value',
             dataIndex: 'value',

@@ -12,7 +12,7 @@ import { useAddressProp } from "../state/application/hooks";
 import { useDispatch } from "react-redux";
 import { Application_Update_AddressPropMap } from "../state/application/action";
 import { utils } from 'ethers';
-const { Text, Link , Paragraph } = Typography;
+const { Text, Link, Paragraph } = Typography;
 
 export function ChecksumAddress(address: string): string {
     return address ? utils.getAddress(address) : ""
@@ -25,7 +25,8 @@ export default ({ address, propVO, style }: {
         hasLink?: boolean,
         forceTag?: boolean,
         noTip?: boolean,
-        color?: string
+        color?: string,
+        ellipsis?: boolean
     }
 }) => {
     const _propVO = useAddressProp(address);
@@ -70,33 +71,35 @@ export default ({ address, propVO, style }: {
         </>
     }
     const checksumAddress = ChecksumAddress(address);
-    const ellipsisAddress = checksumAddress.substring(0, 8) + "..." + checksumAddress.substring(checksumAddress.length - 8);
+    const ellipsisAddress = (style && !style.ellipsis) ?
+        checksumAddress
+        : checksumAddress.substring(0, 8) + "..." + checksumAddress.substring(checksumAddress.length - 8);
 
-    const textStyle : any = {
-        maxWidth:"90%"
+    const textStyle: any = {
+        maxWidth: "90%"
     }
-    if ( style && style.color ){
+    if (style && style.color) {
         textStyle.color = style.color;
     }
 
     return <>
         <Text>
             {RenderIcon()}
-            <Tooltip style={{float:"left"}} title={(style && style.noTip) ? "" : checksumAddress}>
+            <Tooltip style={{ float: "left" }} title={(style && style.noTip) ? "" : checksumAddress}>
                 {
                     (style && !style.hasLink) && <>
                         {
-                            tag && <Text ellipsis style={ textStyle }>
+                            tag && <Text ellipsis style={textStyle}>
                                 {tag}
                             </Text>
                         }
                         {
-                            !tag && !style.forceTag && <Text ellipsis style={ textStyle }>
+                            !tag && !style.forceTag && <Text ellipsis style={textStyle}>
                                 {ellipsisAddress}
                             </Text>
                         }
                         {
-                            !tag && style.forceTag && <Text ellipsis strong style={ textStyle }>
+                            !tag && style.forceTag && <Text ellipsis strong style={textStyle}>
                                 {type?.toLocaleUpperCase()}
                             </Text>
                         }
@@ -106,12 +109,12 @@ export default ({ address, propVO, style }: {
                     (!style || style.hasLink == true) && <>
                         <RouterLink to={`/address/${checksumAddress}`}>
                             {
-                                tag && <Link ellipsis style={ textStyle }>
+                                tag && <Link ellipsis style={textStyle}>
                                     {tag}
                                 </Link>
                             }
                             {
-                                !tag && <Link ellipsis style={ textStyle }>
+                                !tag && <Link ellipsis style={textStyle}>
                                     {ellipsisAddress}
                                 </Link>
                             }
@@ -119,7 +122,7 @@ export default ({ address, propVO, style }: {
                     </>
                 }
             </Tooltip>
-            <Paragraph style={{ height: "0px" , display:"inline-block"}} copyable={{ text: checksumAddress }}>
+            <Paragraph style={{ height: "0px", display: "inline-block" }} copyable={{ text: checksumAddress }}>
             </Paragraph>
         </Text>
     </>
