@@ -71,7 +71,7 @@ export default ({ address, propVO, style }: {
         </>
     }
     const checksumAddress = ChecksumAddress(address);
-    const ellipsisAddress = (style && !style.ellipsis) ?
+    const ellipsisAddress = (style && style.ellipsis == false ) ?
         checksumAddress
         : checksumAddress.substring(0, 8) + "..." + checksumAddress.substring(checksumAddress.length - 8);
 
