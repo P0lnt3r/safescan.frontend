@@ -12,6 +12,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { JSBI } from "@uniswap/sdk";
 import { format } from "../../utils/NumberFormat";
 import BlockNumber from "../../components/BlockNumber";
+import Address from "../../components/Address";
 
 const { Text, Link } = Typography;
 
@@ -109,35 +110,49 @@ export default ({ address }: { address: string }) => {
             title: <Text strong style={{ color: "#6c757e" }}>Date</Text>,
             dataIndex: 'timestamp',
             render: (val) => <>{DateFormat(val * 1000)}</>,
-            width: 180
+            width: 200
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Parent Txn Hash</Text>,
             dataIndex: 'transactionHash',
             render: (val, txVO) => <TransactionHash txhash={val}  status={txVO.status}></TransactionHash>,
+            width: 240,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Type</Text>,
             dataIndex: 'type',
             render: (val, txVO) => <>{val}</>,
-            width: 140
+            width: 200
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>From</Text>,
             dataIndex: 'from',
-            render: (val, txVO) => <Text ellipsis>{val}</Text>,
+            render: (val, txVO) => {
+                const hasLink = !(address == val);
+                return <>
+                    <Address address={val} propVO={txVO.fromPropVO} style={{hasLink}} />
+                </>
+            } ,
+            width: 240
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>To</Text>,
             dataIndex: 'to',
-            render: (val, txVO) => <Text ellipsis>{val}</Text>,
+            render: (val, txVO) => {
+                const hasLink = !(address == val);
+                return <>
+                    <Address address={val} propVO={txVO.toPropVO} style={{hasLink}} />
+                </>
+            } ,
+            width: 240
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Value</Text>,
             dataIndex: 'value',
             render: (val, txVO) => <>
-                <Text strong><EtherAmount raw={val} fix={18} /></Text>
+                <Text strong><EtherAmount raw={val} fix={6} /></Text>
             </>,
+            width:200
         },
     ]
 

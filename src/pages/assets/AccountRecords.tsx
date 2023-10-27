@@ -21,7 +21,6 @@ import {
 } from '@ant-design/icons';
 import { Link as RouterLink } from "react-router-dom";
 import { JSBI } from "@uniswap/sdk";
-import { fetchAddressNodeRewards } from "../../services/node";
 import { fetchAccountRecord, fetchAddressAccountRecord } from "../../services/accountRecord";
 import BlockNumberFormatTime from "../../components/BlockNumberFormatTime";
 import { Button } from "antd/lib/radio";

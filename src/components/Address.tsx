@@ -18,9 +18,10 @@ export function ChecksumAddress(address: string): string {
     return address ? utils.getAddress(address) : ""
 }
 
-export default ({ address, propVO, style }: {
+export default ({ address, propVO, style , to }: {
     address: string,
     propVO?: AddressPropVO | undefined,
+    to ?: string,
     style?: {
         hasLink?: boolean,
         forceTag?: boolean,
@@ -82,6 +83,8 @@ export default ({ address, propVO, style }: {
         textStyle.color = style.color;
     }
 
+    const routerTo = to ? to : "/address/" + checksumAddress;
+
     return <>
         <Text>
             {RenderIcon()}
@@ -107,7 +110,7 @@ export default ({ address, propVO, style }: {
                 }
                 {
                     (!style || style.hasLink == true) && <>
-                        <RouterLink to={`/address/${checksumAddress}`}>
+                        <RouterLink to={routerTo}>
                             {
                                 tag && <Link ellipsis style={textStyle}>
                                     {tag}

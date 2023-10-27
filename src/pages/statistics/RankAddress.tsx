@@ -80,7 +80,7 @@ export default () => {
             title: <Text strong style={{ color: "#6c757e" }}>Rank</Text>,
             dataIndex: 'rank',
             render: (rank) => <Text strong>{rank}</Text >,
-            width: 30,
+            width: 40,
             fixed: 'left',
         },
         {
@@ -107,7 +107,7 @@ export default () => {
                     vo.addressPropVO && <Address address={vo.address} propVO={vo.addressPropVO} style={{ hasLink: false }}></Address>
                 }
             </>,
-            width: 70,
+            width: 80,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Total Balance</Text>,
@@ -119,7 +119,7 @@ export default () => {
                     <Text strong><EtherAmount raw={totalBalance} fix={4} /></Text>
                 </>
             },
-            width: 80,
+            width: 70,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Lock Amount</Text>,
@@ -132,7 +132,7 @@ export default () => {
                     </Text>
                 </>
             },
-            width: 80,
+            width: 70,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Before 24H</Text>,
@@ -181,7 +181,7 @@ export default () => {
 
                 </>
             },
-            width: 80,
+            width: 70,
         },
     ];
 

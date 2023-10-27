@@ -77,19 +77,7 @@ export default (superMasterNode: SuperNodeVO) => {
                             <Row style={{ marginTop: "10px" }}>
                                 <Col xl={6} xs={24}><Text strong>Creator:</Text></Col>
                                 <Col xl={18} xs={24}>
-                                    {
-                                        creator.toLowerCase() != nodeAddress &&
-                                        <>
-                                            <Address address={creator.toLowerCase()} style={{ hasLink: creator.toLowerCase() != nodeAddress }}></Address>
-                                        </>
-                                    }
-                                    {
-                                        creator.toLowerCase() == nodeAddress &&
-                                        <>
-                                            {creator.toLowerCase()}
-                                        </>
-                                    }
-
+                                    <Address address={creator} style={{ellipsis:false , hasLink:true}}></Address>
                                 </Col>
                             </Row>
                             <Row style={{ marginTop: "10px" }}>
@@ -126,7 +114,7 @@ export default (superMasterNode: SuperNodeVO) => {
                     </Row>
                     <Row style={{ marginTop: "10px" }}>
                         <Col xl={3} xs={24}><Text strong>Enode:</Text></Col>
-                        <Col xl={21} xs={24}>
+                        <Col xl={16} xs={24}>
                             <Text>{enode}</Text>
                         </Col>
                     </Row>
@@ -270,7 +258,6 @@ export default (superMasterNode: SuperNodeVO) => {
                                 })
                             }
                         </Descriptions.Item>
-
                     </Descriptions>
                 </Card>
             </Col>

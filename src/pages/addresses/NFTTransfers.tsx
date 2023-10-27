@@ -17,7 +17,7 @@ import TxMethodId from "../../components/TxMethodId";
 import NFT_URI_IMG, { NFT_URI_IMG_SIZE } from "../../components/NFT_URI_IMG";
 
 const { Text, Link } = Typography;
-const DEFAULT_PAGESIZE = 20;
+const DEFAULT_PAGESIZE = 10;
 
 export default ({ address }: { address: string }) => {
 
@@ -30,7 +30,7 @@ export default ({ address }: { address: string }) => {
     const [pagination, setPagination] = useState<TablePaginationConfig>({
         current: 1,
         pageSize: DEFAULT_PAGESIZE,
-        position: ["topRight", "bottomRight"],
+        position: [ "bottomRight" ],
         pageSizeOptions: [],
         responsive: true,
     });
@@ -92,7 +92,7 @@ export default ({ address }: { address: string }) => {
             title: <Text strong style={{ color: "#6c757e" }}>Txn Hash</Text>,
             dataIndex: 'transactionHash',
             render: (val, txVO) => <><TransactionHash blockNumber={txVO.blockNumber} txhash={val} status={1}></TransactionHash></>,
-            width: 150,
+            width: 120,
             fixed: 'left',
         },
         {
@@ -106,30 +106,19 @@ export default ({ address }: { address: string }) => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Date Time</Text>,
             dataIndex: 'timestamp',
-            width: 120,
+            width: 150,
             render: (val) => <>{DateFormat(val * 1000)}</>
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>From</Text>,
             dataIndex: 'from',
-            width: 150,
+            width: 170,
             render: (from, txVO) => {
                 return (
                     <>
                         <Row>
                             <Col span={20}>
-                                <Tooltip title={from}>
-                                    {
-                                        address === from
-                                            ? <Text style={{ width: "80%" }} ellipsis>
-                                                {from}
-                                            </Text>
-                                            :
-                                            <RouterLink to={`/address/${from}`}>
-                                                <Link style={{ width: "80%" }} ellipsis>{from}</Link>
-                                            </RouterLink>
-                                    }
-                                </Tooltip>
+                                <Address address={from} propVO={txVO.fromPropVO} style={{ hasLink: from != address }} />
                             </Col>
                             <Col span={4}>
                                 {
@@ -180,7 +169,7 @@ export default ({ address }: { address: string }) => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Item</Text>,
             dataIndex: 'tokenURI',
-            width: 180,
+            width: 150,
             render: (tokenURI, nftTransferVO) => {
                 const { tokenId, tokenPropVO, token } = nftTransferVO;
                 const nftProp = tokenPropVO && (tokenPropVO.subType == "erc721" || tokenPropVO.subType == "erc1155") ? tokenPropVO?.prop : undefined;

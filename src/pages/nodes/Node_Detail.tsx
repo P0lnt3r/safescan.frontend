@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom"
 import { Card, Typography, Tag, Input, Button, Space, Tooltip, Tabs, Row, Col, Divider, Modal } from 'antd';
 import {
-    SearchOutlined, QrcodeOutlined, FileTextOutlined, UserOutlined
+    QrcodeOutlined, FileTextOutlined, UserOutlined
 } from '@ant-design/icons';
 import { isMobile } from 'react-device-detect'
 import type { TabsProps } from 'antd';
@@ -9,24 +9,20 @@ import QRCode from 'qrcode.react';
 import { useEffect, useMemo, useState } from "react";
 import { fetchAddress } from "../../services/address";
 import { AddressVO, MasterNodeVO, SuperNodeVO } from "../../services";
-import EtherAmount, { ETHER_Combine } from "../../components/EtherAmount";
-import TransactionHash from "../../components/TransactionHash";
-import { DateFormat } from "../../utils/DateUtil";
 import SuperNode from "./SuperNode";
 import MasterNode from "./MasterNode";
+import SupernodesVoteActions from "./SupernodesVoteActions";
+import NodeRewards from "./NodeRewards";
+import { ChecksumAddress } from "../../components/Address";
 
 const { Title, Text, Paragraph, Link } = Typography;
 
 export default function () {
 
     const address = useParams().address?.toLocaleLowerCase();
-    const items: TabsProps['items'] = useMemo(() => {
-        return [
-            
-        ]
-    }, [address]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [addressVO, setAddressVO] = useState<AddressVO>();
+
     useEffect(() => {
         if (address) {
             fetchAddress(address).then(data => {
@@ -34,7 +30,6 @@ export default function () {
             })
         }
     }, [address])
-
     const { type, subType, tag, remark, prop } = useMemo(() => {
         return addressVO?.propVO ? addressVO.propVO : {
             type: undefined,
@@ -44,16 +39,34 @@ export default function () {
             prop: undefined
         };
     }, [addressVO]);
+    const items: TabsProps['items'] = useMemo(() => {
+        let items: TabsProps['items'] = [
+            {
+                key:"nodeRewards",
+                label: "Node Rewards",
+                children: <NodeRewards nodeAddress={address}></NodeRewards>
+            }
+        ];
+        if ( subType == "supernode" ){
+            items.push({
+                key: 'votes',
+                label: 'Votes',
+                children: <SupernodesVoteActions address={address}></SupernodesVoteActions>
+            })
+        }
+        return items;
+    }, [addressVO]);
+
 
     return (
         <>
             {
                 address &&
-                <Modal title={address}
+                <Modal title={ ChecksumAddress(address) }
                     open={isModalOpen} onCancel={() => setIsModalOpen(false)} closable={false} style={{ textAlign: "center" }}
                     footer={<></>}>
                     <QRCode
-                        value={address}
+                        value={ ChecksumAddress(address) }
                         size={200}
                         fgColor="#000000"
                     />
@@ -84,17 +97,16 @@ export default function () {
                                     : { fontSize: "18px" }
                             }>
                             <Paragraph copyable style={{ color: "rgba(52, 104, 171, 0.85)" }}>
-                                {address}
+                                { address && ChecksumAddress(address) }
                             </Paragraph>
                         </Text>
                         <Tooltip title="Click to view QR Code">
-                            <Button onClick={() => setIsModalOpen(true)} style={{ marginTop: "2px", marginLeft: "5px" }} type="primary" size="small" shape="circle" icon={<QrcodeOutlined />} />
+                            <Button onClick={() => setIsModalOpen(true)} 
+                                style={{ marginTop: "2px", marginLeft: "5px" }} type="primary" size="small" shape="circle" icon={<QrcodeOutlined />} />
                         </Tooltip>
                     </Row>
                 </Col>
             </Row>
-
-            <Divider style={{ marginTop: "20px" }} />
             {
                 subType == "supernode" && prop &&
                 <SuperNode {...JSON.parse(prop) as SuperNodeVO} />

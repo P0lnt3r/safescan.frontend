@@ -89,7 +89,7 @@ export default (masterNode: MasterNodeVO) => {
                             <Row style={{ marginTop: "10px" }}>
                                 <Col xl={8} xs={24}><Text strong>Creator:</Text></Col>
                                 <Col xl={16} xs={24}>
-                                    <Text>{creator.toLowerCase()}</Text>
+                                    <Address address={creator} style={{ ellipsis: false, hasLink: true }}></Address>
                                 </Col>
                             </Row>
                         </Col>
@@ -102,8 +102,10 @@ export default (masterNode: MasterNodeVO) => {
                     </Row>
                     <Row style={{ marginTop: "10px" }}>
                         <Col xl={4} xs={24}><Text strong>Enode:</Text></Col>
-                        <Col xl={20} xs={24}>
-                            <Text>{enode}</Text>
+                        <Col xl={18} xs={24}>
+                            <Paragraph copyable>
+                                {enode}
+                            </Paragraph>
                         </Col>
                     </Row>
 
@@ -182,7 +184,6 @@ export default (masterNode: MasterNodeVO) => {
                             </Descriptions>
                         </Col>
                     </Row>
-
                 </Card>
             </Col>
         </Row>

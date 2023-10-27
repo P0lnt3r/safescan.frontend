@@ -12,7 +12,10 @@ export async function fetchMasterNodes( params : PageQueryDTO | {address ?: stri
     return serverResponse.data;
 }
 
-export async function fetchAddressNodeRewards( params : { address : string } | PageQueryDTO ) : Promise<PageResponseVO<NodeRewardVO>>{
+export async function fetchNodeRewards( params : PageQueryDTO | {
+    address ?: string , 
+    nodeAddress ?: string
+}) : Promise<PageResponseVO<NodeRewardVO>>{
     const serverResponse = await POST( `${API_HOST}/noderewards` , { ...params } );
     return serverResponse.data;
 }
@@ -37,7 +40,7 @@ export async function fetchSupernodeRegisterActions( params : PageQueryDTO ) : P
     return serverResponse.data;
 }
 
-export async function fetchSNVoteActions( params : PageQueryDTO ) : Promise<PageResponseVO<SNVoteActionVO>>{
+export async function fetchSNVoteActions( params : PageQueryDTO | {address : string} ) : Promise<PageResponseVO<SNVoteActionVO>>{
     const serverResponse = await POST( `${API_HOST}/snvotes` , params );
     return serverResponse.data;
 }

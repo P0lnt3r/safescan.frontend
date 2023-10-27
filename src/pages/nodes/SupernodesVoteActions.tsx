@@ -14,11 +14,16 @@ import { add } from "date-fns";
 const { Title, Text, Link, Paragraph } = Typography;
 const DEFAULT_PAGESIZE = 20;
 
-export default () => {
+export default ( { address } : {
+    address ?: string
+} ) => {
+
     const [loading, setLoading] = useState<boolean>(false);
     const [tableData, setTableData] = useState<SNVoteActionVO[]>([]);
+
     const [unconfirmed, setUnconfirmed] = useState<number>(0);
     const [confirmed, setConfirmed] = useState<number>(0);
+
     const [pagination, setPagination] = useState<TablePaginationConfig>({
         current: 1,
         pageSize: DEFAULT_PAGESIZE,
@@ -31,7 +36,8 @@ export default () => {
         setLoading(true);
         fetchSNVoteActions({
             current: pagination.current,
-            pageSize: pagination.pageSize
+            pageSize: pagination.pageSize,
+            address
         }).then(data => {
             setLoading(false);
             setTableData(data.records);

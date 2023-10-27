@@ -113,7 +113,7 @@ export default () => {
             render: (address) => {
                 let checksumAddress = ChecksumAddress(address)
                 return <>
-                    <RouterLink to={`/address/${checksumAddress}`}>
+                    <RouterLink to={`/node/${checksumAddress}`}>
                         <Link style={{ lineHeight: "42px" }}>{checksumAddress}</Link>
                     </RouterLink>
                     <Paragraph style={{

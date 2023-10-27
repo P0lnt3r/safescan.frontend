@@ -16,7 +16,7 @@ import NodeRewards from "./NodeRewards";
 import AccountRecords from "./AccountRecords";
 import ContractInternalTransactions from "./ContractInternalTransactions";
 import AddressTokens from "./AddressTokens";
-import Address from "../../components/Address";
+import Address, { ChecksumAddress } from "../../components/Address";
 import TransactionHash from "../../components/TransactionHash";
 import { DateFormat } from "../../utils/DateUtil";
 import NFTTransfers from "./NFTTransfers";
@@ -78,7 +78,7 @@ export default function () {
 
     const { type, subType, tag, remark, prop } = useMemo(() => {
         return addressVO?.propVO ? addressVO.propVO : {
-            type: undefined,
+            type: addressVO?.type,
             subType: undefined,
             tag: undefined,
             remark: undefined,
@@ -90,7 +90,7 @@ export default function () {
         <>
             {
                 address &&
-                <Modal title={address}
+                <Modal title={ChecksumAddress(address)}
                     open={isModalOpen} onCancel={() => setIsModalOpen(false)} closable={false} style={{ textAlign: "center" }}
                     footer={<></>}>
                     <QRCode
@@ -125,13 +125,21 @@ export default function () {
                                     : { fontSize: "18px" }
                             }>
                             <Paragraph copyable style={{ color: "rgba(52, 104, 171, 0.85)" }}>
-                                {address}
+                                {address && ChecksumAddress(address)}
                             </Paragraph>
                         </Text>
                         <Tooltip title="Click to view QR Code">
                             <Button onClick={() => setIsModalOpen(true)} style={{ marginTop: "2px", marginLeft: "5px" }} type="primary" size="small" shape="circle" icon={<QrcodeOutlined />} />
                         </Tooltip>
                     </Row>
+                </Col>
+                <Col span={24} style={{ marginBottom: "20px" }}>
+                    {
+                        "masternode" == subType && <Tag color="#2db7f5">MASTERNODE</Tag>
+                    }
+                    {
+                        "supernode" == subType && <Tag color="#2db7f5">SUPERNODE</Tag>
+                    }
                 </Col>
             </Row>
 
@@ -222,12 +230,23 @@ export default function () {
                                 {
                                     address && addressVO && addressVO.propVO &&
                                     <>
-                                        <Address address={address} propVO={addressVO.propVO} style={{ hasLink: false }} />
+                                        {
+                                            (subType == "masternode" || subType == "supernode") &&
+                                            <Address address={address} propVO={addressVO.propVO}
+                                                to={`/node/${address}`}
+                                            />
+                                        }
+                                        {
+                                            !(subType == "masternode" || subType == "supernode") &&
+                                            <Address address={address} propVO={addressVO.propVO}
+                                                style={{ hasLink: false }}
+                                            />
+                                        }
+
                                     </>
                                 }
                             </Col>
                         </Row>
-
                         {
                             type == "address" &&
                             <>
@@ -239,7 +258,9 @@ export default function () {
                                             address && addressVO && addressVO.latestTxHash &&
                                             <Row>
                                                 <Col span={24}>
-                                                    <TransactionHash txhash={addressVO.latestTxHash} />
+                                                    <div style={{ width: "60%" }}>
+                                                        <TransactionHash txhash={addressVO.latestTxHash} />
+                                                    </div>
                                                 </Col>
                                                 <Col span={24}>
                                                     <Text type="secondary">{DateFormat(addressVO.latestTxTimestamp * 1000)}</Text>
@@ -262,7 +283,9 @@ export default function () {
                                                     }
                                                     {
                                                         addressVO.firstTxBlockNumber != 0 &&
-                                                        <TransactionHash txhash={addressVO.firstTxHash} />
+                                                        <div style={{ width: "60%" }}>
+                                                            <TransactionHash txhash={addressVO.firstTxHash} />
+                                                        </div>
                                                     }
                                                 </Col>
                                                 <Col span={24}>
@@ -282,17 +305,50 @@ export default function () {
                                     <Col xl={6} xs={24}><Text strong>Contract Creator</Text></Col>
                                     <Col xl={18} xs={24}>
                                         {
-                                            address && addressVO && addressVO.contract &&
+                                            address && addressVO && addressVO.contract && addressVO.contract.creatorBlockNumber == 0 &&
+                                            <Row>
+                                                <Col span={24}>
+                                                    <Text strong>GENESIS</Text>
+                                                </Col>
+                                            </Row>
+                                        }
+                                        {
+                                            address && addressVO && addressVO.contract && addressVO.contract.creator &&
                                             <Row>
                                                 <Col span={24}>
                                                     <Address address={addressVO.contract.creator} />
                                                 </Col>
                                                 <Col span={24}>
-                                                    At Txn : <TransactionHash txhash={addressVO.contract.creatorTransactionHash} />
+                                                    <Text style={{ float: "left" }}>
+                                                        At Txn:
+                                                    </Text>
+                                                    <div style={{ width: "70%", float: "left" }}>
+                                                        <TransactionHash txhash={addressVO.contract.creatorTransactionHash} />
+                                                    </div>
                                                 </Col>
                                                 <Col span={24}>
                                                     <Text type="secondary">{DateFormat(addressVO.contract.creatorTimestamp * 1000)}</Text>
                                                 </Col>
+                                                {
+                                                    addressVO.contract.selfDestructTransactionHash &&
+                                                    <>
+                                                        <Divider />
+                                                        <Col span={24}>
+                                                            <Text strong type="danger">SELF_DESTRUCT</Text>
+                                                        </Col>
+                                                        <Col span={24}>
+                                                            <Text style={{ float: "left" }}>
+                                                                At Txn:
+                                                            </Text>
+                                                            <div style={{ width: "70%", float: "left" }}>
+                                                                <TransactionHash txhash={addressVO.contract.selfDestructTransactionHash} />
+                                                            </div>
+                                                        </Col>
+                                                        <Col span={24}>
+                                                            <Text type="secondary">{DateFormat(addressVO.contract.selfDestructTimestamp * 1000)}</Text>
+                                                        </Col>
+                                                    </>
+                                                }
                                             </Row>
                                         }
                                     </Col>
@@ -304,7 +360,7 @@ export default function () {
                     </Card>
                 </Col>
             </Row>
-            
+
             <Divider style={{ marginTop: "20px" }} />
 
             <Card>

@@ -1,4 +1,3 @@
-
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { NodeRewardVO, TransactionVO } from "../../services";
 import { fetchAddressTransactions } from "../../services/tx";
@@ -14,15 +13,19 @@ import TxMethodId from "../../components/TxMethodId";
 import { ArrowRightOutlined, FileTextOutlined } from '@ant-design/icons';
 import { Link as RouterLink } from "react-router-dom";
 import { JSBI } from "@uniswap/sdk";
-import { fetchNodeRewards } from "../../services/node";
 import BlockNumber from "../../components/BlockNumber";
 import { format } from "../../utils/NumberFormat";
+import { fetchNodeRewards } from "../../services/node";
 import Address from "../../components/Address";
 
 const { Text, Link } = Typography;
-const DEFAULT_PAGESIZE = 20;
+const DEFAULT_PAGESIZE = 10;
 
-export default ({ address }: { address: string }) => {
+
+export default ({ address, nodeAddress }: {
+    address?: string
+    nodeAddress?: string
+}) => {
 
     const { t } = useTranslation();
     const [tableData, setTableData] = useState<NodeRewardVO[]>([]);
@@ -43,7 +46,8 @@ export default ({ address }: { address: string }) => {
         fetchNodeRewards({
             current: pagination.current,
             pageSize: pagination.pageSize,
-            address: address
+            address: address,
+            nodeAddress: nodeAddress
         }).then(data => {
             setLoading(false)
             setTableData(data.records);
@@ -87,9 +91,9 @@ export default ({ address }: { address: string }) => {
 
     useEffect(() => {
         pagination.current = 1;
-        pagination.pageSize = 20;
+        pagination.pageSize = DEFAULT_PAGESIZE;
         doFetchAddressNodeWards();
-    }, [address]);
+    }, [address, nodeAddress]);
 
     const RewardTypeLabel = (rewardType: number) => {
         switch (rewardType) {
@@ -123,23 +127,25 @@ export default ({ address }: { address: string }) => {
             render: (val) => <>{DateFormat(val * 1000)}</>
         },
         {
-            title: <Text strong style={{ color: "#6c757e" }}>Node</Text>,
-            dataIndex: 'nodeAddress',
-            width: 180,
-            render: (nodeAddress, nodeReward) => {
+            title: <Text strong style={{ color: "#6c757e" }}>Reward Type</Text>,
+            dataIndex: 'rewardType',
+            width: 130,
+            render: (rewardType) => {
+                const _rewardType = RewardTypeLabel(rewardType);
                 return <>
-                    <Address address={nodeAddress} propVO={nodeReward.nodeAddressPropVO} to={`/node/${nodeAddress}`} />
+                    <Text type="secondary" style={{ marginRight: "5px" }}>[{_rewardType}]</Text>
                 </>
             }
         },
         {
-            title: <Text strong style={{ color: "#6c757e" }}>Reward Type</Text>,
-            dataIndex: 'rewardType',
+            title: <Text strong style={{ color: "#6c757e" }}>Address</Text>,
+            dataIndex: 'address',
             width: 180,
-            render: (rewardType, nodeReward) => {
-                const _rewardType = RewardTypeLabel(rewardType);
+            render: (addr, nodeReward) => {
+                const hasLink = !(addr == address);
+                const rewardType = RewardTypeLabel(nodeReward.rewardType);
                 return <>
-                    <Text type="secondary" style={{ marginRight: "5px" }}>[{_rewardType}]</Text>
+                    <Address address={addr} propVO={nodeReward.addressPropVO}></Address>
                 </>
             }
         },
@@ -151,6 +157,7 @@ export default ({ address }: { address: string }) => {
         }
 
     ];
+
 
     function OutputTotal() {
         return <>
@@ -171,4 +178,5 @@ export default ({ address }: { address: string }) => {
         />
 
     </>
+
 }

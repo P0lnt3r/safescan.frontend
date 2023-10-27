@@ -19,6 +19,7 @@ import ERC20TokenAmount from '../../components/ERC20TokenAmount';
 import { fetchERC20Transfers, fetchTransactions } from '../../services/tx';
 import TransactionHash from '../../components/TransactionHash';
 import { DateFormat } from '../../utils/DateUtil';
+import Address from '../../components/Address';
 
 const { Title, Text, Link } = Typography;
 
@@ -77,19 +78,7 @@ export default () => {
             render: (from, txVO) => {
                 return (
                     <>
-                        <Row>
-                            <Col span={20}>
-                                <Tooltip title={from}>
-                                    {
-
-                                        <RouterLink to={`/address/${from}`}>
-                                            <Link style={{ width: "80%" }} ellipsis>{from}</Link>
-                                        </RouterLink>
-                                    }
-                                </Tooltip>
-                            </Col>
-
-                        </Row>
+                        <Address address={from} propVO={txVO.fromPropVO} />
                     </>
                 )
             }
@@ -98,12 +87,7 @@ export default () => {
             title: <Text strong style={{ color: "#6c757e" }}>To</Text>,
             dataIndex: 'to',
             width: 180,
-            render: (to) =>
-                <Tooltip title={to}>{
-                    <RouterLink to={`/address/${to}`}>
-                        <Link style={{ width: "80%", marginLeft: "5px" }} ellipsis>{to}</Link>
-                    </RouterLink>
-                }</Tooltip>
+            render: (to , txVO) => <Address address={to} propVO={txVO.toPropVO} />
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Value</Text>,
