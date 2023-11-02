@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { SorterResult } from 'antd/es/table/interface';
 import ERC20TokenAmount from '../../components/ERC20TokenAmount';
 import ERC20Logo from '../../components/ERC20Logo';
+import { ChecksumAddress } from '../../components/Address';
 
 const { Title, Text, Link } = Typography;
 const DEFAULT_PAGESIZE = 10;
@@ -94,13 +95,15 @@ export default ({ address }: { address: string }) => {
             title: <Text strong style={{ color: "#6c757e" }}>Contract Address</Text>,
             dataIndex: 'token',
             render: (token, vo) => {
-                return <RouterLink to={`/address/${token}`}>
-                    <Link ellipsis style={{ width: '80%', marginLeft: "5px" }}>
-                        {token}
+                const checksumAddress = ChecksumAddress(token);
+                const ellipsisAddress = checksumAddress.substring(0, 8) + "..." + checksumAddress.substring(checksumAddress.length - 8);
+                return <RouterLink to={`/token/${token}`}>
+                    <Link ellipsis style={{ marginLeft: "5px" }}>
+                        {ellipsisAddress}
                     </Link>
                 </RouterLink>
             },
-            width: 180
+            width: 100
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Balance</Text>,

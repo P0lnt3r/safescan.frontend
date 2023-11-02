@@ -20,6 +20,7 @@ import {
     ApartmentOutlined,
     UserOutlined,
     SolutionOutlined,
+    DeliveredProcedureOutlined
 } from '@ant-design/icons';
 import shape from '../../images/shape-1.svg'
 import { useMemo } from 'react';
@@ -89,7 +90,15 @@ export default ({ safeAccountManagerActions }: { safeAccountManagerActions: Safe
                         {OutputActionAndLabel()}
                         <span style={{ float: "right" }}>
                             <EtherAmount raw={amount} fix={18}></EtherAmount>
-                            <ArrowRightOutlined />
+                            {
+                                isFreeze &&
+
+                                <CaretRightOutlined style={{ marginLeft: "5px", marginRight: "5px" }} />
+                            }
+                            {
+                                !isFreeze &&
+                                <ArrowRightOutlined style={{ marginLeft: "5px", marginRight: "5px" }} />
+                            }
                         </span>
                     </Col>
                     <Col span={16}>
@@ -108,7 +117,15 @@ export default ({ safeAccountManagerActions }: { safeAccountManagerActions: Safe
                     }
                 </Col>
                 <Col span={24}>
-                    <ArrowRightOutlined />
+                    {
+                        isFreeze &&
+
+                        <CaretRightOutlined style={{ marginLeft: "5px", marginRight: "5px" }} />
+                    }
+                    {
+                        !isFreeze &&
+                        <ArrowRightOutlined style={{ marginLeft: "5px", marginRight: "5px" }} />
+                    }
                     <Address address={to} />
                 </Col>
             </>}
@@ -130,7 +147,7 @@ export default ({ safeAccountManagerActions }: { safeAccountManagerActions: Safe
             {
                 lockId != "0" && !(lockIds instanceof Array) &&
                 <Col span={24}>
-                    <img src={shape} style={{ width: "8px", marginTop: "-2px", marginRight: "4px" }} />
+                    <img src={shape} style={{ width: "8px", marginTop: "-8px", marginRight: "4px" , marginLeft:"6px" }} />
                     <Text type='secondary' strong>[ID:{lockId}]</Text>
                     <Text>
                         {

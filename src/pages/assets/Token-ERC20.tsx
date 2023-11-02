@@ -57,9 +57,9 @@ export default ({ address, contractVO, erc20TokenVO }: {
                                     <Address address={contractVO.creator} />
                                 </Col>
                                 <Col span={24}>
-                                    <Text>
-                                        At Txn: <Text style={{width:"60%"}}><TransactionHash txhash={contractVO.creatorTransactionHash} /></Text>
-                                    </Text>
+                                    At Txn: <div style={{width:"70%",display:"inline-block"}}>
+                                        <TransactionHash txhash={contractVO.creatorTransactionHash} />
+                                    </div>
                                 </Col>
                                 <Col span={24}>
                                     <Text type="secondary">{DateFormat(contractVO.creatorTimestamp * 1000)}</Text>

@@ -6,14 +6,6 @@ import { AddressBalanceRankVO, ERC20TokenVO, ERC20TransferVO } from '../../servi
 import type { ColumnsType } from 'antd/es/table';
 import EtherAmount from '../../components/EtherAmount';
 import { Link as RouterLink } from 'react-router-dom';
-import {
-    UserOutlined,
-    FileTextOutlined,
-    SafetyOutlined,
-    ApartmentOutlined
-} from '@ant-design/icons';
-import { format } from '../../utils/NumberFormat';
-import { fetchERC20Tokens } from '../../services/assets';
 import ERC20Logo from '../../components/ERC20Logo';
 import ERC20TokenAmount from '../../components/ERC20TokenAmount';
 import { fetchERC20Transfers, fetchTransactions } from '../../services/tx';

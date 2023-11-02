@@ -1,4 +1,4 @@
-import { AddressBalanceRankVO, AddressPropVO, AddressVO, POST,GET, PageQueryDTO, PageResponseVO, ERC20AddressBalanceVO, AddressAnaliyic } from "./index.d";
+import { AddressBalanceRankVO, AddressPropVO, AddressVO, POST,GET, PageQueryDTO, PageResponseVO, ERC20AddressBalanceVO, AddressAnaliyic, AddressERC20TokenBalance } from "./index.d";
 import config from "../config";
 const API_HOST = config.api_host;
 
@@ -24,5 +24,10 @@ export async function fetchAddress( address : string ) : Promise< AddressVO > {
 
 export async function fetchAddressAnalytic( address : string ) : Promise< AddressAnaliyic > {
     const serverResponse = await POST( `${API_HOST}/addresses/analytic/${address}` );
+    return serverResponse.data;
+}
+
+export async function fetchAddressERC20TokenBalance( address : string , token : string ) : Promise< AddressERC20TokenBalance > {
+    const serverResponse = await POST( `${API_HOST}/addresses/balance/${address}/${token}` );
     return serverResponse.data;
 }

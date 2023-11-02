@@ -84,10 +84,10 @@ export default ({ token }: { token: string }) => {
                                 tokenAsset.owner &&
                                 <Col span={24}>
                                     <Row>
-                                        <Col span={5}>
+                                        <Col span={6}>
                                             <Text strong type='secondary' style={{ marginRight: "5px" }}>Owner:</Text>
                                         </Col>
-                                        <Col span={19}>
+                                        <Col span={18}>
                                             <Tooltip title={tokenAsset.owner}>
                                                 <Paragraph style={{
                                                     width: "95%",

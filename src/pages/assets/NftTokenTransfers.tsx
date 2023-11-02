@@ -18,7 +18,10 @@ import NFT_URI_IMG, { NFT_URI_IMG_SIZE } from "../../components/NFT_URI_IMG";
 const { Text, Link } = Typography;
 const DEFAULT_PAGESIZE = 20;
 
-export default ({ token }: { token: string }) => {
+export default ({ token, filterAddress }: {
+    token: string,
+    filterAddress?: string | null
+}) => {
 
     const { t } = useTranslation();
     const navigate = useNavigate();
@@ -40,7 +43,8 @@ export default ({ token }: { token: string }) => {
         fetchNftTransfers({
             current: pagination.current,
             pageSize: pagination.pageSize,
-            token: token
+            token: token,
+            address: filterAddress
         }).then(data => {
             setLoading(false)
             setTableData(data.records);
@@ -85,8 +89,7 @@ export default ({ token }: { token: string }) => {
         pagination.current = 1;
         pagination.pageSize = DEFAULT_PAGESIZE;
         doFetchNFTTokenTransactions();
-    }, [token]);
-
+    }, [token, filterAddress]);
 
     const columns: ColumnsType<NftTransferVO> = [
         {
@@ -107,17 +110,28 @@ export default ({ token }: { token: string }) => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Date Time</Text>,
             dataIndex: 'timestamp',
-            width: 120,
+            width: 150,
             render: (val) => <>{DateFormat(val * 1000)}</>
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>From</Text>,
             dataIndex: 'from',
-            width: 150,
+            width: 180,
             render: (from, txVO) => {
                 return (
                     <>
-                        <Address address={from} propVO={txVO.fromPropVO} />
+                        <Row>
+                            <Col span={20}>
+                                <Address address={from} propVO={txVO.fromPropVO} />
+                            </Col>
+                            <Col span={4}>
+                                {
+                                    from == filterAddress
+                                        ? <Text code strong style={{ color: "orange" }}>OUT</Text>
+                                        : <Text code strong style={{ color: "green" }}>IN</Text>
+                                }
+                            </Col>
+                        </Row>
                     </>
                 )
             }
@@ -149,7 +163,7 @@ export default ({ token }: { token: string }) => {
                     {
                         tokenType == "erc1155" && <>
                             <Tag style={{
-                                height: "30px", lineHeight: "28px", borderRadius: "10px", float:"right"
+                                height: "30px", lineHeight: "28px", borderRadius: "10px", float: "right"
                             }}>x{vo.tokenValue}</Tag>
                         </>
                     }
@@ -159,7 +173,7 @@ export default ({ token }: { token: string }) => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Item</Text>,
             dataIndex: 'tokenURI',
-            width: 180,
+            width: 150,
             render: (tokenURI, nftTransferVO) => {
                 const { tokenId, tokenPropVO, token } = nftTransferVO;
                 const nftProp = tokenPropVO && (tokenPropVO.subType == "erc721" || tokenPropVO.subType == "erc1155") ? tokenPropVO?.prop : undefined;

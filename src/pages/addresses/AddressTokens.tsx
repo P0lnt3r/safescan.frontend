@@ -2,13 +2,11 @@ import { AutoComplete, Input, Cascader, Select, Button, Row, Col, Tooltip } from
 import { Card, Table, Typography, notification , Tag } from 'antd';
 import "./index.css"
 import {
-    UserOutlined,
     CaretDownOutlined,
     WalletOutlined
 } from '@ant-design/icons';
 import { useEffect, useMemo, useState } from 'react';
 import { BaseOptionType } from 'antd/lib/select';
-import { DefaultOptionType } from 'antd/lib/cascader';
 import { AddressPropVO } from '../../services';
 import ERC20TokenAmount from '../../components/ERC20TokenAmount';
 import ERC20Logo from '../../components/ERC20Logo';
@@ -32,7 +30,7 @@ export default ({ tokens, address, erc721TokenAssetCounts }: {
     const navigate = useNavigate();
     const totalTokens = (tokens ? tokens.length : 0 )
                       + (erc721TokenAssetCounts ? erc721TokenAssetCounts.length : 0);
-
+    const filterAddress = address;
     const RenderTokenAmount = (value: string, balance: string, { address, name, decimals, symbol }: {
         address: string,
         name: string,
@@ -45,6 +43,9 @@ export default ({ tokens, address, erc721TokenAssetCounts }: {
                 style={{
                     display: 'flex',
                     justifyContent: 'space-between',
+                }}
+                onClick={()=>{
+                    navigate(`/token/${address}?a=${filterAddress}`)
                 }}
             >
                 <Row>
@@ -64,10 +65,11 @@ export default ({ tokens, address, erc721TokenAssetCounts }: {
         )
     });
 
-    const RenderTokenAssetCount = (value: string, count: number, { address, name, symbol }: {
+    const RenderTokenAssetCount = (value: string, count: number, { address, name, symbol , subType}: {
         address: string,
         name: string,
-        symbol: string
+        symbol: string,
+        subType: string
     }) => ({
         value,
         label: (
@@ -75,6 +77,9 @@ export default ({ tokens, address, erc721TokenAssetCounts }: {
                 style={{
                     display: 'flex',
                     justifyContent: 'space-between',
+                }}
+                onClick={()=>{
+                    navigate(`/token/${address}?a=${filterAddress}`)
                 }}
             >
                 <Row style={{width:"100%"}}>
@@ -87,7 +92,7 @@ export default ({ tokens, address, erc721TokenAssetCounts }: {
                         <Text type='secondary'>
                             <Text type='secondary'>{symbol}</Text>
                         </Text>
-                        <Tag style={{float:"right" , borderRadius:"12px"}} >ERC-721</Tag>
+                        <Tag style={{float:"right" , borderRadius:"12px"}} >{subType}</Tag>
                         <Tag style={{float:"right" , borderRadius:"12px"}} color="#108ee9">x{count}</Tag>
                     </Col>
                 </Row>
@@ -130,12 +135,12 @@ export default ({ tokens, address, erc721TokenAssetCounts }: {
                     const { name, decimals, symbol } = JSON.parse(prop) as { name: string, decimals: number, symbol: string };
                     filterOptions.push({
                         value: `${name}(${symbol})`,
-                        label: RenderTokenAssetCount(token, tokenAssetCount, { address: token, name, symbol }).label,
+                        label: RenderTokenAssetCount(token, tokenAssetCount, { address: token, name, symbol , subType }).label,
                     });
                     if (!categorys.get(subType)) {
                         categorys.set(subType, []);
                     }
-                    categorys.get(subType)?.push(RenderTokenAssetCount(token, tokenAssetCount, { address: token, name, symbol }))
+                    categorys.get(subType)?.push(RenderTokenAssetCount(token, tokenAssetCount, { address: token, name, symbol , subType }))
                 }
             }
         }

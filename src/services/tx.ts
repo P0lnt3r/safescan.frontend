@@ -60,9 +60,9 @@ export async function fetchERC20Transfers( params:PageQueryDTO | {
 }
 
 export async function fetchNftTransfers( params:PageQueryDTO | {
-    address ?: string , 
+    address ?: string | null , 
     token ?: string,
-    tokenId ?: string
+    tokenId ?: string 
 } ): Promise<PageResponseVO<NftTransferVO>> {
     const serverResponse = await POST(`${API_HOST}/txs/nft`, { ...params });
     return serverResponse.data;

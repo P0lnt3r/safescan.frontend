@@ -569,6 +569,11 @@ export interface AddressAnaliyic {
     nodeRewards : AnalyticNodeReward[]
 }
 
+export interface AddressERC20TokenBalance {
+    balance : string , 
+    erc20TokenVO : ERC20TokenVO
+}
+
 export interface SNVoteActionVO {
     action: string,
     amountWeight: string,

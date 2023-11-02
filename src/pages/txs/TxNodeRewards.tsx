@@ -52,13 +52,13 @@ export default ({ nodeRewards }: { nodeRewards: NodeRewardVO[] }) => {
         const rewardTypeLabel = RewardTypeLabel(rewardType);
         return <>
             <Row key={eventLogIndex}>
-                <Col style={{ minWidth: "260px" }}>
-                    <img src={shape} style={{ width: "8px", marginTop: "-2px", marginRight: "4px" }} />
-                    <Text style={{ marginRight: "5px" }} type="secondary" >[{rewardTypeLabel}]</Text>
+                <Col style={{ minWidth: "220px" , lineHeight:"24px" }}>
+                    <img src={shape} style={{ width: "8px", marginTop: "-8px", marginRight: "4px" }} />
                     <EtherAmount raw={amount} fix={18} />
                 </Col>
                 <Col xl={16} xs={24}>
                     <Text><ArrowRightOutlined style={{ marginLeft: "15px", marginRight: "10px" }} />
+                        <Text style={{ marginRight: "5px" }} type="secondary" >[{rewardTypeLabel}]:</Text>
                         <Address address={address} propVO={addressPropVO} />
                     </Text>
                 </Col>

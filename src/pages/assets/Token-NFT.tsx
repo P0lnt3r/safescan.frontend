@@ -35,13 +35,13 @@ export default ({ address, contractVO, nftTokenVO }: {
                     <Row style={{ marginTop: "15px" }}>
                         <Col xl={6} xs={24}><Text strong>Holders:</Text></Col>
                         <Col xl={18} xs={24}>
-                            {format(nftTokenVO.holders+"")}
+                            {format(nftTokenVO.holders + "")}
                         </Col>
                     </Row>
                     <Row style={{ marginTop: "15px" }}>
                         <Col xl={6} xs={24}><Text strong>Total Transfers:</Text></Col>
                         <Col xl={18} xs={24}>
-                            {format(nftTokenVO.totalTransfers+"")}
+                            {format(nftTokenVO.totalTransfers + "")}
                         </Col>
                     </Row>
                     <Row style={{ marginTop: "15px" }}>
@@ -52,7 +52,9 @@ export default ({ address, contractVO, nftTokenVO }: {
                                     <Address address={contractVO.creator} />
                                 </Col>
                                 <Col span={24}>
-                                    At Txn : <TransactionHash txhash={contractVO.creatorTransactionHash} />
+                                    At Txn: <div style={{ width: "70%", display: "inline-block" }}>
+                                        <TransactionHash txhash={contractVO.creatorTransactionHash} />
+                                    </div>
                                 </Col>
                                 <Col span={24}>
                                     <Text type="secondary">{DateFormat(contractVO.creatorTimestamp * 1000)}</Text>
@@ -63,11 +65,11 @@ export default ({ address, contractVO, nftTokenVO }: {
                 </Card>
             </Col>
             <Col style={{ marginTop: "15px", padding: "5px" }} xl={12} xs={24} >
-                <Card size="small" style={{height:"258px"}} title={<Title level={5}>Profile Summary</Title>}>
+                <Card size="small" style={{ height: "258px" }} title={<Title level={5}>Profile Summary</Title>}>
                     <Row style={{ marginTop: "15px" }}>
                         <Col xl={6} xs={24}><Text strong>Total Supply:</Text></Col>
                         <Col xl={18} xs={24}>
-                            {format(nftTokenVO.totalAssets+"")}
+                            {format(nftTokenVO.totalAssets + "")}
                         </Col>
                     </Row>
                     <Row style={{ marginTop: "15px" }}>

@@ -15,10 +15,11 @@ import Address from "../../components/Address";
 const { Text, Link } = Typography;
 const DEFAULT_PAGESIZE = 20;
 
-export default ({ tokenAddress }: { tokenAddress: string }) => {
-
+export default ({ tokenAddress, filterAddress }: {
+    tokenAddress: string,
+    filterAddress ?: string
+}) => {
     const { t } = useTranslation();
-
     const [tableData, setTableData] = useState<ERC20TransferVO[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [unconfirmed, setUnconfirmed] = useState<number>(0);
@@ -37,7 +38,8 @@ export default ({ tokenAddress }: { tokenAddress: string }) => {
         fetchERC20Transfers({
             current: pagination.current,
             pageSize: pagination.pageSize,
-            tokenAddress: tokenAddress
+            tokenAddress,
+            address : filterAddress
         }).then(data => {
             setLoading(false)
             setTableData(data.records);
@@ -103,14 +105,29 @@ export default ({ tokenAddress }: { tokenAddress: string }) => {
             title: "From",
             dataIndex: 'from',
             width: 180,
-            render: (from, txVO) => <Address address={from} propVO={txVO.fromPropVO} />
+            render: (from, txVO) => {
+                return <>
+                    <Row>
+                        <Col span={20}>
+                            <Address address={from} propVO={txVO.fromPropVO} />
+                        </Col>
+                        <Col span={4}>
+                            {
+                                from == filterAddress
+                                    ? <Text code strong style={{ color: "orange" }}>OUT</Text>
+                                    : <Text code strong style={{ color: "green" }}>IN</Text>
+                            }
+                        </Col>
+                    </Row>
+                </>
+            }
         },
         {
             title: 'To',
             dataIndex: 'to',
             width: 180,
             render: (to, txVO) => <Address address={to} propVO={txVO.fromPropVO} />
-            },
+        },
         {
             title: 'Value',
             dataIndex: 'value',

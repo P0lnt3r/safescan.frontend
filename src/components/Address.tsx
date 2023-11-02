@@ -15,13 +15,17 @@ import { utils } from 'ethers';
 const { Text, Link, Paragraph } = Typography;
 
 export function ChecksumAddress(address: string): string {
-    return address ? utils.getAddress(address) : ""
+    try {
+        return address ? utils.getAddress(address) : ""
+    } catch (error) {
+        return address;
+    }
 }
 
-export default ({ address, propVO, style , to }: {
+export default ({ address, propVO, style, to }: {
     address: string,
     propVO?: AddressPropVO | undefined,
-    to ?: string,
+    to?: string,
     style?: {
         hasLink?: boolean,
         forceTag?: boolean,
@@ -51,6 +55,22 @@ export default ({ address, propVO, style , to }: {
         }
     }, [address, propVO]);
 
+    const checksumAddress = ChecksumAddress(address);
+    const ellipsisAddress = (style && style.ellipsis == false) ?
+        checksumAddress
+        : checksumAddress.substring(0, 8) + "..." + checksumAddress.substring(checksumAddress.length - 8);
+    const _tag = (style && style.forceTag == false) ?
+        ellipsisAddress
+        : tag ? tag : ellipsisAddress;
+
+    const textStyle: any = {
+        maxWidth: "90%"
+    }
+    if (style && style.color) {
+        textStyle.color = style.color;
+    }
+    const routerTo = to ? to : "/address/" + checksumAddress;
+
     const RenderIcon = () => {
         const isSuperNode = subType == "supernode";
         if (isSuperNode) {
@@ -71,19 +91,6 @@ export default ({ address, propVO, style , to }: {
         return <>
         </>
     }
-    const checksumAddress = ChecksumAddress(address);
-    const ellipsisAddress = (style && style.ellipsis == false ) ?
-        checksumAddress
-        : checksumAddress.substring(0, 8) + "..." + checksumAddress.substring(checksumAddress.length - 8);
-
-    const textStyle: any = {
-        maxWidth: "90%"
-    }
-    if (style && style.color) {
-        textStyle.color = style.color;
-    }
-
-    const routerTo = to ? to : "/address/" + checksumAddress;
 
     return <>
         <Text>
@@ -92,32 +99,27 @@ export default ({ address, propVO, style , to }: {
                 {
                     (style && !style.hasLink) && <>
                         {
-                            tag && <Text ellipsis style={textStyle}>
-                                {tag}
+                            _tag && <Text ellipsis style={textStyle}>
+                                {_tag}
                             </Text>
                         }
                         {
-                            !tag && !style.forceTag && <Text ellipsis style={textStyle}>
-                                {ellipsisAddress}
-                            </Text>
-                        }
-                        {
-                            !tag && style.forceTag && <Text ellipsis strong style={textStyle}>
+                            !_tag && style.forceTag && <Text ellipsis strong style={textStyle}>
                                 {type?.toLocaleUpperCase()}
                             </Text>
                         }
                     </>
                 }
                 {
-                    (!style || style.hasLink == true) && <>
+                    (!style || style.hasLink) && <>
                         <RouterLink to={routerTo}>
                             {
-                                tag && <Link ellipsis style={textStyle}>
-                                    {tag}
+                                _tag && <Link ellipsis style={textStyle}>
+                                    {_tag}
                                 </Link>
                             }
                             {
-                                !tag && <Link ellipsis style={textStyle}>
+                                !_tag && <Link ellipsis style={textStyle}>
                                     {ellipsisAddress}
                                 </Link>
                             }
