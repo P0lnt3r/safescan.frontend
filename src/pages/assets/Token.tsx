@@ -33,13 +33,14 @@ export default () => {
         if (address) {
             fetchToken(address).then((data) => {
                 setTokenInfo(data);
+                if ( filterAddress && address && data.erc20TokenVO.address ){
+                    fetchAddressERC20TokenBalance(filterAddress , address).then((data)=>{
+                        setFilterAddressERC20TokenBalance( data.balance )
+                    })
+                }
             })
         }
-        if ( filterAddress && address && tokenInfo?.erc20TokenVO.address ){
-            fetchAddressERC20TokenBalance(filterAddress , address).then((data)=>{
-                setFilterAddressERC20TokenBalance( data.balance )
-            })
-        }
+        
     }, [address , filterAddress]);
 
     const items: TabsProps['items'] = useMemo(() => {

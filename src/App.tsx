@@ -34,6 +34,8 @@ import PageChartMasternodes from './pages/statistics/Page-Chart-Masternodes';
 import PageChartSupernodes from './pages/statistics/Page-Chart-Supernodes';
 import Node_Detail from './pages/nodes/Node_Detail';
 import AccountRecord from './pages/assets/AccountRecord';
+import VerifyContract from './pages/verify/verifyContract';
+import VerifyContractSolc from './pages/verify/verifyContract-solc';
 
 const { Content } = Layout;
 
@@ -76,6 +78,8 @@ function App() {
               <Route path="/token/:address" index element={<Token />} />
               <Route path="/tokenholdings" index element={<AddressTokenHoldings />} />
               <Route path="/nft/:token/:tokenId" index element={<Nft />} />
+              <Route path="/verifyContract" index element={<VerifyContract />} />
+              <Route path="/verifyContract-solc" index element={<VerifyContractSolc />} />
             </Routes>
           </div>
         </BrowserRouter>
