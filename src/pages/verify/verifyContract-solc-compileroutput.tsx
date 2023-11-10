@@ -116,11 +116,10 @@ export default ({ verifyParams, verifyResult }: {
             <Row style={{ marginTop: "20px" }}>
 
                 <Col span={24}>
-                    
+
                     {
                         errors && <>
                             <Text style={{ fontSize: "16px" }} strong>Compiler Warning(s):</Text>
-                            <br /><br />
                             <div style={{
                                 marginTop: "20px", width: "100%", backgroundColor: "#f7f7f7",
                                 border: "1px solid #dddada", padding: "16px 16px", borderRadius: ".5rem",
