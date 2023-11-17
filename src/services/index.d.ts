@@ -589,4 +589,17 @@ export interface SNVoteActionVO {
     confirmed : number
 }
 
+export interface Contract_Compile_VO {
 
+    address: string,
+    creator: string,
+    creatorBlockNumber: number,
+    creatorTransactionHash: string,
+    creatorTimestamp: number,
+    selfDestructTransactionHash: string,
+    selfDestructBlockNumber: number,
+    selfDestructTimestamp: number,
+    name : string,
+    
+
+}

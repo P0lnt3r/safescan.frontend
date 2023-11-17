@@ -33,17 +33,17 @@ export enum SystemContract {
 }
 
 export const SysContractABI: { [address in SystemContract]: string } = {
-    [SystemContract.SystemProperty]     : SystemContractAbiConfig._0x0000000000000000000000000000000000001002,
-    [SystemContract.AccountManager]     : SystemContractAbiConfig._0x0000000000000000000000000000000000001012,
-    [SystemContract.MasterNode]         : SystemContractAbiConfig._0x0000000000000000000000000000000000001022,
-    [SystemContract.SuperNode]          : SystemContractAbiConfig._0x0000000000000000000000000000000000001032,
-    [SystemContract.SuperNodeVote]      : SystemContractAbiConfig._0x0000000000000000000000000000000000001042,
-    [SystemContract.MasterNodeState]    : SystemContractAbiConfig._0x0000000000000000000000000000000000001052,
-    [SystemContract.SuperNodeState]     : SystemContractAbiConfig._0x0000000000000000000000000000000000001062,
-    [SystemContract.Proposal]           : SystemContractAbiConfig._0x0000000000000000000000000000000000001072,
-    [SystemContract.SystemReward]       : SystemContractAbiConfig._0x0000000000000000000000000000000000001082,
-    [SystemContract.SAFE3]              : SystemContractAbiConfig._0x0000000000000000000000000000000000001092,
-    [SystemContract.MultiCall]          : SystemContractAbiConfig._0x0000000000000000000000000000000000001102
+    [SystemContract.SystemProperty]     : SystemContractAbiConfig.PropertyABI,
+    [SystemContract.AccountManager]     : SystemContractAbiConfig.AccountManagerABI,
+    [SystemContract.MasterNode]         : SystemContractAbiConfig.MasterNodeABI,
+    [SystemContract.SuperNode]          : SystemContractAbiConfig.SuperNodeABI,
+    [SystemContract.SuperNodeVote]      : SystemContractAbiConfig.SNVoteABI,
+    [SystemContract.MasterNodeState]    : SystemContractAbiConfig.MasterNodeStateABI,
+    [SystemContract.SuperNodeState]     : SystemContractAbiConfig.SuperNodeStateABI,
+    [SystemContract.Proposal]           : SystemContractAbiConfig.ProposalABI,
+    [SystemContract.SystemReward]       : SystemContractAbiConfig.SystemRewardABI,
+    [SystemContract.SAFE3]              : SystemContractAbiConfig.Safe3ABI,
+    [SystemContract.MultiCall]          : SystemContractAbiConfig.MulticallABI
 }
 
 export enum CommonAbiType {

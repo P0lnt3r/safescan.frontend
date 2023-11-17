@@ -19,8 +19,8 @@ export default ({ verifyParams, verifyResult }: {
         evmVersion: string | undefined
     },
     verifyResult?: {
-        output: any,
-        result: any
+        output ?: any,
+        result ?: any
     }
 }) => {
 
@@ -31,8 +31,8 @@ export default ({ verifyParams, verifyResult }: {
         evmVersion
     } = verifyParams;
 
-    const errors = verifyResult?.output.errors;
-    const contracts = verifyResult?.output?.contracts?.["single.sol"];
+    const errors = verifyResult?.output?.errors;
+    const contracts = verifyResult?.output?.contracts?.["contract.sol"];
 
     const { contractNames, contractNamesStr, contractBytecodes } = useMemo(() => {
         if (contracts) {
@@ -181,13 +181,13 @@ export default ({ verifyParams, verifyResult }: {
                                     {
                                         contractBytecodes && contractBytecodes.map((contractNameBytecode) => {
                                             const { contractName, bytecode } = contractNameBytecode;
-                                            return <>
+                                            return <div key={contractName}>
                                                 <br />
                                                 <Text strong>{`${contractBytecodes.indexOf(contractNameBytecode) + 1}) ${contractName}`}</Text>
                                                 <br />
                                                 {bytecode}
                                                 <br />
-                                            </>
+                                            </div>
                                         })
                                     }
                                 </div>

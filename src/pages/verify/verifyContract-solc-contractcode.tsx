@@ -3,8 +3,10 @@ import CollapsePanel from "antd/lib/collapse/CollapsePanel";
 import { useState } from "react";
 import { useLocation } from "react-router";
 import { contractCompile } from "../../services/verify";
+import { Link as RouterLink } from 'react-router-dom';
+import Address from "../../components/Address";
 
-const { Text } = Typography;
+const { Text, Link } = Typography;
 const { TextArea } = Input;
 
 const evmVersionSelectOptions = [
@@ -22,7 +24,7 @@ const evmVersionSelectOptions = [
     { value: "shanghai", label: "shanghai (default for >=v0.8.20)" },
 ];
 
-export default ( { verifyParams , setVerifyParams , setVerifyResult }: {
+export default ({ verifyParams, setVerifyParams, setVerifyResult }: {
     verifyParams: {
         contractAddress: string | null,
         compileVersion: string | null,
@@ -31,9 +33,9 @@ export default ( { verifyParams , setVerifyParams , setVerifyResult }: {
         contractSourceCode: string | undefined,
         license: string | undefined,
         evmVersion: string | undefined
-    } , 
-    setVerifyParams : ( {} : any ) => void , 
-    setVerifyResult : ( {} : any ) => void
+    },
+    setVerifyParams: ({ }: any) => void,
+    setVerifyResult: ({ }: any) => void
 }) => {
 
     const location = useLocation();
@@ -49,11 +51,12 @@ export default ( { verifyParams , setVerifyParams , setVerifyResult }: {
         license: string | undefined,
         evmVersion: string | undefined
     }>(verifyParams);
+    const [errCode, setErrCode] = useState();
 
     const optimizationSelectChange = (optimizerEnabled: boolean) => {
         setParams({
             ...params,
-            optimizerEnabled : optimizerEnabled
+            optimizerEnabled: optimizerEnabled
         })
     }
     const runsInputChange = (event: any) => {
@@ -87,13 +90,40 @@ export default ( { verifyParams , setVerifyParams , setVerifyResult }: {
             contractCompile({
                 ...params
             }).then((data: any) => {
-                setVerifyResult(data)
+                if ( data.result == "err_1002" ){
+                    setErrCode(data.result)
+                }else{
+                    setVerifyResult(data)
+                }
             })
         }
     }
 
     return <>
         <Card>
+
+            {
+                errCode && errCode == "err_1002" &&
+                <Alert type="error" style={{
+                    borderRadius: "12px",
+                    backgroundColor: "rgb(255, 160, 170)",
+                    border: "8px solid rgb(255, 160, 170)",
+                    marginBottom: "40px"
+                }} message={<>
+                    <Text strong style={{
+                        color: "#b02a37"
+                    }}>Error! Unable to locate Contract Code at <RouterLink to={`/address/${verifyParams.contractAddress}`}><Link strong style={{
+                        marginLeft: "5px"
+                    }}>
+                        {verifyParams.contractAddress && <>
+                            {
+                                verifyParams.contractAddress
+                            }</>}
+                    </Link></RouterLink><br />
+                        Is this a valid Contract Address ?</Text>
+                </>} />
+            }
+
             <Alert
                 message={<>
                     <Text type="secondary" strong>

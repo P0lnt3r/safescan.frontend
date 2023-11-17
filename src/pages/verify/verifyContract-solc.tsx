@@ -48,7 +48,7 @@ export default () => {
                 />
             }
         ]
-        if (verifyResult) {
+        if (verifyResult?.output) {
             items.push({
                 key: 'compilerOutput',
                 label: 'Compiler Output',
