@@ -32,3 +32,9 @@
 .address-holding-div:hover {
     background-color: #ddd;
 }
+
+.source_code_shower {
+    width: 100%;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}

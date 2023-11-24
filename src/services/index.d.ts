@@ -590,7 +590,6 @@ export interface SNVoteActionVO {
 }
 
 export interface Contract_Compile_VO {
-
     address: string,
     creator: string,
     creatorBlockNumber: number,
@@ -600,6 +599,23 @@ export interface Contract_Compile_VO {
     selfDestructBlockNumber: number,
     selfDestructTimestamp: number,
     name : string,
-    
+    verifyTimestamp : number
+}
 
+export interface Contract_Compile_Result_VO {
+    address : string ,
+    name : stirng ,
+    creationBytecode : string;
+    deployedBytecode : string ;
+    deployedBytecodeSourceMap : string;
+    deployedArgsAbiEncode : string;
+    compileBytecode : string;
+    sourceCodes : string;
+    compileType : string;
+    compileVersion : string;
+    abi : string;
+    evmVersion : string;
+    optimizerEnabled : boolean;
+    optimizerRuns : number;
+    license : string;
 }

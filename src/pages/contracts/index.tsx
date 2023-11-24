@@ -65,6 +65,13 @@ export default () => {
         doFetchContracts();
     }, []);
 
+    const RenderCompileVersion = ( version : string ) => {
+        const content = version ? version.substring(
+            0 , version.indexOf("+") 
+        ) : "-";
+        return content
+    }
+
     const columns: ColumnsType<Contract_Compile_VO> = [
         {
             title: <Text strong style={{ color: "#6c757e" }}>Address</Text>,
@@ -85,7 +92,7 @@ export default () => {
                     <Text strong>{name}</Text>
                 </>
             },
-            width: 40,
+            width: 60,
             fixed: 'left',
         },
         {
@@ -108,7 +115,7 @@ export default () => {
                     }
                 </>
             },
-            width: 40,
+            width: 50,
             fixed: 'left',
         },
         {
@@ -127,10 +134,10 @@ export default () => {
             dataIndex: 'compileVersion',
             render: (compileVersion, vo) => {
                 return <>
-                    <Text>{compileVersion ? compileVersion : "-"}</Text>
+                    <Text>{RenderCompileVersion(compileVersion)}</Text>
                 </>
             },
-            width: 40,
+            width: 30,
             fixed: 'left',
         },
         {
@@ -146,13 +153,13 @@ export default () => {
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Verified Date</Text>,
-            dataIndex: 'verifyTime',
-            render: (verifyTime, vo) => {
+            dataIndex: 'verifyTimestamp',
+            render: (verifyTimestamp, vo) => {
                 return <>
-                    <Text>{verifyTime ? verifyTime : "-"}</Text>
+                    <Text>{verifyTimestamp ? DateFormat(verifyTimestamp * 1000) : "-"}</Text>
                 </>
             },
-            width: 40,
+            width: 50,
             fixed: 'left',
         },
         {

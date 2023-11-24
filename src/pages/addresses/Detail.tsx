@@ -21,14 +21,19 @@ import TransactionHash from "../../components/TransactionHash";
 import { DateFormat } from "../../utils/DateUtil";
 import NFTTransfers from "./NFTTransfers";
 import AddressAnalytics from "./AddressAnalytics";
+import AddressContractSourceCode from "./AddressContractSourceCode";
 
 const { Title, Text, Paragraph, Link } = Typography;
 
 export default function () {
 
     const address = useParams().address?.toLocaleLowerCase();
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [addressVO, setAddressVO] = useState<AddressVO>();
+
     const items: TabsProps['items'] = useMemo(() => {
-        return [
+        const items = [
             {
                 key: 'transactions',
                 label: "Transactions",
@@ -38,36 +43,54 @@ export default function () {
                 key: 'contractInternalTransactions',
                 label: "Internal Txns",
                 children: address && <ContractInternalTransactions address={address} ></ContractInternalTransactions>,
-            },
+            }
+        ];
+        if (addressVO?.contract) {
+            items.push({
+                key: "sourceCode",
+                label: "Contract",
+                children: address && <AddressContractSourceCode address={address} />
+            });
+        }
+        items.push(
             {
                 key: 'noderewards',
                 label: "Node Rewards",
                 children: address && <NodeRewards address={address} />
-            },
+            }
+        );
+        items.push(
             {
                 key: 'accountRecords',
                 label: `Account Records`,
                 children: address && <AccountRecords address={address}></AccountRecords>,
             },
+        );
+        items.push(
             {
                 key: 'erc20-transactions',
                 label: `ERC20 Transactions`,
                 children: address && <ERC20Transfers address={address}></ERC20Transfers>,
             },
+        );
+        items.push(
             {
                 key: 'nft-transfers',
                 label: `NFT Transfers`,
                 children: address && <NFTTransfers address={address}></NFTTransfers>,
             },
+        );
+        items.push(
             {
                 key: 'analytics',
                 label: `Analytics`,
                 children: address && <AddressAnalytics address={address}></AddressAnalytics>,
-            },
-        ]
-    }, [address]);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [addressVO, setAddressVO] = useState<AddressVO>();
+            }
+        );
+        return items;
+    }, [addressVO]);
+
+
     useEffect(() => {
         if (address) {
             fetchAddress(address).then(data => {
@@ -364,7 +387,7 @@ export default function () {
             <Divider style={{ marginTop: "20px" }} />
 
             <Card>
-                <Tabs defaultActiveKey="1" items={items} />
+                <Tabs defaultActiveKey="sourceCode" items={items} />
             </Card>
 
         </>

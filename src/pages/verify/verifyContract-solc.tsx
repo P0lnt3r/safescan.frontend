@@ -30,7 +30,7 @@ export default () => {
         optimizerRuns: "200",
         contractSourceCode: undefined,
         license: "",
-        evmVersion: undefined
+        evmVersion: undefined,
     });
     const [verifyResult, setVerifyResult] = useState<{
         output: any,
