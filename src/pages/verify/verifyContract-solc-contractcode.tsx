@@ -17,7 +17,7 @@ export default ({ verifyParams, setVerifyParams, setVerifyResult }: {
         optimizerEnabled: boolean,
         optimizerRuns: string,
         contractSourceCode: string | undefined,
-        license: string | undefined,
+        license: string | null,
         evmVersion: string | undefined,
     },
     setVerifyParams: ({ }: any) => void,
@@ -26,15 +26,14 @@ export default ({ verifyParams, setVerifyParams, setVerifyResult }: {
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
-    const licenseType = searchParams.get("licenseType");
 
     const [params, setParams] = useState<{
         contractAddress: string | null,
-        compileVersion: string | null,
+        compileVersion: string | null ,
         optimizerEnabled: boolean,
         optimizerRuns: string,
         contractSourceCode: string | undefined,
-        license: string | undefined,
+        license: string | null,
         evmVersion: string | undefined
     }>(verifyParams);
     const [errCode, setErrCode] = useState();
@@ -210,7 +209,7 @@ export default ({ verifyParams, setVerifyParams, setVerifyResult }: {
                             <br />
                             <Select
                                 size="large"
-                                defaultValue={licenseType}
+                                defaultValue={params.license}
                                 style={{ width: "100%" }}
                                 options={LicenseOptions}
                                 onChange={licenseSelectChange}

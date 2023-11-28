@@ -14,6 +14,7 @@ export default () => {
     const searchParams = new URLSearchParams(location.search);
     const contractAddress = searchParams.get("a");
     const compile = searchParams.get("c");
+    const license = searchParams.get("license");
 
     const [verifyParams, setVerifyParams] = useState<{
         contractAddress: string | null,
@@ -21,7 +22,7 @@ export default () => {
         optimizerEnabled: boolean,
         optimizerRuns: string,
         contractSourceCode: string | undefined,
-        license: string | undefined,
+        license: string | null,
         evmVersion: string | undefined
     }>({
         contractAddress: contractAddress,
@@ -29,7 +30,7 @@ export default () => {
         optimizerEnabled: false,
         optimizerRuns: "200",
         contractSourceCode: undefined,
-        license: "",
+        license: license,
         evmVersion: undefined,
     });
     const [verifyResult, setVerifyResult] = useState<{

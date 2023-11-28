@@ -97,8 +97,6 @@ export default ({ address }: {
     }, [contractCompileResult]);
 
     return <>
-
-
         {
             /** 没有进行合约源码验证 */
             !contractCompileResult?.sourceCodes && <>
@@ -107,7 +105,7 @@ export default ({ address }: {
                         <Text type="secondary"><InfoCircleFilled style={{ marginRight: "10px" }} /></Text>
                         Are you the contract creator?
                         <RouterLink to={`/verifyContract?a=${address}`}>
-                            <Link strong style={{marginLeft:"5px",marginRight:"5px"}}>
+                            <Link strong style={{ marginLeft: "5px", marginRight: "5px" }}>
                                 Verify and Publish
                             </Link>
                         </RouterLink>

@@ -59,7 +59,7 @@ export default () => {
     const submitClick = () => {
         if ( params.contractAddress && params.compile && params.license ){
             let _compile = params.compile.replace("+" , "%2b");
-            navigator(`/verifyContract-solc?a=${params.contractAddress}&c=${_compile}&licenseType=${params.license}`)
+            navigator(`/verifyContract-solc?a=${params.contractAddress}&c=${_compile}&license=${params.license}`)
         }
     }
     const resetClick = () => {

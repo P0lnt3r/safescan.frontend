@@ -6,12 +6,9 @@ import type { ColumnsType } from 'antd/es/table';
 import EtherAmount from '../../components/EtherAmount';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-    UserOutlined,
-    FileTextOutlined,
-    SafetyOutlined,
-    ApartmentOutlined,
-    SearchOutlined,
-    CloseCircleOutlined
+    ThunderboltOutlined,
+    ThunderboltFilled,
+    ToolFilled
 } from '@ant-design/icons';
 import { format } from '../../utils/NumberFormat';
 import { fetchMasterNodes, fetchSuperNodes } from '../../services/node';
@@ -65,9 +62,9 @@ export default () => {
         doFetchContracts();
     }, []);
 
-    const RenderCompileVersion = ( version : string ) => {
+    const RenderCompileVersion = (version: string) => {
         const content = version ? version.substring(
-            0 , version.indexOf("+") 
+            0, version.indexOf("+")
         ) : "-";
         return content
     }
@@ -78,7 +75,7 @@ export default () => {
             dataIndex: 'address',
             render: (address, vo) => {
                 return <>
-                    <Address address={address} style={{ forceTag: false, hasLink: true }} />
+                    <Address address={address} propVO={vo.addressPropVO} style={{ forceTag: false, hasLink: true }} />
                 </>
             },
             width: 60,
@@ -110,7 +107,9 @@ export default () => {
                     }
                     {
                         creatorBlockNumber != 0 && <>
-                            {DateFormat(creatorTimestamp * 1000)}
+                            <RouterLink to={`/tx/${creatorTransactionHash}`}>
+                                {DateFormat(creatorTimestamp * 1000)}
+                            </RouterLink>
                         </>
                     }
                 </>
@@ -137,18 +136,47 @@ export default () => {
                     <Text>{RenderCompileVersion(compileVersion)}</Text>
                 </>
             },
-            width: 30,
+            width: 25,
             fixed: 'left',
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Setting</Text>,
             dataIndex: 'optimizerEnabled',
-            render: (optimizerEnabled, vo) => {
+            render: (_, vo) => {
+                const {
+                    optimizerEnabled, optimizerRuns, deployedArgsAbiEncode
+                } = vo;
                 return <>
-                    <Text strong>{optimizerEnabled}</Text>
+                    {
+                        !optimizerEnabled && !deployedArgsAbiEncode && <>
+                            <Text strong>-</Text>
+                        </>
+                    }
+                    {
+                        optimizerEnabled && <>
+                            <Tooltip title="Optimization Enabled">
+                                <Tag style={{
+                                    width: "24px", borderRadius: "12px", paddingLeft: "5px"
+                                }}>
+                                    <ThunderboltFilled style={{ color: "#6f6f6f" }} />
+                                </Tag>
+                            </Tooltip>
+                        </>
+                    }
+                    {
+                        deployedArgsAbiEncode && <>
+                            <Tooltip title="Constructor Arguments">
+                                <Tag style={{
+                                    width: "24px", borderRadius: "12px", paddingLeft: "5px"
+                                }}>
+                                    <ToolFilled style={{ color: "#6f6f6f" }} />
+                                </Tag>
+                            </Tooltip>
+                        </>
+                    }
                 </>
             },
-            width: 40,
+            width: 25,
             fixed: 'left',
         },
         {

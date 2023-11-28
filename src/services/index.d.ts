@@ -591,6 +591,7 @@ export interface SNVoteActionVO {
 
 export interface Contract_Compile_VO {
     address: string,
+    addressPropVO : AddressPropVO,
     creator: string,
     creatorBlockNumber: number,
     creatorTransactionHash: string,
@@ -599,12 +600,16 @@ export interface Contract_Compile_VO {
     selfDestructBlockNumber: number,
     selfDestructTimestamp: number,
     name : string,
-    verifyTimestamp : number
+    verifyTimestamp : number,
+    optimizerEnabled : boolean,
+    optimizerRuns : number,
+    deployedArgsAbiEncode : string,
 }
 
 export interface Contract_Compile_Result_VO {
     address : string ,
     name : stirng ,
+    creatorTransactionHash : string,
     creationBytecode : string;
     deployedBytecode : string ;
     deployedBytecodeSourceMap : string;
