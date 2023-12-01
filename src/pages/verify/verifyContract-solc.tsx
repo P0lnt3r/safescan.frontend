@@ -18,20 +18,24 @@ export default () => {
 
     const [verifyParams, setVerifyParams] = useState<{
         contractAddress: string | null,
+        compileType : string | null,
         compileVersion: string | null,
         optimizerEnabled: boolean,
         optimizerRuns: string,
         contractSourceCode: string | undefined,
         license: string | null,
-        evmVersion: string | undefined
+        evmVersion: string | undefined,
+        standardInputJson : string | null,
     }>({
         contractAddress: contractAddress,
+        compileType: "signle",
         compileVersion: compile,
         optimizerEnabled: false,
         optimizerRuns: "200",
         contractSourceCode: undefined,
         license: license,
         evmVersion: undefined,
+        standardInputJson : null
     });
     const [verifyResult, setVerifyResult] = useState<{
         output: any,
@@ -58,7 +62,7 @@ export default () => {
             setTabActiveKey("compilerOutput")
         }
         return items;
-    }, [verifyParams , verifyResult]);
+    }, [verifyParams, verifyResult]);
 
     return <>
         <div style={{ textAlign: "center", marginTop: "12px" }}>
@@ -69,7 +73,7 @@ export default () => {
             </Tag>
             <Divider />
         </div>
-        <Tabs activeKey={tabActiveKey} items={items} onChange={setTabActiveKey}/>
+        <Tabs activeKey={tabActiveKey} items={items} onChange={setTabActiveKey} />
     </>
 
 }

@@ -2,7 +2,7 @@ import { Col, Divider, Row, Typography, Input, Select, Button } from "antd";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { ChecksumAddress } from "../../components/Address";
-import { LicenseOptions, SolcCompileVersionOptions } from "./verify_option_config";
+import { CompileTypeOptions, LicenseOptions, SolcCompileVersionOptions } from "./verify_option_config";
 
 const { Text } = Typography;
 
@@ -13,16 +13,14 @@ export default () => {
     const paramAddress = searchParams.get('a');
     const navigator = useNavigate();
 
-    const contractInputRef = useRef(null);
-    const compileSelectRef = useRef(null);
-    const licenseSelectRef = useRef(null);
-
     const [params, setParams] = useState<{
         contractAddress: string | undefined,
+        compileType: string | undefined,
         compile: string | undefined,
         license: string | undefined
     }>({
         contractAddress: undefined,
+        compileType: undefined,
         compile: undefined,
         license: undefined
     });
@@ -32,6 +30,7 @@ export default () => {
             setParams({
                 contractAddress: ChecksumAddress(paramAddress),
                 compile: undefined,
+                compileType: undefined,
                 license: undefined
             })
         }
@@ -55,15 +54,31 @@ export default () => {
             license: license ? license : undefined
         })
     }
+    const compileTypeSelectChange = (compileType: string) => {
+        setParams({
+            ...params,
+            compileType: compileType ? compileType : undefined
+        })
+    }
 
     const submitClick = () => {
-        if ( params.contractAddress && params.compile && params.license ){
-            let _compile = params.compile.replace("+" , "%2b");
-            navigator(`/verifyContract-solc?a=${params.contractAddress}&c=${_compile}&license=${params.license}`)
+        if (params.contractAddress && params.compileType && params.compile && params.license) {
+            let _compile = params.compile.replace("+", "%2b");
+            if (params.compileType == "Solidity(Single File)") {
+                navigator(`/verifyContract-solc?a=${params.contractAddress}&c=${_compile}&license=${params.license}`)
+            }else if (params.compileType == "Solidity(Standard-Json-Input)"){
+                navigator(`/verifyContract-solc-json?a=${params.contractAddress}&c=${_compile}&license=${params.license}`)
+            }
         }
     }
-    const resetClick = () => {
 
+    const resetClick = () => {
+        setParams({
+            contractAddress: params.contractAddress ? params.contractAddress : undefined,
+            compileType: '',
+            compile: '',
+            license: ''
+        })
     }
 
     return <>
@@ -85,14 +100,13 @@ export default () => {
 
         <div style={{ marginTop: "12px", margin: "auto", width: "40%", paddingTop: "50px" }}>
             <Row>
-
                 <Col span={24}>
                     <Text strong>Please enter the Contract Address you would like to verify</Text>
                     <br />
                 </Col>
                 <Col span={24}>
 
-                    <Input value={params?.contractAddress ? params?.contractAddress : undefined} ref={contractInputRef}
+                    <Input value={params?.contractAddress ? params?.contractAddress : undefined}
                         style={{ borderRadius: "8px", marginTop: "5px" }} placeholder="0x..." size="large"
                         onChange={contractAddressInputChange}
                     />
@@ -104,9 +118,24 @@ export default () => {
                 </Col>
                 <Col span={24}>
                     <Select
-                        ref={compileSelectRef}
                         size="large"
                         defaultValue="[Please Select]"
+                        value={params.compileType}
+                        style={{ width: "100%" }}
+                        options={CompileTypeOptions}
+                        onChange={compileTypeSelectChange}
+                    />
+                </Col>
+
+                <Col span={24} style={{ marginTop: "16px" }}>
+                    <Text strong>Please select Compiler Version</Text>
+                    <br />
+                </Col>
+                <Col span={24}>
+                    <Select
+                        size="large"
+                        defaultValue="[Please Select]"
+                        value={params.compile}
                         style={{ width: "100%" }}
                         options={SolcCompileVersionOptions}
                         onChange={compileSelectChange}
@@ -117,12 +146,11 @@ export default () => {
                     <Text strong>Please select Open Source License Type</Text>
                     <br />
                 </Col>
-
                 <Col span={24}>
                     <Select
-                        ref={licenseSelectRef}
                         size="large"
                         defaultValue="[Please Select]"
+                        value={params.license}
                         style={{ width: "100%" }}
                         options={LicenseOptions}
                         onChange={licenseSelectChange}
@@ -133,7 +161,7 @@ export default () => {
                     <Button onClick={submitClick} size="large" type="primary" style={{ marginRight: "2px", borderRadius: "8px" }}>
                         Submit
                     </Button>
-                    <Button size="large" style={{ marginLeft: "2px", borderRadius: "8px" }}>
+                    <Button onClick={resetClick} size="large" style={{ marginLeft: "2px", borderRadius: "8px" }}>
                         Reset
                     </Button>
                 </Col>

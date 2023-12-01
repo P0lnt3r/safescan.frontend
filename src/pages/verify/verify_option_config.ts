@@ -1,4 +1,9 @@
 
+export const CompileTypeOptions = [
+    { value: '', label: '[Please Select]' },
+    { value: 'Solidity(Single File)', label: 'Solidity(Single File)' },
+    { value: 'Solidity(Standard-Json-Input)', label: 'Solidity(Standard-Json-Input)' },
+]
 
 export const LicenseOptions = [
     { value: '', label: '[Please Select]' },

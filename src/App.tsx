@@ -37,6 +37,7 @@ import AccountRecord from './pages/assets/AccountRecord';
 import VerifyContract from './pages/verify/verifyContract';
 import VerifyContractSolc from './pages/verify/verifyContract-solc';
 import Contracts from './pages/contracts';
+import VerifyContractSolcJson from './pages/verify/verifyContract-solc-json';
 
 const { Content } = Layout;
 
@@ -82,6 +83,7 @@ function App() {
               <Route path="/contracts" index element={<Contracts />} />
               <Route path="/verifyContract" index element={<VerifyContract />} />
               <Route path="/verifyContract-solc" index element={<VerifyContractSolc />} />
+              <Route path="/verifyContract-solc-json" index element={<VerifyContractSolcJson />} />
             </Routes>
           </div>
         </BrowserRouter>
