@@ -5,6 +5,7 @@ import { useLocation } from "react-router";
 import { contractCompile } from "../../services/verify";
 import VerifyContractSolcContractcode from "./verifyContract-solc-contractcode";
 import VerifyContractSolcCompileroutput from "./verifyContract-solc-compileroutput";
+import VerifyContractSolcJsonCompileroutput from "./verifyContract-solc-json-compileroutput";
 
 const { Text } = Typography;
 
@@ -57,7 +58,7 @@ export default () => {
             items.push({
                 key: 'compilerOutput',
                 label: 'Compiler Output',
-                children: <VerifyContractSolcCompileroutput verifyParams={verifyParams} verifyResult={verifyResult} />
+                children: <VerifyContractSolcJsonCompileroutput verifyParams={verifyParams} verifyResult={verifyResult} />
             })
             setTabActiveKey("compilerOutput")
         }

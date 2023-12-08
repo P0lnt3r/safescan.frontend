@@ -6,38 +6,30 @@ import IERC721 from "../../abi/IERC721.json";
 import IERC1155 from "../../abi/IERC1155.json";
 import SystemContractAbiConfig from './SystemContractAbi';
 
-/*
-    系统配置参数合约:property.sol,          地址: 0x0000000000000000000000000000000000001002
-    账户管理合约:AccountManager.sol         地址: 0x0000000000000000000000000000000000001012
-    主节点合约:MasterNode.sol               地址: 0x0000000000000000000000000000000000001022
-    超级节点合约:SuperMasterNode.sol,       地址: 0x0000000000000000000000000000000000001032
-    超级节点投票合约:SMNVote.sol,           地址: 0x0000000000000000000000000000000000001042
-    主节点状态合约:MasterNodeState.sol,     地址: 0x0000000000000000000000000000000000001052
-    超级节点状态合约:SuperNodeState.sol,    地址: 0x0000000000000000000000000000000000001062
-    提案合约:Proposal.sol,                  地址: 0x0000000000000000000000000000000000001072
-    系统奖励合约"SystemReward.sol,          地址: 0x0000000000000000000000000000000000001082
-    MultiCall                             地址: 0x0000000000000000000000000000000000001102
-*/
 export enum SystemContract {
-    SystemProperty      = "0x0000000000000000000000000000000000001002",
-    AccountManager      = "0x0000000000000000000000000000000000001012",
-    MasterNode          = "0x0000000000000000000000000000000000001022",
-    SuperNode           = "0x0000000000000000000000000000000000001032",
-    SuperNodeVote       = "0x0000000000000000000000000000000000001042",
-    MasterNodeState     = "0x0000000000000000000000000000000000001052",
-    SuperNodeState      = "0x0000000000000000000000000000000000001062",
-    Proposal            = "0x0000000000000000000000000000000000001072",
-    SystemReward        = "0x0000000000000000000000000000000000001082",
-    SAFE3               = "0x0000000000000000000000000000000000001092",
-    MultiCall           = "0x0000000000000000000000000000000000001102"
+    SystemProperty      = "0x0000000000000000000000000000000000001000",
+    AccountManager      = "0x0000000000000000000000000000000000001010",
+    MasterNodeStorage   = "0x0000000000000000000000000000000000001020",
+    MasterNodeLogic     = "0x0000000000000000000000000000000000001025",
+    SuperNodeStorage    = "0x0000000000000000000000000000000000001030",
+    SuperNodeLogic      = "0x0000000000000000000000000000000000001035",
+    SNVote              = "0x0000000000000000000000000000000000001040",
+    MasterNodeState     = "0x0000000000000000000000000000000000001050",
+    SuperNodeState      = "0x0000000000000000000000000000000000001060",
+    Proposal            = "0x0000000000000000000000000000000000001070",
+    SystemReward        = "0x0000000000000000000000000000000000001080",
+    SAFE3               = "0x0000000000000000000000000000000000001090",
+    MultiCall           = "0x0000000000000000000000000000000000001100"
 }
 
 export const SysContractABI: { [address in SystemContract]: string } = {
     [SystemContract.SystemProperty]     : SystemContractAbiConfig.PropertyABI,
     [SystemContract.AccountManager]     : SystemContractAbiConfig.AccountManagerABI,
-    [SystemContract.MasterNode]         : SystemContractAbiConfig.MasterNodeABI,
-    [SystemContract.SuperNode]          : SystemContractAbiConfig.SuperNodeABI,
-    [SystemContract.SuperNodeVote]      : SystemContractAbiConfig.SNVoteABI,
+    [SystemContract.MasterNodeStorage]  : SystemContractAbiConfig.MasterNodeStorageABI,
+    [SystemContract.MasterNodeLogic]    : SystemContractAbiConfig.MasterNodeLogicABI,
+    [SystemContract.SuperNodeStorage]   : SystemContractAbiConfig.SuperNodeStorageABI,
+    [SystemContract.SuperNodeLogic]     : SystemContractAbiConfig.SuperNodeLogicABI,
+    [SystemContract.SNVote]             : SystemContractAbiConfig.SNVoteABI,
     [SystemContract.MasterNodeState]    : SystemContractAbiConfig.MasterNodeStateABI,
     [SystemContract.SuperNodeState]     : SystemContractAbiConfig.SuperNodeStateABI,
     [SystemContract.Proposal]           : SystemContractAbiConfig.ProposalABI,

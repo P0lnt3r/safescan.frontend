@@ -609,6 +609,7 @@ export interface Contract_Compile_VO {
 export interface Contract_Compile_Result_VO {
     address : string ,
     name : stirng ,
+    compileType : string,
     creatorTransactionHash : string,
     creationBytecode : string;
     deployedBytecode : string ;

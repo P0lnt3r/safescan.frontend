@@ -96,6 +96,48 @@ export default ({ address }: {
         return stringview + decodeview + encodeview;
     }, [contractCompileResult]);
 
+    const contractSources = useMemo(() => {
+        const contractSources: any[] = [];
+        const contractSourceName = contractCompileResult?.name;
+        if ("standardInputJson" == contractCompileResult?.compileType) {
+            const standardInput = JSON.parse(contractCompileResult?.sourceCodes);
+            const sources = standardInput.sources;
+            const mainContractFileName = contractSourceName.substring(
+                0, contractSourceName.indexOf(":")
+            )
+            let files = 0;
+            for (let _ in sources) {
+                files++;
+            }
+            let i = 1;
+            let theMainContract;
+            for (let fileName in sources) {
+                const _fileName = fileName.lastIndexOf("/") > -1 ? fileName.substring(fileName.lastIndexOf("/") + 1) : fileName;
+                if (mainContractFileName == fileName) {
+                    theMainContract = {
+                        outputLabel: `File ${i} of ${files} : ${_fileName}`,
+                        content: sources[fileName].content
+                    }
+                } else {
+                    contractSources.push({
+                        outputLabel: `File ${i} of ${files} : ${_fileName}`,
+                        content: sources[fileName].content
+                    });
+                }
+                i++;
+            }
+            if (theMainContract) {
+                contractSources.unshift(theMainContract);
+            }
+            delete standardInput.sources;
+            contractSources.push({
+                outputLabel: "Settings",
+                content: JSON.stringify(standardInput, null, 2)
+            });
+        }
+        return contractSources;
+    }, [contractCompileResult]);
+    console.log(contractSources)
     return <>
         {
             /** 没有进行合约源码验证 */
@@ -193,13 +235,52 @@ export default ({ address }: {
                     contractCompileResult?.sourceCodes && <>
                         <Row style={{ marginTop: "50px" }}>
                             <Text type="secondary"><CodeOutlined /></Text>
-                            <Text strong style={{ marginLeft: "5px" }}>Contract Source Code<Text type="secondary">(Solidity)</Text></Text>
+                            <Text strong style={{ marginLeft: "5px" }}>Contract Source Code<Text type="secondary">
+                                (
+                                Solidity
+                                {
+                                    "standardInputJson" == contractCompileResult?.compileType && <>
+                                        <a style={{ marginLeft: "2px", marginRight: "2px" }} href='https://solidity.readthedocs.io/en/v0.5.8/using-the-compiler.html#compiler-input-and-output-json-description' target='_blank'>
+                                            Standard Json-Input
+                                        </a>
+                                        format
+                                    </>
+                                }
+                                )
+                            </Text>
+                            </Text>
                         </Row>
-                        <Row style={{ marginTop: "20px", maxHeight: "600px", overflow: "auto" }}>
-                            <SyntaxHighlighter style={atomOneLight} className="source_code_shower" showLineNumbers={true} >
-                                {contractCompileResult.sourceCodes}
-                            </SyntaxHighlighter>
-                        </Row>
+                        {
+                            "standardInputJson" == contractCompileResult?.compileType && contractSources && <>
+                                {
+                                    contractSources.map((contractSourcecode: any) => {
+                                        const {
+                                            outputLabel,
+                                            content
+                                        } = contractSourcecode;
+                                        return <>
+                                            <div id={outputLabel} style={{ marginTop: "15px" }}>
+                                                <Text type='secondary' strong>{outputLabel}</Text>
+                                                <Row style={{ marginTop: "5px", maxHeight: "400px", overflow: "auto" }}>
+                                                    <SyntaxHighlighter style={atomOneLight} className="source_code_shower" showLineNumbers={true} >
+                                                        {content}
+                                                    </SyntaxHighlighter>
+                                                </Row>
+                                            </div>
+                                        </>
+                                    })
+                                }
+                            </>
+                        }
+                        {
+                            "single" == contractCompileResult?.compileType && <>
+                                <Row style={{ marginTop: "20px", maxHeight: "600px", overflow: "auto" }}>
+                                    <SyntaxHighlighter style={atomOneLight} className="source_code_shower" showLineNumbers={true} >
+                                        {contractCompileResult.sourceCodes}
+                                    </SyntaxHighlighter>
+                                </Row>
+                            </>
+                        }
                     </>
                 }
 
@@ -234,15 +315,18 @@ export default ({ address }: {
                 </Row>
 
                 {/** Constructor Arguments */}
-                <Row style={{ marginTop: "50px" }}>
-                    <Text type="secondary"><OneToOneOutlined /></Text>
-                    <Text strong style={{ marginLeft: "5px" }}>Constructor Arguments<Text type="secondary">(ABI-Encoded and is the last bytes of the Contract Creation Code above)</Text></Text>
-                </Row>
-                <Row style={{ marginTop: "20px" }}>
-                    <TextArea value={deployedArgsAbiEncodeStringView}
-                        style={{ width: "100%", borderRadius: "8px", minHeight: "200px", backgroundColor: "#f9f9f9", borderColor: "#ddd", fontFamily: "SFMono-Regular,Menlo,Monaco,Consolas,\"Liberation Mono\",\"Courier New\",monospace" }} />
-                </Row>
-
+                {
+                    deployedArgsAbiEncodeStringView && <>
+                        <Row style={{ marginTop: "50px" }}>
+                            <Text type="secondary"><OneToOneOutlined /></Text>
+                            <Text strong style={{ marginLeft: "5px" }}>Constructor Arguments<Text type="secondary">(ABI-Encoded and is the last bytes of the Contract Creation Code above)</Text></Text>
+                        </Row>
+                        <Row style={{ marginTop: "20px" }}>
+                            <TextArea value={deployedArgsAbiEncodeStringView}
+                                style={{ width: "100%", borderRadius: "8px", minHeight: "200px", backgroundColor: "#f9f9f9", borderColor: "#ddd", fontFamily: "SFMono-Regular,Menlo,Monaco,Consolas,\"Liberation Mono\",\"Courier New\",monospace" }} />
+                        </Row>
+                    </>
+                }
                 {/** Constructor Arguments */}
                 <Row style={{ marginTop: "50px" }}>
                     <Text type="secondary"><BlockOutlined /></Text>

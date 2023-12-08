@@ -11,18 +11,18 @@ const { Text, Link } = Typography;
 const { TextArea } = Input;
 
 export default ({ verifyParams, setVerifyParams, setVerifyResult }: {
-
     verifyParams: {
         contractAddress: string | null,
         compileType : string | null,
         compileVersion: string | null,
         standardInputJson: string | null,
+        optimizerEnabled: boolean,
+        optimizerRuns: string,
+        evmVersion: string | undefined,
         license: string | null,
     },
-
     setVerifyParams: ({ }: any) => void,
     setVerifyResult: ({ }: any) => void
-
 }) => {
 
     const location = useLocation();
@@ -34,6 +34,9 @@ export default ({ verifyParams, setVerifyParams, setVerifyResult }: {
         compileVersion: string | null,
         standardInputJson : string | null,
         license: string | null,
+        optimizerEnabled: boolean,
+        optimizerRuns: string,
+        evmVersion: string | undefined,
     }>(verifyParams);
     const [errCode, setErrCode] = useState();
 
@@ -44,9 +47,20 @@ export default ({ verifyParams, setVerifyParams, setVerifyResult }: {
         })
     }
     const standardInputJsonTextAreaChange = (event: any) => {
+        const input = event.target.value;
+        let standardInput;
+        let optimizer;
+        try {
+            standardInput = JSON.parse(input);
+            optimizer = standardInput.settings?.optimizer;
+        }catch(err){
+            console.error(err)
+        }
         setParams({
             ...params,
-            standardInputJson: event.target.value
+            standardInputJson: event.target.value,
+            optimizerEnabled : optimizer?.enabled,
+            optimizerRuns: optimizer?.runs
         })
     }
 
