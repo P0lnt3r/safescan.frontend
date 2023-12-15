@@ -15,10 +15,10 @@ const { Text, Link } = Typography;
 export default ({ verifyParams, verifyResult }: {
     verifyParams: {
         contractAddress: string | null,
+        compileType: string | null,
         compileVersion: string | null,
         optimizerEnabled: boolean,
         optimizerRuns: string,
-        contractSourceCode: string | undefined,
         license: string | null,
         evmVersion: string | undefined
     },
@@ -38,13 +38,26 @@ export default ({ verifyParams, verifyResult }: {
     } = verifyParams;
 
     const errors = verifyResult?.output?.errors;
-    const contracts = verifyResult?.output?.contracts?.["contract.sol"];
+    const contracts = verifyResult?.output?.contracts;
 
     const { contractNames, contractNamesStr, contractBytecodes } = useMemo(() => {
         if (contracts) {
             let contractNames: string[] = [];
-            for (let name in contracts) {
-                contractNames.push(name)
+            let contractBytecodes: {
+                contractName: string,
+                bytecode: string
+            }[] = [];
+            for (let fileName in contracts) {
+                for (let childContractName in contracts[fileName]) {
+                    let contractName = fileName.indexOf("/") > -1 ? (fileName + ":" + childContractName) : childContractName;
+                    contractNames.push(contractName);
+                    if (contracts[fileName][childContractName]?.evm?.bytecode?.object) {
+                        contractBytecodes.push({
+                            contractName,
+                            bytecode: contracts[fileName][childContractName].evm.bytecode.object
+                        });
+                    }
+                }
             }
             contractNames = contractNames.reverse()
             let contractNamesStr = "";
@@ -55,18 +68,6 @@ export default ({ verifyParams, verifyResult }: {
                     contractNamesStr += `${contractNames[i]}, `;
                 }
             }
-            let contractBytecodes: {
-                contractName: string,
-                bytecode: string
-            }[] = [];
-            contractNames.filter((contractName: string) =>
-                contracts[contractName].evm && contracts[contractName].evm.bytecode && contracts[contractName].evm.bytecode.object
-            ).forEach((contractName) => {
-                contractBytecodes.push({
-                    contractName,
-                    bytecode: contracts[contractName].evm.bytecode.object
-                });
-            })
             return {
                 contractNames,
                 contractNamesStr,
@@ -79,6 +80,41 @@ export default ({ verifyParams, verifyResult }: {
             contractBytecodes: undefined
         };
     }, [contracts]);
+
+    const RenderContractsNames = function () {
+        let _contractName: string[] = [];
+        contractNames?.forEach(contractName => {
+            if (_contractName.length == contractNames.length - 1) {
+                _contractName.push(contractName);
+            } else {
+                _contractName.push(contractName + ",");
+            }
+        })
+        return <Text>
+            {
+                _contractName && _contractName.map((contractName) => {
+                    let fileName , childContractName;
+                    if ( contractName.indexOf(":") > -1 ){
+                        let i = contractName.indexOf(":");
+                        fileName = contractName.substring( 0 , i);
+                        childContractName = contractName.substring(i + 1);
+                    }else{
+                        childContractName = contractName;
+                    }
+                    return <Text>
+                        {
+                            fileName && <>{`${fileName}:`}</>
+                        }
+                        {
+                            contractName && <Text style={{fontWeight:800}} strong>
+                                {`${childContractName}`}
+                            </Text>
+                        }
+                    </Text>
+                })
+            }
+        </Text>
+    }
 
     return <>
 
@@ -104,7 +140,7 @@ export default ({ verifyParams, verifyResult }: {
                                     <Text>
                                         <DoubleRightOutlined style={{ marginRight: "5px" }} />
                                         Found the following ContractName(s) in source code :
-                                        <Text strong>{contractNamesStr}</Text>
+                                        <Text>{RenderContractsNames()}</Text>
                                     </Text>
                                     <br />
                                 </>
@@ -252,7 +288,6 @@ export default ({ verifyParams, verifyResult }: {
                                     </Text>
                                 </div>
                                 <br />
-
                             </>
                         }
 
@@ -310,6 +345,8 @@ export default ({ verifyParams, verifyResult }: {
             <Button type="primary" size="large" style={{
                 marginTop: "2em",
                 borderRadius: "4px"
+            }} onClick={() => {
+                
             }}>
                 Start Over
             </Button>

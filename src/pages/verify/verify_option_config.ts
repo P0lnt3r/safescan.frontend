@@ -40,18 +40,18 @@ export const EvmVersionOptions = [
 
 export const SolcCompileVersionOptions = [
     { value: '', label: '[Please Select]' },
-    {
-        value: 'v0.8.22+commit.4fc1097e',
-        label: 'v0.8.22+commit.4fc1097e'
-    },
-    {
-        value: 'v0.8.21+commit.d9974bed',
-        label: 'v0.8.21+commit.d9974bed'
-    },
-    {
-        value: 'v0.8.20+commit.a1b79de6',
-        label: 'v0.8.20+commit.a1b79de6'
-    },
+    // {
+    //     value: 'v0.8.22+commit.4fc1097e',
+    //     label: 'v0.8.22+commit.4fc1097e'
+    // },
+    // {
+    //     value: 'v0.8.21+commit.d9974bed',
+    //     label: 'v0.8.21+commit.d9974bed'
+    // },
+    // {
+    //     value: 'v0.8.20+commit.a1b79de6',
+    //     label: 'v0.8.20+commit.a1b79de6'
+    // },
     {
         value: 'v0.8.19+commit.7dd6d404',
         label: 'v0.8.19+commit.7dd6d404'

@@ -4,8 +4,7 @@ import { useMemo, useState } from "react";
 import { useLocation } from "react-router";
 import { contractCompile } from "../../services/verify";
 import VerifyContractSolcContractcode from "./verifyContract-solc-contractcode";
-import VerifyContractSolcCompileroutput from "./verifyContract-solc-compileroutput";
-import VerifyContractSolcJsonCompileroutput from "./verifyContract-solc-json-compileroutput";
+import VerifyContractSolcCompilerOutput from "./verifyContract-solc-compileroutput";
 
 const { Text } = Typography;
 
@@ -29,7 +28,7 @@ export default () => {
         standardInputJson : string | null,
     }>({
         contractAddress: contractAddress,
-        compileType: "signle",
+        compileType: "single",
         compileVersion: compile,
         optimizerEnabled: false,
         optimizerRuns: "200",
@@ -58,7 +57,7 @@ export default () => {
             items.push({
                 key: 'compilerOutput',
                 label: 'Compiler Output',
-                children: <VerifyContractSolcJsonCompileroutput verifyParams={verifyParams} verifyResult={verifyResult} />
+                children: <VerifyContractSolcCompilerOutput verifyParams={verifyParams} verifyResult={verifyResult} />
             })
             setTabActiveKey("compilerOutput")
         }

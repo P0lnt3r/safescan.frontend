@@ -4,9 +4,9 @@ import { useMemo, useState } from "react";
 import { useLocation } from "react-router";
 import { contractCompile } from "../../services/verify";
 import VerifyContractSolcContractcode from "./verifyContract-solc-contractcode";
-import VerifyContractSolcCompileroutput from "./verifyContract-solc-compileroutput";
 import VerifyContractSolcJsonInput from "./verifyContract-solc-json-input";
-import VerifyContractSolcJsonCompileroutput from "./verifyContract-solc-json-compileroutput";
+import VerifyContractSolcJsonCompileroutput from "./verifyContract-solc-compileroutput";
+import VerifyContractSolcCompileroutput from "./verifyContract-solc-compileroutput";
 
 const { Text } = Typography;
 
@@ -44,8 +44,8 @@ export default () => {
         output: any,
         result: any
     }>();
-    const [tabActiveKey, setTabActiveKey] = useState<string>("contractCode");
 
+    const [tabActiveKey, setTabActiveKey] = useState<string>("contractCode");
     const items = useMemo<TabsProps['items']>(() => {
         const items = [
             {
@@ -60,12 +60,13 @@ export default () => {
             items.push({
                 key: 'compilerOutput',
                 label: 'Compiler Output',
-                children: <VerifyContractSolcJsonCompileroutput verifyParams={verifyParams} verifyResult={verifyResult} />
+                children: <VerifyContractSolcCompileroutput verifyParams={verifyParams} verifyResult={verifyResult} />
             })
             setTabActiveKey("compilerOutput")
         }
         return items;
     }, [verifyParams, verifyResult]);
+
 
     return <>
         <div style={{ textAlign: "center", marginTop: "12px" }}>

@@ -69,6 +69,16 @@ export default () => {
         return content
     }
 
+    const RenderCompileType = ( compile : string ) => {
+        if ( compile ){
+            if ( "standardInputJson" == compile ){
+                return "Solidity(Json)";
+            }
+            return "Solidity";
+        }
+        return "-";
+    }
+
     const columns: ColumnsType<Contract_Compile_VO> = [
         {
             title: <Text strong style={{ color: "#6c757e" }}>Address</Text>,
@@ -122,7 +132,7 @@ export default () => {
             dataIndex: 'compileType',
             render: (compileType, vo) => {
                 return <>
-                    <Text>{compileType ? compileType : "-"}</Text>
+                    <Text>{RenderCompileType(compileType)}</Text>
                 </>
             },
             width: 40,

@@ -9,6 +9,7 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 import { atomOneLight } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { fetchContractCompileResult } from "../../services/contract";
 import { defaultAbiCoder, FunctionFragment, Interface, ParamType } from 'ethers/lib/utils';
+import CodeHighlighter from './CodeHighlighter';
 
 const { Title, Text, Paragraph, Link } = Typography;
 const { TextArea } = Input;
@@ -137,7 +138,7 @@ export default ({ address }: {
         }
         return contractSources;
     }, [contractCompileResult]);
-    console.log(contractSources)
+    
     return <>
         {
             /** 没有进行合约源码验证 */
@@ -262,9 +263,10 @@ export default ({ address }: {
                                             <div id={outputLabel} style={{ marginTop: "15px" }}>
                                                 <Text type='secondary' strong>{outputLabel}</Text>
                                                 <Row style={{ marginTop: "5px", maxHeight: "400px", overflow: "auto" }}>
-                                                    <SyntaxHighlighter style={atomOneLight} className="source_code_shower" showLineNumbers={true} >
+                                                    {/* <SyntaxHighlighter style={atomOneLight} className="source_code_shower" showLineNumbers={true} >
                                                         {content}
-                                                    </SyntaxHighlighter>
+                                                    </SyntaxHighlighter> */}
+                                                    <CodeHighlighter  code={content} language='solidity' />
                                                 </Row>
                                             </div>
                                         </>
@@ -295,14 +297,19 @@ export default ({ address }: {
                 </Row>
 
                 {/** Contract Creation Code */}
-                <Row style={{ marginTop: "50px" }}>
-                    <Text type="secondary"><HolderOutlined /></Text>
-                    <Text strong style={{ marginLeft: "5px" }}>Contract Creation Code</Text>
-                </Row>
-                <Row style={{ marginTop: "20px" }}>
-                    <TextArea value={contractCompileResult?.creationBytecode}
-                        style={{ width: "100%", borderRadius: "8px", minHeight: "200px", backgroundColor: "#f9f9f9", borderColor: "#ddd", fontFamily: "SFMono-Regular,Menlo,Monaco,Consolas,\"Liberation Mono\",\"Courier New\",monospace" }} />
-                </Row>
+                {
+                    contractCompileResult?.creationBytecode && <>
+                        <Row style={{ marginTop: "50px" }}>
+                            <Text type="secondary"><HolderOutlined /></Text>
+                            <Text strong style={{ marginLeft: "5px" }}>Contract Creation Code</Text>
+                        </Row>
+                        <Row style={{ marginTop: "20px" }}>
+                            <TextArea value={contractCompileResult?.creationBytecode}
+                                style={{ width: "100%", borderRadius: "8px", minHeight: "200px", backgroundColor: "#f9f9f9", borderColor: "#ddd", fontFamily: "SFMono-Regular,Menlo,Monaco,Consolas,\"Liberation Mono\",\"Courier New\",monospace" }} />
+                        </Row>
+                    </>
+                }
+
 
                 {/** Contract Creation Code */}
                 <Row style={{ marginTop: "50px" }}>
@@ -316,7 +323,7 @@ export default ({ address }: {
 
                 {/** Constructor Arguments */}
                 {
-                    deployedArgsAbiEncodeStringView && <>
+                    contractCompileResult?.deployedArgsAbiEncode && <>
                         <Row style={{ marginTop: "50px" }}>
                             <Text type="secondary"><OneToOneOutlined /></Text>
                             <Text strong style={{ marginLeft: "5px" }}>Constructor Arguments<Text type="secondary">(ABI-Encoded and is the last bytes of the Contract Creation Code above)</Text></Text>
@@ -327,7 +334,7 @@ export default ({ address }: {
                         </Row>
                     </>
                 }
-                {/** Constructor Arguments */}
+                {/** Deployed Bytecode Sourcemap */}
                 <Row style={{ marginTop: "50px" }}>
                     <Text type="secondary"><BlockOutlined /></Text>
                     <Text strong style={{ marginLeft: "5px" }}>Deployed Bytecode Sourcemap</Text>

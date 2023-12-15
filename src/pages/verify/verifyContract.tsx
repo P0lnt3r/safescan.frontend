@@ -24,6 +24,17 @@ export default () => {
         compile: undefined,
         license: undefined
     });
+    const [errors, setErrors] = useState<{
+        contractAddressInputError: boolean,
+        compileTypeSelectError: boolean,
+        compileSelectError: boolean,
+        licenseSelectError: boolean
+    }>({
+        contractAddressInputError: false,
+        compileTypeSelectError: false,
+        compileSelectError: false,
+        licenseSelectError: false
+    });
 
     useEffect(() => {
         if (paramAddress) {
@@ -66,9 +77,16 @@ export default () => {
             let _compile = params.compile.replace("+", "%2b");
             if (params.compileType == "Solidity(Single File)") {
                 navigator(`/verifyContract-solc?a=${params.contractAddress}&c=${_compile}&license=${params.license}`)
-            }else if (params.compileType == "Solidity(Standard-Json-Input)"){
+            } else if (params.compileType == "Solidity(Standard-Json-Input)") {
                 navigator(`/verifyContract-solc-json?a=${params.contractAddress}&c=${_compile}&license=${params.license}`)
             }
+        } else {
+            setErrors({
+                compileTypeSelectError: !params.compileType,
+                compileSelectError: !params.compile,
+                licenseSelectError: !params.license,
+                contractAddressInputError: !params.contractAddress
+            })
         }
     }
 
@@ -78,6 +96,12 @@ export default () => {
             compileType: '',
             compile: '',
             license: ''
+        })
+        setErrors({
+            contractAddressInputError: false,
+            compileTypeSelectError: false,
+            compileSelectError: false,
+            licenseSelectError: false
         })
     }
 
@@ -124,7 +148,14 @@ export default () => {
                         style={{ width: "100%" }}
                         options={CompileTypeOptions}
                         onChange={compileTypeSelectChange}
+                        status={errors && errors.compileTypeSelectError ? "error" : ""}
                     />
+                    {
+                        errors && errors.compileTypeSelectError &&
+                        <Text type="danger" strong >
+                            Required
+                        </Text>
+                    }
                 </Col>
 
                 <Col span={24} style={{ marginTop: "16px" }}>
@@ -139,7 +170,14 @@ export default () => {
                         style={{ width: "100%" }}
                         options={SolcCompileVersionOptions}
                         onChange={compileSelectChange}
+                        status={errors && errors.compileSelectError ? "error" : ""}
                     />
+                    {
+                        errors && errors.compileSelectError &&
+                        <Text type="danger" strong >
+                            Required
+                        </Text>
+                    }
                 </Col>
 
                 <Col span={24} style={{ marginTop: "16px" }}>
@@ -154,7 +192,14 @@ export default () => {
                         style={{ width: "100%" }}
                         options={LicenseOptions}
                         onChange={licenseSelectChange}
+                        status={errors && errors.licenseSelectError ? "error" : ""}
                     />
+                    {
+                        errors && errors.licenseSelectError &&
+                        <Text type="danger" strong >
+                            Required
+                        </Text>
+                    }
                 </Col>
 
                 <Col span={24} style={{ textAlign: "center", marginTop: "20px" }}>
