@@ -164,9 +164,9 @@ export default () => {
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Item</Text>,
-            dataIndex: 'tokenURI',
+            dataIndex: 'tokenImage',
             width: 150,
-            render: (tokenURI, nftTransferVO) => {
+            render: (tokenImage, nftTransferVO) => {
                 const { tokenId, tokenPropVO, token } = nftTransferVO;
                 const nftProp = tokenPropVO && (tokenPropVO.subType == "erc721" || tokenPropVO.subType == "erc1155") ? tokenPropVO?.prop : undefined;
                 const nft = nftProp ? JSON.parse(nftProp) : undefined;
@@ -176,7 +176,7 @@ export default () => {
                             tokenPropVO && <>
                                 <Row style={{ width: "100%" }}>
                                     <Col span={4}>
-                                        <NFT_URI_IMG size={NFT_URI_IMG_SIZE.SMALL} uri={tokenURI} />
+                                        <NFT_URI_IMG size={NFT_URI_IMG_SIZE.SMALL} uri={tokenImage} />
                                     </Col>
                                     <Col span={20}>
                                         <Col span={24}>

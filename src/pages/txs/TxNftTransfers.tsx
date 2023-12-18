@@ -65,14 +65,14 @@ export default ({
                 <Col xl={16} xs={24}>
                     {
                         erc721Transfers.map((nftTransfer) => {
-                            const { token, tokenId, tokenValue, tokenURI, tokenPropVO,
+                            const { token, tokenId, tokenValue, tokenImage, tokenPropVO,
                                 from, fromPropVO, to, toPropVO } = nftTransfer;
                             const nftProp = tokenPropVO?.prop;
                             const nft = nftProp ? JSON.parse(nftProp) : undefined;
                             return <>
                                 <Row style={{ marginBottom: "20px" }}>
                                     <Col span={1}>
-                                        <NFT_URI_IMG uri={tokenURI} size={NFT_URI_IMG_SIZE.SMALL} />
+                                        <NFT_URI_IMG uri={tokenImage} size={NFT_URI_IMG_SIZE.SMALL} />
                                     </Col>
                                     <Col span={18} style={{ marginLeft: "10px" }}>
                                         <Text type="secondary">ERC721 </Text>
@@ -130,14 +130,14 @@ export default ({
                     <Col xl={16} xs={24}>
                         {
                             erc1155Transfers.map((nftTransfer) => {
-                                const { token, tokenId, tokenValue, tokenURI, tokenPropVO,
+                                const { token, tokenId, tokenValue, tokenImage, tokenPropVO,
                                     from, fromPropVO, to, toPropVO } = nftTransfer;
                                 const nftProp = tokenPropVO?.prop;
                                 const nft = nftProp ? JSON.parse(nftProp) : undefined;
                                 return <>
                                     <Row style={{ marginBottom: "20px" }}>
                                         <Col span={1}>
-                                            <NFT_URI_IMG uri={tokenURI} size={NFT_URI_IMG_SIZE.SMALL} />
+                                            <NFT_URI_IMG uri={tokenImage} size={NFT_URI_IMG_SIZE.SMALL} />
                                         </Col>
                                         <Col span={18} style={{ marginLeft: "10px" }}>
                                             <Text type="secondary">ERC1155 </Text>

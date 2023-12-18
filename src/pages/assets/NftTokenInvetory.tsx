@@ -66,7 +66,7 @@ export default ({ token }: { token: string }) => {
                     <Card className='nft_item'>
                         <Row>
                             <Col span={24} style={{ textAlign: 'center', marginBottom: "24px" }}>
-                                <NFT_URI_IMG uri={tokenAsset.tokenURI}
+                                <NFT_URI_IMG uri={tokenAsset.tokenImage}
                                     size={NFT_URI_IMG_SIZE.MIDDLE}
                                     onClick={() => {
                                         navigate(`/nft/${tokenAsset.token}/${tokenAsset.tokenId}`)

@@ -155,7 +155,9 @@ export default ({ token, tokenId, tokenType }: {
     }
 
     return <>
+
         <Divider style={{ marginTop:"20px"}} />
+
         <Card title="NFT Transfers">
             <OutputTotal />
             <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }} loading={loading}

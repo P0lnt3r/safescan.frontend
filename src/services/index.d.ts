@@ -495,7 +495,7 @@ export interface NftTransferVO {
     blockNumber: number
     tokenType: string,
     tokenValue: string,
-    tokenURI: string
+    tokenImage: string
 }
 
 export interface NftTokenHoldRankVO {
@@ -516,7 +516,9 @@ export interface NftTokenAssetVO {
     tokenType: string,
     tokenPropVO: AddressPropVO,
     tokenValue: string,
-    tokenURI: string
+    tokenURI: string,
+    tokenMetadata: string,
+    tokenImage: string,
 }
 
 
