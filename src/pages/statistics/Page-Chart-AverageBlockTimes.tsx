@@ -75,7 +75,7 @@ export default () => {
             <Col span={8} style={{ paddingLeft: "20px" }}>
                 <Title level={5}>About</Title>
                 <Text>
-                    The chart highlights the total number of transactions on the BNB Smart Chain blockchain with daily individual breakdown for average difficulty,
+                    The chart highlights the total number of transactions on the Safe4 Blockchain blockchain with daily individual breakdown for average difficulty,
                     estimated hash rate, average block time and size, total block and uncle block count and total new address seen.
                 </Text>
                 <Divider style={{ marginTop: "15px" }} />
