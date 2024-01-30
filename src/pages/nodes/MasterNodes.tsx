@@ -191,65 +191,20 @@ export default () => {
             </>
         },
         {
-            title: <Text strong style={{ color: "#6c757e" }}>IP</Text>,
-            dataIndex: 'ip',
-            render: (ip) => <>
-                {ip}
-            </>,
-            width: 40,
-            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => <>
-                <div style={{ padding: 8, width: "400px", height: "100px" }} onKeyDown={(e) => e.stopPropagation()}>
-                    <Text strong>Address</Text>
-                    <Input 
-                        value={tableQueryParams.ip}
-                        onChange={(e) => {
-                            setTableQueryParams({
-                                ...tableQueryParams,
-                                ip: e.target.value
-                            })
-                        }}
-                        style={{ marginBottom: 8, display: 'block' }}
-                    />
-                    <Button
-                        type="primary"
-                        icon={<SearchOutlined />}
-                        size="small"
-                        style={{ width: 90, float: "left" }}
-                        onClick={() => {
-                            closePropSearch();
-                            close();
-                        }}
-                    >
-                        Search
-                    </Button>
-                    <Button
-                        size="small"
-                        style={{ width: 90, float: "right" }}
-                        onClick={() => {
-                            closePropSearch("ip")
-                            close();
-                        }}
-                    >
-                        Reset
-                    </Button>
-                </div>
-            </>
-        },
-        {
             title: <Text strong style={{ color: "#6c757e" }}>Amount</Text>,
-            dataIndex: 'amount',
-            render: (amount) => <>
+            dataIndex: 'totalAmount',
+            render: (totalAmount) => <>
                 <Text strong>
-                    {<EtherAmount raw={amount} fix={18}></EtherAmount>}
+                    {<EtherAmount raw={totalAmount} fix={18}></EtherAmount>}
                 </Text>
             </>,
             width: 140,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>State</Text>,
-            dataIndex: 'stateInfo',
-            render: (stateInfo) => <>
-                {State(stateInfo.state)}
+            dataIndex: 'state',
+            render: (state) => <>
+                {State(state)}
             </>,
             width: 40,
         },

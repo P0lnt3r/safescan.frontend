@@ -23,9 +23,9 @@ const { Title, Text, Paragraph, Link } = Typography;
 
 export default (superMasterNode: SuperNodeVO) => {
 
-    const { id, ip, description, creator, enode, incentivePlan, stateInfo, lastRewardHeight, amount, founders, voteInfo, addr } = superMasterNode;
+    const { id, description, creator, enode, incentivePlan, state, lastRewardHeight, totalAmount, totalVoteNum , totalVoterAmount , founders, addr } = superMasterNode;
     const nodeAddress = addr.toLowerCase();
-    const nodeState = stateInfo.state;
+    const nodeState = state;
     const blockNumber = useBlockNumber();
 
     function State(state: number) {
@@ -63,12 +63,6 @@ export default (superMasterNode: SuperNodeVO) => {
                                 </Col>
                             </Row>
                             <Row style={{ marginTop: "10px" }}>
-                                <Col xl={6} xs={24}><Text strong>IP:</Text></Col>
-                                <Col xl={18} xs={24}>
-                                    <Text>{ip}</Text>
-                                </Col>
-                            </Row>
-                            <Row style={{ marginTop: "10px" }}>
                                 <Col xl={6} xs={24}><Text strong>Description:</Text></Col>
                                 <Col xl={18} xs={24}>
                                     <Text>{description}</Text>
@@ -83,19 +77,19 @@ export default (superMasterNode: SuperNodeVO) => {
                             <Row style={{ marginTop: "10px" }}>
                                 <Col xl={6} xs={24}><Text strong>Amount:</Text></Col>
                                 <Col xl={18} xs={24}>
-                                    <Text><EtherAmount raw={amount} fix={18}></EtherAmount></Text>
+                                    <Text><EtherAmount raw={totalAmount} fix={18}></EtherAmount></Text>
                                 </Col>
                             </Row>
                             <Row style={{ marginTop: "10px" }}>
                                 <Col xl={6} xs={24}><Text strong>Vote Obtained:</Text></Col>
                                 <Col xl={18} xs={24}>
-                                    <Text><EtherAmount raw={voteInfo.totalNum} fix={18} ignoreLabel></EtherAmount></Text>
+                                    <Text><EtherAmount raw={totalVoteNum} fix={18} ignoreLabel></EtherAmount></Text>
                                 </Col>
                             </Row>
                             <Row style={{ marginTop: "10px" }}>
                                 <Col xl={6} xs={24}><Text strong>Vote Amount:</Text></Col>
                                 <Col xl={18} xs={24}>
-                                    <Text><EtherAmount raw={voteInfo.totalAmount} fix={18}></EtherAmount></Text>
+                                    <Text><EtherAmount raw={totalVoterAmount} fix={18}></EtherAmount></Text>
                                 </Col>
                             </Row>
                             <Row style={{ marginTop: "10px" }}>
@@ -191,7 +185,7 @@ export default (superMasterNode: SuperNodeVO) => {
                             }
                         </Descriptions.Item>
 
-                        <Descriptions.Item span={3} label={<Text strong style={{ color: "#6c757e" }} >Voters ({voteInfo.voters.length})</Text>}>
+                        {/* <Descriptions.Item span={3} label={<Text strong style={{ color: "#6c757e" }} >Voters ({voteInfo.voters.length})</Text>}>
                             {
                                 voteInfo.voters.map(({ lockID, addr, amount, height, lockDay, unlockHeight, unfreezeHeight, releaseHeight }) => {
                                     const hasLock = lockDay != undefined && lockDay > 0;
@@ -257,7 +251,7 @@ export default (superMasterNode: SuperNodeVO) => {
                                     </>)
                                 })
                             }
-                        </Descriptions.Item>
+                        </Descriptions.Item> */}
                     </Descriptions>
                 </Card>
             </Col>

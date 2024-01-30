@@ -22,8 +22,8 @@ const { Title, Text, Paragraph, Link } = Typography;
 
 export default (masterNode: MasterNodeVO) => {
 
-    const { id, ip, description, creator, enode, incentivePlan, stateInfo, lastRewardHeight, amount, founders, addr } = masterNode;
-    const nodeState = stateInfo.state;
+    const { id, description, creator, enode, incentivePlan, state, lastRewardHeight, totalAmount, founders, addr } = masterNode;
+    const nodeState = state;
     const nodeAddress = addr.toLowerCase();
     const blockNumber = useBlockNumber();
 
@@ -63,12 +63,6 @@ export default (masterNode: MasterNodeVO) => {
                                 </Col>
                             </Row>
                             <Row style={{ marginTop: "10px" }}>
-                                <Col span={8}><Text strong>IP:</Text></Col>
-                                <Col span={16}>
-                                    <Text>{ip}</Text>
-                                </Col>
-                            </Row>
-                            <Row style={{ marginTop: "10px" }}>
                                 <Col span={8}><Text strong>Description:</Text></Col>
                                 <Col span={16}>
                                     <Text>{description}</Text>
@@ -77,7 +71,7 @@ export default (masterNode: MasterNodeVO) => {
                             <Row style={{ marginTop: "10px" }}>
                                 <Col span={8}><Text strong>Amount:</Text></Col>
                                 <Col span={16}>
-                                    <Text><EtherAmount raw={amount} fix={18}></EtherAmount></Text>
+                                    <Text><EtherAmount raw={totalAmount} fix={18}></EtherAmount></Text>
                                 </Col>
                             </Row>
                             <Row style={{ marginTop: "10px" }}>

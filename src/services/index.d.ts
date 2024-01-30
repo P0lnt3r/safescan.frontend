@@ -301,9 +301,9 @@ export interface IncentivePlanVO {
 export interface SuperNodeVO {
     rank: number,
     id: number,
-    amount: string,
-    totalVoteNum: number,
-    totalVoterAmount: number,
+    totalAmount: string,
+    totalVoteNum: string,
+    totalVoterAmount: string,
     voteObtainedRate: string,
     createHeight: number,
     updateHeight: number,
@@ -312,39 +312,25 @@ export interface SuperNodeVO {
     addr: string,
     enode: string,
     creator: string,
-    ip: string,
     description: string,
     founders: MemberInfoVO[],
     incentivePlan: IncentivePlanVO,
-    stateInfo: {
-        state: number,
-        height: number
-    },
-    voteInfo: {
-        totalAmount: string,
-        totalNum: string,
-        height: number,
-        voters: MemberInfoVO[]
-    }
+    state
 }
 
 export interface MasterNodeVO {
     id: number
-    amount: string,
-    createHeight: number,
-    updateHeight: number,
+    totalAmount: string,
     addr: string,
     enode: string,
     creator: string,
-    ip: string,
     description: string,
     founders: MemberInfoVO[],
     incentivePlan: IncentivePlanVO,
-    stateInfo: {
-        state: number,
-        height: number
-    },
-    lastRewardHeight: number
+    state,
+    lastRewardHeight: number,
+    createHeight: number,
+    updateHeight: number,
 }
 
 export interface NodeRewardVO {
