@@ -33,11 +33,19 @@ export default (masterNode: MasterNodeVO) => {
             text: string
         } = {
             status: "default",
-            text: "default"
+            text: "UNKNOWN"
+        }
+        if (state == 0) {
+            _state.status = "success";
+            _state.text = "INITIALIZE";
         }
         if (state == 1) {
             _state.status = "processing";
             _state.text = "ENABLED";
+        }
+        if (state == 2) {
+            _state.status = "error";
+            _state.text = "ERROR";
         }
         return (<>
             <Badge {..._state} />

@@ -102,13 +102,13 @@ export default () => {
             title: <Text strong style={{ color: "#6c757e" }}>Vote Obtained</Text>,
             dataIndex: 'amount',
             render: (amount, superNode) => {
-                const { totalAmount, totalVoteNum , totalVoterAmount } = superNode;
+                const { totalAmount, totalVoteNum , totalVoteAmount } = superNode;
                 return <>
                     <Text strong>
                         {<EtherAmount raw={totalVoteNum} fix={18} ignoreLabel></EtherAmount>}
                     </Text>
                     <Text type='secondary' style={{ fontSize: "12px", float: "right" }}>
-                        [{<EtherAmount raw={totalVoterAmount} fix={18}></EtherAmount>}]
+                        [{<EtherAmount raw={totalVoteAmount} fix={18}></EtherAmount>}]
                     </Text>
                     <Progress style={{ width: "90%" }} percent={Number((Number(superNode.voteObtainedRate) * 100).toFixed(2))} status={"normal"} />
                 </>

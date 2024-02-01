@@ -23,7 +23,7 @@ const { Title, Text, Paragraph, Link } = Typography;
 
 export default (superMasterNode: SuperNodeVO) => {
 
-    const { id, description, creator, enode, incentivePlan, state, lastRewardHeight, totalAmount, totalVoteNum , totalVoterAmount , founders, addr } = superMasterNode;
+    const { id, description, creator, enode, incentivePlan, state, lastRewardHeight, totalAmount, totalVoteNum, totalVoteAmount , founders, addr } = superMasterNode;
     const nodeAddress = addr.toLowerCase();
     const nodeState = state;
     const blockNumber = useBlockNumber();
@@ -34,11 +34,19 @@ export default (superMasterNode: SuperNodeVO) => {
             text: string
         } = {
             status: "default",
-            text: "default"
+            text: "UNKNOWN"
+        }
+        if (state == 0) {
+            _state.status = "success";
+            _state.text = "INITIALIZE";
         }
         if (state == 1) {
             _state.status = "processing";
             _state.text = "ENABLED";
+        }
+        if (state == 2) {
+            _state.status = "error";
+            _state.text = "ERROR";
         }
         return (<>
             <Badge {..._state} />
@@ -48,6 +56,9 @@ export default (superMasterNode: SuperNodeVO) => {
         <Row>
             <Col style={{ marginTop: "10px", padding: "5px" }} span={24} >
                 <Card size="default" title={<Text strong><ClusterOutlined style={{ marginRight: "5px" }} />SuperNode</Text>}>
+                    {
+                        JSON.stringify(superMasterNode)
+                    }
                     <Row>
                         <Col xl={12}>
                             <Row style={{ marginTop: "10px" }}>
@@ -89,7 +100,7 @@ export default (superMasterNode: SuperNodeVO) => {
                             <Row style={{ marginTop: "10px" }}>
                                 <Col xl={6} xs={24}><Text strong>Vote Amount:</Text></Col>
                                 <Col xl={18} xs={24}>
-                                    <Text><EtherAmount raw={totalVoterAmount} fix={18}></EtherAmount></Text>
+                                    <Text><EtherAmount raw={totalVoteAmount} fix={18}></EtherAmount></Text>
                                 </Col>
                             </Row>
                             <Row style={{ marginTop: "10px" }}>

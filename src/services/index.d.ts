@@ -303,7 +303,7 @@ export interface SuperNodeVO {
     id: number,
     totalAmount: string,
     totalVoteNum: string,
-    totalVoterAmount: string,
+    totalVoteAmount: string,
     voteObtainedRate: string,
     createHeight: number,
     updateHeight: number,

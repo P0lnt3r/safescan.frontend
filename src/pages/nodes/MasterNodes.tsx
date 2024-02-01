@@ -70,7 +70,7 @@ export default () => {
             text: string
         } = {
             status: "default",
-            text: "default"
+            text: "UNKNOWN"
         }
         if (state == 0) {
             _state.status = "success";
