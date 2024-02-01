@@ -14,7 +14,13 @@ const config = {
         block_confirmed: 6,
         api_host: `http://47.107.47.210:5005`,
         ws_host: `ws://47.107.47.210:5005/socket.io`
-    }
+    },
+    "prod": {
+        native_label: "SAFE",
+        block_confirmed: 6,
+        api_host: `http://172.104.162.94:5005`,
+        ws_host: `ws://172.104.162.94:5005/socket.io`
+    },
 }
 
 export default config['dev'];
