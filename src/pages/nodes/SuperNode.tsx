@@ -56,9 +56,6 @@ export default (superMasterNode: SuperNodeVO) => {
         <Row>
             <Col style={{ marginTop: "10px", padding: "5px" }} span={24} >
                 <Card size="default" title={<Text strong><ClusterOutlined style={{ marginRight: "5px" }} />SuperNode</Text>}>
-                    {
-                        JSON.stringify(superMasterNode)
-                    }
                     <Row>
                         <Col xl={12}>
                             <Row style={{ marginTop: "10px" }}>
