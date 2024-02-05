@@ -108,16 +108,6 @@ export default () => {
             fixed: 'left',
         },
         {
-            title: <Text strong style={{ color: "#6c757e" }}>Block</Text>,
-            dataIndex: 'blockNumber',
-            width: 80,
-            render: (blockNumber, vo) => {
-                return <>
-                    <BlockNumber blockNumber={blockNumber} confirmed={vo.confirmed}></BlockNumber>
-                </>
-            }
-        },
-        {
             title: <Text strong style={{ color: "#6c757e" }}>Date Time</Text>,
             dataIndex: 'timestamp',
             width: 120,
@@ -150,9 +140,9 @@ export default () => {
             render: (amount) => <Text strong><EtherAmount raw={amount.toString()} fix={6} /></Text>
         },
         {
-            title: <Text strong style={{ color: "#6c757e" }}>Account Record ID</Text>,
+            title: <Text strong style={{ color: "#6c757e" }}>Record ID</Text>,
             dataIndex: 'lockId',
-            width: 120,
+            width: 80,
             render: (lockId) => <Text strong>{lockId}</Text>
         },
     ]

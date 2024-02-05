@@ -105,10 +105,10 @@ export default () => {
                 const { totalAmount, totalVoteNum , totalVoteAmount } = superNode;
                 return <>
                     <Text strong>
-                        {<EtherAmount raw={totalVoteNum} fix={18} ignoreLabel></EtherAmount>}
+                        {<EtherAmount raw={totalVoteNum} fix={2} ignoreLabel></EtherAmount>}
                     </Text>
                     <Text type='secondary' style={{ fontSize: "12px", float: "right" }}>
-                        [{<EtherAmount raw={totalVoteAmount} fix={18}></EtherAmount>}]
+                        [{<EtherAmount raw={totalVoteAmount} fix={2}></EtherAmount>}]
                     </Text>
                     <Progress style={{ width: "90%" }} percent={Number((Number(superNode.voteObtainedRate) * 100).toFixed(2))} status={"normal"} />
                 </>

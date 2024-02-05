@@ -142,7 +142,7 @@ export default ( { address } : {
             render: (amount) => <Text strong><EtherAmount raw={amount.toString()} fix={6} ignoreLabel /></Text>
         },
         {
-            title: <Text strong style={{ color: "#6c757e" }}>Account Record ID</Text>,
+            title: <Text strong style={{ color: "#6c757e" }}>Record ID</Text>,
             dataIndex: 'lockId',
             width: 80,
             render: (lockId) => <RouterLink to={`/assets/accountRecords/${lockId}`}>
