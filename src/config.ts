@@ -18,9 +18,15 @@ const config = {
     "prod": {
         native_label: "SAFE",
         block_confirmed: 6,
-        api_host: `http://172.104.162.94:5005`,
-        ws_host: `ws://172.104.162.94:5005/socket.io`
+        api_host: `http://safe4.anwang.com:5005`,
+        ws_host: `ws://safe4.anwang.com:5005/socket.io`
+    },
+    "prodssl": {
+        native_label: "SAFE",
+        block_confirmed: 6,
+        api_host: `https://safe4.anwang.com/5005`,
+        ws_host: `wss://safe4.anwang.com/ws/socket.io`
     },
 }
 
-export default config['test'];
+export default config['dev'];

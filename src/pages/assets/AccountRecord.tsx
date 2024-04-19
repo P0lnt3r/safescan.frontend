@@ -125,8 +125,9 @@ function RenderMemberOfNode(accountRecord: AccountRecordVO) {
     const {
         specialAddress, nodeAddressPropVO, registerAction, registerActionTxHash,
         freezeHeight, freezeTimestamp, unfreezeHeight, unfreezeTimestamp,
+        withdrawTxHash
     } = accountRecord;
-    const isEmpty = EMPTY_ADDRESS == specialAddress;
+    const isEmpty = !specialAddress || EMPTY_ADDRESS == specialAddress || withdrawTxHash != null;
     return <>
         <Row>
             <Col span={6}>
@@ -182,7 +183,7 @@ function RenderVoteForNode(accountRecord: AccountRecordVO) {
         voteHeight, voteTimestamp, releaseHeight, releaseTimestamp,
         withdrawTxHash
     } = accountRecord;
-    const isEmpty = withdrawTxHash != null || EMPTY_ADDRESS == votedAddress;
+    const isEmpty = !votedAddress || EMPTY_ADDRESS == votedAddress || withdrawTxHash != null ;
     return <>
         <Row>
             <Col span={6}>
