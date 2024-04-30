@@ -1,5 +1,5 @@
 import { Card, Typography, Tag, Input, Button, Space, Tooltip, Tabs, Row, Col, Divider, Modal, Descriptions, Badge } from 'antd';
-import { IncentivePlanVO, MasterNodeVO, SuperNodeVO } from '../../services';
+import { IncentivePlanVO, MasterNodeVO, MemberInfoVO, SuperNodeVO } from '../../services';
 import { Link as RouterLink } from 'react-router-dom';
 import EtherAmount from '../../components/EtherAmount';
 import { Pie } from '@ant-design/plots';
@@ -17,6 +17,7 @@ import { PresetStatusColorType } from 'antd/es/_util/colors';
 import { isMobile } from 'react-device-detect';
 import Address from '../../components/Address';
 import { useBlockNumber } from '../../state/application/hooks';
+import Table, { ColumnsType } from 'antd/lib/table';
 
 const { Title, Text, Paragraph, Link } = Typography;
 
@@ -52,46 +53,63 @@ export default (masterNode: MasterNodeVO) => {
         </>)
     }
 
+    const columns: ColumnsType<MemberInfoVO> = [
+        {
+            title: 'Account Record ID',
+            dataIndex: 'lockID',
+            key: 'lockID',
+            render: (lockID) => <RouterLink to={`/assets/accountRecords/${lockID}`}>
+                <Link strong>{lockID}</Link>
+            </RouterLink>
+        },
+        {
+            title: 'Owner',
+            dataIndex: 'addr',
+            key: 'addr',
+            render: (addr) => <Address address={addr.toLowerCase()} style={{ forceTag: false, ellipsis: false, hasLink: true, noTip: true }} />
+        },
+        {
+            title: 'Amount',
+            dataIndex: 'amount',
+            key: 'amount',
+            render: (amount) => <Text strong><EtherAmount raw={amount} fix={18} /></Text>
+        }
+    ]
+
     return (<>
         <Row>
             <Col style={{ marginTop: "10px", padding: "5px" }} span={24} >
-                <Card size="default" title={<Text strong><ApartmentOutlined style={{ marginRight: "5px" }} />MasterNode</Text>}>
+                <Card size="default" title={<Text strong><ApartmentOutlined style={{ marginRight: "5px" }} />Masternode</Text>}>
                     <Row>
                         <Col xl={12}>
-                            <Row style={{ marginTop: "10px" }}>
+                            <Row style={{ marginTop: "15px" }}>
                                 <Col span={8}><Text strong>ID:</Text></Col>
                                 <Col span={16}>
                                     <Text>{id}</Text>
                                 </Col>
                             </Row>
-                            <Row style={{ marginTop: "10px" }}>
+                            <Row style={{ marginTop: "15px" }}>
                                 <Col span={8}><Text strong>State:</Text></Col>
                                 <Col span={16}>
                                     {State(nodeState)}
                                 </Col>
                             </Row>
-                            <Row style={{ marginTop: "10px" }}>
-                                <Col span={8}><Text strong>Description:</Text></Col>
-                                <Col span={16}>
-                                    <Text>{description}</Text>
-                                </Col>
-                            </Row>
-                            <Row style={{ marginTop: "10px" }}>
-                                <Col span={8}><Text strong>Amount:</Text></Col>
-                                <Col span={16}>
-                                    <Text><EtherAmount raw={totalAmount} fix={18}></EtherAmount></Text>
-                                </Col>
-                            </Row>
-                            <Row style={{ marginTop: "10px" }}>
-                                <Col span={8}><Text strong>Reward Height:</Text></Col>
-                                <Col span={16}>
-                                    <Text>{lastRewardHeight}</Text>
-                                </Col>
-                            </Row>
-                            <Row style={{ marginTop: "10px" }}>
+                            <Row style={{ marginTop: "15px" }}>
                                 <Col xl={8} xs={24}><Text strong>Creator:</Text></Col>
                                 <Col xl={16} xs={24}>
                                     <Address address={creator} style={{ ellipsis: false, hasLink: true }}></Address>
+                                </Col>
+                            </Row>
+                            <Row style={{ marginTop: "15px" }}>
+                                <Col span={8}><Text strong>Amount:</Text></Col>
+                                <Col span={16}>
+                                    <Text strong><EtherAmount raw={totalAmount} fix={18}></EtherAmount></Text>
+                                </Col>
+                            </Row>
+                            <Row style={{ marginTop: "15px" }}>
+                                <Col span={8}><Text strong>Latest Reward Height:</Text></Col>
+                                <Col span={16}>
+                                    <Text>{lastRewardHeight}</Text>
                                 </Col>
                             </Row>
                         </Col>
@@ -102,7 +120,7 @@ export default (masterNode: MasterNodeVO) => {
                             </div>
                         </Col>
                     </Row>
-                    <Row style={{ marginTop: "10px" }}>
+                    <Row style={{ marginTop: "15px" }}>
                         <Col xl={4} xs={24}><Text strong>Enode:</Text></Col>
                         <Col xl={18} xs={24}>
                             <Paragraph copyable>
@@ -110,78 +128,21 @@ export default (masterNode: MasterNodeVO) => {
                             </Paragraph>
                         </Col>
                     </Row>
+                    <Divider />
+
+                    <Row style={{ marginTop: "10px" }}>
+                        <Col xl={4} xs={24}><Text strong>Description:</Text></Col>
+                        <Col xl={18} xs={24}>
+                            <Text type='secondary'>{description}</Text>
+                        </Col>
+                    </Row>
+                    <Divider />
 
                     <Row>
                         <Col span={24}>
                             <Descriptions style={{ marginTop: "20px", maxWidth: "100%" }} layout="vertical" bordered>
                                 <Descriptions.Item span={3} label={<Text strong style={{ color: "#6c757e" }} >Founders ({founders.length})</Text>}>
-                                    {
-                                        founders.map(({ lockID, addr, amount, height, lockDay, unlockHeight, unfreezeHeight, releaseHeight }) => {
-                                            const hasLock = lockDay != undefined && lockDay > 0;
-                                            const isLocked = hasLock && unlockHeight && unlockHeight > blockNumber;
-                                            const isFreezed = (unfreezeHeight && unfreezeHeight > blockNumber)
-                                                || (releaseHeight && releaseHeight > blockNumber)
-                                            return (<>
-                                                <Row key={lockID}>
-                                                    <Divider></Divider>
-                                                    <Col xs={24} xl={4}>
-                                                        {
-                                                            hasLock && isLocked && <LockOutlined />
-                                                        }
-                                                        {
-                                                            hasLock && !isLocked && <UnlockOutlined />
-                                                        }
-                                                        {
-                                                            isFreezed && <HourglassTwoTone />
-                                                        }
-                                                        <Text type="secondary">[ID:{lockID}]</Text>
-                                                        <Text strong style={{ float: "right" }}>
-                                                            {
-                                                                isFreezed && <Text strong style={{ color: "rgb(6, 58, 156)" }}>
-                                                                    <EtherAmount raw={amount} fix={18} />
-                                                                </Text>
-                                                            }
-                                                            {
-                                                                !isFreezed && isLocked && <Text strong type="secondary" >
-                                                                    <EtherAmount raw={amount} fix={18} />
-                                                                </Text>
-                                                            }
-                                                            {
-                                                                !isFreezed && !isLocked && <Text strong type="success" >
-                                                                    <EtherAmount raw={amount} fix={18} />
-                                                                </Text>
-                                                            }
-                                                        </Text>
-                                                    </Col>
-                                                    <Col xs={0} xl={2}>
-
-                                                    </Col>
-                                                    <Col xs={24} xl={10}>
-                                                        {
-                                                            addr.toLowerCase() == nodeAddress && <>
-                                                                <Tooltip title={addr.toLowerCase()}>
-                                                                    <Text code style={{ color: "orange" }}>SELF</Text>
-                                                                </Tooltip>
-                                                            </>
-                                                        }
-                                                        {
-                                                            addr.toLowerCase() != nodeAddress && <>
-                                                                {
-                                                                    !isMobile && <Address address={addr.toLowerCase()} />
-                                                                }
-                                                                {
-                                                                    isMobile && <>
-
-                                                                    </>
-                                                                }
-                                                            </>
-                                                        }
-                                                    </Col>
-                                                    <Divider />
-                                                </Row>
-                                            </>)
-                                        })
-                                    }
+                                    <Table style={{ marginTop: "10px", marginBottom: "30px" }} columns={columns} dataSource={founders} pagination={false} />
                                 </Descriptions.Item>
                             </Descriptions>
                         </Col>

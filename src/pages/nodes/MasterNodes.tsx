@@ -1,24 +1,17 @@
 
 import { Card, Table, Typography, Row, Col, Tooltip, PaginationProps, Badge, Divider, TabsProps, Tabs, Input, Space, Button, InputRef, Tag } from 'antd';
 import { useEffect, useRef, useState } from 'react';
-import { fetchAddressBalanceRank } from '../../services/address';
 import { AddressBalanceRankVO, MasterNodeVO, SuperNodeVO } from '../../services';
 import type { ColumnsType } from 'antd/es/table';
 import EtherAmount from '../../components/EtherAmount';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-    UserOutlined,
-    FileTextOutlined,
-    SafetyOutlined,
-    ApartmentOutlined,
     SearchOutlined,
-    CloseCircleOutlined
 } from '@ant-design/icons';
-import { format } from '../../utils/NumberFormat';
 import { fetchMasterNodes, fetchSuperNodes } from '../../services/node';
 import { PresetStatusColorType } from 'antd/es/_util/colors';
 import MasternodesRegisters from './MasternodesRegisters';
-import { ChecksumAddress } from '../../components/Address';
+import Address, { ChecksumAddress } from '../../components/Address';
 
 const { Title, Text, Link, Paragraph } = Typography;
 
@@ -58,6 +51,7 @@ export default () => {
         })
     }
     const [tableData, setTableData] = useState<MasterNodeVO[]>([]);
+    const [loading ,setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         pagination.current = 1;
@@ -91,30 +85,25 @@ export default () => {
 
     const columns: ColumnsType<MasterNodeVO> = [
         {
-            title: <Text strong style={{ color: "#6c757e" }}>ID</Text>,
+            title: <Text strong style={{ color: "#6c757e" }}>Masternode ID</Text>,
             dataIndex: 'id',
             render: (id) => <>
-                {id}
+                <Text strong>{id}</Text>
             </>,
-            width: 50,
+            width: "10%",
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Address</Text>,
             dataIndex: 'addr',
             render: (address) => {
-                let checksumAddress = ChecksumAddress(address)
                 return <>
-                    <Text>
-                        <RouterLink to={`/node/${checksumAddress}`}>
-                            <Link style={{ lineHeight: "42px" }}>{checksumAddress}</Link>
-                        </RouterLink>
-                        <Paragraph style={{
-                            display: "inline-block"
-                        }} copyable={{ text: checksumAddress }}></Paragraph>
-                    </Text>
+                    <Address address={address} style={{
+                        hasLink:true,
+                        ellipsis:false
+                    }} to={`/node/${address}`} />
                 </>
             },
-            width: 250,
+            width: "30%",
             filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => <>
                 <div style={{ padding: 8, width: "400px", height: "100px" }} onKeyDown={(e) => e.stopPropagation()}>
                     <Text strong>Address</Text>
@@ -154,49 +143,12 @@ export default () => {
             </>
         },
         {
-            title: <Text strong style={{ color: "#6c757e" }}>Name</Text>,
+            title: <Text strong style={{ color: "#6c757e" }}>Description</Text>,
             dataIndex: 'description',
             render: (description) => <>
-                {description}
+                <Text title={description} type='secondary' style={{width:"400px"}} ellipsis>{description}</Text>
             </>,
-            width: 150,
-            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => <>
-                <div style={{ padding: 8, width: "400px", height: "100px" }} onKeyDown={(e) => e.stopPropagation()}>
-                    <Text strong>Name</Text>
-                    <Input
-                        value={tableQueryParams.name}
-                        onChange={(e) => {
-                            setTableQueryParams({
-                                ...tableQueryParams,
-                                name: e.target.value
-                            })
-                        }}
-                        style={{ marginBottom: 8, display: 'block' }}
-                    />
-                    <Button
-                        type="primary"
-                        icon={<SearchOutlined />}
-                        size="small"
-                        style={{ width: 90, float: "left" }}
-                        onClick={() => {
-                            closePropSearch();
-                            close();
-                        }}
-                    >
-                        Search
-                    </Button>
-                    <Button
-                        size="small"
-                        style={{ width: 90, float: "right" }}
-                        onClick={() => {
-                            closePropSearch("name")
-                            close();
-                        }}
-                    >
-                        Reset
-                    </Button>
-                </div>
-            </>
+            width: "40%",
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Amount</Text>,
@@ -206,7 +158,7 @@ export default () => {
                     {<EtherAmount raw={totalAmount} fix={18}></EtherAmount>}
                 </Text>
             </>,
-            width: 140,
+            width: "10%",
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>State</Text>,
@@ -214,7 +166,7 @@ export default () => {
             render: (state) => <>
                 {State(state)}
             </>,
-            width: 40,
+            width: "10%",
         },
     ];
 
@@ -249,7 +201,7 @@ export default () => {
     return (<>
         <Title level={3}>Safe4 Network Masternodes</Title>
         <br />
-        [Text : What is MasterNode ? || How to create MasterNode...]
+        [Text : What is Masternode ? || How to create MasterNode...]
         <Divider />
         {
             (tableQueryParams.address || tableQueryParams.ip || tableQueryParams.name) &&
@@ -290,7 +242,7 @@ export default () => {
             </Row>
         }
 
-        <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
+        <Table loading={loading} columns={columns} dataSource={tableData} scroll={{ x: 800 }}
             pagination={pagination} rowKey={(txVO) => txVO.id}
             style={{ marginTop: "20px" }}
         />

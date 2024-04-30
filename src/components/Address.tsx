@@ -64,7 +64,8 @@ export default ({ address, propVO, style, to }: {
         : tag ? tag : ellipsisAddress;
 
     const textStyle: any = {
-        maxWidth: "90%"
+        maxWidth: "90%",
+        fontFamily: "SFMono-Regular,Menlo,Monaco,Consolas,\"Liberation Mono\",\"Courier New\",monospace"
     }
     if (style && style.color) {
         textStyle.color = style.color;
@@ -94,7 +95,7 @@ export default ({ address, propVO, style, to }: {
 
     return <>
         <Text>
-            {RenderIcon()}
+            { (!style || style.forceTag) && RenderIcon()}
             <Tooltip style={{ float: "left" }} title={(style && style.noTip) ? "" : checksumAddress}>
                 {
                     (style && !style.hasLink) && <>

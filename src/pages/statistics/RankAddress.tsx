@@ -87,15 +87,12 @@ export default () => {
             title: <Text strong style={{ color: "#6c757e" }}>Address</Text>,
             dataIndex: 'address',
             render: (address, addressBalanceRankVO: AddressBalanceRankVO) => <>
-                {
-                    addressBalanceRankVO.addressPropVO?.type == 'contract' &&
-                    <>
-                        <Tooltip title="Contract"><FileTextOutlined style={{ marginRight: "5px" }} /></Tooltip>
-                    </>
-                }
-                <RouterLink to={`/address/${address}`}>
-                    <Link>{ChecksumAddress(address)}</Link>
-                </RouterLink>
+                <Address address={address} style={{
+                    hasLink: true,
+                    ellipsis: false,
+                    noTip: true,
+                    forceTag : false,
+                }} to={`/address/${address}`} />
             </>,
             width: 140,
         },
@@ -104,7 +101,7 @@ export default () => {
             dataIndex: 'tag',
             render: (tag, vo) => <>
                 {
-                    vo.addressPropVO && <Address address={vo.address} propVO={vo.addressPropVO} style={{ hasLink: false }}></Address>
+                    vo.addressPropVO && <Address address={vo.address} propVO={vo.addressPropVO} style={{ hasLink: false , forceTag:true }}></Address>
                 }
             </>,
             width: 80,

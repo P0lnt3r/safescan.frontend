@@ -8,8 +8,6 @@ import TransactionHash from '../../components/TransactionHash';
 import { DateFormat } from '../../utils/DateUtil';
 import EtherAmount from '../../components/EtherAmount';
 import TxMethodId from "../../components/TxMethodId";
-import { ArrowRightOutlined, FileTextOutlined } from '@ant-design/icons';
-import { Link as RouterLink } from "react-router-dom";
 import { format } from "../../utils/NumberFormat";
 import BlockNumber from "../../components/BlockNumber";
 import Address from "../../components/Address";

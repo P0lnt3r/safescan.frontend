@@ -166,7 +166,7 @@ export default ({ address }: { address: string }) => {
 
     return <>
         <OutputTotal></OutputTotal>
-        <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
+        <Table loading={loading} columns={columns} dataSource={tableData} scroll={{ x: 800 }}
             pagination={pagination} rowKey={(nodeReward: NodeRewardVO) => nodeReward.transactionHash + nodeReward.eventLogIndex}
         />
 

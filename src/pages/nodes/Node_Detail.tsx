@@ -73,23 +73,7 @@ export default function () {
                 </Modal>
             }
             <Row>
-                <Col xs={24} xl={2}>
-                    <Title level={4}>
-                        {
-                            addressVO && addressVO.type == "contract" && <>
-                                <FileTextOutlined />
-                                <Text style={{ marginLeft: "8px" }}>Contract</Text>
-                            </>
-                        }
-                        {
-                            addressVO && addressVO.type == "address" && <>
-                                <UserOutlined />
-                                <Text style={{ marginLeft: "8px" }}>Address</Text>
-                            </>
-                        }
-                    </Title>
-                </Col>
-                <Col xs={24} xl={20}>
+                <Col xs={24} xl={24}>
                     <Row>
                         <Text type="secondary" strong
                             style={

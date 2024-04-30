@@ -1,24 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { NodeRewardVO, TransactionVO } from "../../services";
-import { fetchAddressTransactions } from "../../services/tx";
 import { PaginationProps, Table, Typography, Row, Col, Tooltip, TablePaginationConfig } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslation } from 'react-i18next';
-import AddressTag, { ShowStyle } from '../../components/AddressTag';
 import TransactionHash from '../../components/TransactionHash';
 import { DateFormat } from '../../utils/DateUtil';
 import EtherAmount from '../../components/EtherAmount';
-import NavigateLink from "../../components/NavigateLink";
-import TxMethodId from "../../components/TxMethodId";
-import { ArrowRightOutlined, FileTextOutlined } from '@ant-design/icons';
-import { Link as RouterLink } from "react-router-dom";
-import { JSBI } from "@uniswap/sdk";
 import BlockNumber from "../../components/BlockNumber";
 import { format } from "../../utils/NumberFormat";
 import { fetchNodeRewards } from "../../services/node";
 import Address from "../../components/Address";
 
-const { Text, Link } = Typography;
+const { Text } = Typography;
 const DEFAULT_PAGESIZE = 10;
 
 
@@ -158,7 +151,6 @@ export default ({ address, nodeAddress }: {
 
     ];
 
-
     function OutputTotal() {
         return <>
             {
@@ -173,8 +165,8 @@ export default ({ address, nodeAddress }: {
 
     return <>
         <OutputTotal></OutputTotal>
-        <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
-            pagination={pagination} rowKey={(nodeReward: NodeRewardVO) => nodeReward.transactionHash + nodeReward.eventLogIndex}
+        <Table loading={loading} columns={columns} dataSource={tableData} scroll={{ x: 800 }}
+            pagination={pagination} rowKey={(nodeReward: NodeRewardVO) => nodeReward.transactionHash + nodeReward.address}
         />
 
     </>

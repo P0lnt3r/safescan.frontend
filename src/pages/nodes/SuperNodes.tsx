@@ -1,23 +1,18 @@
 
 import { Card, Table, Typography, Row, Col, Tooltip, PaginationProps, Badge, Progress, TabsProps, Tabs, Divider, InputRef, Input, Button, Space, Tag } from 'antd';
 import { useEffect, useRef, useState } from 'react';
-import { fetchAddressBalanceRank } from '../../services/address';
 import { AddressBalanceRankVO, SuperNodeVO } from '../../services';
 import type { ColumnsType } from 'antd/es/table';
 import EtherAmount from '../../components/EtherAmount';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-    UserOutlined,
-    FileTextOutlined,
-    SafetyOutlined,
-    ApartmentOutlined,
     SearchOutlined
 } from '@ant-design/icons';
 import { format } from '../../utils/NumberFormat';
 import { fetchSuperNodes } from '../../services/node';
 import { PresetStatusColorType } from 'antd/es/_util/colors';
 import SupernodesRegisters from './SupernodesRegisters';
-import { ChecksumAddress } from '../../components/Address';
+import Address, { ChecksumAddress } from '../../components/Address';
 import SupernodesVoteActions from './SupernodesVoteActions';
 
 const { Title, Text, Link, Paragraph } = Typography;
@@ -96,13 +91,13 @@ export default () => {
             render: (rank) => <>
                 {rank}
             </>,
-            width: 50,
+            width: "8%",
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Vote Obtained</Text>,
             dataIndex: 'amount',
             render: (amount, superNode) => {
-                const { totalAmount, totalVoteNum , totalVoteAmount } = superNode;
+                const { totalAmount, totalVoteNum, totalVoteAmount } = superNode;
                 return <>
                     <Text strong>
                         {<EtherAmount raw={totalVoteNum} fix={2} ignoreLabel></EtherAmount>}
@@ -113,23 +108,20 @@ export default () => {
                     <Progress style={{ width: "90%" }} percent={Number((Number(superNode.voteObtainedRate) * 100).toFixed(2))} status={"normal"} />
                 </>
             },
-            width: 150,
+            width: "18%",
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Address</Text>,
             dataIndex: 'addr',
             render: (address) => {
-                let checksumAddress = ChecksumAddress(address)
                 return <>
-                    <RouterLink to={`/node/${checksumAddress}`}>
-                        <Link style={{ lineHeight: "42px" }}>{checksumAddress}</Link>
-                    </RouterLink>
-                    <Paragraph style={{
-                        display: "inline-block"
-                    }} copyable={{ text: checksumAddress }}></Paragraph>
+                    <Address address={address} style={{
+                        hasLink: true,
+                        ellipsis: false
+                    }} to={`/node/${address}`} />
                 </>
             },
-            width: 300,
+            width: "34%",
             filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => <>
                 <div style={{ padding: 8, width: "400px", height: "100px" }} onKeyDown={(e) => e.stopPropagation()}>
                     <Text strong>Address</Text>
@@ -169,49 +161,49 @@ export default () => {
             </>
         },
         {
-            title: <Text strong style={{ color: "#6c757e" }}>Name</Text>,
+            title: <Text strong style={{ color: "#6c757e" }}>Description</Text>,
             dataIndex: 'description',
             render: (description) => <>
-                {description}
+                <Text type='secondary' style={{ width: "250px" }} ellipsis>{description}</Text>
             </>,
-            width: 130,
-            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => <>
-                <div style={{ padding: 8, width: "400px", height: "100px" }} onKeyDown={(e) => e.stopPropagation()}>
-                    <Text strong>Name</Text>
-                    <Input
-                        value={tableQueryParams.name}
-                        onChange={(e) => {
-                            setTableQueryParams({
-                                ...tableQueryParams,
-                                name: e.target.value
-                            })
-                        }}
-                        style={{ marginBottom: 8, display: 'block' }}
-                    />
-                    <Button
-                        type="primary"
-                        icon={<SearchOutlined />}
-                        size="small"
-                        style={{ width: 90, float: "left" }}
-                        onClick={() => {
-                            closePropSearch();
-                            close();
-                        }}
-                    >
-                        Search
-                    </Button>
-                    <Button
-                        size="small"
-                        style={{ width: 90, float: "right" }}
-                        onClick={() => {
-                            closePropSearch("name")
-                            close();
-                        }}
-                    >
-                        Reset
-                    </Button>
-                </div>
-            </>
+            width: "20%",
+            // filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => <>
+            //     <div style={{ padding: 8, width: "400px", height: "100px" }} onKeyDown={(e) => e.stopPropagation()}>
+            //         <Text strong>Description</Text>
+            //         <Input
+            //             value={tableQueryParams.name}
+            //             onChange={(e) => {
+            //                 setTableQueryParams({
+            //                     ...tableQueryParams,
+            //                     name: e.target.value
+            //                 })
+            //             }}
+            //             style={{ marginBottom: 8, display: 'block' }}
+            //         />
+            //         <Button
+            //             type="primary"
+            //             icon={<SearchOutlined />}
+            //             size="small"
+            //             style={{ width: 90, float: "left" }}
+            //             onClick={() => {
+            //                 closePropSearch();
+            //                 close();
+            //             }}
+            //         >
+            //             Search
+            //         </Button>
+            //         <Button
+            //             size="small"
+            //             style={{ width: 90, float: "right" }}
+            //             onClick={() => {
+            //                 closePropSearch("name")
+            //                 close();
+            //             }}
+            //         >
+            //             Reset
+            //         </Button>
+            //     </div>
+            // </>
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Amount</Text>,
@@ -221,7 +213,7 @@ export default () => {
                     {<EtherAmount raw={totalAmount} fix={18}></EtherAmount>}
                 </Text>
             </>,
-            width: 150,
+            width: "10%",
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>State</Text>,
@@ -229,7 +221,7 @@ export default () => {
             render: (state) => <>
                 {State(state)}
             </>,
-            width: 10,
+            width: "10%",
         },
     ];
 
@@ -266,8 +258,8 @@ export default () => {
     }
 
     return (<>
-        <Title level={3}>SuperNodes</Title>
-        [Text : What is SuperNode ? || How to create SuperNode...]
+        <Title level={3}>Safe4 Network Supernodes</Title>
+        [Text : What is Supernode ? || How to create Supernode...]
         <Divider />
         {
             (tableQueryParams.address || tableQueryParams.ip || tableQueryParams.name) &&
