@@ -38,6 +38,7 @@ import VerifyContract from './pages/verify/verifyContract';
 import VerifyContractSolc from './pages/verify/verifyContract-solc';
 import Contracts from './pages/contracts';
 import VerifyContractSolcJson from './pages/verify/verifyContract-solc-json';
+import Safe3Redeem from './pages/statistics/safe3/Safe3Redeem';
 
 const { Content } = Layout;
 
@@ -84,6 +85,7 @@ function App() {
               <Route path="/verifyContract" index element={<VerifyContract />} />
               <Route path="/verifyContract-solc" index element={<VerifyContractSolc />} />
               <Route path="/verifyContract-solc-json" index element={<VerifyContractSolcJson />} />
+              <Route path="/safe3/redeem" index element={<Safe3Redeem />} />
             </Routes>
           </div>
         </BrowserRouter>

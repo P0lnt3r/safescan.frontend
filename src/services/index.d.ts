@@ -613,3 +613,29 @@ export interface Contract_Compile_Result_VO {
     optimizerRuns : number;
     license : string;
 }
+
+
+export interface Safe3RedeemVO {
+    blockNumber : number,
+    timestamp : number,
+    transactionHash : string ,
+    eventLogIndex : number,
+    action : string,
+    safe3Address:string,
+    safe4Address : string ,
+    amount : string | undefined,
+    lockId : number | undefined,
+    confirmed: number
+}
+
+export interface Safe3AddressRedeemVO {
+    safe3Address : string , 
+    safe4Address : string | undefined,
+    available : string,
+    availableRedeemHash : string | undefined,
+    locked : string,
+    lockedRedeemHash : string | undefined,
+    masternode : boolean , 
+    mLockedAmount : string | undefined,
+    masternodeRedeemHash : string | undefined,
+}
