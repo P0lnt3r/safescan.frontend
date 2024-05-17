@@ -34,4 +34,4 @@ const config = {
 
 }
 
-export default config['dev'];
+export default config['prodssl'];

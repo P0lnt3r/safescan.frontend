@@ -639,3 +639,10 @@ export interface Safe3AddressRedeemVO {
     mLockedAmount : string | undefined,
     masternodeRedeemHash : string | undefined,
 }
+
+export interface Safe3RedeemStatisticVO {
+    totalSafe3Amount : string , 
+    redeemSafe3Amount : string , 
+    totalMasternodeCount : number,
+    redeemMasternodeCount : number
+}
