@@ -131,55 +131,54 @@ export default () => {
             },
             width: 70,
         },
-        {
-            title: <Text strong style={{ color: "#6c757e" }}>Before 24H</Text>,
-            dataIndex: 'changeBefore24H',
-            render: (changeBefore, vo) => {
-                if (!changeBefore) {
-                    changeBefore = vo.balance;
-                }
-                let changeDown = false;
-                if (changeBefore.indexOf("-") >= 0) {
-                    changeBefore = changeBefore.substring(changeBefore.indexOf("-") + 1);
-                    changeDown = true;
-                }
-                const changeAmount = JSBI.BigInt(changeBefore);
-                const hasChange = !JSBI.EQ(changeAmount, 0);
-                const changeUp = hasChange && !changeDown;
-                return <>
-                    <Row>
-                        {
-                            hasChange && <>
-                                <Col span={24}>
-                                    <Text strong style={{ color: changeUp ? "green" : "red" }}>
-                                        {changeUp && "+"}
-                                        {changeDown && "-"}
-                                        <EtherAmount raw={changeAmount.toString()} fix={6} />
-                                    </Text>
-                                </Col>
-                                <Col span={24}>
-                                    <Text strong style={{ fontSize: "12px", color: changeUp ? "green" : "red" }}>
-                                        {vo.changeBefore24HPercent && changeUp && "+"}
-                                        <span>{vo.changeBefore24HPercent}</span>
-                                    </Text>
-                                </Col>
-                            </>
-                        }
-                        {
-                            !hasChange && <>
-                                <Col span={24}>
-                                    <Text strong type='secondary'>
-                                        <EtherAmount raw={changeAmount.toString()} fix={4} />
-                                    </Text>
-                                </Col>
-                            </>
-                        }
-                    </Row>
-
-                </>
-            },
-            width: 70,
-        },
+        // {
+        //     title: <Text strong style={{ color: "#6c757e" }}>Before 24H</Text>,
+        //     dataIndex: 'changeBefore24H',
+        //     render: (changeBefore, vo) => {
+        //         if (!changeBefore) {
+        //             changeBefore = vo.balance;
+        //         }
+        //         let changeDown = false;
+        //         if (changeBefore.indexOf("-") >= 0) {
+        //             changeBefore = changeBefore.substring(changeBefore.indexOf("-") + 1);
+        //             changeDown = true;
+        //         }
+        //         const changeAmount = JSBI.BigInt(changeBefore);
+        //         const hasChange = !JSBI.EQ(changeAmount, 0);
+        //         const changeUp = hasChange && !changeDown;
+        //         return <>
+        //             <Row>
+        //                 {
+        //                     hasChange && <>
+        //                         <Col span={24}>
+        //                             <Text strong style={{ color: changeUp ? "green" : "red" }}>
+        //                                 {changeUp && "+"}
+        //                                 {changeDown && "-"}
+        //                                 <EtherAmount raw={changeAmount.toString()} fix={6} />
+        //                             </Text>
+        //                         </Col>
+        //                         <Col span={24}>
+        //                             <Text strong style={{ fontSize: "12px", color: changeUp ? "green" : "red" }}>
+        //                                 {vo.changeBefore24HPercent && changeUp && "+"}
+        //                                 <span>{vo.changeBefore24HPercent}</span>
+        //                             </Text>
+        //                         </Col>
+        //                     </>
+        //                 }
+        //                 {
+        //                     !hasChange && <>
+        //                         <Col span={24}>
+        //                             <Text strong type='secondary'>
+        //                                 <EtherAmount raw={changeAmount.toString()} fix={4} />
+        //                             </Text>
+        //                         </Col>
+        //                     </>
+        //                 }
+        //             </Row>
+        //         </>
+        //     },
+        //     width: 70,
+        // },
     ];
 
     return (<>

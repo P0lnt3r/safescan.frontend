@@ -2,10 +2,14 @@ import format from 'date-fns/format';
 import addDays from 'date-fns/addDays';
 
 export function DateFormat( time : number | undefined ) : string {
-    if ( time ){
-        return format(new Date(time), 'yyyy-MM-dd HH:mm:ss');
+    try{
+        if ( time ){
+            return format(new Date(time), 'yyyy-MM-dd HH:mm:ss');
+        }
+        return "-Unknown";
+    }catch(err){
+        return "-Unknown";
     }
-    return "";
 }
 
 export function GetIntervalDays( start : string , end : string ) : string[] {
