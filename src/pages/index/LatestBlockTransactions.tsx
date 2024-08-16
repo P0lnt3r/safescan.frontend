@@ -14,6 +14,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { FileTextOutlined } from '@ant-design/icons';
 import { isMobile } from 'react-device-detect';
 import Address from '../../components/Address';
+import BlockNumber from '../../components/BlockNumber';
 
 const { Title, Text, Link } = Typography;
 
@@ -46,12 +47,7 @@ export default function () {
                                         <Col xl={8} xs={20} style={{ paddingLeft: '2%' }}>
                                             <Row>
                                                 <Col xl={24} xs={10}>
-                                                    <NavigateLink path={`/block/${blockVO.number}`}>
-                                                        {
-                                                            blockVO.number > dbStoredBlockNumber ? <Link italic underline>{blockVO.number}</Link>
-                                                                : <Link>{blockVO.number}</Link>
-                                                        }
-                                                    </NavigateLink>
+                                                    <BlockNumber blockNumber={blockVO.number} confirmed={blockVO.confirmed}></BlockNumber>
                                                 </Col>
                                                 <Col xl={24} xs={14} style={isMobile ? { textAlign: "right" } : {}}>
                                                     <Text type="secondary">

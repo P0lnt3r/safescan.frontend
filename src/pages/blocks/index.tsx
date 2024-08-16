@@ -15,6 +15,7 @@ import { useDBStoredBlockNumber } from '../../state/application/hooks';
 import Address from '../../components/Address';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { isMobile } from 'react-device-detect';
+import BlockNumber from '../../components/BlockNumber';
 
 const { Title, Text, Link } = Typography;
 
@@ -31,10 +32,7 @@ export default function () {
       dataIndex: 'number',
       render: (number, blockVO) => {
         const confirmed = blockVO.confirmed;
-        return confirmed == 1 ? <RouterLink to={`/block/${number}`}>{number}</RouterLink> :
-          <RouterLink to={`/block/${number}`}>
-            <Link italic underline>{number}</Link>
-          </RouterLink>
+        return  <BlockNumber blockNumber={number} confirmed={confirmed} />
       },
       width: 100,
       fixed: 'left',
@@ -228,12 +226,7 @@ export default function () {
                       <List.Item key={number}>
                         <Row style={{ width: "100%" }}>
                           <Col span={12}>
-                            {
-                              confirmed == 1 ? <RouterLink to={`/block/${number}`}>{number}</RouterLink> :
-                                <RouterLink to={`/block/${number}`}>
-                                  <Link italic underline>{number}</Link>
-                                </RouterLink>
-                            }
+                            <BlockNumber blockNumber={number} confirmed={confirmed} />
                           </Col>
                           <Col span={12} style={{ textAlign: "right" }}>
                             <Text>{DateFormat(Number(timestamp) * 1000)}</Text>

@@ -1,6 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { Typography } from 'antd';
-import { useBlockNumber } from '../state/application/hooks';
 
 const { Link } = Typography;
 
