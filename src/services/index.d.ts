@@ -448,6 +448,13 @@ export interface TimestampStatisticVO {
     avgBlockTime : string
 }
 
+export interface StateVO {
+    total : number , 
+    enabled : number ,
+    error : number,
+    init : number
+}
+
 export interface TokenInfoVO {
     address: string,
     contractVO: ContractVO,

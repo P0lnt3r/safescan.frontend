@@ -1,24 +1,14 @@
 
 import { Card, Table, Typography, Row, Col, Tooltip, PaginationProps, Badge, Divider, TabsProps, Tabs, Input, Space, Button, InputRef, Tag } from 'antd';
-import { useEffect, useRef, useState } from 'react';
-import { AddressBalanceRankVO, MasterNodeVO, SuperNodeVO } from '../../services';
+import { useEffect, useState } from 'react';
+import { MasterNodeVO } from '../../services';
 import type { ColumnsType } from 'antd/es/table';
 import EtherAmount from '../../components/EtherAmount';
-import {
-    SearchOutlined,
-} from '@ant-design/icons';
 import { fetchMasterNodes, fetchSuperNodes } from '../../services/node';
-import { PresetStatusColorType } from 'antd/es/_util/colors';
-import MasternodesRegisters from './MasternodesRegisters';
-import Address, { ChecksumAddress } from '../../components/Address';
-import { BaseType } from 'antd/lib/typography/Base';
+import Address from '../../components/Address';
 import { RenderNodeState } from './Utils';
-import MasternodeList from './MasternodeList';
-import MasternodeHistoryChart from './MasternodeHistoryChart';
-import MasternodeStatePie from './MasternodeStatePie';
 
 const { Title, Text, Link, Paragraph } = Typography;
-
 
 export default () => {
 
@@ -74,7 +64,7 @@ export default () => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>State</Text>,
             dataIndex: 'state',
-            render: (state) => RenderNodeState(5),
+            render: (state) => RenderNodeState(1),
             width: "100px"
         },
         {
@@ -127,55 +117,10 @@ export default () => {
         },
     ];
 
-    const items: TabsProps['items'] = [
-        {
-            key: 'registers',
-            label: 'Registers',
-            children: <MasternodesRegisters />,
-        },
-        {
-            key: 'stateUpdateEvents',
-            label: 'State Update Events',
-            children: '[State Update Events:<Table:List>]',
-        },
-    ];
-
-    const closePropSearch = (prop?: string) => {
-        if (prop == "address") {
-            tableQueryParams.address = undefined;
-        }
-        if (prop == "ip") {
-            tableQueryParams.ip = undefined;
-        }
-        if (prop == "name") {
-            tableQueryParams.name = undefined;
-        }
-        pagination.current = 1;
-        doFetchMasterNodes();
-    }
-
-    return (<>
-        <Title level={3}>Safe4 Network Masternodes</Title>
-        <Row>
-            <Col span={12}>
-                <MasternodeHistoryChart />
-            </Col>
-            <Col offset={2} span={10}>
-                <MasternodeStatePie />
-            </Col>
-        </Row>
-        <Divider style={{ margin: '20px 0px' }} />
-
-        <Title level={4}>Masternode List</Title>
-        <MasternodeList />
-        <Divider style={{ margin: '20px 0px' }} />
-
-        <Title level={4}>Masternode Actions</Title>
-        <Card>
-            <Tabs defaultActiveKey="1" items={items} />
-        </Card>
-
-    </>)
-
-
+    return <>
+        <Table loading={loading} columns={columns} dataSource={tableData} scroll={{ x: 800 }}
+            pagination={pagination} rowKey={(txVO) => txVO.id}
+            style={{ marginTop: "20px" }}
+        />
+    </>
 }
