@@ -1,30 +1,30 @@
 
-import { Card, Table, Typography, Progress, Tooltip, Row, Col } from 'antd';
-import { Avatar, Divider, List, Skeleton } from 'antd';
-import { PaginationConfig, PaginationProps } from 'antd/es/pagination';
+import { Card, Table, Typography, Progress, Row, Col, DatePicker, Button, Input, Space, InputRef } from 'antd';
+import { Divider, List, Skeleton } from 'antd';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { BlockVO } from '../../services';
 import { fetchBlocks } from '../../services/block';
 import { useTranslation } from 'react-i18next';
 import { DateFormat } from '../../utils/DateUtil';
-import NumberFormat, { format } from '../../utils/NumberFormat';
+import { format } from '../../utils/NumberFormat';
 import { Link as RouterLink } from 'react-router-dom';
 import EtherAmount from '../../components/EtherAmount';
-import { useDBStoredBlockNumber } from '../../state/application/hooks';
 import Address from '../../components/Address';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { isMobile } from 'react-device-detect';
 import BlockNumber from '../../components/BlockNumber';
+import { SearchOutlined } from '@ant-design/icons';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
 
 const { Title, Text, Link } = Typography;
 
-const DEFAULT_PAGE_SIZE = 20;
+const DEFAULT_PAGE_SIZE = 50;
 
 export default function () {
-
   const { t } = useTranslation();
-
+  const ref = useRef(null);
   const columns: ColumnsType<BlockVO> = [
     {
       key: 'number',
@@ -32,7 +32,7 @@ export default function () {
       dataIndex: 'number',
       render: (number, blockVO) => {
         const confirmed = blockVO.confirmed;
-        return  <BlockNumber blockNumber={number} confirmed={confirmed} />
+        return <BlockNumber blockNumber={number} confirmed={confirmed} />
       },
       width: 100,
       fixed: 'left',
@@ -41,7 +41,19 @@ export default function () {
       title: <Text strong style={{ color: "#6c757e" }}>Date Time</Text>,
       dataIndex: 'timestamp',
       width: 180,
-      render: val => DateFormat(Number(val) * 1000)
+      render: val => DateFormat(Number(val) * 1000),
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => {
+
+        return <>
+          <div style={{ padding: "5px", width: "250px" }} onKeyDown={(e) => e.stopPropagation()}>
+            <DatePicker ref={ref} style={{ marginTop: "20px", marginBottom: "20px", width: "100%" }}
+              onChange={(date, dateString) => {
+                setSelectedKeys([dateString]);
+                confirm();
+              }} />
+          </div>
+        </>
+      },
     },
     {
       title: <Text strong style={{ color: "#6c757e" }}>Txns</Text>,
@@ -59,7 +71,36 @@ export default function () {
         return <>
           <Address address={address} propVO={propVO} />
         </>
-      }
+      },
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+        <div style={{ padding: 8, width: "300px" }} onKeyDown={(e) => e.stopPropagation()}>
+          <Input placeholder='Input Miner Address' style={{ marginBottom: 8, display: 'block' }}
+            value={selectedKeys[0]}
+            onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          />
+          <Space>
+            <Button
+              type="primary"
+              icon={<SearchOutlined />}
+              size="small"
+              style={{ width: 100 }}
+              onClick={() => confirm()}
+            >
+              Search
+            </Button>
+            <Button
+              size="small"
+              style={{ width: 100 }}
+              onClick={() => {
+                clearFilters && clearFilters();
+                confirm();
+              }}
+            >
+              Reset
+            </Button>
+          </Space>
+        </div>
+      )
     },
     {
       title: <Text strong style={{ color: "#6c757e" }}>Difficulty</Text>,
@@ -99,48 +140,46 @@ export default function () {
     },
   ];
 
+  const [queryParams, setQueryParams] = useState<{
+    date?: string,
+    miner?: string
+  }>({});
+
   const doFetchBlocks = async (current?: number) => {
     setLoading(true);
-    fetchBlocks({ current: current ? current : pagination.current, pageSize: pagination.pageSize }).then((data) => {
+    fetchBlocks({
+      current: current ? current : pagination.current,
+      pageSize: pagination.pageSize,
+      ...queryParams
+    }).then((data) => {
       setLoading(false);
       if (current) {
         setTableData([...tableData, ...data.records]);
       } else {
         setTableData(data.records);
       }
-      const unconfirmed = [];
-      data.records.forEach(blockVO => {
-        if (blockVO.confirmed < 1) {
-          unconfirmed.push(blockVO);
-        }
-      });
+      const unconfirmed = data.records.filter(blockVO => blockVO.confirmed != 1).length;
       setConfirmed(data.total);
-      setUnconfirmed(unconfirmed.length);
-      const onChange = (page: number, pageSize: number) => {
-        pagination.pageSize = unconfirmed.length > 0 ? pageSize - unconfirmed.length : pageSize;
-        pagination.current = page;
-        doFetchBlocks();
-      }
+      setUnconfirmed(unconfirmed);
+
       if (pagination.current == 1) {
         const total = data.total;
         const dbSize = data.pageSize;
         const dbPages = Math.floor(total / dbSize);
-        const uiTotal = (dbPages * unconfirmed.length) + total;
+        const uiTotal = (dbPages * unconfirmed) + total;
         setPagination({
           ...pagination,
           current: data.current,
           total: uiTotal,
           pageSize: data.records.length,
-          onChange: onChange
-        })
+        });
       } else {
         setPagination({
           ...pagination,
           current: data.current,
           total: data.total,
           pageSize: data.pageSize,
-          onChange: onChange
-        })
+        });
       }
     })
   }
@@ -174,8 +213,8 @@ export default function () {
   }
 
   function listHasMore(): boolean {
-    if ( pagination.current && pagination.total ){
-      const totalPages = Math.floor( pagination.total / pagination.current )
+    if (pagination.current && pagination.total) {
+      const totalPages = Math.floor(pagination.total / pagination.current)
       return pagination.current < totalPages;
     }
     return true;
@@ -190,7 +229,7 @@ export default function () {
   return (
     <>
       <Title level={3}>Blocks</Title>
-      <Card style={{padding:"0px"}}>
+      <Card style={{ padding: "0px" }}>
         <Row>
           <Col xl={24} xs={0}>
             <OutputTotal></OutputTotal>
@@ -198,6 +237,19 @@ export default function () {
               pagination={pagination}
               rowKey={blockVO => blockVO.number}
               loading={loading}
+              onChange={({ current, pageSize }, filters, sorter, extra) => {
+                queryParams.date = undefined;
+                queryParams.miner = undefined;
+                if (filters.timestamp && filters.timestamp[0]) {
+                  queryParams.date = filters.timestamp[0].toString();
+                }
+                if (filters.miner && filters.miner[0]) {
+                  queryParams.miner = filters.miner[0].toString();
+                }
+                pagination.pageSize = unconfirmed > 0 ? pageSize ? pageSize - unconfirmed : pageSize : pageSize;
+                pagination.current = current;
+                doFetchBlocks();
+              }}
             />
           </Col>
           <Col xl={0} xs={24}>

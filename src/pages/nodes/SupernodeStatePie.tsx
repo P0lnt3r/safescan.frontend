@@ -1,6 +1,6 @@
 import { Pie } from '@ant-design/plots';
 import { useEffect, useState } from 'react';
-import { fetchMasternodesState } from '../../services/chart';
+import { fetchSupernodesState } from '../../services/chart';
 import { Col, Row, Typography } from 'antd';
 
 export interface MasternodeStatePieData {
@@ -15,10 +15,10 @@ const { Text } = Typography;
 export default () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [data, setData] = useState<any[]>([]);
-    const [total, setTotal] = useState<number>();
+    const [total ,setTotal] = useState<number>();
     useEffect(() => {
         setLoading(true);
-        fetchMasternodesState().then(data => {
+        fetchSupernodesState().then(data => {
             const { total, init, error, enabled } = data;
             setLoading(false);
             setData([
@@ -26,7 +26,7 @@ export default () => {
                 { type: 'INITIALIZE', value: init },
                 { type: 'ERROR', value: error },
             ]);
-            setTotal(total);
+            setTotal(total)
         })
     }, []);
 
@@ -52,9 +52,9 @@ export default () => {
 
     return <>
         <Row>
-            <Col style={{ height: "300px", textAlign: "center" }} span={24}>
+            <Col style={{ height: "300px" , textAlign:"center"}} span={24}>
                 {
-                    total && <Text strong>Total Number of Masternodes:{total}</Text>
+                    total &&  <Text strong>Total Number of Supernodes:{total}</Text>
                 }
                 <Pie loading={loading} {...config} />
             </Col>

@@ -207,7 +207,7 @@ export default () => {
                 <Card loading={loading} style={{
                     cursor: "pointer"
                 }} title={<Text style={{ fontSize: "14px" }}>Daily Masternodes & Rewards Chart</Text>}>
-                    <ChartMasternodes masternodesChartData={masternodesChartData} config={{ height: 200 }} />
+                    <ChartMasternodes loading={loading} masternodesChartData={masternodesChartData} config={{ height: 200 }} />
                 </Card>
             </Col>
             <Col onClick={() => {
@@ -216,7 +216,7 @@ export default () => {
                 <Card loading={loading} style={{
                     cursor: "pointer"
                 }} title={<Text style={{ fontSize: "14px" }}>Daily Supernodes & Rewards Chart</Text>}>
-                    <ChartSupernodes supernodesChartData={supernodesChartData} config={{ height: 200 }} />
+                    <ChartSupernodes loading={loading} supernodesChartData={supernodesChartData} config={{ height: 200 }} />
                 </Card>
             </Col>
         </Row>

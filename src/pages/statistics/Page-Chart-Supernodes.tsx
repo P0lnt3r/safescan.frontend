@@ -59,7 +59,7 @@ export default () => {
         <Row>
             <Col span={16}>
                 <Card loading={loading} title="Daily Supernodes & Rewards">
-                    <ChartSupernodes supernodesChartData={supernodesChartData} config={{
+                    <ChartSupernodes loading={loading} supernodesChartData={supernodesChartData} config={{
                         xAxis: {
                             range: [0, 1],
                         },

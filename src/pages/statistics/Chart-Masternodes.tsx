@@ -8,7 +8,8 @@ export interface MasternodesChartType {
     rewards: number
 }
 
-export default ({ masternodesChartData, config }: {
+export default ({ loading , masternodesChartData, config }: {
+    loading : boolean
     masternodesChartData?: MasternodesChartType[],
     config?: any
 }) => {
@@ -36,7 +37,7 @@ export default ({ masternodesChartData, config }: {
     }
 
     return <>
-        <DualAxes {..._config} />
+        <DualAxes loading={loading} {..._config} />
     </>
 
 }

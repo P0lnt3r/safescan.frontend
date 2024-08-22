@@ -62,7 +62,7 @@ export default () => {
         <Row>
             <Col span={16}>
                 <Card loading={loading} title="Daily Masternodes & Rewards">
-                    <ChartMasternodes masternodesChartData={masternodesChartData} config={{
+                    <ChartMasternodes loading masternodesChartData={masternodesChartData} config={{
                         xAxis: {
                             range: [0, 1],
                         },

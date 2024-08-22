@@ -1,5 +1,4 @@
 
-import { Line } from '@ant-design/plots';
 import { DualAxes } from '@ant-design/plots';
 
 export interface SupernodesChartType {
@@ -8,16 +7,17 @@ export interface SupernodesChartType {
     rewards: number
 }
 
-export default ({ supernodesChartData, config }: {
+export default ({ loading , supernodesChartData, config }: {
+    loading : boolean,
     supernodesChartData?: SupernodesChartType[],
     config?: any
 }) => {
     const _config = {
         ...config,
-        data : [supernodesChartData,supernodesChartData],
+        data: [supernodesChartData, supernodesChartData],
         padding: 'auto',
         xField: 'date',
-        yField: ['count','rewards'],
+        yField: ['count', 'rewards'],
         xAxis: {
             tickCount: 5,
         },
@@ -35,7 +35,7 @@ export default ({ supernodesChartData, config }: {
     }
 
     return <>
-        <DualAxes {..._config} />
+        <DualAxes loading={loading} {..._config} />
     </>
 
 }

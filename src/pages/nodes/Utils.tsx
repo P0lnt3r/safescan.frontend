@@ -3,7 +3,6 @@ import { Badge, Typography } from "antd";
 const { Text } = Typography;
 
 export function RenderNodeState(state: number) {
-
     switch (state) {
         case 0:
             // 初始化状态
@@ -39,6 +38,22 @@ export function RenderNodeState(state: number) {
     }
 }
 
-export function MatchEnodeIP(enode: string) {
-    return "";
+export function MatchEnodeIP(enode: string): string {
+    const regex = /(?<=@)(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?=:)/;
+    const match = enode.match(regex);
+    let ip = '';
+    if (match) {
+        ip = match[0];
+    }
+    return ip;
+}
+
+export function isValidIP(ip: string): boolean {
+    const regex = /^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])$/;
+    return regex.test(ip);
+}
+
+export function isValidNodeID( id : string ) : boolean {
+    const regex = /^[1-9]\d*$/;
+    return regex.test(id);
 }

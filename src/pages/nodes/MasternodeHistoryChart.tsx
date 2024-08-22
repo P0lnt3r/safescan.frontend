@@ -4,33 +4,31 @@ import ChartMasternodes, { MasternodesChartType } from "../statistics/Chart-Mast
 import { JSBI } from "@uniswap/sdk";
 import { ETHER } from "../../components/EtherAmount";
 
-
 export default () => {
-
-    const [masternodesChartData, setMasternodesChartData] = useState<MasternodesChartType[]>([]);
-
+    const [nodesChartData, setNodesChartData] = useState<MasternodesChartType[]>([]);
+    const [loading ,setLoading] = useState<boolean>(false);
     useEffect(() => {
+        setLoading(true);
         fetchAll().then(data => {
-            const _masternodesChartData: MasternodesChartType[] = [];
+            const _nodesChartData : MasternodesChartType[] = [];
             data.forEach(timestampStatistic => {
                 const { totalMasterNodes } = timestampStatistic;
                 // 解析区块及奖励
-                const { date, blockNumberStart, blockNumberEnd, totalRewards, totalSupernodeRewards, totalMasternodeRewards } = timestampStatistic;
-                const masternodesRewards = JSBI.subtract(JSBI.BigInt(totalMasternodeRewards),
-                    JSBI.BigInt(_masternodesChartData.length > 0 ? data[_masternodesChartData.length - 1].totalMasternodeRewards : "0")
+                const { date, totalMasternodeRewards } = timestampStatistic;
+                const rewards = JSBI.subtract(JSBI.BigInt(totalMasternodeRewards),
+                    JSBI.BigInt(_nodesChartData.length > 0 ? data[_nodesChartData.length - 1].totalMasternodeRewards : "0")
                 );
-                _masternodesChartData.push({
+                _nodesChartData.push({
                     date,
                     count: totalMasterNodes,
-                    rewards: Number.parseFloat(ETHER(masternodesRewards, 4))
+                    rewards: Number.parseFloat(ETHER(rewards, 4))
                 })
             });
-            setMasternodesChartData(_masternodesChartData);
+            setLoading(false);
+            setNodesChartData(_nodesChartData);
         });
     }, [])
-
     return <>
-        <ChartMasternodes masternodesChartData={masternodesChartData} config={{ height: 300 }} />
+        <ChartMasternodes loading={loading} masternodesChartData={nodesChartData} config={{ height: 300 }} />
     </>
-
 }

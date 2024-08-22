@@ -14,6 +14,10 @@ import { PresetStatusColorType } from 'antd/es/_util/colors';
 import SupernodesRegisters from './SupernodesRegisters';
 import Address, { ChecksumAddress } from '../../components/Address';
 import SupernodesVoteActions from './SupernodesVoteActions';
+import { MatchEnodeIP } from './Utils';
+import SuperNodeList from './SuperNodeList';
+import SupernodeHistoryChart from './SupernodeHistoryChart';
+import SupernodeStatePie from './SupernodeStatePie';
 
 const { Title, Text, Link, Paragraph } = Typography;
 
@@ -113,97 +117,30 @@ export default () => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Address</Text>,
             dataIndex: 'addr',
-            render: (address) => {
+            render: (address, supernodeVO) => {
+                const { enode } = supernodeVO;
                 return <>
                     <Address address={address} style={{
                         hasLink: true,
                         ellipsis: false
                     }} to={`/node/${address}`} />
+                    <br />
+                    <Text strong>{MatchEnodeIP(enode)}</Text>
                 </>
             },
             width: "34%",
-            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => <>
-                <div style={{ padding: 8, width: "400px", height: "100px" }} onKeyDown={(e) => e.stopPropagation()}>
-                    <Text strong>Address</Text>
-                    <Input
-                        value={tableQueryParams.address}
-                        onChange={(e) => {
-                            setTableQueryParams({
-                                ...tableQueryParams,
-                                address: e.target.value
-                            })
-                        }}
-                        style={{ marginBottom: 8, display: 'block' }}
-                    />
-                    <Button
-                        type="primary"
-                        icon={<SearchOutlined />}
-                        size="small"
-                        style={{ width: 90, float: "left" }}
-                        onClick={() => {
-                            closePropSearch();
-                            close();
-                        }}
-                    >
-                        Search
-                    </Button>
-                    <Button
-                        size="small"
-                        style={{ width: 90, float: "right" }}
-                        onClick={() => {
-                            closePropSearch("address")
-                            close();
-                        }}
-                    >
-                        Reset
-                    </Button>
-                </div>
-            </>
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Description</Text>,
             dataIndex: 'description',
-            render: (description) => <>
-                <Text type='secondary' style={{ width: "250px" }} ellipsis>{description}</Text>
-            </>,
+            render: (description, supernodeVO) => {
+                const { name } = supernodeVO;
+                return <>
+                    <Text strong style={{ width: "250px" }} ellipsis>{name}</Text>
+                    <Text type='secondary' style={{ width: "250px" }} ellipsis>{description}</Text>
+                </>
+            },
             width: "20%",
-            // filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => <>
-            //     <div style={{ padding: 8, width: "400px", height: "100px" }} onKeyDown={(e) => e.stopPropagation()}>
-            //         <Text strong>Description</Text>
-            //         <Input
-            //             value={tableQueryParams.name}
-            //             onChange={(e) => {
-            //                 setTableQueryParams({
-            //                     ...tableQueryParams,
-            //                     name: e.target.value
-            //                 })
-            //             }}
-            //             style={{ marginBottom: 8, display: 'block' }}
-            //         />
-            //         <Button
-            //             type="primary"
-            //             icon={<SearchOutlined />}
-            //             size="small"
-            //             style={{ width: 90, float: "left" }}
-            //             onClick={() => {
-            //                 closePropSearch();
-            //                 close();
-            //             }}
-            //         >
-            //             Search
-            //         </Button>
-            //         <Button
-            //             size="small"
-            //             style={{ width: 90, float: "right" }}
-            //             onClick={() => {
-            //                 closePropSearch("name")
-            //                 close();
-            //             }}
-            //         >
-            //             Reset
-            //         </Button>
-            //     </div>
-            // </>
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Amount</Text>,
@@ -259,50 +196,16 @@ export default () => {
 
     return (<>
         <Title level={3}>Safe4 Network Supernodes</Title>
-        [Text : What is Supernode ? || How to create Supernode...]
-        <Divider />
-        {
-            (tableQueryParams.address || tableQueryParams.ip || tableQueryParams.name) &&
-            <Row style={{
-                background: "white"
-            }}>
-                <div style={{
-                    width: "100%",
-                }}>
-                    <Divider dashed />
-                    <Text style={{ marginLeft: "5px", marginRight: "5px" }}>Filters:</Text>
-                    <Space size={[0, 8]} wrap>
-                        {
-                            tableQueryParams.address &&
-                            <Tag closable={true} onClose={() => closePropSearch("address")}>
-                                Address:{tableQueryParams.address}
-                            </Tag>
-                        }
-                    </Space>
-                    <Space size={[0, 8]} wrap>
-                        {
-                            tableQueryParams.ip &&
-                            <Tag closable={true} onClose={() => closePropSearch("ip")}>
-                                Ip:{tableQueryParams.ip}
-                            </Tag>
-                        }
-                    </Space>
-                    <Space size={[0, 8]} wrap>
-                        {
-                            tableQueryParams.name &&
-                            <Tag closable={true} onClose={() => closePropSearch("name")}>
-                                Name:{tableQueryParams.name}
-                            </Tag>
-                        }
-                    </Space>
-                    <Divider dashed />
-                </div>
-            </Row>
-        }
-        <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
-            pagination={pagination} rowKey={(txVO) => txVO.id}
-            style={{ marginTop: "20px" }}
-        />
+        <Row>
+            <Col span={12}>
+                <SupernodeHistoryChart />
+            </Col>
+            <Col offset={2} span={10}>
+                <SupernodeStatePie />
+            </Col>
+        </Row>
+        <Divider style={{ margin: '40px 0px' }} />
+        <SuperNodeList />
         <Divider style={{ margin: '20px 0px' }} />
         <Card>
             <Tabs defaultActiveKey="1" items={items} />
