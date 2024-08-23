@@ -1,4 +1,4 @@
-import { GET, MasterNodeVO, NodeRegisterActionVO, NodeRewardVO, POST, PageQueryDTO, PageResponseVO, SNVoteActionVO, SuperNodeVO } from "./index.d";
+import { GET, MasterNodeVO, NodeRegisterActionVO, NodeRewardVO, POST, PageQueryDTO, PageResponseVO, SNVoteActionVO, SuperNodeVO, SupernodeVoterNumVO } from "./index.d";
 import config from "../config";
 const API_HOST = config.api_host;
 
@@ -42,5 +42,10 @@ export async function fetchSupernodeRegisterActions( params : PageQueryDTO ) : P
 
 export async function fetchSNVoteActions( params : PageQueryDTO | {address : string} ) : Promise<PageResponseVO<SNVoteActionVO>>{
     const serverResponse = await POST( `${API_HOST}/snvotes` , params );
+    return serverResponse.data;
+}
+
+export async function fetchSNVoters( address : string ) : Promise<SupernodeVoterNumVO[]>{
+    const serverResponse = await POST( `${API_HOST}/snvotes/${address}` );
     return serverResponse.data;
 }

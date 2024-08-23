@@ -207,9 +207,9 @@ export default () => {
         <Divider style={{ margin: '40px 0px' }} />
         <SuperNodeList />
         <Divider style={{ margin: '20px 0px' }} />
-        <Card>
+        {/* <Card>
             <Tabs defaultActiveKey="1" items={items} />
-        </Card>
+        </Card> */}
     </>)
 
 

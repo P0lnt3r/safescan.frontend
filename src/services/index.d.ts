@@ -1,3 +1,4 @@
+import { AddressPropVO } from './index.d';
 import { Topics } from "../utils/decode/config";
 
 export const POST = async function (url: string, params?: any): Promise<ApiResponse<any>> {
@@ -652,4 +653,10 @@ export interface Safe3RedeemStatisticVO {
     redeemSafe3Amount : string , 
     totalMasternodeCount : number,
     redeemMasternodeCount : number
+}
+
+export interface SupernodeVoterNumVO {
+    address : string ,
+    addressPropVO : AddressPropVO 
+    voteNum : string ,
 }

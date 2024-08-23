@@ -33,11 +33,11 @@ export default () => {
         </Row>
         <Divider style={{ margin: '40px 0px' }} />
         <MasternodeList />
-        <Divider style={{ margin: '20px 0px' }} />
+        {/* <Divider style={{ margin: '20px 0px' }} />
         <Title level={4}>Masternode Actions</Title>
         <Card>
             <Tabs defaultActiveKey="1" items={items} />
-        </Card>
+        </Card> */}
     </>)
 
 

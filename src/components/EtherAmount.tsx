@@ -1,4 +1,4 @@
-import { BigintIsh, CurrencyAmount } from '@uniswap/sdk';
+import { BigintIsh, CurrencyAmount, JSBI } from '@uniswap/sdk';
 import config from '../config';
 import { Typography } from 'antd';
 import { format } from '../utils/NumberFormat'
@@ -23,10 +23,15 @@ export function ETHER_Combine( raws : string[] , fixed ?: number ){
 }
 
 export default ( { raw , fix , ignoreLabel } : { raw : string | bigint , fix?:number , ignoreLabel ?: boolean } ) => {
-    let amount = raw ? CurrencyAmount.ether(raw).toFixed( fix ? fix : 6 ) : "0";
-    amount = format(amount);
+
+    const currencyAmount = raw ? CurrencyAmount.ether(raw) : CurrencyAmount.ether(JSBI.BigInt(0));
+    let amount = currencyAmount.toExact();
+    if ( fix ){
+        amount = currencyAmount.toFixed( fix ) ;
+        amount = format(amount);
+    }
     return <>
-        <>{amount} { !ignoreLabel && NATIVE_LABEL}</> 
+        <>{amount} { !ignoreLabel && NATIVE_LABEL }</> 
     </>
 }
 

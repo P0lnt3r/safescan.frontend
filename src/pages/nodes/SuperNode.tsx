@@ -1,61 +1,52 @@
 import { Card, Typography, Tag, Input, Button, Space, Tooltip, Tabs, Row, Col, Divider, Modal, Descriptions, Badge } from 'antd';
-import { IncentivePlanVO, MemberInfoVO, SuperNodeVO } from '../../services';
+import { MemberInfoVO, SuperNodeVO, SupernodeVoterNumVO } from '../../services';
 import { Link as RouterLink } from 'react-router-dom';
 import EtherAmount from '../../components/EtherAmount';
-import { Pie } from '@ant-design/plots';
 import IncentivePlanPie from '../../components/IncentivePlanPie';
 import {
-    ApartmentOutlined,
-    UserOutlined,
-    SolutionOutlined,
-    HourglassTwoTone,
     ClusterOutlined,
     TeamOutlined,
-    LockOutlined,
-    UnlockOutlined,
 } from '@ant-design/icons';
-import { PresetStatusColorType } from 'antd/es/_util/colors';
-import Address from '../../components/Address';
 import { useBlockNumber } from '../../state/application/hooks';
-import { isMobile } from 'react-device-detect';
-import { TableProps } from 'antd/es/table';
 import Table, { ColumnsType } from 'antd/lib/table';
+import { RenderNodeState } from './Utils';
+import { useEffect, useState } from 'react';
+import { fetchSNVoters } from '../../services/node';
+import Address from '../../components/Address';
 
 const { Title, Text, Paragraph, Link } = Typography;
 
 export default (superMasterNode: SuperNodeVO) => {
 
-    const { id, description, creator, enode, incentivePlan, state, lastRewardHeight, totalAmount, totalVoteNum, totalVoteAmount, founders, addr } = superMasterNode;
-    const nodeAddress = addr.toLowerCase();
+    const { id, description, creator, enode, incentivePlan, state, lastRewardHeight, totalAmount, totalVoteNum, totalVoteAmount, founders, addr, name } = superMasterNode;
     const nodeState = state;
     const blockNumber = useBlockNumber();
+    const [loadingVoters, setLoadingVoters] = useState(false);
+    const [voters, setVoters] = useState<SupernodeVoterNumVO[]>();
 
-    function State(state: number) {
-        let _state: {
-            status: PresetStatusColorType,
-            text: string
-        } = {
-            status: "default",
-            text: "UNKNOWN"
+    useEffect(() => {
+        if (addr) {
+            setLoadingVoters(true);
+            fetchSNVoters(addr).then(data => {
+                setLoadingVoters(false);
+                setVoters(data);
+            });
         }
-        if (state == 0) {
-            _state.status = "success";
-            _state.text = "INITIALIZE";
-        }
-        if (state == 1) {
-            _state.status = "processing";
-            _state.text = "ENABLED";
-        }
-        if (state == 2) {
-            _state.status = "error";
-            _state.text = "ERROR";
-        }
-        return (<>
-            <Badge {..._state} />
-        </>)
-    }
+    }, [addr]);
 
     const columns: ColumnsType<MemberInfoVO> = [
+        {
+            title: 'Address',
+            dataIndex: 'addr',
+            key: 'addr',
+            render: (addr) => <Address address={addr.toLowerCase()} style={{ forceTag: false, ellipsis: false, hasLink: true, noTip: true }} />
+        },
+        {
+            title: 'Lock Amount',
+            dataIndex: 'amount',
+            key: 'amount',
+            render: (amount) => <Text strong><EtherAmount raw={amount} fix={18} /></Text>
+        },
         {
             title: 'Account Record ID',
             dataIndex: 'lockID',
@@ -63,18 +54,24 @@ export default (superMasterNode: SuperNodeVO) => {
             render: (lockID) => <RouterLink to={`/assets/accountRecords/${lockID}`}>
                 <Link strong>{lockID}</Link>
             </RouterLink>
+        }
+    ]
+
+    const votersColumns: ColumnsType<SupernodeVoterNumVO> = [
+        {
+            title: 'Address',
+            dataIndex: 'address',
+            key: 'address',
+            render: (addr, vo) => {
+                const { addressPropVO } = vo;
+                return <Address propVO={addressPropVO} address={addr.toLowerCase()} style={{ ellipsis: false, hasLink: true , forceTag:true }} />
+            }
         },
         {
-            title: 'Owner',
-            dataIndex: 'addr',
-            key: 'addr',
-            render: (addr) => <Address address={addr.toLowerCase()} style={{ forceTag: false, ellipsis: false, hasLink: true , noTip:true }} />
-        },
-        {
-            title: 'Amount',
-            dataIndex: 'amount',
-            key: 'amount',
-            render: (amount) => <Text strong><EtherAmount raw={amount} fix={18} /></Text>
+            title: 'Vote Amount',
+            dataIndex: 'voteNum',
+            key: 'voteNum',
+            render: (amount) => <Text strong><EtherAmount raw={amount} ignoreLabel /></Text>
         }
     ]
 
@@ -87,19 +84,19 @@ export default (superMasterNode: SuperNodeVO) => {
                             <Row style={{ marginTop: "10px" }}>
                                 <Col xl={6} xs={24}><Text strong>ID:</Text></Col>
                                 <Col xl={18} xs={24}>
-                                    <Text>{id}</Text>
+                                    <Text strong>{id}</Text>
                                 </Col>
                             </Row>
                             <Row style={{ marginTop: "10px" }}>
                                 <Col xl={6} xs={24}><Text strong>State:</Text></Col>
                                 <Col xl={18} xs={24}>
-                                    {State(nodeState)}
+                                    {RenderNodeState(nodeState)}
                                 </Col>
                             </Row>
                             <Row style={{ marginTop: "10px" }}>
-                                <Col xl={6} xs={24}><Text strong>Description:</Text></Col>
+                                <Col xl={6} xs={24}><Text strong>Name:</Text></Col>
                                 <Col xl={18} xs={24}>
-                                    <Text>{description}</Text>
+                                    <Text>{name}</Text>
                                 </Col>
                             </Row>
                             <Row style={{ marginTop: "10px" }}>
@@ -109,21 +106,27 @@ export default (superMasterNode: SuperNodeVO) => {
                                 </Col>
                             </Row>
                             <Row style={{ marginTop: "10px" }}>
+                                <Col xl={6} xs={24}><Text strong>Address:</Text></Col>
+                                <Col xl={18} xs={24}>
+                                    <Address address={addr} style={{ ellipsis: false, hasLink: true }}></Address>
+                                </Col>
+                            </Row>
+                            <Row style={{ marginTop: "10px" }}>
                                 <Col xl={6} xs={24}><Text strong>Amount:</Text></Col>
                                 <Col xl={18} xs={24}>
-                                    <Text><EtherAmount raw={totalAmount} fix={18}></EtherAmount></Text>
+                                    <Text strong><EtherAmount raw={totalAmount} fix={18}></EtherAmount></Text>
                                 </Col>
                             </Row>
                             <Row style={{ marginTop: "10px" }}>
                                 <Col xl={6} xs={24}><Text strong>Vote Obtained:</Text></Col>
                                 <Col xl={18} xs={24}>
-                                    <Text><EtherAmount raw={totalVoteNum} fix={18} ignoreLabel></EtherAmount></Text>
+                                    <Text><EtherAmount raw={totalVoteNum} ignoreLabel></EtherAmount></Text>
                                 </Col>
                             </Row>
                             <Row style={{ marginTop: "10px" }}>
                                 <Col xl={6} xs={24}><Text strong>Vote Amount:</Text></Col>
                                 <Col xl={18} xs={24}>
-                                    <Text><EtherAmount raw={totalVoteAmount} fix={18}></EtherAmount></Text>
+                                    <Text><EtherAmount raw={totalVoteAmount}></EtherAmount></Text>
                                 </Col>
                             </Row>
                             <Row style={{ marginTop: "10px" }}>
@@ -143,7 +146,9 @@ export default (superMasterNode: SuperNodeVO) => {
                     <Row style={{ marginTop: "10px" }}>
                         <Col xl={3} xs={24}><Text strong>Enode:</Text></Col>
                         <Col xl={16} xs={24}>
-                            <Text>{enode}</Text>
+                            <Paragraph copyable>
+                                {enode}
+                            </Paragraph>
                         </Col>
                     </Row>
                     <Divider />
@@ -157,9 +162,12 @@ export default (superMasterNode: SuperNodeVO) => {
 
                     <Descriptions style={{ marginTop: "20px" }} layout="vertical" bordered>
                         <Descriptions.Item span={3} label={<Text strong style={{ color: "#6c757e" }} >
-                            <TeamOutlined style={{ marginRight: "5px" }} />Founders ({founders.length})
-                        </Text>}>
-                            <Table style={{marginTop:"10px" , marginBottom:"30px"}} columns={columns} dataSource={founders} pagination={false} />
+                            <TeamOutlined style={{ marginRight: "5px" }} />Founders ({founders.length})</Text>}>
+                            <Table style={{ marginTop: "10px", marginBottom: "30px" }} columns={columns} dataSource={founders} pagination={false} />
+                        </Descriptions.Item>
+                        <Descriptions.Item span={2} label={<Text strong style={{ color: "#6c757e" }} >
+                            <TeamOutlined style={{ marginRight: "5px" }} />Voters ({voters?.length})</Text>}>
+                            <Table loading={loadingVoters} style={{ marginTop: "10px", marginBottom: "30px" }} columns={votersColumns} dataSource={voters} pagination={{ pageSize: 10 }} />
                         </Descriptions.Item>
                     </Descriptions>
                 </Card>
