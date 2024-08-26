@@ -1,8 +1,5 @@
 import { useParams } from "react-router-dom"
-import { Card, Typography, Tag, Input, Button, Space, Tooltip, Tabs, Row, Col, Divider, Modal } from 'antd';
-import {
-    QrcodeOutlined, FileTextOutlined, UserOutlined
-} from '@ant-design/icons';
+import { Card, Typography, Tabs, Divider } from 'antd';
 import type { TabsProps } from 'antd';
 import { useEffect, useMemo, useState } from "react";
 import { fetchAddress } from "../../services/address";
@@ -11,6 +8,7 @@ import SuperNode from "./SuperNode";
 import MasterNode from "./MasterNode";
 import SupernodesVoteActions from "./SupernodesVoteActions";
 import NodeRewards from "./NodeRewards";
+import NodeRegisters from "./NodeRegisters";
 
 const { Title, Text, Paragraph, Link } = Typography;
 
@@ -22,11 +20,12 @@ export default function () {
     useEffect(() => {
         if (address) {
             fetchAddress(address).then(data => {
+                console.log("Node Data ==", data)
                 setAddressVO(data)
             })
         }
     }, [address])
-    
+
     const { type, subType, tag, remark, prop } = useMemo(() => {
         return addressVO?.propVO ? addressVO.propVO : {
             type: undefined,
@@ -39,7 +38,12 @@ export default function () {
 
     const items: TabsProps['items'] = useMemo(() => {
         let items: TabsProps['items'] = [];
-        if (addressVO) {
+        if (addressVO && subType) {
+            items.push({
+                key: "registers",
+                label: "Registers",
+                children: <NodeRegisters type={subType} address={addressVO.address}></NodeRegisters>
+            });
             if (subType == "supernode") {
                 items.push({
                     key: 'votes',
@@ -48,20 +52,27 @@ export default function () {
                 })
             }
             items.push({
-                key: "nodeRewards",
-                label: "Node Rewards",
-                children: <NodeRewards nodeAddress={address}></NodeRewards>
-            })
+                key: "rewards",
+                label: "Rewards",
+                children: <NodeRewards nodeAddress={addressVO.address}></NodeRewards>
+            });
         }
         return items;
     }, [addressVO]);
+
+    function convertNumbersToStrings(jsonString: string) {
+        return jsonString.replace(/(?<!")\b\d{16,}\b(?!")/g, '"$&"');
+    }
 
     return (
         <>
             {
                 subType == "supernode" && prop &&
-                <SuperNode {...JSON.parse(prop) as SuperNodeVO} />
+                <>
+                    <SuperNode supernodeVO={JSON.parse(convertNumbersToStrings(prop))} />
+                </>
             }
+            
             {
                 subType == "masternode" && prop &&
                 <MasterNode {...JSON.parse(prop) as MasterNodeVO} />

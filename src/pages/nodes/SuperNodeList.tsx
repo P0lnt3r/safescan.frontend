@@ -26,7 +26,7 @@ export default () => {
 
     const [pagination, setPagination] = useState<PaginationProps>({
         current: 1,
-        pageSize: 10,
+        pageSize: 5,
         showTotal: (total) => <>Total : {total}</>,
     });
 
@@ -142,11 +142,16 @@ export default () => {
 
     const doQuery = useCallback(() => {
         const _tableQueryParams: {
-            address?: string,
-            id?: number,
-            ip?: string,
-            name?: string
-        } = {};
+            address : string | undefined,
+            id : number  | undefined,
+            ip : string  | undefined,
+            name : string  | undefined
+        } = {
+            address : undefined,
+            id : undefined,
+            ip : undefined,
+            name : undefined
+        };
         if (queryInput) {
             const isAddress = ethers.utils.isAddress(queryInput);
             const isIdNumber = isValidNodeID(queryInput);
@@ -164,7 +169,10 @@ export default () => {
                 _tableQueryParams.name = queryInput;
             }
         }
-        setTableQueryParams({ ..._tableQueryParams });
+        setTableQueryParams({ 
+            ...tableQueryParams ,
+            ..._tableQueryParams 
+        });
     }, [queryInput]);
 
     useEffect(() => {

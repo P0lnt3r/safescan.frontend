@@ -16,9 +16,14 @@ import Address from '../../components/Address';
 
 const { Title, Text, Paragraph, Link } = Typography;
 
-export default (superMasterNode: SuperNodeVO) => {
+export default ( {
+    supernodeVO
+} : {
+    supernodeVO : any
+} ) => {
 
-    const { id, description, creator, enode, incentivePlan, state, lastRewardHeight, totalAmount, totalVoteNum, totalVoteAmount, founders, addr, name } = superMasterNode;
+    const { id, description, creator, enode, incentivePlan, state, lastRewardHeight, totalAmount, totalVoteNum, totalVoteAmount, founders, addr, name } 
+        = supernodeVO;
     const nodeState = state;
     const blockNumber = useBlockNumber();
     const [loadingVoters, setLoadingVoters] = useState(false);
@@ -39,6 +44,7 @@ export default (superMasterNode: SuperNodeVO) => {
             title: 'Address',
             dataIndex: 'addr',
             key: 'addr',
+            width:"50%",
             render: (addr) => <Address address={addr.toLowerCase()} style={{ forceTag: false, ellipsis: false, hasLink: true, noTip: true }} />
         },
         {
@@ -65,17 +71,20 @@ export default (superMasterNode: SuperNodeVO) => {
             render: (addr, vo) => {
                 const { addressPropVO } = vo;
                 return <Address propVO={addressPropVO} address={addr.toLowerCase()} style={{ ellipsis: false, hasLink: true , forceTag:true }} />
-            }
+            },
+            width:"50%"
         },
         {
-            title: 'Vote Amount',
+            title: 'Votes Cast',
             dataIndex: 'voteNum',
             key: 'voteNum',
+            width:"50%",
             render: (amount) => <Text strong><EtherAmount raw={amount} ignoreLabel /></Text>
         }
     ]
 
     return (<>
+        { JSON.stringify(supernodeVO) }
         <Row>
             <Col style={{ marginTop: "10px", padding: "5px" }} span={24} >
                 <Card size="default" title={<Text strong><ClusterOutlined style={{ marginRight: "5px" }} />SuperNode</Text>}>
@@ -118,8 +127,9 @@ export default (superMasterNode: SuperNodeVO) => {
                                 </Col>
                             </Row>
                             <Row style={{ marginTop: "10px" }}>
-                                <Col xl={6} xs={24}><Text strong>Vote Obtained:</Text></Col>
+                                <Col xl={6} xs={24}><Text strong>Votes Received:</Text></Col>
                                 <Col xl={18} xs={24}>
+                                    <Text strong>{totalVoteNum}</Text>
                                     <Text><EtherAmount raw={totalVoteNum} ignoreLabel></EtherAmount></Text>
                                 </Col>
                             </Row>

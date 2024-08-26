@@ -2,58 +2,28 @@ import { Card, Typography, Tag, Input, Button, Space, Tooltip, Tabs, Row, Col, D
 import { IncentivePlanVO, MasterNodeVO, MemberInfoVO, SuperNodeVO } from '../../services';
 import { Link as RouterLink } from 'react-router-dom';
 import EtherAmount from '../../components/EtherAmount';
-import { Pie } from '@ant-design/plots';
 import IncentivePlanPie from '../../components/IncentivePlanPie';
 import {
     ApartmentOutlined,
-    UserOutlined,
-    SolutionOutlined,
-    HourglassTwoTone,
-    ClusterOutlined,
-    LockOutlined,
-    UnlockOutlined,
 } from '@ant-design/icons';
-import { PresetStatusColorType } from 'antd/es/_util/colors';
-import { isMobile } from 'react-device-detect';
 import Address from '../../components/Address';
-import { useBlockNumber } from '../../state/application/hooks';
 import Table, { ColumnsType } from 'antd/lib/table';
+import { RenderNodeState } from './Utils';
 
-const { Title, Text, Paragraph, Link } = Typography;
+const { Text, Paragraph, Link } = Typography;
 
 export default (masterNode: MasterNodeVO) => {
 
     const { id, description, creator, enode, incentivePlan, state, lastRewardHeight, totalAmount, founders, addr } = masterNode;
     const nodeState = state;
-    const nodeAddress = addr.toLowerCase();
-    const blockNumber = useBlockNumber();
-
-    function State(state: number) {
-        let _state: {
-            status: PresetStatusColorType,
-            text: string
-        } = {
-            status: "default",
-            text: "UNKNOWN"
-        }
-        if (state == 0) {
-            _state.status = "success";
-            _state.text = "INITIALIZE";
-        }
-        if (state == 1) {
-            _state.status = "processing";
-            _state.text = "ENABLED";
-        }
-        if (state == 2) {
-            _state.status = "error";
-            _state.text = "ERROR";
-        }
-        return (<>
-            <Badge {..._state} />
-        </>)
-    }
 
     const columns: ColumnsType<MemberInfoVO> = [
+        {
+            title: 'Address',
+            dataIndex: 'addr',
+            key: 'addr',
+            render: (addr) => <Address address={addr.toLowerCase()} style={{ forceTag: false, ellipsis: false, hasLink: true, noTip: true }} />
+        },
         {
             title: 'Account Record ID',
             dataIndex: 'lockID',
@@ -61,12 +31,6 @@ export default (masterNode: MasterNodeVO) => {
             render: (lockID) => <RouterLink to={`/assets/accountRecords/${lockID}`}>
                 <Link strong>{lockID}</Link>
             </RouterLink>
-        },
-        {
-            title: 'Owner',
-            dataIndex: 'addr',
-            key: 'addr',
-            render: (addr) => <Address address={addr.toLowerCase()} style={{ forceTag: false, ellipsis: false, hasLink: true, noTip: true }} />
         },
         {
             title: 'Amount',
@@ -85,19 +49,25 @@ export default (masterNode: MasterNodeVO) => {
                             <Row style={{ marginTop: "15px" }}>
                                 <Col span={8}><Text strong>ID:</Text></Col>
                                 <Col span={16}>
-                                    <Text>{id}</Text>
+                                    <Text strong>{id}</Text>
                                 </Col>
                             </Row>
                             <Row style={{ marginTop: "15px" }}>
                                 <Col span={8}><Text strong>State:</Text></Col>
                                 <Col span={16}>
-                                    {State(nodeState)}
+                                    {RenderNodeState(nodeState)}
                                 </Col>
                             </Row>
-                            <Row style={{ marginTop: "15px" }}>
+                            <Row style={{ marginTop: "10px" }}>
                                 <Col xl={8} xs={24}><Text strong>Creator:</Text></Col>
                                 <Col xl={16} xs={24}>
                                     <Address address={creator} style={{ ellipsis: false, hasLink: true }}></Address>
+                                </Col>
+                            </Row>
+                            <Row style={{ marginTop: "10px" }}>
+                                <Col xl={8} xs={24}><Text strong>Address:</Text></Col>
+                                <Col xl={16} xs={24}>
+                                    <Address address={addr} style={{ ellipsis: false, hasLink: true }}></Address>
                                 </Col>
                             </Row>
                             <Row style={{ marginTop: "15px" }}>
@@ -123,9 +93,11 @@ export default (masterNode: MasterNodeVO) => {
                     <Row style={{ marginTop: "15px" }}>
                         <Col xl={4} xs={24}><Text strong>Enode:</Text></Col>
                         <Col xl={18} xs={24}>
-                            <Paragraph copyable>
-                                {enode}
-                            </Paragraph>
+                            {
+                                enode && <Paragraph copyable>
+                                    {enode}
+                                </Paragraph>
+                            }
                         </Col>
                     </Row>
                     <Divider />

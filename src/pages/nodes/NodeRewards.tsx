@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { NodeRewardVO, TransactionVO } from "../../services";
-import { PaginationProps, Table, Typography, Row, Col, Tooltip, TablePaginationConfig } from 'antd';
+import { NodeRewardVO } from "../../services";
+import { Table, Typography, TablePaginationConfig } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslation } from 'react-i18next';
 import TransactionHash from '../../components/TransactionHash';

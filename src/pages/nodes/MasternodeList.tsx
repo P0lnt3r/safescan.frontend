@@ -24,7 +24,6 @@ export default () => {
         ip?: string,
         states?: number[]
     }>({});
-
     const [pagination, setPagination] = useState<PaginationProps>({
         current: 1,
         pageSize: 10,
@@ -125,10 +124,14 @@ export default () => {
 
     const doQuery = useCallback(() => {
         const _tableQueryParams: {
-            address?: string,
-            id?: number,
-            ip?: string
-        } = {};
+            address : string | undefined,
+            id : number  | undefined,
+            ip : string  | undefined
+        } = {
+            address : undefined,
+            id : undefined,
+            ip : undefined
+        };
         if (queryInput) {
             const isAddress = ethers.utils.isAddress(queryInput);
             const isIdNumber = isValidNodeID(queryInput);

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { NodeRegisterActionVO } from "../../services";
-import { fetchMasternodeRegisterActions } from "../../services/node";
+import { fetchMasternodeRegisterActions, fetchSupernodeRegisterActions } from "../../services/node";
 import { TablePaginationConfig, Table, Typography, Row, Col, Tooltip } from "antd";
 import { ColumnsType } from "antd/lib/table";
 import TransactionHash from "../../components/TransactionHash";
@@ -9,12 +9,17 @@ import { DateFormat } from "../../utils/DateUtil";
 import Address, { ChecksumAddress } from "../../components/Address";
 import EtherAmount from "../../components/EtherAmount";
 import BlockNumber from "../../components/BlockNumber";
-import { add } from "date-fns";
 
-const { Title, Text, Link, Paragraph } = Typography;
-const DEFAULT_PAGESIZE = 20;
+const { Text, Link } = Typography;
+const DEFAULT_PAGESIZE = 10;
 
-export default () => {
+export default ({
+    address,
+    type
+}: {
+    type: string
+    address?: string
+}) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [tableData, setTableData] = useState<NodeRegisterActionVO[]>([]);
     const [unconfirmed, setUnconfirmed] = useState<number>(0);
@@ -29,10 +34,18 @@ export default () => {
 
     const doFetchMasternodeResgiterActions = () => {
         setLoading(true);
-        fetchMasternodeRegisterActions({
-            current: pagination.current,
-            pageSize: pagination.pageSize
-        }).then(data => {
+        const fetchRegistersPromise = type == 'masternode' ?
+            fetchMasternodeRegisterActions({
+                current: pagination.current,
+                pageSize: pagination.pageSize,
+                address
+            }) :
+            fetchSupernodeRegisterActions({
+                current: pagination.current,
+                pageSize: pagination.pageSize,
+                address
+            });
+        fetchRegistersPromise.then(data => {
             setLoading(false);
             setTableData(data.records);
             const unconfirmed = [];
@@ -85,7 +98,7 @@ export default () => {
             fixed: 'left',
         },
         {
-            title: <Text strong style={{ color: "#6c757e" }}>Register Type</Text>,
+            title: <Text strong style={{ color: "#6c757e" }}>Register Method</Text>,
             dataIndex: 'registerType',
             render: (val, vo) => <>
                 {val}
@@ -110,7 +123,7 @@ export default () => {
             render: (val) => <>{DateFormat(val * 1000)}</>
         },
         {
-            title: <Text strong style={{ color: "#6c757e" }}>Operator</Text>,
+            title: <Text strong style={{ color: "#6c757e" }}>Founder</Text>,
             dataIndex: 'operator',
             width: 140,
             render: (operator, vo) => {
@@ -120,12 +133,12 @@ export default () => {
             }
         },
         {
-            title: <Text strong style={{ color: "#6c757e" }}>Masternode</Text>,
+            title: <Text strong style={{ color: "#6c757e" }}> {type == "masternode" ? "Masternode" : "Supernode"} </Text>,
             dataIndex: 'address',
             width: 140,
             render: (address, vo) => {
                 return <>
-                    <Address address={address} propVO={vo.addressPropVO}/>
+                    <Address address={address} propVO={vo.addressPropVO} />
                 </>
             }
         },

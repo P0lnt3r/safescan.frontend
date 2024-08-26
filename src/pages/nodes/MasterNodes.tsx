@@ -1,25 +1,12 @@
 
-import { Card, Typography, Row, Col,Divider, TabsProps, Tabs } from 'antd';
-import MasternodesRegisters from './MasternodesRegisters';
+import { Card, Typography, Row, Col, Divider, TabsProps, Tabs } from 'antd';
 import MasternodeList from './MasternodeList';
 import MasternodeHistoryChart from './MasternodeHistoryChart';
 import MasternodeStatePie from './MasternodeStatePie';
+import NodeRegisters from './NodeRegisters';
 const { Title, Text } = Typography;
 
 export default () => {
-
-    const items: TabsProps['items'] = [
-        {
-            key: 'registers',
-            label: 'Registers',
-            children: <MasternodesRegisters />,
-        },
-        {
-            key: 'stateUpdateEvents',
-            label: 'State Update Events',
-            children: '[State Update Events:<Table:List>]',
-        },
-    ];
 
     return (<>
         <Title level={3}>Safe4 Network Masternodes</Title>
@@ -33,11 +20,9 @@ export default () => {
         </Row>
         <Divider style={{ margin: '40px 0px' }} />
         <MasternodeList />
-        {/* <Divider style={{ margin: '20px 0px' }} />
-        <Title level={4}>Masternode Actions</Title>
-        <Card>
-            <Tabs defaultActiveKey="1" items={items} />
-        </Card> */}
+        <Divider style={{ margin: '20px 0px' }} />
+        <Title level={4}>Latest Masternodes Registers</Title>
+        <NodeRegisters type='masternode' />
     </>)
 
 

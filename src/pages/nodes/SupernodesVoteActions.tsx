@@ -11,8 +11,8 @@ import EtherAmount from "../../components/EtherAmount";
 import BlockNumber from "../../components/BlockNumber";
 import { add } from "date-fns";
 
-const { Title, Text, Link, Paragraph } = Typography;
-const DEFAULT_PAGESIZE = 20;
+const { Text, Link } = Typography;
+const DEFAULT_PAGESIZE = 10;
 
 export default ( { address } : {
     address ?: string
@@ -136,7 +136,7 @@ export default ( { address } : {
             }
         },
         {
-            title: <Text strong style={{ color: "#6c757e" }}>Amount</Text>,
+            title: <Text strong style={{ color: "#6c757e" }}>Votes Cast</Text>,
             dataIndex: 'amountWeight',
             width: 80,
             render: (amount) => <Text strong><EtherAmount raw={amount.toString()} fix={6} ignoreLabel /></Text>

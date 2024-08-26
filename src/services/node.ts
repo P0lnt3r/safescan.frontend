@@ -30,12 +30,12 @@ export async function fetchTxNodeRegisterActionss( txHash : string ) : Promise<N
     return serverResponse.data;
 }
 
-export async function fetchMasternodeRegisterActions( params : PageQueryDTO ) : Promise<PageResponseVO<NodeRegisterActionVO>>{
+export async function fetchMasternodeRegisterActions( params : PageQueryDTO | {address : string} ) : Promise<PageResponseVO<NodeRegisterActionVO>>{
     const serverResponse = await POST( `${API_HOST}/noderegisters/masternode` , params );
     return serverResponse.data;
 }
 
-export async function fetchSupernodeRegisterActions( params : PageQueryDTO ) : Promise<PageResponseVO<NodeRegisterActionVO>>{
+export async function fetchSupernodeRegisterActions( params : PageQueryDTO | {address : string}) : Promise<PageResponseVO<NodeRegisterActionVO>>{
     const serverResponse = await POST( `${API_HOST}/noderegisters/supernode` , params );
     return serverResponse.data;
 }
