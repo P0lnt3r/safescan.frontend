@@ -84,7 +84,6 @@ export default ( {
     ]
 
     return (<>
-        { JSON.stringify(supernodeVO) }
         <Row>
             <Col style={{ marginTop: "10px", padding: "5px" }} span={24} >
                 <Card size="default" title={<Text strong><ClusterOutlined style={{ marginRight: "5px" }} />SuperNode</Text>}>
@@ -129,7 +128,6 @@ export default ( {
                             <Row style={{ marginTop: "10px" }}>
                                 <Col xl={6} xs={24}><Text strong>Votes Received:</Text></Col>
                                 <Col xl={18} xs={24}>
-                                    <Text strong>{totalVoteNum}</Text>
                                     <Text><EtherAmount raw={totalVoteNum} ignoreLabel></EtherAmount></Text>
                                 </Col>
                             </Row>

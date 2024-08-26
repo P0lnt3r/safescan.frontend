@@ -75,7 +75,7 @@ export default function () {
             
             {
                 subType == "masternode" && prop &&
-                <MasterNode {...JSON.parse(prop) as MasterNodeVO} />
+                <MasterNode masternodeVO={JSON.parse(convertNumbersToStrings(prop))} />
             }
             <Divider style={{ marginTop: "20px" }} />
             <Card>

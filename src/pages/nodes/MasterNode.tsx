@@ -12,9 +12,13 @@ import { RenderNodeState } from './Utils';
 
 const { Text, Paragraph, Link } = Typography;
 
-export default (masterNode: MasterNodeVO) => {
+export default ( {
+    masternodeVO
+} : {
+    masternodeVO : MasterNodeVO
+} ) => {
 
-    const { id, description, creator, enode, incentivePlan, state, lastRewardHeight, totalAmount, founders, addr } = masterNode;
+    const { id, description, creator, enode, incentivePlan, state, lastRewardHeight, totalAmount, founders, addr } = masternodeVO;
     const nodeState = state;
 
     const columns: ColumnsType<MemberInfoVO> = [
