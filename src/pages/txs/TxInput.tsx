@@ -103,7 +103,7 @@ export default ({ raw, methodId, fragment }: {
                 <div style={{
                     "backgroundColor": "#f8f9fa",
                     "minHeight": "200px",
-                    "padding": "2%"
+                    "padding": "2%",
                 }}>
                     <Row>
                         <Col xl={4} xs={24}>
@@ -139,7 +139,7 @@ export default ({ raw, methodId, fragment }: {
                                             type == "address" ? <Address address={value.toString().toLowerCase()} ></Address>
                                                 : <Text>{value.toString()}</Text>
                                             : <>
-                                                {value.toString()}
+                                                <Text>  {value.toString()}</Text>
                                                 {/* {
                                                     value.map((ele: any, index: number) => {
                                                         return <Row key={index}>

@@ -26,7 +26,7 @@ export default () => {
 
     const [pagination, setPagination] = useState<PaginationProps>({
         current: 1,
-        pageSize: 5,
+        pageSize: 10,
         showTotal: (total) => <>Total : {total}</>,
     });
 
