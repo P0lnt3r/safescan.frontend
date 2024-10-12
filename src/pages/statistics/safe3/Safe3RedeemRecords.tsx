@@ -179,6 +179,7 @@ export default () => {
                         </>
                     }
                 </Col>
+
                 {
                     address && <Col span={24} style={{ marginTop: "10px" }}>
                         <Safe3AddressRedeem address={address} />

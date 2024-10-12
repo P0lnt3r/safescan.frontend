@@ -646,6 +646,11 @@ export interface Safe3AddressRedeemVO {
     masternode : boolean , 
     mLockedAmount : string | undefined,
     masternodeRedeemHash : string | undefined,
+
+    totalAvailableAmount : string | undefined,
+    totalLockedAmount : string | undefined,
+    totalMasternode : string | undefined,
+    totalMasternodeCount : number | undefined
 }
 
 export interface Safe3RedeemStatisticVO {
