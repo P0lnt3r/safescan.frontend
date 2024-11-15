@@ -68,28 +68,44 @@ export default () => {
             <Col span={8} style={{ paddingLeft: "20px" }}>
                 <Title level={5}>About</Title>
                 <Text>
-                    
+
                 </Text>
                 <Divider style={{ marginTop: "15px" }} />
 
-                <Text type='secondary'><HighlightOutlined /> Supply</Text>
-                <br/>
+                <Text type='secondary'>Amount</Text>
+                <br />
+                <Text>Total Supply</Text>
+                <br />
+                <Text strong>29,400,000.00 SAFE</Text>
+                {/* 
+                <br />
+                <Text>Unmined</Text>
+                <br />
+                <Text strong>29,400,000.00 SAFE</Text>
+                <br />
+                <Text>Locked</Text>
+                <br />
+                <Text strong>29,400,000.00 SAFE</Text>
+                <br />
+                <Text>Stake</Text>
+                <br />
+                <Text strong>29,400,000.00 SAFE</Text>
+                */}
+                <br /> <br />
+                <Text type='secondary'>Supply</Text>
+                <br />
                 <Text>Number of blocks and coins per day</Text>
-                <br/>
+                <br />
                 <Text strong>2880 <Divider type='vertical' /> 1,542.91 SAFE</Text>
-                <br/>
+                <br />
                 <Text>Number of blocks and coins per month</Text>
-                <br/>
+                <br />
                 <Text strong>86400 <Divider type='vertical' /> 46,287.47 SAFE</Text>
-                <br/>
+                <br />
                 <Text>Number of blocks and coins per year</Text>
-                <br/>
+                <br />
                 <Text strong>1036800 <Divider type='vertical' /> 555,449.67 SAFE</Text>
                 <Divider style={{ marginTop: "15px" }} />
-
-                <Text type='secondary'><HighlightOutlined /> Highlight</Text>
-                <br/>
-                <Text>Highest number of <Text strong>16,262,505</Text> transactions on Thursday, November 25, 2021</Text>
             </Col>
         </Row>
     </>

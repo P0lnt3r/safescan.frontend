@@ -21,16 +21,16 @@ export default ({ nodeRegisterActions }: {
         const { nodeType, registerType, address, operator, amount, lockId, lockDays } = nodeRegisterAction;
         const Ribbon = useMemo(() => {
             if ("MN" == nodeType && "Register" == registerType) {
-                return "New MasterNode";
+                return "New Masternode";
             }
             if ("SN" == nodeType && "Register" == registerType) {
-                return "New SuperNode";
+                return "New Supernode";
             }
             return undefined;
         }, [nodeType, registerType]);
         const OperatorLabel = registerType == "Register" ? "Creator" : "Founder";
         const Title =
-            ("MN" == nodeType ? "MasterNode" : "SuperNode")
+            ("MN" == nodeType ? "Masternode" : "Supernode")
             + " " + registerType;
 
         return <Row key={"noderegisteraction:" + nodeRegisterAction.transactionHash + nodeRegisterAction.eventLogIndex}>

@@ -2,26 +2,7 @@ import { NftTransferVO } from "../../services"
 import { Typography, Tag, Input, Tooltip, Row, Col, Divider, Badge, Card } from 'antd';
 
 import {
-    CheckCircleOutlined,
-    CloseCircleOutlined,
     QuestionCircleOutlined,
-    FrownOutlined,
-    CaretRightOutlined,
-    ArrowRightOutlined,
-    LockOutlined,
-    UnlockOutlined,
-    ExportOutlined,
-    ImportOutlined,
-    MedicineBoxOutlined,
-    UserSwitchOutlined,
-    HourglassTwoTone,
-    CarryOutTwoTone,
-    SyncOutlined,
-    ApartmentOutlined,
-    UserOutlined,
-    SolutionOutlined,
-    EnvironmentTwoTone,
-    LoadingOutlined,
 } from '@ant-design/icons';
 import NFT_URI_IMG, { NFT_URI_IMG_SIZE } from "../../components/NFT_URI_IMG";
 import { useMemo } from "react";

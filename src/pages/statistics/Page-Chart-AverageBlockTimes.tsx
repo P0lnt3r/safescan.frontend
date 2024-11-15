@@ -31,7 +31,7 @@ export default () => {
             setLoading(false);
             const _avgBlockTimesChartData: AverageBlockTimesChartType[] = [];
             data.forEach(timestampStatistic => {
-                const {date , avgBlockTime} = timestampStatistic;
+                const { date, avgBlockTime } = timestampStatistic;
                 _avgBlockTimesChartData.push({
                     date,
                     time: Number.parseFloat(avgBlockTime)
@@ -75,17 +75,10 @@ export default () => {
             <Col span={8} style={{ paddingLeft: "20px" }}>
                 <Title level={5}>About</Title>
                 <Text>
-                    The chart highlights the total number of transactions on the Safe4 Blockchain blockchain with daily individual breakdown for average difficulty,
-                    estimated hash rate, average block time and size, total block and uncle block count and total new address seen.
+                    The Safe4 Blockchain Average Block Time Chart shows the historical average time taken in seconds for a block to be included in the Safe4 blockchain.
                 </Text>
                 <Divider style={{ marginTop: "15px" }} />
-                <Text type='secondary'><HighlightOutlined /> Highlight</Text>
-                <br />
-                <Text>Highest number of <Text strong>16,262,505</Text> transactions on Thursday, November 25, 2021</Text>
-                <Divider style={{ marginTop: "15px" }} />
-                <Text type='secondary'><HighlightOutlined /> Highlight</Text>
-                <br />
-                <Text>Highest number of <Text strong>16,262,505</Text> transactions on Thursday, November 25, 2021</Text>
+
             </Col>
         </Row>
     </>

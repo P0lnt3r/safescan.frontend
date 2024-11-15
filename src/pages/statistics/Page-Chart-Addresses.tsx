@@ -68,17 +68,9 @@ export default () => {
             <Col span={8} style={{ paddingLeft: "20px" }}>
                 <Title level={5}>About</Title>
                 <Text>
-                    The chart highlights the total number of transactions on the Safe4 Blockchain blockchain with daily individual breakdown for average difficulty,
-                    estimated hash rate, average block time and size, total block and uncle block count and total new address seen.
+                    The chart shows the total distinct numbers of address on the Safe4 blockchain and the increase in the number of address daily.
                 </Text>
                 <Divider style={{ marginTop: "15px" }} />
-                <Text type='secondary'><HighlightOutlined /> Highlight</Text>
-                <br />
-                <Text>Highest number of <Text strong>16,262,505</Text> transactions on Thursday, November 25, 2021</Text>
-                <Divider style={{ marginTop: "15px" }} />
-                <Text type='secondary'><HighlightOutlined /> Highlight</Text>
-                <br />
-                <Text>Highest number of <Text strong>16,262,505</Text> transactions on Thursday, November 25, 2021</Text>
             </Col>
         </Row>
     </>

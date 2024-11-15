@@ -77,7 +77,7 @@ export default ({ nodeRewards }: { nodeRewards: NodeRewardVO[] }) => {
             </Col>
             <Col xl={16} xs={24}>
                 <Row style={{ marginTop: "2px" }}>
-                    <Text strong style={{ marginRight: "5px" }}>SuperNode:</Text>
+                    <Text strong style={{ marginRight: "5px" }}>Supernode:</Text>
                     {
                         superNode && superNode.propVO &&
                         <Address address={superNode.address} propVO={superNode.propVO} />
@@ -88,7 +88,7 @@ export default ({ nodeRewards }: { nodeRewards: NodeRewardVO[] }) => {
                         .map(nodeReward => RenderNodeReward(nodeReward))
                 }
                 <Row style={{ marginTop: "20px" }}>
-                    <Text strong style={{ marginRight: "5px" }}>MasterNode:</Text>
+                    <Text strong style={{ marginRight: "5px" }}>Masternode:</Text>
                     {
                         masterNode && masterNode.propVO &&
                         <Address address={masterNode.address} propVO={masterNode.propVO} />

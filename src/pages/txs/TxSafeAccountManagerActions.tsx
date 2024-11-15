@@ -20,7 +20,12 @@ import {
     ApartmentOutlined,
     UserOutlined,
     SolutionOutlined,
-    DeliveredProcedureOutlined
+    DeliveredProcedureOutlined,
+    ContainerOutlined,
+    InboxOutlined,
+    ClockCircleOutlined,
+    RetweetOutlined,
+    LoginOutlined
 } from '@ant-design/icons';
 import shape from '../../images/shape-1.svg'
 import { useMemo } from 'react';
@@ -44,20 +49,20 @@ export default ({ safeAccountManagerActions }: { safeAccountManagerActions: Safe
         const OutputActionAndLabel = () => {
             if (isDeposit) {
                 return <>
-                    <ImportOutlined />
+                    <LockOutlined />
                     <Text type='secondary'> [Deposit]</Text>
                 </>;
             }
             if (isWithdraw) {
                 return <>
-                    <ExportOutlined />
+                    <RetweetOutlined />
                     <Text type='secondary'> [Withdraw]</Text>
                 </>;
             }
             if (isAddLock) {
                 return <>
-                    <MedicineBoxOutlined />
-                    <Text type='secondary'> [AddLock]</Text>
+                    <ClockCircleOutlined />
+                    <Text type='secondary'> [AddLockDay]</Text>
                 </>;
             }
             if (isFreeze) {
@@ -68,7 +73,7 @@ export default ({ safeAccountManagerActions }: { safeAccountManagerActions: Safe
             }
             if (isVote) {
                 return <>
-                    <CarryOutTwoTone />
+                    <ContainerOutlined />
                     <Text type='secondary'> [Vote]</Text>
                 </>
             }
@@ -86,22 +91,19 @@ export default ({ safeAccountManagerActions }: { safeAccountManagerActions: Safe
         return <Row>
             {!isMobile && <>
                 <Row style={{ width: "60%" }}>
-                    <Col span={8}>
+                    <Col span={3}>
                         {OutputActionAndLabel()}
-                        <span style={{ float: "right" }}>
-                            <EtherAmount raw={amount} fix={18}></EtherAmount>
-                            {
-                                isFreeze &&
-
-                                <CaretRightOutlined style={{ marginLeft: "5px", marginRight: "5px" }} />
-                            }
-                            {
-                                !isFreeze &&
-                                <ArrowRightOutlined style={{ marginLeft: "5px", marginRight: "5px" }} />
-                            }
-                        </span>
                     </Col>
-                    <Col span={16}>
+                    <Col span={19}>
+                        <Text style={{ marginLeft: "5px", marginRight: "5px" }}>
+                            <EtherAmount raw={amount} fix={18} />
+                        </Text>
+                        {
+                            isFreeze && <LoginOutlined style={{ marginLeft: "5px", marginRight: "5px" }} />
+                        }
+                        {
+                            !isFreeze && <ArrowRightOutlined style={{ marginLeft: "5px", marginRight: "5px" }} />
+                        }
                         <Address address={to} />
                     </Col>
                 </Row>
@@ -119,8 +121,7 @@ export default ({ safeAccountManagerActions }: { safeAccountManagerActions: Safe
                 <Col span={24}>
                     {
                         isFreeze &&
-
-                        <CaretRightOutlined style={{ marginLeft: "5px", marginRight: "5px" }} />
+                        <LoginOutlined style={{ marginLeft: "5px", marginRight: "5px" }} />
                     }
                     {
                         !isFreeze &&
@@ -147,7 +148,7 @@ export default ({ safeAccountManagerActions }: { safeAccountManagerActions: Safe
             {
                 lockId != "0" && !(lockIds instanceof Array) &&
                 <Col span={24}>
-                    <img src={shape} style={{ width: "8px", marginTop: "-8px", marginRight: "4px" , marginLeft:"6px" }} />
+                    <img src={shape} style={{ width: "8px", marginTop: "-8px", marginRight: "4px", marginLeft: "6px" }} />
                     <Text type='secondary' strong>[ID:{lockId}]</Text>
                     <Text>
                         {
@@ -174,7 +175,7 @@ export default ({ safeAccountManagerActions }: { safeAccountManagerActions: Safe
         <Divider style={{ margin: '18px 0px' }} />
         <Row id="safeAccountManagerActions">
             <Col xl={8} xs={24}>
-                <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
+                <Tooltip title="" color='black'>
                     <QuestionCircleOutlined />
                 </Tooltip>
                 <Text strong style={{ marginLeft: "5px" }}>AccountManager Actions</Text>

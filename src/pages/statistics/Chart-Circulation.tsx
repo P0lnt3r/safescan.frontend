@@ -14,17 +14,17 @@ export function parseCirculationChartData(timestampStatistic: TimestampStatistic
         supply: {
             date,
             value: Number(ETHER(totalSupply, 0)),
-            category: "Total Supply"
+            category: "Circulation"
         },
         lock: {
             date,
             value: Number(ETHER(totalLockAmount, 0)),
-            category: "Total Lock"
+            category: "Locked"
         },
         freeze: {
             date,
             value: Number(ETHER(totalFreezeAmount, 0)),
-            category: "Total Freeze"
+            category: "Stake"
         }
     }
 }

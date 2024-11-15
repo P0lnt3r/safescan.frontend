@@ -84,13 +84,6 @@ export default () => {
                     estimated hash rate, average block time and size, total block and uncle block count and total new address seen.
                 </Text>
                 <Divider style={{ marginTop: "15px" }} />
-                <Text type='secondary'><HighlightOutlined /> Highlight</Text>
-                <br />
-                <Text>Highest number of <Text strong>16,262,505</Text> transactions on Thursday, November 25, 2021</Text>
-                <Divider style={{ marginTop: "15px" }} />
-                <Text type='secondary'><HighlightOutlined /> Highlight</Text>
-                <br />
-                <Text>Highest number of <Text strong>16,262,505</Text> transactions on Thursday, November 25, 2021</Text>
             </Col>
         </Row>
     </>

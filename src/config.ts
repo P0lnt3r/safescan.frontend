@@ -12,15 +12,9 @@ const config = {
     "test": {
         native_label: "SAFE",
         block_confirmed: 6,
-        api_host: `http://47.107.47.210:5005`,
-        ws_host: `ws://47.107.47.210:5005/socket.io`
+        api_host: `https://safe4testnet.anwang.com/5005`,
+        ws_host: `wss://safe4testnet.anwang.com/ws/socket.io`
     },
-    // "prod": {
-    //     native_label: "SAFE",
-    //     block_confirmed: 6,
-    //     api_host: `http://safe4.anwang.com:5005`,
-    //     ws_host: `ws://safe4.anwang.com:5005/socket.io`
-    // },
     "prod": {
         native_label: "SAFE",
         block_confirmed: 6,
@@ -30,4 +24,4 @@ const config = {
 }
 
 // export default config['test'];
-export default config['prod'];
+export default config['test'];

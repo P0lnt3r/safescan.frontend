@@ -19,7 +19,7 @@ const isValidInput = (input: string): {
         let _input = input.toLocaleLowerCase();
         if (_input.startsWith('0x') && utils.isHexString(_input)) {
             isAddress = utils.isAddress(_input);
-            isTxHash = utils.hexValue(_input).length == 66;
+            isTxHash = utils.hexValue(_input).length == 66 || utils.hexValue(_input).length == 65;
         } else {
             try {
                 if (parseInt(input, 10) == parseFloat(input)) {
@@ -38,7 +38,7 @@ const isValidInput = (input: string): {
 export default () => {
     const navigate = useNavigate();
     const [inputError, setInputError] = useState<string>();
-    const [inputContent,setInputContent] = useState<string>();
+    const [inputContent, setInputContent] = useState<string>();
 
     const handleInputSearch = (input: string) => {
         const {

@@ -22,20 +22,23 @@ export default () => {
     const blockNumber = useBlockNumber();
     const dbStoreBlockNumber = useDBStoredBlockNumber();
     const statistic = useStatistic();
-    
-    const circulationSupply = useMemo( () => {
+    const navigate = useNavigate();
+
+    const circulationSupply = useMemo(() => {
         const circulation = statistic?.circulation;
-        return circulation ? CurrencyAmount.ether(circulation).toFixed( 2 )
+        return circulation ? CurrencyAmount.ether(circulation).toFixed(2)
             : "0"
-    } , [statistic] );
- 
+    }, [statistic]);
+
     return (
         <Card>
             <Row>
                 <Col xl={6} xs={24} style={{ padding: "1%" }}>
                     <Statistic title="Latest Block Number" value={`${blockNumber}`} />
                     <Divider />
-                    <Statistic title="Circulation Supply of SAFE" value={circulationSupply} />
+                    <Link onClick={() => navigate("charts/circulation")}>
+                        <Statistic title="Circulation Supply of SAFE" value={circulationSupply} />
+                    </Link>
                     <Col xl={0} xs={24}>
                         <Divider />
                     </Col>
@@ -43,25 +46,41 @@ export default () => {
                 <Col xl={8} xs={24} style={{ padding: "1%" }}>
                     <Row>
                         <Col span={12}>
-                            <Statistic title="Addresses" value={statistic?.totalAddress} prefix={<UserOutlined />} />
+                            <Link onClick={() => {
+                                navigate("/charts/addresses")
+                            }}>
+                                <Statistic title="Addresses" value={statistic?.totalAddress} prefix={<UserOutlined />} />
+                            </Link>
                         </Col>
                         <Col span={12}>
-                            <Statistic style={{ float: "right" }} valueStyle={{ float: "right" }} title={
-                                <Text style={{ float: "right" }} type="secondary">Contracts</Text>}
-                                value={statistic?.totalContract} suffix={<FileTextOutlined />}
-                            />
+                            <Link onClick={() => {
+                                navigate("/contracts")
+                            }}>
+                                <Statistic style={{ float: "right" }} valueStyle={{ float: "right" }} title={
+                                    <Text style={{ float: "right" }} type="secondary">Contracts</Text>}
+                                    value={statistic?.totalContract} suffix={<FileTextOutlined />}
+                                />
+                            </Link>
                         </Col>
                     </Row>
                     <Divider />
                     <Row>
                         <Col span={12}>
-                            <Statistic title="Transactions" value={statistic?.totalTxns} prefix={<SafetyOutlined />} />
+                            <Link onClick={() => {
+                                navigate("/charts/txns")
+                            }}>
+                                <Statistic title="Transactions" value={statistic?.totalTxns} prefix={<SafetyOutlined />} />
+                            </Link>
                         </Col>
                         <Col span={12}>
-                            <Statistic style={{ float: "right" }} valueStyle={{ float: "right" }} title={
-                                <Text style={{ float: "right" }} type="secondary">Active Masternodes</Text>}
-                                value={statistic?.totalMasterNodes} suffix={<ApartmentOutlined />}
-                            />
+                            <Link onClick={() => {
+                                navigate("/nodes/masternodes")
+                            }}>
+                                <Statistic style={{ float: "right" }} valueStyle={{ float: "right" }} title={
+                                    <Text style={{ float: "right" }} type="secondary">Active Masternodes</Text>}
+                                    value={statistic?.totalMasterNodes} suffix={<ApartmentOutlined />}
+                                />
+                            </Link>
                         </Col>
                     </Row>
                     <Col xl={0} xs={24}>

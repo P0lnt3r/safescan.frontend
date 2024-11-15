@@ -13,7 +13,7 @@ export default ({ uri, size, onClick }: {
     size: NFT_URI_IMG_SIZE,
     onClick?: MouseEventHandler | undefined
 }) => {
-    const [showDefault, setShowDefault] = useState<boolean>( !(uri != undefined && uri != "") );
+    const [showDefault, setShowDefault] = useState<boolean>(!(uri != undefined && uri != ""));
     const { wrapperHeight, imgHeight } = useMemo(() => {
         if (size == NFT_URI_IMG_SIZE.LARGE) {
             return {
@@ -34,7 +34,7 @@ export default ({ uri, size, onClick }: {
     }, [size, uri]);
 
     return <>
-        <div onClick={onClick ? onClick : () => {}} style={{
+        <div onClick={onClick ? onClick : () => { }} style={{
             height: wrapperHeight,
             display: "flex",
             justifyContent: "center",
@@ -62,7 +62,7 @@ export default ({ uri, size, onClick }: {
                 </>
             }
             {
-                (showDefault || (uri==undefined || uri == '')) && <div onClick={onClick ? onClick : () => { }}
+                (showDefault || (uri == undefined || uri == '')) && <div onClick={onClick ? onClick : () => { }}
                     style={{
                         display: "flex",
                         justifyContent: "center",

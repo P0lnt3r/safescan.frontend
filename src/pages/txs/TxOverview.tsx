@@ -153,7 +153,7 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
         <Divider style={{ margin: '18px 0px' }} />
         <Row>
             <Col span={8}>
-                <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
+                <Tooltip title="The date and time at which a transaction is validated." color='black'>
                     <QuestionCircleOutlined />
                 </Tooltip>
                 <Text strong style={{ marginLeft: "5px" }}>Status</Text>
@@ -190,7 +190,7 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                 <Divider style={{ margin: '18px 0px' }} />
                 <Row>
                     <Col span={8}>
-                        <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
+                        <Tooltip title="Number of the block in which the transaction is recorded. Block confirmations indicate how many blocks have been added since the transaction was produced." color='black'>
                             <QuestionCircleOutlined />
                         </Tooltip>
                         <Text strong style={{ marginLeft: "5px" }}>Block</Text>
@@ -219,7 +219,7 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
         <Divider style={{ margin: '18px 0px' }} />
         <Row>
             <Col span={8}>
-                <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
+                <Tooltip title="The date and time at which a transaction is validated." color='black'>
                     <QuestionCircleOutlined />
                 </Tooltip>
                 <Text strong style={{ marginLeft: "5px" }}>DateTime</Text>
@@ -236,7 +236,7 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
         <Divider style={{ margin: '18px 0px' }} />
         <Row>
             <Col xl={8} xs={24} style={{ marginTop: '14px' }}>
-                <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
+                <Tooltip title="The sending party of the transaction." color='black'>
                     <QuestionCircleOutlined />
                 </Tooltip>
                 <Text strong style={{ marginLeft: "5px" }}>From</Text>
@@ -263,7 +263,7 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
         <Divider style={{ margin: '18px 0px' }} />
         <Row>
             <Col xl={8} xs={24} style={{ marginTop: '14px' }}>
-                <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
+                <Tooltip title="The receiving party of the transaction (could be a contract address)." color='black'>
                     <QuestionCircleOutlined />
                 </Tooltip>
                 <Text strong style={{ marginLeft: "5px" }}>To</Text>
@@ -372,7 +372,7 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                 <Divider style={{ margin: '18px 0px' }} />
                 <Row>
                     <Col xl={8} xs={24}>
-                        <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
+                        <Tooltip title="" color='black'>
                             <QuestionCircleOutlined />
                         </Tooltip>
                         <Text strong style={{ marginLeft: "5px" }}>Node Actions</Text>
@@ -392,7 +392,7 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
         <Divider style={{ margin: '18px 0px' }} />
         <Row>
             <Col xl={8} xs={24}>
-                <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
+                <Tooltip title="The value being transacted in SAFE and fiat value. Note: You can click the fiat value (if available) to see historical value at the time of transaction." color='black'>
                     <QuestionCircleOutlined />
                 </Tooltip>
                 <Text strong style={{ marginLeft: "5px" }}>Value</Text>
@@ -413,7 +413,7 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
 
         <Row style={{ margin: '18px 0px' }}>
             <Col xl={8} xs={24}>
-                <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
+                <Tooltip title="Amount paid to the validator for processing the transaction." color='black'>
                     <QuestionCircleOutlined />
                 </Tooltip>
                 <Text strong style={{ marginLeft: "5px" }}>Txn Fee</Text>
@@ -428,7 +428,7 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
         <Divider style={{ margin: '18px 0px' }} />
         <Row>
             <Col xl={8} xs={24}>
-                <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
+                <Tooltip title="Cost per unit of gas specified for the transaction, in BNB and Gwei. The higher the gas price the higher chance of getting included in a block." color='black'>
                     <QuestionCircleOutlined />
                 </Tooltip>
                 <Text strong style={{ marginLeft: "5px" }}>Gas Price</Text>
@@ -442,7 +442,7 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
 
         <Row style={{ margin: '18px 0px' }}>
             <Col xl={8} xs={24}>
-                <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
+                <Tooltip title="Maximum amount of gas allocated for the transaction & the amount eventually used. Normal BNB transfers involve 21,000 gas units while contracts involve higher values." color='black'>
                     <QuestionCircleOutlined />
                 </Tooltip>
                 <Text strong style={{ marginLeft: "5px" }}>Gas Limit <Divider type="vertical" /> Usage by Txn</Text>
@@ -461,7 +461,7 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
         <Divider style={{ margin: '18px 0px' }} />
         <Row>
             <Col xl={8} xs={24}>
-                <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
+                <Tooltip title="Other data related to this transaction." color='black'>
                     <QuestionCircleOutlined />
                 </Tooltip>
                 <Text strong style={{ marginLeft: "5px" }}>Other Attributes</Text>
@@ -478,7 +478,7 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
 
         <Row style={{ margin: '18px 0px' }}>
             <Col xl={8} xs={24} style={{ marginTop: '14px' }}>
-                <Tooltip title="A TxHash or transaction hash is a unique 66 characters identifier that is generated whenever a transaction is executed" color='black'>
+                <Tooltip title="Additional data included for this transaction. Commonly used as part of contract interaction or as a message sent to the recipient." color='black'>
                     <QuestionCircleOutlined />
                 </Tooltip>
                 <Text strong style={{ marginLeft: "5px" }}>Input Data</Text>

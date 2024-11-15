@@ -30,7 +30,7 @@ export default () => {
             setLoading(false);
             const _gasUsedChartData: GasUsedsChartType[] = [];
             data.forEach(timestampStatistic => {
-                const { date , totalGas, totalGasBurnAmount } = timestampStatistic;
+                const { date, totalGas, totalGasBurnAmount } = timestampStatistic;
                 let gas, burn;
                 gas = JSBI.subtract(JSBI.BigInt(totalGas),
                     JSBI.BigInt(_gasUsedChartData.length > 0 ? data[_gasUsedChartData.length - 1].totalGas : "0")
@@ -81,17 +81,10 @@ export default () => {
             <Col span={8} style={{ paddingLeft: "20px" }}>
                 <Title level={5}>About</Title>
                 <Text>
-                    The chart highlights the total number of transactions on the Safe4 Blockchain blockchain with daily individual breakdown for average difficulty,
-                    estimated hash rate, average block time and size, total block and uncle block count and total new address seen.
+                    The Safe4 Blockchain Daily Gas Used Chart shows the historical total daily gas used of the Safe4 Blockchain network.
                 </Text>
                 <Divider style={{ marginTop: "15px" }} />
-                <Text type='secondary'><HighlightOutlined /> Highlight</Text>
-                <br />
-                <Text>Highest number of <Text strong>16,262,505</Text> transactions on Thursday, November 25, 2021</Text>
-                <Divider style={{ marginTop: "15px" }} />
-                <Text type='secondary'><HighlightOutlined /> Highlight</Text>
-                <br />
-                <Text>Highest number of <Text strong>16,262,505</Text> transactions on Thursday, November 25, 2021</Text>
+
             </Col>
         </Row>
     </>
