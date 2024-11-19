@@ -101,7 +101,7 @@ const Header: React.FC = () => {
 
     return (
         <div style={{ backgroundColor: "white", padding: '1% 0%', marginBottom: '5px' }}>
-            <Row style={{paddingLeft:"7%",paddingRight:"7%"}}>
+            <Row style={{paddingLeft:"7%",paddingRight:"7%",maxWidth:"2000px" , margin:"auto"}}>
                 <Col span={2} style={{ height: '48px' }} >
                     <img src={SAFE_LOGO} style={{ display: "block", maxHeight: "100%" }}></img>
                 </Col>

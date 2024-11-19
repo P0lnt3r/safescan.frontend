@@ -113,7 +113,7 @@ export default () => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Date Time</Text>,
             dataIndex: 'timestamp',
-            width: 120,
+            width: 100,
             render: (val) => <>{DateFormat(val * 1000)}</>
         },
         {

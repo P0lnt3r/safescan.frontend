@@ -48,7 +48,7 @@ function App() {
       <Content style={{ padding: '0 0%' }}>
         <BrowserRouter>
           <Header />
-          <div className="site-layout-content">
+          <div className="site-layout-content" style={{maxWidth:"2000px" , margin:"auto"}}>
             <Routes>
               <Route path="/" index element={<Index />} />
               <Route path="/blocks" index element={<Blocks />} />

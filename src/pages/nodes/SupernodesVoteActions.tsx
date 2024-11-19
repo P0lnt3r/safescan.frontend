@@ -87,14 +87,14 @@ export default ( { address } : {
             title: <Text strong style={{ color: "#6c757e" }}>Txn Hash</Text>,
             dataIndex: 'transactionHash',
             render: (val, vo) => <><TransactionHash blockNumber={vo.blockNumber} txhash={val}></TransactionHash></>,
-            width: 160,
+            width: 150,
             fixed: 'left',
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Action</Text>,
             dataIndex: 'action',
             render: (val, vo) => <>
-                {val}
+                <Text ellipsis>{val}</Text>
             </>,
             width: 100,
             fixed: 'left',
@@ -118,7 +118,7 @@ export default ( { address } : {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Voter</Text>,
             dataIndex: 'voterAddress',
-            width: 140,
+            width: 150,
             render: (voter, vo) => {
                 return <>
                     <Address address={voter} propVO={vo.voterAddressPropVO}/>
@@ -128,7 +128,7 @@ export default ( { address } : {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Supernode</Text>,
             dataIndex: 'targetAddress',
-            width: 140,
+            width: 150,
             render: (address, vo) => {
                 return <>
                     <Address address={address} propVO={vo.targetAddressPropVO} />

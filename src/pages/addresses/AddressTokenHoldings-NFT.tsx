@@ -75,7 +75,7 @@ export default ({ address }: { address: string }) => {
                                         </Text>
                                     } color={tokenAsset.tokenType == "erc721" ? "cyan" : "green"}
                                         style={{ top: "-10px", lineHeight: "18px" }}>
-                                        <NFT_URI_IMG uri={tokenAsset.tokenURI}
+                                        <NFT_URI_IMG uri={tokenAsset.tokenImage}
                                             size={NFT_URI_IMG_SIZE.MIDDLE}
                                             onClick={() => {
                                                 navigate(`/nft/${tokenAsset.token}/${tokenAsset.tokenId}`)

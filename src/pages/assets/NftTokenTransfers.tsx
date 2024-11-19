@@ -96,7 +96,7 @@ export default ({ token, filterAddress }: {
             title: <Text strong style={{ color: "#6c757e" }}>Txn Hash</Text>,
             dataIndex: 'transactionHash',
             render: (val, txVO) => <><TransactionHash blockNumber={txVO.blockNumber} txhash={val} status={1}></TransactionHash></>,
-            width: 150,
+            width: 120,
             fixed: 'left',
         },
         {
@@ -110,13 +110,13 @@ export default ({ token, filterAddress }: {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Date Time</Text>,
             dataIndex: 'timestamp',
-            width: 150,
+            width: 110,
             render: (val) => <>{DateFormat(val * 1000)}</>
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>From</Text>,
             dataIndex: 'from',
-            width: 180,
+            width: 170,
             render: (from, txVO) => {
                 return (
                     <>
@@ -147,7 +147,7 @@ export default ({ token, filterAddress }: {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Type</Text>,
             dataIndex: 'tokenType',
-            width: 120,
+            width: 100,
             render: (tokenType, vo) => {
                 let showText = tokenType;
                 if (tokenType == "erc721") {

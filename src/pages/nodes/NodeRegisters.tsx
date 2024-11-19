@@ -94,14 +94,14 @@ export default ({
             title: <Text strong style={{ color: "#6c757e" }}>Txn Hash</Text>,
             dataIndex: 'transactionHash',
             render: (val, vo) => <><TransactionHash blockNumber={vo.blockNumber} txhash={val}></TransactionHash></>,
-            width: 180,
+            width: 150,
             fixed: 'left',
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Register Method</Text>,
             dataIndex: 'registerType',
             render: (val, vo) => <>
-                {val}
+                <Text ellipsis>{val}</Text>
             </>,
             width: 100,
             fixed: 'left',
@@ -125,7 +125,7 @@ export default ({
         {
             title: <Text strong style={{ color: "#6c757e" }}>Founder</Text>,
             dataIndex: 'operator',
-            width: 140,
+            width: 150,
             render: (operator, vo) => {
                 return <>
                     <Address address={operator} propVO={vo.operatorPropVO} />
@@ -135,7 +135,7 @@ export default ({
         {
             title: <Text strong style={{ color: "#6c757e" }}> {type == "masternode" ? "Masternode" : "Supernode"} </Text>,
             dataIndex: 'address',
-            width: 140,
+            width: 150,
             render: (address, vo) => {
                 return <>
                     <Address address={address} propVO={vo.addressPropVO} />

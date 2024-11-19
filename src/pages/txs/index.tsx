@@ -13,11 +13,11 @@ import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import TxMethodId from '../../components/TxMethodId';
 import NavigateLink from '../../components/NavigateLink';
 import { useDispatch } from 'react-redux';
-import { JSBI } from '@uniswap/sdk';
 import { useBlockNumber, useDBStoredBlockNumber } from '../../state/application/hooks';
 import { format } from '../../utils/NumberFormat';
 import Address from '../../components/Address';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import BlockNumber from '../../components/BlockNumber';
 const { Title, Text, Link } = Typography;
 
 const DEFAULT_PAGESIZE = 20;
@@ -32,18 +32,16 @@ export default function () {
       return 0;
     }
   }, [searchParams]);
-
-  const latestBlockNumber = useBlockNumber();
-  const dbStoredBlockNumber = useDBStoredBlockNumber();
-  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   const columns: ColumnsType<TransactionVO> = [
     {
       title: <Text strong style={{ color: "#6c757e" }}>Txn Hash</Text>,
       dataIndex: 'hash',
-      render: (val, txVO) => <><TransactionHash blockNumber={txVO.blockNumber} txhash={val} status={txVO.status}></TransactionHash></>,
-      width: 180,
+      render: (val, txVO) => <>
+        <TransactionHash blockNumber={txVO.blockNumber} txhash={val} status={txVO.status}></TransactionHash>
+      </>,
+      width: 150,
       fixed: 'left',
     },
     {
@@ -58,15 +56,7 @@ export default function () {
       width: 80,
       render: (blockNumber, vo) => {
         return <>
-          {
-            vo.confirmed == 1 && <RouterLink to={`/block/${blockNumber}`}>{blockNumber}</RouterLink>
-          }
-          {
-            vo.confirmed == 0 &&
-            <RouterLink to={`/block/${blockNumber}`}>
-              <Link italic underline>{blockNumber}</Link>
-            </RouterLink>
-          }
+          <BlockNumber blockNumber={blockNumber} confirmed={vo.confirmed} />
         </>
       }
     },
@@ -112,24 +102,7 @@ export default function () {
       dataIndex: 'value',
       width: 100,
       render: (value) => <Text strong><EtherAmount raw={value.toString()} fix={6} /></Text>
-    },
-    // {
-    //   title: <Text strong style={{ color: "#6c757e" }}>Txn Fee</Text>,
-    //   dataIndex: 'txFee',
-    //   width: 100,
-    //   render: (_, txVO) => {
-    //     const { gasPrice, gasUsed } = txVO;
-    //     const txFee = (gasPrice && gasUsed) ? JSBI.multiply(
-    //       JSBI.BigInt(gasPrice),
-    //       JSBI.BigInt(gasUsed)
-    //     ).toString() : "0";
-    //     return <>
-    //       <Text type="secondary">
-    //         <EtherAmount raw={txFee.toString()} fix={6} ignoreLabel />
-    //       </Text>
-    //     </>
-    //   }
-    // },
+    }
   ];
 
   const doFetchTransactions = async (current?: number) => {

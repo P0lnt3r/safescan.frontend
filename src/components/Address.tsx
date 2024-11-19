@@ -1,8 +1,9 @@
 import { AddressPropVO } from "../services"
-import { Button, Col, Row, Card, Space, Typography, Avatar, List, Tooltip } from 'antd';
+import { Button, Col, Row, Card, Space, Typography, Avatar, List, Tooltip, Modal, Divider } from 'antd';
 import { Link as RouterLink } from 'react-router-dom';
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
+    QrcodeOutlined,
     FileTextOutlined,       // 合约
     FileProtectOutlined,    // 系统合约
     ApartmentOutlined,      // 主节点
@@ -12,6 +13,7 @@ import { useAddressProp } from "../state/application/hooks";
 import { useDispatch } from "react-redux";
 import { Application_Update_AddressPropMap } from "../state/application/action";
 import { utils } from 'ethers';
+import QRCode from "qrcode.react";
 const { Text, Link, Paragraph } = Typography;
 
 export function ChecksumAddress(address: string): string {
@@ -34,6 +36,9 @@ export default ({ address, propVO, style, to }: {
         ellipsis?: boolean
     }
 }) => {
+    const [openQRCode, setOpenQRCode] = useState<boolean>(false);
+    const [openAddress, setOpenAddress] = useState<string>();
+
     const _propVO = useAddressProp(address);
     const dispatch = useDispatch();
     const { type, subType, tag, prop, remark } = useMemo(() => {
@@ -75,11 +80,11 @@ export default ({ address, propVO, style, to }: {
     const RenderIcon = () => {
         const isSuperNode = subType == "supernode";
         if (isSuperNode) {
-            return <Tooltip title="SuperNode"><ClusterOutlined style={{ marginRight: "3px" }} /></Tooltip>;
+            return <Tooltip title="Supernode"><ClusterOutlined style={{ marginRight: "3px" }} /></Tooltip>;
         }
         const isMasterNode = subType == "masternode";
         if (isMasterNode) {
-            return <Tooltip title="MasterNode"><ApartmentOutlined style={{ marginRight: "3px" }} /></Tooltip>;
+            return <Tooltip title="Masternode"><ApartmentOutlined style={{ marginRight: "3px" }} /></Tooltip>;
         }
         const isContract = type == "contract";
         const isSystemContract = isContract && subType == "system";
@@ -90,12 +95,13 @@ export default ({ address, propVO, style, to }: {
             return <Tooltip title="Contract"><FileTextOutlined style={{ marginRight: "3px" }} /></Tooltip>;
         }
         return <>
+
         </>
     }
 
     return <>
         <Text>
-            { (!style || style.forceTag) && RenderIcon()}
+            {(!style || style.forceTag) && RenderIcon()}
             <Tooltip style={{ float: "left" }} title={(style && style.noTip) ? "" : checksumAddress}>
                 {
                     (style && !style.hasLink) && <>
@@ -128,9 +134,36 @@ export default ({ address, propVO, style, to }: {
                     </>
                 }
             </Tooltip>
-            <Paragraph style={{ height: "0px", display: "inline-block" }} copyable={{ text: checksumAddress }}>
-            </Paragraph>
+            <Paragraph style={{ height: "0px", display: "inline-block" }} copyable={{ text: checksumAddress }} />
+            <Tooltip title="View QR Code">
+                <Link style={{ marginLeft: "5px" }} onClick={() => {
+                    setOpenAddress(address);
+                    setOpenQRCode(true);
+                }}>
+                    <QrcodeOutlined />
+                </Link>
+            </Tooltip>
         </Text>
+
+        {
+            openAddress && <Modal title="QR Code" open={openQRCode} width={"600px"} footer={null} closable onCancel={() => { setOpenQRCode(false) }}>
+                <Row>
+                    <Text style={{ margin: "auto", marginTop: "20px", marginBottom: "20px" }} type='secondary'>
+                        Assets can only be sent on the same network
+                    </Text>
+                </Row>
+                <Row style={{ textAlign: "center" }}>
+                    <QRCode size={200} style={{ margin: "auto", boxShadow: "5px 5px 10px 2px rgba(0, 0, 0, 0.2)" }} value={openAddress} />
+                </Row>
+                <Row style={{ width: "400px", textAlign: "center", margin: "auto", marginTop: "20px", marginBottom: "60px" }}>
+                    <Text style={{ margin: "auto" }} strong>
+                        {openAddress}
+                    </Text>
+                    <Paragraph style={{ float: "right", marginTop: "10px" }} copyable={{ text: openAddress }} />
+                </Row>
+            </Modal>
+        }
+
     </>
 
 }
