@@ -322,20 +322,16 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                     <Col xl={16} xs={24}>
                         {
                             erc20Transfers.map(erc20TransferVO => {
-                                const { transactionHash, from, to, token, tokenPropVO, value } = erc20TransferVO;
+                                const { transactionHash, from, to, token, tokenPropVO, value, fromPropVO, toPropVO } = erc20TransferVO;
                                 const erc20Prop = tokenPropVO && tokenPropVO.subType === "erc20" ? tokenPropVO?.prop : undefined;
                                 const erc20 = erc20Prop ? JSON.parse(erc20Prop) : undefined;
                                 return (<>
                                     <Row style={{ marginTop: "2px" }}>
-                                        <Text strong> <CaretRightOutlined /> From</Text>
-                                        <RouterLink to={`/address/${from}`} style={{ minWidth: "60px", maxWidth: "15%", marginLeft: "5px" }}>
-                                            <Link ellipsis>{from}</Link>
-                                        </RouterLink>
-                                        <Text strong> To</Text>
-                                        <RouterLink to={`/address/${to}`} style={{ minWidth: "60px", maxWidth: "15%", marginLeft: "5px" }}>
-                                            <Link ellipsis>{to}</Link>
-                                        </RouterLink>
-                                        <Text strong style={{ marginRight: "5px" }}> For</Text>
+                                        <Text strong style={{ marginRight: "5px" }}><CaretRightOutlined /> From</Text>
+                                        <Address address={from} propVO={fromPropVO} />
+                                        <Text strong style={{ marginLeft:"5px" , marginRight: "5px" }}> To</Text>
+                                        <Address address={to} propVO={toPropVO} />
+                                        <Text strong style={{ marginRight: "5px" , marginLeft:"5px" }}> For</Text>
                                         <ERC20TokenAmount address={token} name={erc20.name} symbol={erc20.symbol} decimals={erc20.decimals} raw={value}
                                             fixed={erc20.decimals} />
                                         <span style={{ marginRight: "5px" }}></span>

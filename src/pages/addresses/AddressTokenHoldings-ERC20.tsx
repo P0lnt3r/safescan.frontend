@@ -126,63 +126,62 @@ export default ({ address }: { address: string }) => {
             },
             width: 140,
         },
-        {
+        // {
+        //     title: <Text strong style={{ color: "#6c757e" }}>Before 24H</Text>,
+        //     dataIndex: 'changeBefore30D',
+        //     render: (changeBefore30D, vo) => {
+        //         if (!changeBefore30D) {
+        //             changeBefore30D = vo.balance;
+        //         }
+        //         let changeDown = false;
+        //         if (changeBefore30D.indexOf("-") >= 0) {
+        //             changeBefore30D = changeBefore30D.substring(changeBefore30D.indexOf("-") + 1);
+        //             changeDown = true;
+        //         }
+        //         const changeAmount = JSBI.BigInt(changeBefore30D);
+        //         const hasChange = !JSBI.EQ(changeAmount, 0);
+        //         const changeUp = hasChange && !changeDown;
+        //         const { tokenPropVO } = vo;
+        //         const erc20Prop = tokenPropVO && tokenPropVO.subType === "erc20" ? tokenPropVO?.prop : undefined;
+        //         const erc20 = erc20Prop ? JSON.parse(erc20Prop) : undefined;
+        //         return <>
+        //             <Row>
+        //                 {
+        //                     hasChange && <>
+        //                         <Col span={24}>
+        //                             <Text strong style={{ color: changeUp ? "green" : "red" }}>
+        //                                 {changeUp && "+"}
+        //                                 {changeDown && "-"}
+        //                                 <ERC20TokenAmount address={vo.token} name={erc20.name} symbol={erc20.symbol}
+        //                                     decimals={erc20.decimals} raw={changeBefore30D} fixed={erc20.decimals} />
+        //                                 <span style={{ marginLeft: "5px" }}>{erc20.symbol}</span>
+        //                             </Text>
+        //                         </Col>
+        //                         <Col span={24}>
+        //                             <Text strong style={{ fontSize: "12px", color: changeUp ? "green" : "red" }}>
+        //                                 {vo.changeBefore30DPercent && changeUp && "+"}
+        //                                 <span>{vo.changeBefore30DPercent}</span>
+        //                             </Text>
+        //                         </Col>
+        //                     </>
+        //                 }
+        //                 {
+        //                     !hasChange && <>
+        //                         <Col span={24}>
+        //                             <Text strong type='secondary'>
+        //                                 <ERC20TokenAmount address={vo.token} name={erc20.name} symbol={erc20.symbol}
+        //                                     decimals={erc20.decimals} raw={changeBefore30D} fixed={erc20.decimals} />
+        //                                 <span style={{ marginLeft: "5px" }}>{erc20.symbol}</span>
+        //                             </Text>
+        //                         </Col>
+        //                     </>
+        //                 }
+        //             </Row>
 
-            title: <Text strong style={{ color: "#6c757e" }}>Before 24H</Text>,
-            dataIndex: 'changeBefore30D',
-            render: (changeBefore30D, vo) => {
-                if (!changeBefore30D) {
-                    changeBefore30D = vo.balance;
-                }
-                let changeDown = false;
-                if (changeBefore30D.indexOf("-") >= 0) {
-                    changeBefore30D = changeBefore30D.substring(changeBefore30D.indexOf("-") + 1);
-                    changeDown = true;
-                }
-                const changeAmount = JSBI.BigInt(changeBefore30D);
-                const hasChange = !JSBI.EQ(changeAmount, 0);
-                const changeUp = hasChange && !changeDown;
-                const { tokenPropVO } = vo;
-                const erc20Prop = tokenPropVO && tokenPropVO.subType === "erc20" ? tokenPropVO?.prop : undefined;
-                const erc20 = erc20Prop ? JSON.parse(erc20Prop) : undefined;
-                return <>
-                    <Row>
-                        {
-                            hasChange && <>
-                                <Col span={24}>
-                                    <Text strong style={{ color: changeUp ? "green" : "red" }}>
-                                        {changeUp && "+"}
-                                        {changeDown && "-"}
-                                        <ERC20TokenAmount address={vo.token} name={erc20.name} symbol={erc20.symbol}
-                                            decimals={erc20.decimals} raw={changeBefore30D} fixed={erc20.decimals} />
-                                        <span style={{ marginLeft: "5px" }}>{erc20.symbol}</span>
-                                    </Text>
-                                </Col>
-                                <Col span={24}>
-                                    <Text strong style={{ fontSize: "12px", color: changeUp ? "green" : "red" }}>
-                                        {vo.changeBefore30DPercent && changeUp && "+"}
-                                        <span>{vo.changeBefore30DPercent}</span>
-                                    </Text>
-                                </Col>
-                            </>
-                        }
-                        {
-                            !hasChange && <>
-                                <Col span={24}>
-                                    <Text strong type='secondary'>
-                                        <ERC20TokenAmount address={vo.token} name={erc20.name} symbol={erc20.symbol}
-                                            decimals={erc20.decimals} raw={changeBefore30D} fixed={erc20.decimals} />
-                                        <span style={{ marginLeft: "5px" }}>{erc20.symbol}</span>
-                                    </Text>
-                                </Col>
-                            </>
-                        }
-                    </Row>
-
-                </>
-            },
-            width: 140,
-        },
+        //         </>
+        //     },
+        //     width: 140,
+        // },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Percentage</Text>,
             dataIndex: 'percentage',

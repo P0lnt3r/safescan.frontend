@@ -1,13 +1,14 @@
 
 const LocalHostPort = "127.0.0.1:5005";
 const InnetHostPort = "10.0.0.172:5005";
+const DEV = "47.107.47.210:5005";
 
 const config = {
     "dev": {
         native_label: "SAFE",
         block_confirmed: 6,
-        api_host: `http://${InnetHostPort}`,
-        ws_host: `ws://${InnetHostPort}/socket.io`
+        api_host: `http://${DEV}`,
+        ws_host: `ws://${DEV}/socket.io`
     },
     "test": {
         native_label: "SAFE",
@@ -24,4 +25,4 @@ const config = {
 }
 
 // export default config['test'];
-export default config['test'];
+export default config['dev'];

@@ -131,7 +131,9 @@ export default function () {
                                         <Col xl={8} xs={20} style={{ paddingLeft: '2%' }}>
                                             <Row>
                                                 <Col xl={24} xs={10}>
-                                                    <TransactionHash txhash={transaction.hash} blockNumber={transaction.blockNumber}></TransactionHash>
+                                                    <div style={{width:"90%"}}>
+                                                        <TransactionHash txhash={transaction.hash} blockNumber={transaction.blockNumber}></TransactionHash>
+                                                    </div>
                                                 </Col>
                                                 <Col xl={24} xs={14} style={isMobile ? { textAlign: "right" } : {}}>
                                                     <Text type="secondary">

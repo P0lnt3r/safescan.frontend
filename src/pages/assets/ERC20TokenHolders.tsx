@@ -1,4 +1,4 @@
-import { Card, Table, Typography, Row, Col, Tooltip, PaginationProps , Progress  } from 'antd';
+import { Card, Table, Typography, Row, Col, Tooltip, PaginationProps, Progress } from 'antd';
 import { useEffect, useState } from 'react';
 import { fetchAddressBalanceRank } from '../../services/address';
 import { AddressBalanceRankVO } from '../../services';
@@ -69,11 +69,11 @@ export default ({ token }: { token: string }) => {
             title: <Text strong style={{ color: "#6c757e" }}>Address</Text>,
             dataIndex: 'address',
             render: (address, addressBalanceRankVO: AddressBalanceRankVO) => <>
-                <Address address={address} propVO={addressBalanceRankVO.addressPropVO} style={{ellipsis:false,hasLink:true}}></Address>
+                <Address address={address} propVO={addressBalanceRankVO.addressPropVO} style={{ ellipsis: false, hasLink: true }}></Address>
             </>,
             width: 180,
         },
-        
+
         {
             title: <Text strong style={{ color: "#6c757e" }}>Balance</Text>,
             dataIndex: 'balance',
@@ -95,72 +95,71 @@ export default ({ token }: { token: string }) => {
             },
             width: 120,
         },
-        {
+        // {
+        //     title: <Text strong style={{ color: "#6c757e" }}>Before 24H</Text>,
+        //     dataIndex: 'changeBefore30D',
+        //     render: (changeBefore30D, vo) => {
+        //         if ( !changeBefore30D ){
+        //             changeBefore30D = vo.balance;
+        //         }
+        //         let changeDown = false;
+        //         if (changeBefore30D.indexOf("-") >= 0) {
+        //             changeBefore30D = changeBefore30D.substring(changeBefore30D.indexOf("-") + 1);
+        //             changeDown = true;
+        //         }
+        //         const changeAmount = JSBI.BigInt(changeBefore30D);
+        //         const hasChange = !JSBI.EQ(changeAmount, 0);
+        //         const changeUp = hasChange && !changeDown;
+        //         const { tokenPropVO } = vo;
+        //         const erc20Prop = tokenPropVO && tokenPropVO.subType === "erc20" ? tokenPropVO?.prop : undefined;
+        //         const erc20 = erc20Prop ? JSON.parse(erc20Prop) : undefined;
+        //         return <>
+        //             <Row>
+        //                 {
+        //                     hasChange && <>
+        //                         <Col span={24}>
+        //                             <Text strong style={{ color: changeUp ? "green" : "red" }}>
+        //                                 {changeUp   && "+"}
+        //                                 {changeDown && "-"}
+        //                                 <ERC20TokenAmount address={vo.address} name={erc20.name} symbol={erc20.symbol}
+        //                                     decimals={erc20.decimals} raw={changeBefore30D} fixed={erc20.decimals} />
+        //                                 <span style={{ marginLeft: "5px" }}>{erc20.symbol}</span>
+        //                             </Text>
+        //                         </Col>
+        //                         <Col span={24}>
+        //                             <Text strong style={{ fontSize: "12px", color: changeUp ? "green" : "red" }}>
+        //                                 { vo.changeBefore30DPercent && changeUp && "+"}
+        //                                 <span>{vo.changeBefore30DPercent}</span>
+        //                             </Text>
+        //                         </Col>
+        //                     </>
+        //                 }
+        //                 {
+        //                     !hasChange && <>
+        //                         <Col span={24}>
+        //                             <Text strong type='secondary'>
+        //                                 <ERC20TokenAmount address={vo.address} name={erc20.name} symbol={erc20.symbol}
+        //                                     decimals={erc20.decimals} raw={changeBefore30D} fixed={erc20.decimals} />
+        //                                 <span style={{ marginLeft: "5px" }}>{erc20.symbol}</span>
+        //                             </Text>
+        //                         </Col>
+        //                     </>
+        //                 }
+        //             </Row>
 
-            title: <Text strong style={{ color: "#6c757e" }}>Before 24H</Text>,
-            dataIndex: 'changeBefore30D',
-            render: (changeBefore30D, vo) => {
-                if ( !changeBefore30D ){
-                    changeBefore30D = vo.balance;
-                }
-                let changeDown = false;
-                if (changeBefore30D.indexOf("-") >= 0) {
-                    changeBefore30D = changeBefore30D.substring(changeBefore30D.indexOf("-") + 1);
-                    changeDown = true;
-                }
-                const changeAmount = JSBI.BigInt(changeBefore30D);
-                const hasChange = !JSBI.EQ(changeAmount, 0);
-                const changeUp = hasChange && !changeDown;
-                const { tokenPropVO } = vo;
-                const erc20Prop = tokenPropVO && tokenPropVO.subType === "erc20" ? tokenPropVO?.prop : undefined;
-                const erc20 = erc20Prop ? JSON.parse(erc20Prop) : undefined;
-                return <>
-                    <Row>
-                        {
-                            hasChange && <>
-                                <Col span={24}>
-                                    <Text strong style={{ color: changeUp ? "green" : "red" }}>
-                                        {changeUp   && "+"}
-                                        {changeDown && "-"}
-                                        <ERC20TokenAmount address={vo.address} name={erc20.name} symbol={erc20.symbol}
-                                            decimals={erc20.decimals} raw={changeBefore30D} fixed={erc20.decimals} />
-                                        <span style={{ marginLeft: "5px" }}>{erc20.symbol}</span>
-                                    </Text>
-                                </Col>
-                                <Col span={24}>
-                                    <Text strong style={{ fontSize: "12px", color: changeUp ? "green" : "red" }}>
-                                        { vo.changeBefore30DPercent && changeUp && "+"}
-                                        <span>{vo.changeBefore30DPercent}</span>
-                                    </Text>
-                                </Col>
-                            </>
-                        }
-                        {
-                            !hasChange && <>
-                                <Col span={24}>
-                                    <Text strong type='secondary'>
-                                        <ERC20TokenAmount address={vo.address} name={erc20.name} symbol={erc20.symbol}
-                                            decimals={erc20.decimals} raw={changeBefore30D} fixed={erc20.decimals} />
-                                        <span style={{ marginLeft: "5px" }}>{erc20.symbol}</span>
-                                    </Text>
-                                </Col>
-                            </>
-                        }
-                    </Row>
-
-                </>
-            },
-            width: 120,
-        },
+        //         </>
+        //     },
+        //     width: 120,
+        // },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Percentage</Text>,
             dataIndex: 'percentage',
             render: (percentage, addressBalanceRankVO: AddressBalanceRankVO) => {
-                let _percentage = percentage.substring(0 , percentage.indexOf("%") - 1);
+                let _percentage = percentage.substring(0, percentage.indexOf("%") - 1);
                 return <>
                     <Text>{percentage}</Text>
                     <br />
-                    <Progress percent={_percentage} showInfo={false} size="small"/>
+                    <Progress percent={_percentage} showInfo={false} size="small" />
                 </>
             },
             width: 80,

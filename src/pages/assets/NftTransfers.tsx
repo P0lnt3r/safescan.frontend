@@ -99,7 +99,7 @@ export default () => {
             title: <Text strong style={{ color: "#6c757e" }}>Txn Hash</Text>,
             dataIndex: 'transactionHash',
             render: (val, txVO) => <><TransactionHash blockNumber={txVO.blockNumber} txhash={val} status={1}></TransactionHash></>,
-            width: 150,
+            width: 120,
             fixed: 'left',
         },
         {
@@ -139,7 +139,7 @@ export default () => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Type</Text>,
             dataIndex: 'tokenType',
-            width: 120,
+            width: 100,
             render: (tokenType, vo) => {
                 let showText = tokenType;
                 if (tokenType == "erc721") {

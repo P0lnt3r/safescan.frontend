@@ -6,13 +6,9 @@ import type { ColumnsType } from 'antd/es/table';
 import { useTranslation } from 'react-i18next';
 import TransactionHash from '../../components/TransactionHash';
 import { DateFormat } from '../../utils/DateUtil';
-import { Link as RouterLink } from 'react-router-dom';
-import ERC20TokenAmount from "../../components/ERC20TokenAmount";
-import ERC20Logo from "../../components/ERC20Logo";
 import { format } from "../../utils/NumberFormat";
 import TxMethodId from "../../components/TxMethodId";
 import Address from "../../components/Address";
-import NFTLogo from "../../components/NFTLogo";
 
 const { Text, Link } = Typography;
 const DEFAULT_PAGESIZE = 20;
@@ -95,7 +91,7 @@ export default ({ token, tokenId, tokenType }: {
             title: <Text strong style={{ color: "#6c757e" }}>Txn Hash</Text>,
             dataIndex: 'transactionHash',
             render: (val, txVO) => <><TransactionHash blockNumber={txVO.blockNumber} txhash={val} status={1}></TransactionHash></>,
-            width: 180,
+            width: 150,
             fixed: 'left',
         },
         {

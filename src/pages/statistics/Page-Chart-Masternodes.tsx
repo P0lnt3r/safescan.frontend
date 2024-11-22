@@ -5,14 +5,10 @@ import {
     HighlightOutlined
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
-import { TEN } from '@uniswap/sdk/dist/constants';
 import { useEffect, useState } from 'react';
 import { fetchAll } from '../../services/chart';
-import ChartTxns, { TxnsChartType } from './Chart-Txns';
-import ChartDailyGasUseds, { GasUsedsChartType } from './Chart-DailyGasUseds';
 import { JSBI } from '@uniswap/sdk';
 import { ETHER, GWEI } from '../../components/EtherAmount';
-import ChartAverageBlockTimes, { AverageBlockTimesChartType } from './Chart-AverageBlockTimes';
 import ChartMasternodes, { MasternodesChartType } from './Chart-Masternodes';
 const { Title, Text, Paragraph, Link } = Typography;
 
@@ -42,6 +38,7 @@ export default () => {
                     rewards: Number.parseFloat(ETHER(masternodesRewards, 4))
                 })
             });
+            console.log("Masternodes-data:",_masternodesChartData)
             setMasternodesChartData(_masternodesChartData);
         });
     }
@@ -62,7 +59,7 @@ export default () => {
         <Row>
             <Col span={16}>
                 <Card loading={loading} title="Daily Masternodes & Rewards">
-                    <ChartMasternodes loading masternodesChartData={masternodesChartData} config={{
+                    <ChartMasternodes loading={loading} masternodesChartData={masternodesChartData} config={{
                         xAxis: {
                             range: [0, 1],
                         },
