@@ -1,9 +1,14 @@
-import { GET, MasterNodeVO, NodeRegisterActionVO, NodeRewardVO, POST, PageQueryDTO, PageResponseVO, StateVO, SuperNodeVO, TimestampStatisticVO } from "./index.d";
+import { CirculationVO, GET, MasterNodeVO, NodeRegisterActionVO, NodeRewardVO, POST, PageQueryDTO, PageResponseVO, StateVO, SuperNodeVO, TimestampStatisticVO } from "./index.d";
 import config from "../config";
 const API_HOST = config.api_host;
 
 export async function fetchAll() : Promise<TimestampStatisticVO[]> {
     const serverResponse = await GET( `${API_HOST}/charts/all` );
+    return serverResponse;
+}
+
+export async function fetchCirculation() : Promise<CirculationVO> {
+    const serverResponse = await GET( `${API_HOST}/charts/circulation` );
     return serverResponse;
 }
 

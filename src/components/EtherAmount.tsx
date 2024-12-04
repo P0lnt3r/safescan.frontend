@@ -22,13 +22,13 @@ export function ETHER_Combine( raws : string[] , fixed ?: number ){
     return format(fixedVal);
 }
 
-export default ( { raw , fix , ignoreLabel } : { raw : string | bigint , fix?:number , ignoreLabel ?: boolean } ) => {
+export default ( { raw , fix , ignoreLabel , forceFix } : { raw : string | bigint , fix?:number , ignoreLabel ?: boolean , forceFix ?: boolean } ) => {
 
     const currencyAmount = raw ? CurrencyAmount.ether(raw) : CurrencyAmount.ether(JSBI.BigInt(0));
     let amount = currencyAmount.toExact();
     if ( fix ){
         amount = currencyAmount.toFixed( fix ) ;
-        amount = format(amount);
+        amount = format(amount,fix , forceFix);
     }
     return <>
         <>{amount} { !ignoreLabel && NATIVE_LABEL }</> 

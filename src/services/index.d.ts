@@ -665,3 +665,13 @@ export interface SupernodeVoterNumVO {
     addressPropVO : AddressPropVO 
     voteNum : string ,
 }
+
+export interface CirculationVO {
+    maxTotalSupply : string,
+    unmined : string,
+    circulation : string,
+    unredeem : string,
+    redeemed : string,
+    locked : string,
+    freeze : string
+}
