@@ -1,7 +1,7 @@
 
 const LocalHostPort = "127.0.0.1:5005";
 const InnetHostPort = "10.0.0.172:5005";
-const DEV = "47.107.47.210:5005";
+const DEV = "47.119.151.64:5005";
 
 const config = {
     "dev": {

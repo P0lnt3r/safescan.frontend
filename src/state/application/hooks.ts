@@ -96,6 +96,7 @@ export function useAddressFunctionFragment(
         }
         if (!addressAbiJson) {
             fetchAddressAbi({ address }).then((data) => {
+                console.log("fetch Address Abi >>" , data)
                 if ( data.length != 0 ){
                     dispatch(Application_Save_ABI(data));
                 }

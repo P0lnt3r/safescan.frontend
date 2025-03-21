@@ -20,5 +20,3 @@ export interface Abi_Method_Param {
     name : string , 
     type : string 
 }
-
-console.log('Hello');
