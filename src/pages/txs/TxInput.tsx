@@ -1,14 +1,21 @@
 
 import { Button, Col, Input, Row, Typography, Dropdown, Space, Menu } from 'antd';
 import { defaultAbiCoder, Fragment, ParamType, Interface, FunctionFragment } from 'ethers/lib/utils';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import AddressTag from '../../components/AddressTag';
 import { DownOutlined, SmileOutlined } from '@ant-design/icons';
 import Address from '../../components/Address';
+import { ethers } from 'ethers';
 
 
 const { TextArea } = Input;
 const { Title, Text, Paragraph, Link } = Typography;
+
+const enum ShowMode {
+    Raw = "raw",
+    ABI = "abi",
+    UTF8 = "utf8"
+}
 
 export default ({ raw, methodId, fragment }: {
     raw: string
@@ -30,31 +37,37 @@ export default ({ raw, methodId, fragment }: {
         return undefined;
     }, [raw, fragment]);
 
-    const [showAbiDecode, setShowAbiDecode] = useState<boolean>(fragment ? true : false);
-    useEffect(() => {
-        fragment && setShowAbiDecode(true);
-    }, [fragment]);
-
+    const [showMode, setShowMode] = useState<ShowMode>(
+        fragment ? ShowMode.ABI : ShowMode.Raw
+    );
 
     const menu = (
         <Menu
             items={[
                 {
-                    key: '1',
+                    key: ShowMode.Raw,
                     label: (
-                        <Text onClick={() => setShowAbiDecode(false)}>
-                            Original
+                        <Text onClick={() => setShowMode(ShowMode.Raw)}>
+                            Original Data
                         </Text>
                     ),
                 },
                 {
-                    key: '2',
+                    key: ShowMode.ABI,
                     label: (
-                        <a onClick={() => setShowAbiDecode(true)}>
+                        <a onClick={() => setShowMode(ShowMode.ABI)}>
                             Abi Decode
                         </a>
                     ),
                     disabled: fragment ? false : true,
+                },
+                {
+                    key: ShowMode.UTF8,
+                    label: (
+                        <a onClick={() => setShowMode(ShowMode.UTF8)}>
+                            UTF-8 Decode
+                        </a>
+                    )
                 }
             ]}
         />
@@ -96,51 +109,51 @@ export default ({ raw, methodId, fragment }: {
 
     }
 
-    return (<>
-        {
-            showAbiDecode ? <>
-
-                <div style={{
-                    "backgroundColor": "#f8f9fa",
-                    "minHeight": "200px",
-                    "padding": "2%",
-                }}>
-                    <Row>
-                        <Col xl={4} xs={24}>
-                            <Text strong>Function</Text>
-                        </Col>
-                        <Col xl={20} xs={24}>
-                            <Text>{functionSignature}</Text>
-                        </Col>
-                    </Row>
-                    <Row style={{ "marginTop": "20px" }}>
-                        <Col xl={4} xs={24}>
-                            <Text strong>Method ID</Text>
-                        </Col>
-                        <Col xl={20} xs={24}>
-                            <Text>{methodId}</Text>
-                        </Col>
-                    </Row>
-                    <Row style={{ "marginTop": "20px" }}>
-                        <Col xl={4} xs={24}>
-                            <Text strong>Input</Text>
-                        </Col>
-                    </Row>
-                    {
-                        decodeResult && decodeResult.map(({ index, type, name, value }) => {
-                            return (<Row key={index}>
-                                <Col xl={4}>
-                                    <Text code>{index}</Text>
-                                    <Text strong style={{ "float": "right", "paddingRight": "5px" }}>{name}:</Text>
-                                </Col>
-                                <Col xl={20} xs={24}>
-                                    {
-                                        type != "array" ?
-                                            type == "address" ? <Address address={value.toString().toLowerCase()} ></Address>
-                                                : <Text>{value.toString()}</Text>
-                                            : <>
-                                                <Text>  {value.toString()}</Text>
-                                                {/* {
+    const RenderInput = useCallback(() => {
+        switch (showMode) {
+            case ShowMode.ABI:
+                return <>
+                    <div style={{
+                        "backgroundColor": "#f8f9fa",
+                        "minHeight": "200px",
+                        "padding": "2%",
+                    }}>
+                        <Row>
+                            <Col xl={4} xs={24}>
+                                <Text strong>Function</Text>
+                            </Col>
+                            <Col xl={20} xs={24}>
+                                <Text>{functionSignature}</Text>
+                            </Col>
+                        </Row>
+                        <Row style={{ "marginTop": "20px" }}>
+                            <Col xl={4} xs={24}>
+                                <Text strong>Method ID</Text>
+                            </Col>
+                            <Col xl={20} xs={24}>
+                                <Text>{methodId}</Text>
+                            </Col>
+                        </Row>
+                        <Row style={{ "marginTop": "20px" }}>
+                            <Col xl={4} xs={24}>
+                                <Text strong>Input</Text>
+                            </Col>
+                        </Row>
+                        {
+                            decodeResult && decodeResult.map(({ index, type, name, value }) => {
+                                return (<Row key={index}>
+                                    <Col xl={4}>
+                                        <Text code>{index}</Text>
+                                        <Text strong style={{ "float": "right", "paddingRight": "5px" }}>{name}:</Text>
+                                    </Col>
+                                    <Col xl={20} xs={24}>
+                                        {
+                                            type != "array" ?
+                                                type == "address" ? <Address address={value.toString().toLowerCase()} ></Address>
+                                                    : <Text>{value.toString()}</Text>
+                                                : <>
+                                                    <Text>  {value.toString()}</Text>
+                                                    {/* {
                                                     value.map((ele: any, index: number) => {
                                                         return <Row key={index}>
                                                             {
@@ -149,19 +162,32 @@ export default ({ raw, methodId, fragment }: {
                                                         </Row>
                                                     })
                                                 } */}
-                                            </>
-                                    }
-                                </Col>
-                            </Row>)
-                        })
-                    }
-                </div>
-
-            </>
-                : <TextArea style={{ cursor: "default", color: "black" }} rows={4} disabled
-                    value={raw} />
+                                                </>
+                                        }
+                                    </Col>
+                                </Row>)
+                            })
+                        }
+                    </div>
+                </>
+            case ShowMode.UTF8:
+                const decodeData = ethers.utils.toUtf8String(raw);
+                return <>
+                    <TextArea style={{ cursor: "default", color: "black" }} rows={4} disabled
+                        value={decodeData} />
+                </>
+            default:
+                return <>
+                    <TextArea style={{ cursor: "default", color: "black" }} rows={4} disabled
+                        value={raw} />
+                </>
         }
+    }, [showMode])
 
+    return (<>
+        {
+            RenderInput()
+        }
         <Dropdown overlay={menu}>
             <Button style={{ marginTop: "10px" }}>
                 <Space>
@@ -170,7 +196,5 @@ export default ({ raw, methodId, fragment }: {
                 </Space>
             </Button>
         </Dropdown>
-
-
     </>)
 }

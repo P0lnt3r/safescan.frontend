@@ -21,15 +21,16 @@ export const GET = async function (url: string, params?: any): Promise<any> {
             'Content-Type': "application/json"
         }
     })
-    const json = await response.json();
+    const data = await response.text();
+    const json = data ? JSON.parse(data) : undefined;
     return json as any;
-}
+  }
 
 function obj2URIParams(data: any) {
     var _result = [];
     for (var key in data) {
         var value = data[key];
-        if (value.constructor === Array) {
+        if (value && value.constructor === Array) {
             value.forEach(function (_value) {
                 _result.push(key + "=" + _value);
             });
@@ -38,7 +39,7 @@ function obj2URIParams(data: any) {
         }
     }
     return _result.join('&');
-}
+  }
 
 
 export interface ApiResponse<VO> {
@@ -674,4 +675,25 @@ export interface CirculationVO {
     redeemed : string,
     locked : string,
     freeze : string
+}
+
+export interface CrossChainVO {
+    asset : string,
+
+    srcAddress : string,
+    srcNetwork : string,
+    srcAmount : string,
+    srcTxHash : string,
+    srcTxBlockNumber : number,
+    srcTxTimestamp : number,
+  
+    dstAddress : string,
+    dstNetwork : string,
+    dstAmount : string,
+    dstTxHash : string,
+    dstTxBlockNumber : number,
+    dstTxTimestamp : number,
+  
+    fee : string,
+    status : number
 }

@@ -43,6 +43,10 @@ import TxSafeAccountManagerActions from './TxSafeAccountManagerActions';
 import TxInternalTxns from './TxInternalTxns';
 import NftTokenTransfers from '../assets/NftTokenTransfers';
 import TxNftTransfers from './TxNftTransfers';
+import { Application_Crosschain_Pool_BSC, Safe4NetworkChainId } from '../../config';
+import CrosschainPoolTx from './CrosschainPoolTx';
+import { isCrosschainPoolTransaction } from '../../images/networks_logos/NetworkLogo';
+import { ethers } from 'ethers';
 
 const { Text, Paragraph, Link } = Typography;
 
@@ -90,8 +94,8 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
             txFee, gasPriceGWEI, gasUsedRate
         }
     }, [gasPrice, gasUsed, gas]);
-
     const functionFragment = useAddressFunctionFragment(to, methodId, useDispatch(), toPropVO?.subType);
+    const isCrosschainPoolTx = isCrosschainPoolTransaction( ethers.utils.getAddress(to) , ethers.utils.getAddress(from) );
 
     return <>
         <Row>
@@ -308,6 +312,10 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
         </Row>
 
         {
+            isCrosschainPoolTx && <CrosschainPoolTx txVO={txVO} />
+        }
+
+        {
             // ERC20 Transfer 列表
             erc20Transfers && erc20Transfers.length > 0 &&
             <>
@@ -329,9 +337,9 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                                     <Row style={{ marginTop: "2px" }}>
                                         <Text strong style={{ marginRight: "5px" }}><CaretRightOutlined /> From</Text>
                                         <Address address={from} propVO={fromPropVO} />
-                                        <Text strong style={{ marginLeft:"5px" , marginRight: "5px" }}> To</Text>
+                                        <Text strong style={{ marginLeft: "5px", marginRight: "5px" }}> To</Text>
                                         <Address address={to} propVO={toPropVO} />
-                                        <Text strong style={{ marginRight: "5px" , marginLeft:"5px" }}> For</Text>
+                                        <Text strong style={{ marginRight: "5px", marginLeft: "5px" }}> For</Text>
                                         <ERC20TokenAmount address={token} name={erc20.name} symbol={erc20.symbol} decimals={erc20.decimals} raw={value}
                                             fixed={erc20.decimals} />
                                         <span style={{ marginRight: "5px" }}></span>
@@ -351,9 +359,6 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
         {
             nftTransfers && nftTransfers.length > 0 && <TxNftTransfers nftTransfers={nftTransfers} />
         }
-
-
-
         {
             // 节点奖励
             nodeRewards && nodeRewards.length > 0 &&
@@ -361,7 +366,6 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                 <TxNodeRewards nodeRewards={nodeRewards} />
             </>
         }
-
         {
             // 节点注册|追加注册
             nodeRegisterActions && nodeRegisterActions.length > 0 && <>
@@ -471,7 +475,6 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                 }
             </Col>
         </Row>
-
         <Row style={{ margin: '18px 0px' }}>
             <Col xl={8} xs={24} style={{ marginTop: '14px' }}>
                 <Tooltip title="Additional data included for this transaction. Commonly used as part of contract interaction or as a message sent to the recipient." color='black'>
@@ -483,7 +486,6 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                 <TxInput raw={input} fragment={functionFragment} methodId={methodId} ></TxInput>
             </Col>
         </Row>
-
     </>
 
 }
