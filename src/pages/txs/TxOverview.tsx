@@ -428,7 +428,7 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
         <Divider style={{ margin: '18px 0px' }} />
         <Row>
             <Col xl={8} xs={24}>
-                <Tooltip title="Cost per unit of gas specified for the transaction, in BNB and Gwei. The higher the gas price the higher chance of getting included in a block." color='black'>
+                <Tooltip title="Cost per unit of gas specified for the transaction, in SAFE and Gwei. The higher the gas price the higher chance of getting included in a block." color='black'>
                     <QuestionCircleOutlined />
                 </Tooltip>
                 <Text strong style={{ marginLeft: "5px" }}>Gas Price</Text>
@@ -442,7 +442,7 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
 
         <Row style={{ margin: '18px 0px' }}>
             <Col xl={8} xs={24}>
-                <Tooltip title="Maximum amount of gas allocated for the transaction & the amount eventually used. Normal BNB transfers involve 21,000 gas units while contracts involve higher values." color='black'>
+                <Tooltip title="Maximum amount of gas allocated for the transaction & the amount eventually used. Normal SAFE transfers involve 21,000 gas units while contracts involve higher values." color='black'>
                     <QuestionCircleOutlined />
                 </Tooltip>
                 <Text strong style={{ marginLeft: "5px" }}>Gas Limit <Divider type="vertical" /> Usage by Txn</Text>
