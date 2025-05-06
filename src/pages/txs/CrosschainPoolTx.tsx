@@ -26,7 +26,15 @@ export default ({ txVO }: {
     } = txVO;
 
     const blockNumber = useBlockNumber();
-    const utf8decode = ethers.utils.toUtf8String(input);
+
+    const utf8decode = useMemo(() => {
+        try {
+            return ethers.utils.toUtf8String(input);
+        } catch (err) {
+            return "";
+        }
+    }, [input])
+
     const [left, right] = utf8decode.split(":");
     const crosschainDirection = getCrosschainDirection(left);
     const [crossChainVO, setCrossChainVO] = useState<CrossChainVO>();

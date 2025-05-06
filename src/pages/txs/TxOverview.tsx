@@ -95,7 +95,7 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
         }
     }, [gasPrice, gasUsed, gas]);
     const functionFragment = useAddressFunctionFragment(to, methodId, useDispatch(), toPropVO?.subType);
-    const isCrosschainPoolTx = isCrosschainPoolTransaction( ethers.utils.getAddress(to) , ethers.utils.getAddress(from) );
+    const isCrosschainPoolTx = isCrosschainPoolTransaction( ethers.utils.getAddress(to) , ethers.utils.getAddress(from) , input );
 
     return <>
         <Row>

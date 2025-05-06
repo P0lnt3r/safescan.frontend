@@ -1,3 +1,4 @@
+import { ethers } from "ethers";
 import { Application_Crosschain_Pool_BSC, Application_Crosschain_Pool_ETH, Application_Crosschain_Pool_MATIC } from "../../config";
 
 
@@ -185,7 +186,14 @@ export function getCrosschainPoolInfo(address: string | undefined, from?: string
   };
 }
 
-export function isCrosschainPoolTransaction(address: string | undefined, from?: string) {
+export function isCrosschainPoolTransaction(address: string | undefined, from?: string, input?: string) {
+  try {
+    if (input) {
+      ethers.utils.toUtf8String(input);
+    }
+  } catch (err) {
+    return false;
+  }
   const {
     isCrosschainPoolBSC, isCrosschainPoolETH, isCrosschainPoolMATIC
   } = getCrosschainPoolInfo(address, from);
