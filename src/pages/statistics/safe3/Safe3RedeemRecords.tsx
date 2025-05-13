@@ -105,7 +105,7 @@ export default () => {
             title: <Text strong style={{ color: "#6c757e" }}>Txn Hash</Text>,
             dataIndex: 'transactionHash',
             key: 'transactionHash',
-            render: (transactionHash, vo) => <><TransactionHash blockNumber={vo.blockNumber} txhash={transactionHash} status={vo.confirmed}></TransactionHash></>,
+            render: (transactionHash, vo) => <><TransactionHash blockNumber={vo.blockNumber} txhash={transactionHash}></TransactionHash></>,
             width: 100,
             fixed: 'left',
         },
