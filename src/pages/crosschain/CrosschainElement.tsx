@@ -33,15 +33,15 @@ export default ({
         const crosschainDirection = srcNetwork == 'safe4' ? CrosschainDirection.SAFE4_NETWORKS : CrosschainDirection.NETWORKS_SAFE4;
         if (crosschainDirection == CrosschainDirection.SAFE4_NETWORKS) {
             return <>
-                <Avatar src={SAFE_LOGO} style={{ padding: "4px", width: "48px", height: "48px" }} />
+                <Avatar src={SAFE_LOGO} style={{ padding: "2px", width: "36px", height: "36px" }} />
                 <ArrowRightOutlined />
-                <Avatar src={getNetworkLogoByCoin(dstNetwork as NetworkCoinType)} style={{ padding: "4px", width: "48px", height: "48px" }} />
+                <Avatar src={getNetworkLogoByCoin(dstNetwork as NetworkCoinType)} style={{ padding: "2px", width: "36px", height: "36px" }} />
             </>
         } else if (crosschainDirection == CrosschainDirection.NETWORKS_SAFE4) {
             return <>
-                <Avatar src={getNetworkLogoByCoin(srcNetwork as NetworkCoinType)} style={{ padding: "4px", width: "48px", height: "48px" }} />
+                <Avatar src={getNetworkLogoByCoin(srcNetwork as NetworkCoinType)} style={{ padding: "2px", width: "36px", height: "36px" }} />
                 <ArrowRightOutlined />
-                <Avatar src={SAFE_LOGO} style={{ padding: "4px", width: "48px", height: "48px" }} />
+                <Avatar src={SAFE_LOGO} style={{ padding: "2px", width: "36px", height: "36px" }} />
             </>
         }
     }
@@ -64,9 +64,9 @@ export default ({
                     {RenderIcon()}
                 </Col>
                 <Col span={16} style={{ textAlign: "right" }}>
-                    <Text>{srcTxBlockNumber} <Divider type="vertical" /> {srcTxTimestamp && DateFormat(srcTxTimestamp * 1000)}</Text>
+                    <Text>{srcTxTimestamp && DateFormat(srcTxTimestamp * 1000)}</Text>
                     <br />
-                    <Text>{dstTxBlockNumber} <Divider type="vertical" /> {dstTxTimestamp && DateFormat(dstTxTimestamp * 1000)}</Text>
+                    <Text>{dstTxTimestamp && DateFormat(dstTxTimestamp * 1000)}</Text>
                 </Col>
             </Row>
             <Row style={{ marginTop: "5px" }}>
