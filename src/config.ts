@@ -30,8 +30,9 @@ const config = {
     "dev": {
         native_label: "SAFE",
         block_confirmed: 6,
-        api_host: `http://${DEV}`,
-        ws_host: `ws://${DEV}/socket.io`
+        api_host: `http://${LocalHostPort}`,
+        crosschain: `https://safe4.anwang.com/crosschain`,
+        ws_host: `ws://${LocalHostPort}/socket.io`,
     },
     "test": {
         native_label: "SAFE",
@@ -49,5 +50,4 @@ const config = {
     },
 }
 
-// export default config['test'];
 export default config['prod'];

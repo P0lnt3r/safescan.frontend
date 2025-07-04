@@ -272,7 +272,7 @@ export default function () {
                 <List
                   dataSource={tableData}
                   renderItem={(block) => {
-                    const { number, timestamp, miner, gasLimit, gasUsed, txns, reward, confirmed } = block;
+                    const { number, timestamp, miner, gasLimit, gasUsed, txns, reward, confirmed, difficulty } = block;
                     const rate = Math.round(Number(gasUsed) / Number(gasLimit) * 10000) / 100;
                     return <>
                       <List.Item key={number}>
@@ -281,6 +281,8 @@ export default function () {
                             <BlockNumber blockNumber={number} confirmed={confirmed} />
                           </Col>
                           <Col span={12} style={{ textAlign: "right" }}>
+                            <Text style={{ marginLeft: "5%" }}>Difficulty:{difficulty}</Text>
+                            <Divider type='vertical' />
                             <Text>{DateFormat(Number(timestamp) * 1000)}</Text>
                           </Col>
                           <Col span={24}>

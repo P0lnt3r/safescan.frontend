@@ -39,6 +39,7 @@ import VerifyContractSolc from './pages/verify/verifyContract-solc';
 import Contracts from './pages/contracts';
 import VerifyContractSolcJson from './pages/verify/verifyContract-solc-json';
 import Safe3Redeem from './pages/statistics/safe3/Safe3Redeem';
+import Crosschains from './pages/crosschain/Crosschains';
 
 const { Content } = Layout;
 
@@ -48,7 +49,7 @@ function App() {
       <Content style={{ padding: '0 0%' }}>
         <BrowserRouter>
           <Header />
-          <div className="site-layout-content" style={{maxWidth:"2000px" , margin:"auto"}}>
+          <div className="site-layout-content" style={{ maxWidth: "2000px", margin: "auto" }}>
             <Routes>
               <Route path="/" index element={<Index />} />
               <Route path="/blocks" index element={<Blocks />} />
@@ -65,7 +66,7 @@ function App() {
               <Route path="/assets/erc20tokens" index element={<ERC20Tokens />} />
               <Route path="/assets/nft-tokens" index element={<NftTokens />} />
               <Route path="/assets/erc20txns" index element={<ERC20Transfers />} />
-              <Route path="/assets/nft-transfers" index element={<NftTransfers />} /> 
+              <Route path="/assets/nft-transfers" index element={<NftTransfers />} />
               <Route path="/nodes/supernodes" index element={<SuperNodes />} />
               <Route path="/nodes/masternodes" index element={<MasterNodes />} />
               <Route path="/node/:address" index element={<Node_Detail />} />
@@ -86,6 +87,7 @@ function App() {
               <Route path="/verifyContract-solc" index element={<VerifyContractSolc />} />
               <Route path="/verifyContract-solc-json" index element={<VerifyContractSolcJson />} />
               <Route path="/safe3/redeem" index element={<Safe3Redeem />} />
+              <Route path="/crosschains" index element={<Crosschains />} />
             </Routes>
           </div>
         </BrowserRouter>

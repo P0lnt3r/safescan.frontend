@@ -60,6 +60,7 @@ export function getNetworkExplorerURLByCoin(networkType: NetworkCoinType) {
     case NetworkCoinType.SOL:
       return NetworkExplorerURL.SOL;
   }
+  return ""
 }
 
 export function outputNetworkCoin(networkType: NetworkType) {

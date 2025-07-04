@@ -107,6 +107,7 @@ export default function () {
 
   const doFetchTransactions = async (current?: number) => {
     setLoading(true);
+    console.log("Fetch page.size =" ,  pagination.pageSize)
     fetchTransactions({
       current: current ? current : pagination.current, pageSize: pagination.pageSize,
       blockNumber: blockNumber > 0 ? blockNumber : undefined
@@ -132,7 +133,11 @@ export default function () {
       setConfirmed(data.total);
       setUnconfirmed(unconfirmed.length);
       const onChange = (page: number, pageSize: number) => {
-        pagination.pageSize = unconfirmed.length > 0 ? pageSize - unconfirmed.length : pageSize;
+        if ( unconfirmed.length == data.records.length ){
+          pagination.pageSize = pageSize;
+        } else {
+          pagination.pageSize = unconfirmed.length > 0 ? pageSize - unconfirmed.length : pageSize;
+        }
         pagination.current = page;
         doFetchTransactions();
       }
@@ -140,7 +145,7 @@ export default function () {
         const total = data.total;
         const dbSize = data.pageSize;
         const dbPages = Math.floor(total / dbSize);
-        const uiTotal = (dbPages * unconfirmed.length) + total;
+        const uiTotal = unconfirmed.length != dbSize ? (dbPages * unconfirmed.length) + total : total;
         setPagination({
           ...pagination,
           current: data.current,
@@ -179,23 +184,20 @@ export default function () {
   //     doFetchTransactions();
   //   }
   // }, [latestBlockNumber, dbStoredBlockNumber, blockNumber]);
-
   useEffect(() => {
     doFetchTransactions();
   }, []);
-
   function OutputTotal() {
     return <>
       {
         confirmed != unconfirmed && <Text strong style={{ color: "#6c757e" }}>Total of {
           confirmed && <>{format(confirmed + "")}</>
         } Transactions
-          {unconfirmed > 0 && <Text> and {unconfirmed} unconfirmed</Text>}
+          {unconfirmed > 0 && unconfirmed != pagination.pageSize && pagination.current == 1 && <Text> and {unconfirmed} unconfirmed</Text>}
         </Text>
       }
     </>
   }
-
   function listHasMore(): boolean {
     if (pagination.current && pagination.total) {
       const totalPages = Math.floor(pagination.total / pagination.current)
