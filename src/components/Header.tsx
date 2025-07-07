@@ -55,6 +55,7 @@ const Header: React.FC = () => {
                 getItem('View Internal Transactions', '/txsInternal'),
                 getItem('View Blocks', '/blocks'),
                 getItem('View Contracts', '/contracts'),
+                getItem('View Cross-Chain', '/crosschains'),
             ]),
             getItem("Nodes", 'nodes', <ApartmentOutlined />, [
                 getItem('Masternodes', '/nodes/masternodes'),
