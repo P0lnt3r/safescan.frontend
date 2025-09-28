@@ -63,8 +63,8 @@ const Header: React.FC = () => {
             ]),
             getItem("Assets", 'assets', <WalletOutlined />, [
                 getItem('Account Records', '/assets/accountrecords'),
-                getItem('ERC20 Tokens', '/assets/erc20tokens'),
-                getItem('ERC20 Transfers', '/assets/erc20txns'),
+                getItem('SRC20 Tokens', '/assets/erc20tokens'),
+                getItem('SRC20 Transfers', '/assets/erc20txns'),
                 getItem('NFT Tokens', '/assets/nft-tokens'),
                 getItem('NFT Transfers', '/assets/nft-transfers'),
             ]),

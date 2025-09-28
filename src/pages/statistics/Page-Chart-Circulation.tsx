@@ -115,23 +115,23 @@ export default () => {
                 }
                 <Divider />
                 <Text type='secondary' style={{ fontSize: "20px" }}>Supply</Text>
-                <Row style={{marginTop:"5px"}}>
+                <Row style={{ marginTop: "5px" }}>
                     <Col span={24}>
                         <Text>Number of blocks and coins per day</Text>
                         <Text style={{ float: "right" }} strong>2880 <Divider type='vertical' />
-                            1,542.91 SAFE
+                            1,372.61 SAFE
                         </Text>
                     </Col>
                     <Col span={24} style={{ marginTop: "5px" }}>
                         <Text>Number of blocks and coins per month</Text>
                         <Text style={{ float: "right" }} strong>86400 <Divider type='vertical' />
-                            46,287.47 SAFE
+                            41,178.16 SAFE
                         </Text>
                     </Col>
                     <Col span={24} style={{ marginTop: "5px" }}>
                         <Text>Number of blocks and coins per year</Text>
                         <Text style={{ float: "right" }} strong>1036800 <Divider type='vertical' />
-                            555,449.67 SAFE
+                            501,002.65 SAFE
                         </Text>
                     </Col>
                 </Row>

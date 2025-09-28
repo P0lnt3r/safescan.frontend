@@ -114,7 +114,7 @@ export default () => {
     ];
 
     return (<>
-        <Title level={3}>ERC20 Tokens</Title>
+        <Title level={3}>SRC20 Tokens</Title>
         <Card>
             <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
                 pagination={pagination}

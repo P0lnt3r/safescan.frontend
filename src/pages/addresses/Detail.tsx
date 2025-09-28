@@ -69,7 +69,7 @@ export default function () {
         items.push(
             {
                 key: 'erc20-transactions',
-                label: `ERC20 Transactions`,
+                label: `SRC20 Transactions`,
                 children: address && <ERC20Transfers address={address}></ERC20Transfers>,
             },
         );
