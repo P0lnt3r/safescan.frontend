@@ -41,6 +41,12 @@ export default ({ raw, methodId, fragment }: {
         fragment ? ShowMode.ABI : ShowMode.Raw
     );
 
+    useEffect(() => {
+        if (fragment) {
+            setShowMode(ShowMode.ABI)
+        }
+    }, [fragment])
+
     const menu = (
         <Menu
             items={[
