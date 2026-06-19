@@ -24,10 +24,25 @@ export default () => {
         totalMasternodeCount , redeemMasternodeCount , leftMasternodeCount , leftMRate ,
     } = useMemo( () => {
         if ( safe3RedeemStatistic ){
+
+            console.log("safe3RedeemStatistic" , safe3RedeemStatistic)
+
             const { totalSafe3Amount , redeemSafe3Amount , totalMasternodeCount , redeemMasternodeCount } = safe3RedeemStatistic; 
             const leftSafe3Amount = CurrencyAmount.ether(totalSafe3Amount).subtract(CurrencyAmount.ether(redeemSafe3Amount));
             const leftRate = Number(leftSafe3Amount.divide(CurrencyAmount.ether(totalSafe3Amount)).toFixed(4)) * 100;
             const leftMRate = (Number( (totalMasternodeCount - redeemMasternodeCount) / totalMasternodeCount ) * 100).toFixed(2);
+
+            console.log({
+                totalSafe3Amount : CurrencyAmount.ether(totalSafe3Amount).toFixed(2),
+                redeemSafe3Amount : CurrencyAmount.ether(redeemSafe3Amount).toFixed(2),
+                leftSafe3Amount : leftSafe3Amount.toFixed(2),
+                leftRate,
+                totalMasternodeCount,
+                redeemMasternodeCount,
+                leftMasternodeCount : totalMasternodeCount - redeemMasternodeCount , 
+                leftMRate
+            })
+
             return {
                 totalSafe3Amount : CurrencyAmount.ether(totalSafe3Amount).toFixed(2),
                 redeemSafe3Amount : CurrencyAmount.ether(redeemSafe3Amount).toFixed(2),

@@ -45,7 +45,7 @@ export default ({ tokens, address, erc721TokenAssetCounts }: {
                     justifyContent: 'space-between',
                 }}
                 onClick={()=>{
-                    navigate(`/token/${address}?a=${filterAddress}`)
+                    // navigate(`/token/${address}?a=${filterAddress}`)
                 }}
             >
                 <Row>
@@ -113,6 +113,9 @@ export default ({ tokens, address, erc721TokenAssetCounts }: {
         if (tokens) {
             for (let i in tokens) {
                 const { token, balance, tokenPropVO } = tokens[i];
+                if ( !tokenPropVO ){
+                    continue
+                }
                 const { prop, subType, tag } = tokenPropVO;
                 if (prop) {
                     const { name, decimals, symbol } = JSON.parse(prop) as { name: string, decimals: number, symbol: string };

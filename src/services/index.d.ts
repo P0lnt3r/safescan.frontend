@@ -10,7 +10,13 @@ export const POST = async function (url: string, params?: any): Promise<ApiRespo
         body: JSON.stringify(params)
     })
     const json = await response.json();
-    return json as ApiResponse<any>;
+    if (json.data) {
+        return json as ApiResponse<any>;
+    }
+    return {
+        data: []
+    } as ApiResponse<any>;
+    // return json as ApiResponse<any>;
 }
 
 export const GET = async function (url: string, params?: any): Promise<any> {
@@ -23,8 +29,14 @@ export const GET = async function (url: string, params?: any): Promise<any> {
     })
     const data = await response.text();
     const json = data ? JSON.parse(data) : undefined;
+    if (json.data) {
+        return json as any;
+    }
+    // return {
+    //     data: []
+    // }
     return json as any;
-  }
+}
 
 function obj2URIParams(data: any) {
     var _result = [];
@@ -39,7 +51,7 @@ function obj2URIParams(data: any) {
         }
     }
     return _result.join('&');
-  }
+}
 
 
 export interface ApiResponse<VO> {
@@ -108,7 +120,7 @@ export interface TransactionVO {
     revertReason: string,
     hasInternalError: number,
     confirmed: number,
-    callType:number
+    callType: number
 }
 
 export interface EventLogVO {
@@ -143,7 +155,8 @@ export interface ERC20TransferVO {
     transactionHash: string
     value: string
     confirmed: number
-    blockNumber: number
+    blockNumber: number,
+    eventLogIndex: number
 }
 
 export interface ContractInternalTransactionVO {
@@ -407,7 +420,7 @@ export interface SafeAccountManagerActionVO {
     amount: string,
     lockDay: number,
     lockId: string,
-    confirmed : number
+    confirmed: number
 }
 
 export interface NodeRegisterActionVO {
@@ -418,13 +431,13 @@ export interface NodeRegisterActionVO {
     nodeType: string,
     registerType: string,
     address: string,
-    addressPropVO : AddressPropVO,
+    addressPropVO: AddressPropVO,
     operator: string,
-    operatorPropVO : AddressPropVO,
+    operatorPropVO: AddressPropVO,
     amount: string,
     lockDays: number,
     lockId: number,
-    confirmed : number
+    confirmed: number
 }
 
 
@@ -435,26 +448,26 @@ export interface TimestampStatisticVO {
     totalTxns: number,
     totalInternalTxns: number,
     totalERC20Transfers: number,
-    totalAddress : number,
+    totalAddress: number,
     totalContract: number,
     totalSuperNodes: number,
     totalMasterNodes: number,
     totalRewards: string,
-    totalSupernodeRewards : string,
-    totalMasternodeRewards : string,
+    totalSupernodeRewards: string,
+    totalMasternodeRewards: string,
     totalSupply: string,
     totalLockAmount: string,
     totalFreezeAmount: string,
-    totalGas : string,
-    totalGasBurnAmount : string,
-    avgBlockTime : string
+    totalGas: string,
+    totalGasBurnAmount: string,
+    avgBlockTime: string
 }
 
 export interface StateVO {
-    total : number , 
-    enabled : number ,
-    error : number,
-    init : number
+    total: number,
+    enabled: number,
+    error: number,
+    init: number
 }
 
 export interface TokenInfoVO {
@@ -548,13 +561,13 @@ export interface AnalyticBalance {
 export interface AnalyticTokenTransfer {
     tokenTransfers: number,
     tokenContractCount: number,
-    time : string
+    time: string
 }
 
 export interface AnalyticNodeReward {
-    rewardAmount : string,
-    rewardCount : number,
-    time : string
+    rewardAmount: string,
+    rewardCount: number,
+    time: string
 }
 
 export interface AddressAnaliyic {
@@ -562,13 +575,13 @@ export interface AddressAnaliyic {
     transactions: AnalyticTransaction[],
     txnFees: AnalyticTxnFee[],
     balances: AnalyticBalance[],
-    tokenTransfers : AnalyticTokenTransfer[],
-    nodeRewards : AnalyticNodeReward[]
+    tokenTransfers: AnalyticTokenTransfer[],
+    nodeRewards: AnalyticNodeReward[]
 }
 
 export interface AddressERC20TokenBalance {
-    balance : string , 
-    erc20TokenVO : ERC20TokenVO
+    balance: string,
+    erc20TokenVO: ERC20TokenVO
 }
 
 export interface SNVoteActionVO {
@@ -578,17 +591,17 @@ export interface SNVoteActionVO {
     eventLogIndex: number,
     lockId: number,
     targetAddress: string,
-    targetAddressPropVO : AddressPropVO,
+    targetAddressPropVO: AddressPropVO,
     timestamp: number,
     transactionHash: string
     voterAddress: string,
-    voterAddressPropVO : AddressPropVO,
-    confirmed : number
+    voterAddressPropVO: AddressPropVO,
+    confirmed: number
 }
 
 export interface Contract_Compile_VO {
     address: string,
-    addressPropVO : AddressPropVO,
+    addressPropVO: AddressPropVO,
     creator: string,
     creatorBlockNumber: number,
     creatorTransactionHash: string,
@@ -596,104 +609,104 @@ export interface Contract_Compile_VO {
     selfDestructTransactionHash: string,
     selfDestructBlockNumber: number,
     selfDestructTimestamp: number,
-    name : string,
-    verifyTimestamp : number,
-    optimizerEnabled : boolean,
-    optimizerRuns : number,
-    deployedArgsAbiEncode : string,
+    name: string,
+    verifyTimestamp: number,
+    optimizerEnabled: boolean,
+    optimizerRuns: number,
+    deployedArgsAbiEncode: string,
 }
 
 export interface Contract_Compile_Result_VO {
-    address : string ,
-    name : stirng ,
-    compileType : string,
-    creatorTransactionHash : string,
-    creationBytecode : string;
-    deployedBytecode : string ;
-    deployedBytecodeSourceMap : string;
-    deployedArgsAbiEncode : string;
-    compileBytecode : string;
-    sourceCodes : string;
-    compileType : string;
-    compileVersion : string;
-    abi : string;
-    evmVersion : string;
-    optimizerEnabled : boolean;
-    optimizerRuns : number;
-    license : string;
+    address: string,
+    name: stirng,
+    compileType: string,
+    creatorTransactionHash: string,
+    creationBytecode: string;
+    deployedBytecode: string;
+    deployedBytecodeSourceMap: string;
+    deployedArgsAbiEncode: string;
+    compileBytecode: string;
+    sourceCodes: string;
+    compileType: string;
+    compileVersion: string;
+    abi: string;
+    evmVersion: string;
+    optimizerEnabled: boolean;
+    optimizerRuns: number;
+    license: string;
 }
 
 
 export interface Safe3RedeemVO {
-    blockNumber : number,
-    timestamp : number,
-    transactionHash : string ,
-    eventLogIndex : number,
-    action : string,
-    safe3Address:string,
-    safe4Address : string ,
-    amount : string | undefined,
-    lockId : number | undefined,
+    blockNumber: number,
+    timestamp: number,
+    transactionHash: string,
+    eventLogIndex: number,
+    action: string,
+    safe3Address: string,
+    safe4Address: string,
+    amount: string | undefined,
+    lockId: number | undefined,
     confirmed: number
 }
 
 export interface Safe3AddressRedeemVO {
-    safe3Address : string , 
-    safe4Address : string | undefined,
-    available : string,
-    availableRedeemHash : string | undefined,
-    locked : string,
-    lockedRedeemHash : string | undefined,
-    masternode : boolean , 
-    mLockedAmount : string | undefined,
-    masternodeRedeemHash : string | undefined,
+    safe3Address: string,
+    safe4Address: string | undefined,
+    available: string,
+    availableRedeemHash: string | undefined,
+    locked: string,
+    lockedRedeemHash: string | undefined,
+    masternode: boolean,
+    mLockedAmount: string | undefined,
+    masternodeRedeemHash: string | undefined,
 
-    totalAvailableAmount : string | undefined,
-    totalLockedAmount : string | undefined,
-    totalMasternode : string | undefined,
-    totalMasternodeCount : number | undefined
+    totalAvailableAmount: string | undefined,
+    totalLockedAmount: string | undefined,
+    totalMasternode: string | undefined,
+    totalMasternodeCount: number | undefined
 }
 
 export interface Safe3RedeemStatisticVO {
-    totalSafe3Amount : string , 
-    redeemSafe3Amount : string , 
-    totalMasternodeCount : number,
-    redeemMasternodeCount : number
+    totalSafe3Amount: string,
+    redeemSafe3Amount: string,
+    totalMasternodeCount: number,
+    redeemMasternodeCount: number
 }
 
 export interface SupernodeVoterNumVO {
-    address : string ,
-    addressPropVO : AddressPropVO 
-    voteNum : string ,
+    address: string,
+    addressPropVO: AddressPropVO
+    voteNum: string,
 }
 
 export interface CirculationVO {
-    maxTotalSupply : string,
-    unmined : string,
-    circulation : string,
-    unredeem : string,
-    redeemed : string,
-    locked : string,
-    freeze : string
+    maxTotalSupply: string,
+    unmined: string,
+    circulation: string,
+    unredeem: string,
+    redeemed: string,
+    locked: string,
+    freeze: string
 }
 
 export interface CrossChainVO {
-    asset : string,
+    asset: string,
 
-    srcAddress : string,
-    srcNetwork : string,
-    srcAmount : string,
-    srcTxHash : string,
-    srcTxBlockNumber : number,
-    srcTxTimestamp : number,
-  
-    dstAddress : string,
-    dstNetwork : string,
-    dstAmount : string,
-    dstTxHash : string,
-    dstTxBlockNumber : number,
-    dstTxTimestamp : number,
-  
-    fee : string,
-    status : number
+    srcAddress: string,
+    srcNetwork: string,
+    srcAmount: string,
+    srcTxHash: string,
+    srcTxBlockNumber: number,
+    srcTxTimestamp: number,
+
+    dstAddress: string,
+    dstNetwork: string,
+    dstAmount: string,
+    dstTxHash: string,
+    dstTxBlockNumber: number,
+    dstTxTimestamp: number,
+
+    fee: string,
+    status: number
 }

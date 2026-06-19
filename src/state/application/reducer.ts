@@ -30,13 +30,13 @@ export interface IApplicationState {
 
 const initialState: IApplicationState = {
     blockNumber: 0,
-    latestTimestamp : 0,
+    latestTimestamp: 0,
     dbStoredBlockNumber: 0,
     methodSignature: new Map(),
     addressPropMap: new Map(),
     latestBlocks: [],
     latestTransactions: [],
-    statistic : undefined, 
+    statistic: undefined,
     abis: []
 }
 
@@ -50,17 +50,17 @@ export default createReducer(initialState, (builder) => {
         if (!state.abis) {
             state.abis = [];
         }
-        for ( const address in SysContractABI){
-            state.abis.push( {
-                address ,
-                abi : SysContractABI[address as SystemContract]
-            } )
+        for (const address in SysContractABI) {
+            state.abis.push({
+                address,
+                abi: SysContractABI[address as SystemContract]
+            })
         }
-        for ( const address in CommonAbi_Config){
-            state.abis.push( {
-                address ,
-                abi : JSON.stringify(CommonAbi_Config[address as CommonAbiType])
-            } )
+        for (const address in CommonAbi_Config) {
+            state.abis.push({
+                address,
+                abi: JSON.stringify(CommonAbi_Config[address as CommonAbiType])
+            })
             // console.log("common abi:" , JSON.stringify(CommonAbi_Config[address as CommonAbiType]))
         }
         state.abis.forEach(({ address, abi }) => {
@@ -107,7 +107,7 @@ export default createReducer(initialState, (builder) => {
         .addCase(Application_Update_AddressPropMap, (state, { payload }) => {
             payload.forEach(addressPropVO => {
                 const { address } = addressPropVO;
-                if (state.addressPropMap){
+                if (state.addressPropMap) {
                     state.addressPropMap.set(address, addressPropVO);
                 }
             });
@@ -115,18 +115,21 @@ export default createReducer(initialState, (builder) => {
 
         .addCase(Application_Update_AbiMethodSignature, (state, { payload }) => {
             const abiMethodSignatureArr: AbiMethodSignatureVO[] = payload;
-            abiMethodSignatureArr.forEach(abiMethodSignature => {
-                state.methodSignature?.set(abiMethodSignature.hex, abiMethodSignature.signature);
-            });
+            console.log("abiMethodSignatureArr ==" , abiMethodSignatureArr)
+            // if (abiMethodSignatureArr) {
+            //     abiMethodSignatureArr.forEach(abiMethodSignature => {
+            //         state.methodSignature?.set(abiMethodSignature.hex, abiMethodSignature.signature);
+            //     });
+            // }
         })
 
         .addCase(Application_Update_BlockchainContext, (state, { payload }) => {
-            const { latestBlockNumber, latestBlockTimestamp , dbStoredBlockNumber , latestBlocks, latestTransactions , statistic } = payload;
+            const { latestBlockNumber, latestBlockTimestamp, dbStoredBlockNumber, latestBlocks, latestTransactions, statistic } = payload;
             return {
                 ...state,
                 blockNumber: latestBlockNumber,
-                dbStoredBlockNumber : dbStoredBlockNumber,
-                latestTimestamp : latestBlockTimestamp ,
+                dbStoredBlockNumber: dbStoredBlockNumber,
+                latestTimestamp: latestBlockTimestamp,
                 latestBlocks,
                 latestTransactions,
                 statistic

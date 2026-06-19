@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom"
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import { Card, Typography, Tag, Input, Button, Space, Tooltip, Tabs, Row, Col, Divider, Modal } from 'antd';
 import {
     SearchOutlined, QrcodeOutlined, FileTextOutlined, UserOutlined
@@ -24,13 +24,22 @@ import AddressAnalytics from "./AddressAnalytics";
 import AddressContractSourceCode from "./AddressContractSourceCode";
 
 const { Title, Text, Paragraph, Link } = Typography;
+const DEFAULT_PAGESIZE = 10;
 
 export default function () {
 
     const address = useParams().address?.toLocaleLowerCase();
-
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [addressVO, setAddressVO] = useState<AddressVO>();
+    const [searchParams, setSearchParams] = useSearchParams();
+    const activeTab = searchParams.get("tab") || "transactions";
+    const setActiveTab = (key: string) => {
+        const next = new URLSearchParams(searchParams);
+        next.set("tab", key);
+        next.set("page", "1");
+        next.set("pageSize", String(DEFAULT_PAGESIZE));
+        setSearchParams(next);
+    };
 
     const items: TabsProps['items'] = useMemo(() => {
         const items = [
@@ -88,8 +97,7 @@ export default function () {
             }
         );
         return items;
-    }, [addressVO]);
-
+    }, [addressVO, activeTab]);
 
     useEffect(() => {
         if (address) {
@@ -378,8 +386,6 @@ export default function () {
                                 </Row>
                             </>
                         }
-
-
                     </Card>
                 </Col>
             </Row>
@@ -387,7 +393,9 @@ export default function () {
             <Divider style={{ marginTop: "20px" }} />
 
             <Card>
-                <Tabs defaultActiveKey="sourceCode" items={items} />
+                <Tabs activeKey={activeTab} items={items} onChange={(active) => {
+                    setActiveTab(active);
+                }} />
             </Card>
 
         </>

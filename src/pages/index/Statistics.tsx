@@ -26,6 +26,7 @@ export default () => {
 
     const circulationSupply = useMemo(() => {
         const circulation = statistic?.circulation;
+        console.log(statistic)
         return circulation ? CurrencyAmount.ether(circulation).toFixed(2)
             : "0"
     }, [statistic]);

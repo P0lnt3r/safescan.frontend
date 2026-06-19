@@ -1,168 +1,152 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
-import { ContractInternalTransactionVO, TransactionVO } from "../../services";
-import { fetchAddressContractInternalTransactions, fetchAddressTransactions } from "../../services/tx";
-import { PaginationProps, Table, Typography, Row, Col, Tooltip, TablePaginationConfig } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
-import { useTranslation } from 'react-i18next';
-import TransactionHash from '../../components/TransactionHash';
-import { DateFormat } from '../../utils/DateUtil';
-import EtherAmount from '../../components/EtherAmount';
-import { ArrowRightOutlined, FileTextOutlined } from '@ant-design/icons';
-import { Link as RouterLink } from "react-router-dom";
-import { JSBI } from "@uniswap/sdk";
-import { format } from "../../utils/NumberFormat";
+import { useEffect, useMemo, useState } from "react";
+import { ContractInternalTransactionVO } from "../../services";
+import { fetchAddressContractInternalTransactions } from "../../services/tx";
+import { Table, Typography } from "antd";
+import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
+import { useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+
+import TransactionHash from "../../components/TransactionHash";
+import { DateFormat } from "../../utils/DateUtil";
+import EtherAmount from "../../components/EtherAmount";
 import BlockNumber from "../../components/BlockNumber";
 import Address from "../../components/Address";
+import { format } from "../../utils/NumberFormat";
 
-const { Text, Link } = Typography;
-
-const DEFAULT_PAGESIZE = 20;
+const { Text } = Typography;
+const DEFAULT_PAGESIZE = 10;
 
 export default ({ address }: { address: string }) => {
-
     const { t } = useTranslation();
+
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const current = Number(searchParams.get("page") || 1);
+    const pageSize = Number(searchParams.get("pageSize") || DEFAULT_PAGESIZE);
+
     const [tableData, setTableData] = useState<ContractInternalTransactionVO[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [unconfirmed, setUnconfirmed] = useState<number>(0);
-    const [confirmed, setConfirmed] = useState<number>(0);
-    const [pagination, setPagination] = useState<TablePaginationConfig>({
-        current: 1,
-        pageSize: DEFAULT_PAGESIZE,
-        position: ["topRight", "bottomRight"],
-        pageSizeOptions: [],
-        responsive: true,
-    });
+    const [loading, setLoading] = useState(false);
+    const [total, setTotal] = useState(0);
 
-    async function doFetchAddressContractIntenalTransactions() {
-        setLoading(true)
-        fetchAddressContractInternalTransactions({
-            current: pagination.current,
-            pageSize: pagination.pageSize,
-            address: address
-        }).then(data => {
-            setLoading(false)
-            setTableData(data.records);
-            const unconfirmed = [];
-            data.records.forEach(tx => {
-                if (tx.confirmed != 1) {
-                    unconfirmed.push(tx);
-                }
-            })
-            setConfirmed(data.total);
-            setUnconfirmed(unconfirmed.length);
-            const onChange = (page: number, pageSize: number) => {
-                pagination.pageSize = unconfirmed.length > 0 ? pageSize - unconfirmed.length : pageSize;
-                pagination.current = page;
-                doFetchAddressContractIntenalTransactions();
-            }
-            if (pagination.current == 1) {
-                const total = data.total;
-                const dbSize = data.pageSize;
-                const dbPages = Math.floor(total / dbSize);
-                const uiTotal = (dbPages * unconfirmed.length) + total;
-                setPagination({
-                    ...pagination,
-                    current: data.current,
-                    total: uiTotal,
-                    pageSize: data.records.length,
-                    onChange: onChange
-                })
-            } else {
-                setPagination({
-                    ...pagination,
-                    current: data.current,
-                    total: data.total,
-                    pageSize: data.pageSize,
-                    onChange: onChange
-                })
-            }
-
-        })
-    }
-
+    // ================= FETCH =================
     useEffect(() => {
-        pagination.current = 1;
-        pagination.pageSize = DEFAULT_PAGESIZE;
-        doFetchAddressContractIntenalTransactions();
-    }, [address]);
+        setLoading(true);
 
-    function OutputTotal() {
-        return <>
-            {
-                confirmed != unconfirmed && <Text strong style={{ color: "#6c757e" }}>Total of {
-                    confirmed && <>{format(confirmed + "")}</>
-                } Contract Internal Transactions
-                    {unconfirmed > 0 && <Text> and {unconfirmed} unconfirmed</Text>}
-                </Text>
-            }
-        </>
-    }
+        fetchAddressContractInternalTransactions({
+            current,
+            pageSize,
+            address,
+        }).then((data) => {
+            setTableData(data.records);
+            setTotal(data.total);
+            setLoading(false);
+            console.log("Load Contract Internal Transactions: ", data.records.length);
+        });
+    }, [address, current, pageSize]);
 
+    // ================= URL PAGINATION =================
+    const handlePageChange = (page: number, size?: number) => {
+        const next = new URLSearchParams(searchParams);
+
+        next.set("page", String(page));
+        if (size) next.set("pageSize", String(size));
+
+        setSearchParams(next);
+    };
+
+    const pagination: TablePaginationConfig = {
+        current,
+        pageSize,
+        total,
+        position: ["topRight", "bottomRight"],
+        showSizeChanger: true,
+    };
+
+    // ================= COLUMNS =================
     const columns: ColumnsType<ContractInternalTransactionVO> = [
         {
             title: <Text strong style={{ color: "#6c757e" }}>Block</Text>,
-            dataIndex: 'blockNumber',
-            render: (blockNumber,txVO) => <BlockNumber blockNumber={blockNumber} confirmed={txVO.confirmed}></BlockNumber> ,
+            dataIndex: "blockNumber",
+            width: 100,
             fixed: true,
-            width: 100
+            render: (blockNumber, txVO) => (
+                <BlockNumber blockNumber={blockNumber} confirmed={txVO.confirmed} />
+            ),
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Date</Text>,
-            dataIndex: 'timestamp',
+            dataIndex: "timestamp",
+            width: 200,
             render: (val) => <>{DateFormat(val * 1000)}</>,
-            width: 200
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Parent Txn Hash</Text>,
-            dataIndex: 'transactionHash',
-            render: (val, txVO) => <TransactionHash txhash={val}  status={txVO.status}></TransactionHash>,
+            dataIndex: "transactionHash",
             width: 240,
+            render: (val, txVO) => (
+                <TransactionHash txhash={val} status={txVO.status} />
+            ),
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Type</Text>,
-            dataIndex: 'type',
-            render: (val, txVO) => <>{val}</>,
-            width: 200
+            dataIndex: "type",
+            width: 120,
+            render: (val) => <>{val}</>,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>From</Text>,
-            dataIndex: 'from',
-            render: (val, txVO) => {
-                const hasLink = !(address == val);
-                return <>
-                    <Address address={val} propVO={txVO.fromPropVO} style={{hasLink}} />
-                </>
-            } ,
-            width: 240
+            dataIndex: "from",
+            width: 240,
+            render: (val, txVO) => (
+                <Address
+                    address={val}
+                    propVO={txVO.fromPropVO}
+                    style={{ hasLink: address !== val }}
+                />
+            ),
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>To</Text>,
-            dataIndex: 'to',
-            render: (val, txVO) => {
-                const hasLink = !(address == val);
-                return <>
-                    <Address address={val} propVO={txVO.toPropVO} style={{hasLink}} />
-                </>
-            } ,
-            width: 240
+            dataIndex: "to",
+            width: 240,
+            render: (val, txVO) => (
+                <Address
+                    address={val}
+                    propVO={txVO.toPropVO}
+                    style={{ hasLink: address !== val }}
+                />
+            ),
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Value</Text>,
-            dataIndex: 'value',
-            render: (val, txVO) => <>
-                <Text strong><EtherAmount raw={val} fix={6} /></Text>
-            </>,
-            width:200
+            dataIndex: "value",
+            width: 200,
+            render: (val) => (
+                <Text strong>
+                    <EtherAmount raw={val} fix={6} />
+                </Text>
+            ),
         },
-    ]
+    ];
 
-    return <>
-        <OutputTotal></OutputTotal>
-        <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
-            loading={loading}
-            pagination={pagination}
-        />
+    // ================= UI =================
+    return (
+        <>
+            <Text strong style={{ color: "#6c757e" }}>
+                Total of {format(String(total))} Contract Internal Transactions
+            </Text>
 
-    </>
-
-}
+            <Table
+                columns={columns}
+                dataSource={tableData}
+                rowKey={(txVO) => txVO.transactionHash + "_" + txVO.gasUsed}
+                scroll={{ x: 800 }}
+                loading={loading}
+                pagination={{
+                    ...pagination,
+                    onChange: handlePageChange,
+                }}
+            />
+        </>
+    );
+};
