@@ -1,0 +1,43 @@
+.block-detail-page-divider {
+  margin: 16px 0 24px;
+}
+
+.block-detail-title-row {
+  margin-bottom: 8px;
+}
+
+.block-detail-number {
+  line-height: 34px;
+  margin-left: 8px;
+  font-size: 18px;
+}
+
+.block-detail-card .ant-card-body {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.block-detail-row {
+  padding: 12px 0;
+}
+
+.block-detail-label {
+  margin-left: 5px;
+}
+
+.block-detail-group-divider {
+  margin: 4px 0 8px;
+}
+
+.block-detail-height-value {
+  margin: 0 14px;
+}
+
+.block-detail-sync-icon {
+  margin-right: 5px;
+}
+
+.block-detail-extra-data {
+  cursor: default;
+  color: #000;
+}

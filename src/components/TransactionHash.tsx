@@ -31,11 +31,11 @@ export default (
             <RouterLink to={`/tx/${txhash}`}>
                 {
                     blockNumber && blockNumber > dbStoredBlockNumber &&
-                    <Link italic underline ellipsis style={{ width: '85%', marginLeft: "2px" }}>{txhash}</Link>
+                    <Link italic underline ellipsis style={{ width: '80%', marginLeft: "2px" }}>{txhash}</Link>
                 }
                 {
                     ((blockNumber && blockNumber <= dbStoredBlockNumber) || !blockNumber) &&
-                    <Link strong ellipsis style={{ width: '85%', marginLeft: "2px" }}>{txhash}</Link>
+                    <Link strong ellipsis style={{ width: '80%', marginLeft: "2px" }}>{txhash}</Link>
                 }
             </RouterLink>
             <Paragraph style={{ float: "right" , height:"6px" }} copyable={{ text: txhash }} />

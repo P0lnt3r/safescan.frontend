@@ -65,7 +65,7 @@ export default ({ address }: { address: string }) => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Txn Hash</Text>,
             dataIndex: "hash",
-            width: 140,
+            width: 120,
             fixed: "left",
             render: (val, txVO) => (
                 <TransactionHash
@@ -78,7 +78,7 @@ export default ({ address }: { address: string }) => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Method</Text>,
             dataIndex: "methodId",
-            width: 100,
+            width: 80,
             render: (methodId, txVO) => (
                 <TxMethodId
                     methodId={methodId}
@@ -90,7 +90,7 @@ export default ({ address }: { address: string }) => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Block</Text>,
             dataIndex: "blockNumber",
-            width: 70,
+            width: 60,
             render: (blockNumber, txVO) => (
                 <BlockNumber blockNumber={blockNumber} confirmed={txVO.confirmed} />
             ),
@@ -104,7 +104,7 @@ export default ({ address }: { address: string }) => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>From</Text>,
             dataIndex: "from",
-            width: 160,
+            width: 180,
             render: (from, txVO) => {
                 const hasLink = from !== address;
 
@@ -143,10 +143,10 @@ export default ({ address }: { address: string }) => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Value</Text>,
             dataIndex: "value",
-            width: 120,
+            width: 100,
             render: (value) => (
                 <Text strong>
-                    <EtherAmount raw={value} />
+                    <EtherAmount raw={value} fix={6} />
                 </Text>
             ),
         },

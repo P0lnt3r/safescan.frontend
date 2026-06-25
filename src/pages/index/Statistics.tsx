@@ -32,7 +32,7 @@ export default () => {
     }, [statistic]);
 
     return (
-        <Card>
+        <Card className="home-stats-card">
             <Row>
                 <Col xl={6} xs={24} style={{ padding: "1%" }}>
                     <Statistic title="Latest Block Number" value={`${blockNumber}`} />

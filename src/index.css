@@ -5,17 +5,16 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* background: rgb(249, 249, 249); */
+}
+
+html,
+body,
+#root {
+  height: 100%;
 }
 
 .site-layout-content {
-  min-height: 600px;
-  padding-left: 7%;
-  padding-right: 7%;
+  flex: 1;
   padding-top: 1%;
   padding-bottom: 2%;
-  /* background: #fff; */
 }
-
-
-

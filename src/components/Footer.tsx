@@ -1,12 +1,18 @@
+import { VerticalAlignTopOutlined } from '@ant-design/icons';
 
-
-
-export default function(){
-
+export default function Footer() {
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     return (
-        <h4></h4>
-    )
-
-
+        <footer className="app-footer">
+            <div className="site-container app-footer-inner">
+                <button type="button" className="app-footer-back-top" onClick={scrollToTop}>
+                    <VerticalAlignTopOutlined />
+                    Back to Top
+                </button>
+            </div>
+        </footer>
+    );
 }

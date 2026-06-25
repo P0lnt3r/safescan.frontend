@@ -125,7 +125,7 @@ export default ({
                     <EtherAmount raw={value} fix={18} />
                 </Text>
             </>,
-            width: 180,
+            width: 120,
         },
         {
             title: <><Text strong style={{ color: "#6c757e" }}>Gas Limit</Text></>,

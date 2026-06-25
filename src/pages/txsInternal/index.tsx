@@ -123,10 +123,10 @@ export default () => {
     {
       title: <Text strong style={{ color: "#6c757e" }}>Value</Text>,
       dataIndex: "value",
-      width: 200,
+      width: 120,
       render: (val) => (
         <Text strong>
-          <EtherAmount raw={val} fix={18} />
+          <EtherAmount raw={val} fix={6} />
         </Text>
       ),
     },

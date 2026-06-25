@@ -1,0 +1,11 @@
+.blocks-page-divider {
+  margin: 16px 0 24px;
+}
+
+.blocks-page-card .ant-card-body {
+  padding-top: 20px;
+}
+
+.blocks-page-table .ant-table-thead > tr > th {
+  font-weight: 600;
+}

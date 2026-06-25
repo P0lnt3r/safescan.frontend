@@ -1,13 +1,16 @@
 
-import { isBigNumberish } from '@ethersproject/bignumber/lib/bignumber';
-import { Menu, Row, Col, Button, Layout, Input } from 'antd';
+import { Input, Alert } from 'antd';
 import { ethers } from 'ethers';
 import { useState } from 'react';
-import { Alert, Space } from 'antd';
 import { useNavigate } from 'react-router';
 
 const { Search } = Input;
 const { utils } = ethers;
+
+interface SearchComponentProps {
+    compact?: boolean;
+    hero?: boolean;
+}
 
 const isValidInput = (input: string): {
     isBlockNumber: boolean,
@@ -35,7 +38,7 @@ const isValidInput = (input: string): {
     }
 }
 
-export default () => {
+export default ({ compact = false, hero = false }: SearchComponentProps) => {
     const navigate = useNavigate();
     const [inputError, setInputError] = useState<string>();
     const [inputContent, setInputContent] = useState<string>();
@@ -61,22 +64,41 @@ export default () => {
         }
     }
 
-    return <>
-        <Search style={{ marginLeft: '40px', width: '80%', marginTop: '6px' }}
-            size='large'
-            placeholder="Input Address/TxHash" enterButton
-            onSearch={handleInputSearch}
-            value={inputContent}
-            onChange={(e) => setInputContent(e.target.value)}
-        />
-        {
-            inputError &&
-            <Alert style={{ marginLeft: '40px', width: '80%', marginTop: '6px' }}
-                message={inputError}
-                type="error"
-                showIcon
-            />
-        }
-    </>
+    const searchStyle = hero
+        ? { width: '100%', marginTop: 0, marginLeft: 0 }
+        : compact
+            ? { width: '100%', marginTop: 0, marginLeft: 0 }
+            : { marginLeft: '40px', width: '80%', marginTop: '6px' };
 
+    const alertStyle = hero
+        ? { width: '100%', marginTop: '8px', marginLeft: 0 }
+        : compact
+            ? { width: '100%', marginTop: '6px', marginLeft: 0 }
+            : { marginLeft: '40px', width: '80%', marginTop: '6px' };
+
+    const wrapperClass = hero
+        ? 'search-component-wrap search-component-hero'
+        : 'search-component-wrap';
+
+    return (
+        <div className={wrapperClass}>
+            <Search
+                style={searchStyle}
+                size={hero ? 'large' : compact ? 'middle' : 'large'}
+                placeholder="Search by Address / Txn Hash / Block"
+                enterButton
+                onSearch={handleInputSearch}
+                value={inputContent}
+                onChange={(e) => setInputContent(e.target.value)}
+            />
+            {inputError && (
+                <Alert
+                    style={alertStyle}
+                    message={inputError}
+                    type="error"
+                    showIcon
+                />
+            )}
+        </div>
+    );
 }

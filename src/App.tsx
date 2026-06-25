@@ -46,10 +46,10 @@ const { Content } = Layout;
 function App() {
   return (
     <Layout className="layout">
-      <Content style={{ padding: '0 0%' }}>
+      <Content className="app-layout-content">
         <BrowserRouter>
           <Header />
-          <div className="site-layout-content" style={{ maxWidth: "2000px", margin: "auto" }}>
+          <div className="site-layout-content site-container">
             <Routes>
               <Route path="/" index element={<Index />} />
               <Route path="/blocks" index element={<Blocks />} />

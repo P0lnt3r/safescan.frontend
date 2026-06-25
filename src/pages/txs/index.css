@@ -1,0 +1,11 @@
+.txs-page-divider {
+  margin: 16px 0 24px;
+}
+
+.txs-page-card .ant-card-body {
+  padding-top: 20px;
+}
+
+.txs-page-table .ant-table-thead > tr > th {
+  font-weight: 600;
+}

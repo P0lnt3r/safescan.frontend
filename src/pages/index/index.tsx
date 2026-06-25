@@ -1,18 +1,16 @@
-import { Typography } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import { useTranslation, Trans } from 'react-i18next';
+import './index.css';
+import HeroSection from './HeroSection';
 import LatestBlockTransactions from './LatestBlockTransactions';
-import { useBlockNumber } from '../../state/application/hooks';
 import Statistics from './Statistics';
-const { Title, Text, Link } = Typography;
 
-export default function () {
+export default function Index() {
     return (
-        <>
-            <div>
-                <Statistics />                
+        <div className="home-page">
+            <HeroSection />
+            <div className="home-stats-wrap">
+                <Statistics />
             </div>
             <LatestBlockTransactions />
-        </>
-    )
+        </div>
+    );
 }

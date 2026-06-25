@@ -1,26 +1,26 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { 
-    AppstoreOutlined, 
-    AreaChartOutlined, 
-    SettingOutlined, 
-    UnorderedListOutlined, 
-    CloseOutlined ,
+import React, { useMemo, useState } from 'react';
+import {
+    AreaChartOutlined,
+    UnorderedListOutlined,
+    CloseOutlined,
     HomeOutlined,
-    FundViewOutlined,
     ApartmentOutlined,
     SecurityScanOutlined,
-    
     WalletOutlined,
+    FireOutlined,
 } from '@ant-design/icons';
 
 import type { MenuProps } from 'antd';
-import { Menu, Row, Col, Button, Layout, Input } from 'antd';
-import SAFE_LOGO from '../images/safe_logo.png'
+import { Menu, Button } from 'antd';
+import { JSBI } from '@uniswap/sdk';
+import SAFE_LOGO from '../images/safe_logo.png';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import SearchComponent from './SearchComponent';
+import { GWEI } from './EtherAmount';
+import { useLatestTransactions } from '../state/application/hooks';
+import config from '../config';
 
-const { Search } = Input;
 type MenuItem = Required<MenuProps>['items'][number];
 
 function getItem(
@@ -39,17 +39,56 @@ function getItem(
     } as MenuItem;
 }
 
+const MOBILE_WIDTH = 1000;
+const NATIVE_LABEL = config.native_label;
 
-const MODILE_WIDTH = 1000;
+function useMedianGasGwei(): string | null {
+    const transactions = useLatestTransactions();
+
+    return useMemo(() => {
+        if (!transactions?.length) {
+            return null;
+        }
+        const gasPrices = transactions
+            .map((tx) => tx.gasPrice)
+            .filter((price) => price && price !== '0');
+
+        if (!gasPrices.length) {
+            return null;
+        }
+
+        const sorted = [...gasPrices].sort((a, b) => {
+            if (JSBI.greaterThan(JSBI.BigInt(a), JSBI.BigInt(b))) {
+                return 1;
+            }
+            if (JSBI.lessThan(JSBI.BigInt(a), JSBI.BigInt(b))) {
+                return -1;
+            }
+            return 0;
+        });
+        const mid = Math.floor(sorted.length / 2);
+        const median = sorted.length % 2 === 0
+            ? JSBI.divide(
+                JSBI.add(JSBI.BigInt(sorted[mid - 1]), JSBI.BigInt(sorted[mid])),
+                JSBI.BigInt(2),
+            )
+            : JSBI.BigInt(sorted[mid]);
+
+        return GWEI(median.toString(), 2);
+    }, [transactions]);
+}
 
 const Header: React.FC = () => {
     const navigate = useNavigate();
-    const { t, i18n } = useTranslation();
+    const location = useLocation();
+    const { i18n } = useTranslation();
+    const isHomePage = location.pathname === '/';
+    const gasGwei = useMedianGasGwei();
 
-    const items: MenuItem[] = useMemo( () => {
+    const items: MenuItem[] = useMemo(() => {
         return [
-            getItem( "Home" , '', <HomeOutlined />),
-            getItem( "Blockchain" , 'blockchain', <SecurityScanOutlined />, [
+            getItem('Home', '', <HomeOutlined />),
+            getItem('Blockchain', 'blockchain', <SecurityScanOutlined />, [
                 getItem('View Pending Transactions', '/txsPending'),
                 getItem('View Transactions', '/txs'),
                 getItem('View Internal Transactions', '/txsInternal'),
@@ -57,38 +96,33 @@ const Header: React.FC = () => {
                 getItem('View Contracts', '/contracts'),
                 getItem('View Cross-Chain', '/crosschains'),
             ]),
-            getItem("Nodes", 'nodes', <ApartmentOutlined />, [
+            getItem('Nodes', 'nodes', <ApartmentOutlined />, [
                 getItem('Masternodes', '/nodes/masternodes'),
                 getItem('Supernodes', '/nodes/supernodes'),
             ]),
-            getItem("Assets", 'assets', <WalletOutlined />, [
+            getItem('Assets', 'assets', <WalletOutlined />, [
                 getItem('Account Records', '/assets/accountrecords'),
                 getItem('SRC20 Tokens', '/assets/erc20tokens'),
                 getItem('SRC20 Transfers', '/assets/erc20txns'),
                 getItem('NFT Tokens', '/assets/nft-tokens'),
                 getItem('NFT Transfers', '/assets/nft-transfers'),
             ]),
-            getItem("Statistic", 'statistic', <AreaChartOutlined />, [
+            getItem('Statistic', 'statistic', <AreaChartOutlined />, [
                 getItem('Top Account', '/accounts'),
                 getItem('Charts', '/charts'),
                 getItem('Safe3 Redeem', '/safe3/redeem'),
             ]),
-            // getItem('Language', 'language', <SettingOutlined />, [
-            //     getItem('English', 'en'),
-            //     getItem('中文', 'zh'),
-            // ]),
-        ]
-    } , [] );
+        ];
+    }, []);
 
-    // submenu keys of first level
     const rootSubmenuKeys = ['blockchain', 'masternode', 'assets'];
-    const [isMobile, setIsMobile] = useState(window.innerWidth < MODILE_WIDTH);
-    const [openMenu, setOpenMenu] = useState(window.innerWidth >= MODILE_WIDTH);
-    const [openKeys, setOpenKeys] = useState(['']);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < MOBILE_WIDTH);
+    const [openMenu, setOpenMenu] = useState(window.innerWidth >= MOBILE_WIDTH);
+    const [openKeys, setOpenKeys] = useState<string[]>(['']);
 
     window.addEventListener('resize', () => {
-        setIsMobile(window.innerWidth < MODILE_WIDTH);
-        setOpenMenu(window.innerWidth >= MODILE_WIDTH);
+        setIsMobile(window.innerWidth < MOBILE_WIDTH);
+        setOpenMenu(window.innerWidth >= MOBILE_WIDTH);
     });
 
     const onOpenChange: MenuProps['onOpenChange'] = (keys) => {
@@ -100,51 +134,89 @@ const Header: React.FC = () => {
         }
     };
 
-    return (
-        <div style={{ backgroundColor: "white", padding: '1% 0%', marginBottom: '5px' }}>
-            <Row style={{paddingLeft:"7%",paddingRight:"7%",maxWidth:"2000px" , margin:"auto"}}>
-                <Col span={2} style={{ height: '48px' }} >
-                    <img src={SAFE_LOGO} style={{ display: "block", maxHeight: "100%" }}></img>
-                </Col>
-                <Col span={isMobile ? 20 : 10}>
-                    <SearchComponent />
-                </Col>
-                <Col span={isMobile ? 2 : 0} >
-                    <span style={{ float: 'right' }}>
-                        <Button style={{ marginTop: '6px' }} onClick={() => { setOpenMenu(!openMenu) }} size='large'
-                            icon={openMenu ? <CloseOutlined /> : <UnorderedListOutlined />}>
-                        </Button>
-                    </span>
-                </Col>
-                <Col span={isMobile ? 24 : 12}>
-                    {openMenu &&
-                        <div style={isMobile ? {} : { width:'100%' }}>
-                            <span style={{float:'right',width:'100%'}}>
-                                <Menu
-                                    mode={isMobile ? "inline" : "horizontal"}
-                                    openKeys={openKeys}
-                                    onOpenChange={onOpenChange}
-                                    onClick={(target) => {
-                                        const { key } = target;
-                                        if (key == 'en' || key == 'zh') {
-                                            i18n.changeLanguage(key);
-                                        }else{
-                                            navigate(key);
-                                        }
-                                        if (isMobile){
-                                            setOpenMenu(!openMenu);   
-                                        }
-                                    }}
-                                    style={{ float:'right',width:isMobile ? "100%" : "615px" , borderBottom:"0px solid #f0f0f0" }}
-                                    items={items}
-                                />
-                            </span>
-                        </div>
-                    }
-                </Col>
-            </Row>
-        </div>
+    const handleMenuClick: MenuProps['onClick'] = (target) => {
+        const { key } = target;
+        if (key === 'en' || key === 'zh') {
+            i18n.changeLanguage(key);
+        } else {
+            navigate(key);
+        }
+        if (isMobile) {
+            setOpenMenu(false);
+        }
+    };
 
+    const showTopBar = !isHomePage || !isMobile;
+
+    return (
+        <header className="app-header">
+            {showTopBar && (
+                <div className="app-header-top">
+                    <div className="site-container app-header-top-inner">
+                        {!isMobile && (
+                            <div className="app-header-top-left">
+                                <span className="app-header-top-item">
+                                    <span className="app-header-top-label">{NATIVE_LABEL} Price:</span>
+                                    <span className="app-header-top-value">—</span>
+                                </span>
+                                <span className="app-header-top-item">
+                                    <FireOutlined className="app-header-top-gas-icon" />
+                                    <span className="app-header-top-label">Gas:</span>
+                                    <span className="app-header-top-value">
+                                        {gasGwei !== null ? `${gasGwei} Gwei` : '—'}
+                                    </span>
+                                </span>
+                            </div>
+                        )}
+                        {!isHomePage && (
+                            <div className="app-header-top-search">
+                                <SearchComponent compact />
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
+
+            <div className="site-container app-header-bar">
+                <div className="app-header-logo">
+                    <img src={SAFE_LOGO} alt="Safe Chain Explorer" />
+                </div>
+
+                <div className="app-header-actions">
+                    {isMobile && (
+                        <Button
+                            onClick={() => setOpenMenu(!openMenu)}
+                            size="large"
+                            icon={openMenu ? <CloseOutlined /> : <UnorderedListOutlined />}
+                        />
+                    )}
+                    {!isMobile && openMenu && (
+                        <nav className="app-header-nav">
+                            <Menu
+                                mode="horizontal"
+                                disabledOverflow
+                                openKeys={openKeys}
+                                onOpenChange={onOpenChange}
+                                onClick={handleMenuClick}
+                                items={items}
+                            />
+                        </nav>
+                    )}
+                </div>
+            </div>
+
+            {isMobile && openMenu && (
+                <div className="site-container app-header-nav-mobile">
+                    <Menu
+                        mode="inline"
+                        openKeys={openKeys}
+                        onOpenChange={onOpenChange}
+                        onClick={handleMenuClick}
+                        items={items}
+                    />
+                </div>
+            )}
+        </header>
     );
 };
 

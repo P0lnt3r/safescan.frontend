@@ -11,6 +11,15 @@ import { ethers } from 'ethers';
 const { TextArea } = Input;
 const { Title, Text, Paragraph, Link } = Typography;
 
+function toUtf8StringLenient(hex: string): string {
+    try {
+        const bytes = ethers.utils.arrayify(hex);
+        return new TextDecoder('utf-8', { fatal: false }).decode(bytes);
+    } catch {
+        return hex;
+    }
+}
+
 const enum ShowMode {
     Raw = "raw",
     ABI = "abi",
@@ -177,7 +186,7 @@ export default ({ raw, methodId, fragment }: {
                     </div>
                 </>
             case ShowMode.UTF8:
-                const decodeData = ethers.utils.toUtf8String(raw);
+                const decodeData = toUtf8StringLenient(raw);
                 return <>
                     <TextArea style={{ cursor: "default", color: "black" }} rows={4} disabled
                         value={decodeData} />

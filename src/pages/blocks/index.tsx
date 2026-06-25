@@ -13,7 +13,6 @@ import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import { useEffect, useState } from "react";
 import { BlockVO } from "../../services";
 import { fetchBlocks } from "../../services/block";
-import { useTranslation } from "react-i18next";
 import { DateFormat } from "../../utils/DateUtil";
 import { format } from "../../utils/NumberFormat";
 import { Link as RouterLink, useSearchParams } from "react-router-dom";
@@ -21,14 +20,20 @@ import EtherAmount from "../../components/EtherAmount";
 import Address from "../../components/Address";
 import BlockNumber from "../../components/BlockNumber";
 import InfiniteScroll from "react-infinite-scroll-component";
+import "./index.css";
 
 const { Title, Text } = Typography;
 
-const DEFAULT_PAGE_SIZE = 50;
+const DEFAULT_PAGE_SIZE = 20;
+
+const BLOCKS_DESCRIPTION =
+  "Blocks are batches of transactions linked together via cryptographic hashes. Any tampering of a block invalidates subsequent blocks as their hashes would be changed.";
+
+function columnTitle(label: string) {
+  return <Text strong>{label}</Text>;
+}
 
 export default function BlocksPage() {
-  const { t } = useTranslation();
-
   const [tableData, setTableData] = useState<BlockVO[]>([]);
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
@@ -83,7 +88,7 @@ export default function BlocksPage() {
   // =========================
   const columns: ColumnsType<BlockVO> = [
     {
-      title: "Number",
+      title: columnTitle("Number"),
       dataIndex: "number",
       width: 100,
       fixed: "left",
@@ -95,13 +100,13 @@ export default function BlocksPage() {
       )
     },
     {
-      title: "Date Time",
+      title: columnTitle("Date Time"),
       dataIndex: "timestamp",
       width: 180,
       render: (val) => DateFormat(Number(val) * 1000)
     },
     {
-      title: "Txns",
+      title: columnTitle("Txns"),
       dataIndex: "txns",
       width: 80,
       render: (txns, vo) => (
@@ -111,7 +116,7 @@ export default function BlocksPage() {
       )
     },
     {
-      title: "Miner",
+      title: columnTitle("Miner"),
       dataIndex: "miner",
       width: 220,
       render: (address, vo) => (
@@ -119,13 +124,13 @@ export default function BlocksPage() {
       )
     },
     {
-      title: "Difficulty",
+      title: columnTitle("Difficulty"),
       dataIndex: "difficulty",
       width: 120,
       render: (v) => <Text>{v}</Text>
     },
     {
-      title: "Gas Used",
+      title: columnTitle("Gas Used"),
       dataIndex: "gasUsed",
       width: 200,
       render: (gasUsed, vo) => {
@@ -145,16 +150,18 @@ export default function BlocksPage() {
       }
     },
     {
-      title: "Gas Limit",
+      title: columnTitle("Gas Limit"),
       dataIndex: "gasLimit",
       width: 150,
       render: (v) => format(v)
     },
     {
-      title: "Reward",
+      title: columnTitle("Reward"),
       dataIndex: "reward",
       width: 150,
-      render: (v) => <EtherAmount raw={v} />
+      render: (v) => <Text strong>
+            <EtherAmount raw={v} fix={6} />
+      </Text> 
     }
   ];
 
@@ -212,18 +219,18 @@ export default function BlocksPage() {
   // render
   // =========================
   return (
-    <>
+    <div className="blocks-page">
       <Title level={3}>Blocks</Title>
+      <Text type="secondary">{BLOCKS_DESCRIPTION}</Text>
+      <Divider className="blocks-page-divider" />
 
-      <Card>
+      <Card className="blocks-page-card">
         <Row>
-          {/* ===================== */}
-          {/* 大屏 Table */}
-          {/* ===================== */}
           <Col xl={24} xs={0}>
             <OutputTotal />
 
             <Table
+              className="blocks-page-table"
               columns={columns}
               dataSource={tableData}
               loading={loading}
@@ -251,9 +258,6 @@ export default function BlocksPage() {
             />
           </Col>
 
-          {/* ===================== */}
-          {/* 小屏 InfiniteScroll */}
-          {/* ===================== */}
           <Col xl={0} xs={24}>
             <div
               id="scrollableDiv"
@@ -337,7 +341,7 @@ export default function BlocksPage() {
                             style={{ textAlign: "right" }}
                           >
                             <Text code>
-                              <EtherAmount raw={block.reward} />
+                              <EtherAmount raw={block.reward} fix={4}/>
                             </Text>
                           </Col>
                         </Row>
@@ -350,6 +354,6 @@ export default function BlocksPage() {
           </Col>
         </Row>
       </Card>
-    </>
+    </div>
   );
 }

@@ -1,4 +1,4 @@
-import { Card, Table, Typography, Row, Col } from 'antd';
+import { Card, Table, Typography, Row, Col, Divider } from 'antd';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { useEffect, useMemo, useState } from 'react';
 import { TransactionVO } from '../../services';
@@ -14,9 +14,17 @@ import { useDispatch } from 'react-redux';
 import { format } from '../../utils/NumberFormat';
 import Address from '../../components/Address';
 import BlockNumber from '../../components/BlockNumber';
+import './index.css';
 
 const { Title, Text } = Typography;
 const DEFAULT_PAGESIZE = 20;
+
+const TRANSACTIONS_DESCRIPTION =
+  'A transaction is a cryptographically signed instruction that changes the blockchain state. Block explorers track the details of all transactions in the network.';
+
+function columnTitle(label: string) {
+  return <Text strong>{label}</Text>;
+}
 
 export default function TransactionsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -49,7 +57,7 @@ export default function TransactionsPage() {
   // ===== columns =====
   const columns: ColumnsType<TransactionVO> = [
     {
-      title: <Text strong style={{ color: "#6c757e" }}>Txn Hash</Text>,
+      title: columnTitle('Txn Hash'),
       dataIndex: 'hash',
       width: 150,
       fixed: 'left',
@@ -62,7 +70,7 @@ export default function TransactionsPage() {
       ),
     },
     {
-      title: <Text strong style={{ color: "#6c757e" }}>Method</Text>,
+      title: columnTitle('Method'),
       dataIndex: 'methodId',
       width: 100,
       render: (methodId, txVO) => (
@@ -70,7 +78,7 @@ export default function TransactionsPage() {
       ),
     },
     {
-      title: <Text strong style={{ color: "#6c757e" }}>Block</Text>,
+      title: columnTitle('Block'),
       dataIndex: 'blockNumber',
       width: 80,
       render: (blockNumber, vo) => (
@@ -78,13 +86,13 @@ export default function TransactionsPage() {
       ),
     },
     {
-      title: <Text strong style={{ color: "#6c757e" }}>Date Time</Text>,
+      title: columnTitle('Date Time'),
       dataIndex: 'timestamp',
       width: 130,
       render: (val) => <>{DateFormat(val * 1000)}</>,
     },
     {
-      title: <Text strong style={{ color: "#6c757e" }}>From</Text>,
+      title: columnTitle('From'),
       dataIndex: 'from',
       width: 180,
       render: (from, txVO) => (
@@ -99,7 +107,7 @@ export default function TransactionsPage() {
       ),
     },
     {
-      title: <Text strong style={{ color: "#6c757e" }}>To</Text>,
+      title: columnTitle('To'),
       dataIndex: 'to',
       width: 180,
       render: (to, txVO) => (
@@ -107,7 +115,7 @@ export default function TransactionsPage() {
       ),
     },
     {
-      title: <Text strong style={{ color: "#6c757e" }}>Value</Text>,
+      title: columnTitle('Value'),
       dataIndex: 'value',
       width: 120,
       render: (value) => (
@@ -150,28 +158,31 @@ export default function TransactionsPage() {
 
   // ===== UI =====
   return (
-    <>
-      <Row>
-        <Title level={3}>Transactions</Title>
+    <div className="txs-page">
+      <Row align="middle">
+        <Title level={3} style={{ marginBottom: 0 }}>Transactions</Title>
 
         {blockNumber > 0 && (
           <Text type="secondary" style={{ marginLeft: 8, fontSize: 18 }}>
-            For Block{" "}
+            For Block{' '}
             <NavigateLink path={`/block/${blockNumber}`}>
               #{blockNumber}
             </NavigateLink>
           </Text>
         )}
       </Row>
+      <Text type="secondary">{TRANSACTIONS_DESCRIPTION}</Text>
+      <Divider className="txs-page-divider" />
 
-      <Card>
+      <Card className="txs-page-card">
         {confirmed > 0 && (
-          <Text strong style={{ color: "#6c757e" }}>
+          <Text strong style={{ color: '#6c757e' }}>
             Total of {format(String(confirmed))} Transactions
           </Text>
         )}
 
         <Table
+          className="txs-page-table"
           columns={columns}
           dataSource={tableData}
           rowKey={(txVO) => txVO.hash}
@@ -183,6 +194,6 @@ export default function TransactionsPage() {
           }}
         />
       </Card>
-    </>
+    </div>
   );
 }

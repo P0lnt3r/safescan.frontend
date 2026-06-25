@@ -1,66 +1,55 @@
-import { Card, Table, Typography, Row, Col, Tooltip, PaginationProps, Badge, Divider, TabsProps, Tabs, Input, Space, Button, InputRef, Tag, TablePaginationConfig } from 'antd';
-import { useEffect, useRef, useState } from 'react';
-import { fetchAddressBalanceRank } from '../../services/address';
-import { AddressBalanceRankVO, Contract_Compile_VO, MasterNodeVO, SuperNodeVO } from '../../services';
+import { Card, Table, Typography, Tooltip, Divider, Tag, TablePaginationConfig } from 'antd';
+import { useEffect, useState } from 'react';
+import { Contract_Compile_VO } from '../../services';
 import type { ColumnsType } from 'antd/es/table';
-import EtherAmount from '../../components/EtherAmount';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import {
-    ThunderboltOutlined,
     ThunderboltFilled,
     ToolFilled
 } from '@ant-design/icons';
-import { format } from '../../utils/NumberFormat';
-import { fetchMasterNodes, fetchSuperNodes } from '../../services/node';
-import { PresetStatusColorType } from 'antd/es/_util/colors';
-import Address, { ChecksumAddress } from '../../components/Address';
 import { fetchContracts } from '../../services/contract';
 import { DateFormat } from '../../utils/DateUtil';
+import Address from '../../components/Address';
 
-const { Title, Text, Link, Paragraph } = Typography;
+const { Title, Text } = Typography;
 
 const DEFAULT_PAGESIZE = 20;
 
-export default () => {
+export default function ContractsPage() {
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const current = Number(searchParams.get('page') || 1);
+    const pageSize = Number(searchParams.get('pageSize') || DEFAULT_PAGESIZE);
 
     const [tableData, setTableData] = useState<Contract_Compile_VO[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const [data, setData] = useState<Contract_Compile_VO>();
-    const [pagination, setPagination] = useState<TablePaginationConfig>({
-        current: 1,
-        pageSize: DEFAULT_PAGESIZE,
-        position: ["bottomRight"],
-        pageSizeOptions: [],
-        responsive: true,
-    });
+    const [total, setTotal] = useState(0);
 
-    function paginationOnChange(page: number, pageSize: number) {
-        pagination.current = page;
-        doFetchContracts();
-    }
-
-    function doFetchContracts() {
-        setLoading(true);
-        fetchContracts({
-            current: pagination.current,
-            pageSize: pagination.pageSize,
-        }).then(data => {
-            setLoading(false);
-            setTableData(data.records);
-            setPagination({
-                ...pagination,
-                current: data.current,
-                total: data.total,
-                pageSize: data.pageSize,
-                onChange: paginationOnChange
-            })
-        })
-
-    }
+    const pagination: TablePaginationConfig = {
+        current,
+        pageSize,
+        total,
+        position: ["topRight", "bottomRight"],
+        showSizeChanger: true,
+    };
 
     useEffect(() => {
-        doFetchContracts();
-    }, []);
+        setLoading(true);
+        fetchContracts({ current, pageSize }).then((data) => {
+            setLoading(false);
+            setTableData(data.records);
+            setTotal(data.total);
+        });
+    }, [current, pageSize]);
+
+    const handlePageChange = (page: number, size?: number) => {
+        setSearchParams((prev) => {
+            const next = new URLSearchParams(prev);
+            next.set('page', String(page));
+            if (size) next.set('pageSize', String(size));
+            return next;
+        });
+    };
 
     const RenderCompileVersion = (version: string) => {
         const content = version ? version.substring(
@@ -189,17 +178,17 @@ export default () => {
             width: 25,
             fixed: 'left',
         },
-        {
-            title: <Text strong style={{ color: "#6c757e" }}>Verified Date</Text>,
-            dataIndex: 'verifyTimestamp',
-            render: (verifyTimestamp, vo) => {
-                return <>
-                    <Text>{verifyTimestamp ? DateFormat(verifyTimestamp * 1000) : "-"}</Text>
-                </>
-            },
-            width: 50,
-            fixed: 'left',
-        },
+        // {
+        //     title: <Text strong style={{ color: "#6c757e" }}>Verified Date</Text>,
+        //     dataIndex: 'verifyTimestamp',
+        //     render: (verifyTimestamp, vo) => {
+        //         return <>
+        //             <Text>{verifyTimestamp ? DateFormat(verifyTimestamp * 1000) : "-"}</Text>
+        //         </>
+        //     },
+        //     width: 50,
+        //     fixed: 'left',
+        // },
         {
             title: <Text strong style={{ color: "#6c757e" }}>License</Text>,
             dataIndex: 'license',
@@ -217,8 +206,16 @@ export default () => {
         <Title level={3}>Contracts</Title>
         <Divider />
         <Card>
-            <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
-                pagination={pagination}
+            <Table
+                columns={columns}
+                dataSource={tableData}
+                rowKey={(vo) => vo.address}
+                scroll={{ x: 800 }}
+                loading={loading}
+                pagination={{
+                    ...pagination,
+                    onChange: handlePageChange,
+                }}
             />
         </Card>
     </>

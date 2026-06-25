@@ -11,6 +11,9 @@ import { Link as RouterLink } from 'react-router-dom';
 import ERC20TokenAmount from "../../components/ERC20TokenAmount";
 import ERC20Logo from "../../components/ERC20Logo";
 import { format } from "../../utils/NumberFormat";
+import ERC20TransferTable from "../assets/ERC20TokenTransfers";
+import Addresses from ".";
+import Address from "../../components/Address";
 
 const { Text, Link } = Typography;
 const DEFAULT_PAGESIZE = 20;
@@ -72,128 +75,127 @@ export default ({ address }: { address: string }) => {
     };
 
     // ================= COLUMNS =================
+     // ========================
+    // columns
+    // ========================
     const columns: ColumnsType<ERC20TransferVO> = [
         {
-            title: <>{t('Txn Hash')}</>,
-            dataIndex: 'transactionHash',
-            width: 180,
-            fixed: 'left',
+            title: "Tx Hash",
+            dataIndex: "transactionHash",
+            width: 120,
+            fixed: "left",
             render: (val, txVO) => (
                 <TransactionHash
                     blockNumber={txVO.blockNumber}
                     txhash={val}
                     status={1}
                 />
-            ),
+            )
         },
         {
-            title: 'Date Time',
-            dataIndex: 'timestamp',
-            width: 130,
-            render: (val) => <>{DateFormat(val * 1000)}</>
+            title: "Date Time",
+            dataIndex: "timestamp",
+            width: 120,
+            render: (val) => DateFormat(val * 1000)
         },
         {
             title: "From",
-            dataIndex: 'from',
+            dataIndex: "from",
             width: 180,
-            render: (from) => (
+            render: (from, txVO) => (
                 <Row>
                     <Col span={20}>
-                        <Tooltip title={from}>
-                            {address === from ? (
-                                <Text ellipsis>{from}</Text>
-                            ) : (
-                                <RouterLink to={`/address/${from}`}>
-                                    <Link ellipsis>{from}</Link>
-                                </RouterLink>
-                            )}
-                        </Tooltip>
+                        <Address address={from} propVO={txVO.fromPropVO} style={{
+                            hasLink: from !== address
+                        }}/>
                     </Col>
                     <Col span={4}>
-                        {address === from ? (
-                            <Text code strong style={{ color: "orange" }}>OUT</Text>
-                        ) : (
-                            <Text code strong style={{ color: "green" }}>IN</Text>
-                        )}
+                        {
+                            address && <>
+                            {
+                                from === address ? (
+                                    <Text code strong style={{ color: "orange" }}>
+                                        OUT
+                                    </Text>
+                                ) : (
+                                    <Text code strong style={{ color: "green" }}>
+                                        IN
+                                    </Text>
+                                )
+                            }
+                            </>
+                        }
                     </Col>
                 </Row>
             )
         },
         {
-            title: 'To',
-            dataIndex: 'to',
-            width: 180,
-            render: (to) => (
-                <Tooltip title={to}>
-                    {address === to ? (
-                        <Text ellipsis>{to}</Text>
-                    ) : (
-                        <RouterLink to={`/address/${to}`}>
-                            <Link ellipsis>{to}</Link>
-                        </RouterLink>
-                    )}
-                </Tooltip>
+            title: "To",
+            dataIndex: "to",
+            width: 160,
+            render: (to, txVO) => (
+                <Address address={to} propVO={txVO.toPropVO} style={{
+                    hasLink: to !== address
+                }}/>
             )
         },
         {
-            title: 'Value',
-            dataIndex: 'value',
+            title: "Value",
+            dataIndex: "value",
             width: 100,
             render: (value, vo) => {
                 const tokenPropVO = vo.tokenPropVO;
-                const erc20Prop = tokenPropVO?.subType === "erc20"
-                    ? tokenPropVO?.prop
-                    : undefined;
 
-                const erc20 = erc20Prop ? JSON.parse(erc20Prop) : undefined;
+                if (!tokenPropVO) return null;
+
+                const erc20 =
+                    tokenPropVO?.prop &&
+                    tokenPropVO.subType === "erc20"
+                        ? JSON.parse(tokenPropVO.prop)
+                        : undefined;
 
                 return (
-                    <div>
-                        {tokenPropVO && erc20 && (
-                            <ERC20TokenAmount
-                                address={tokenPropVO.address}
-                                name={erc20.name}
-                                symbol={erc20.symbol}
-                                decimals={erc20.decimals}
-                                raw={value}
-                                fixed={4}
-                            />
-                        )}
+                    <div style={{float:"right"}}>
+                       <ERC20TokenAmount
+                        address={tokenPropVO.address}
+                        name={erc20?.name}
+                        symbol={erc20?.symbol}
+                        decimals={erc20?.decimals}
+                        raw={value}
+                        fixed={4}
+                       />
                     </div>
+                   
                 );
             }
         },
         {
-            title: 'Token',
-            dataIndex: 'value',
-            width: 200,
+            title: "Token",
+            dataIndex: "token",
+            width: 180,
             render: (_, vo) => {
                 const tokenPropVO = vo.tokenPropVO;
-                const erc20Prop = tokenPropVO?.subType === "erc20"
-                    ? tokenPropVO?.prop
-                    : undefined;
-
-                const erc20 = erc20Prop ? JSON.parse(erc20Prop) : undefined;
-
+                if (!tokenPropVO) return null;
+                const erc20 =
+                    tokenPropVO.prop && tokenPropVO.subType === "erc20"
+                        ? JSON.parse(tokenPropVO.prop)
+                        : undefined;
                 return (
-                    <div>
-                        {tokenPropVO && erc20 && (
-                            <RouterLink to={`/token/${tokenPropVO.address}`}>
-                                <ERC20Logo address={tokenPropVO.address} />
-                                <Link style={{ marginLeft: 5 }}>
-                                    {erc20.name}({erc20.symbol})
-                                </Link>
-                            </RouterLink>
-                        )}
-                    </div>
+                    <RouterLink to={`/address/${tokenPropVO.address}`}>
+                        <ERC20Logo address={tokenPropVO.address} />
+                        <Link style={{ marginLeft: 6 }}>
+                            {erc20?.name} ({erc20?.symbol})
+                        </Link>
+                    </RouterLink>
                 );
             }
-        },
+        }
     ];
 
     // ================= UI =================
     return (
         <>
+
             <Text strong style={{ color: "#6c757e" }}>
                 Total of {format(String(confirmed))} ERC20 Transfers
                 {unconfirmed > 0 && (

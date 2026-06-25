@@ -77,7 +77,7 @@ export default function ERC20TransferTable({
         {
             title: "Tx Hash",
             dataIndex: "transactionHash",
-            width: 180,
+            width: 120,
             fixed: "left",
             render: (val, txVO) => (
                 <TransactionHash
@@ -90,7 +90,7 @@ export default function ERC20TransferTable({
         {
             title: "Date Time",
             dataIndex: "timestamp",
-            width: 130,
+            width: 120,
             render: (val) => DateFormat(val * 1000)
         },
         {
@@ -103,15 +103,21 @@ export default function ERC20TransferTable({
                         <Address address={from} propVO={txVO.fromPropVO} />
                     </Col>
                     <Col span={4}>
-                        {from === filterAddress ? (
-                            <Text code strong style={{ color: "orange" }}>
-                                OUT
-                            </Text>
-                        ) : (
-                            <Text code strong style={{ color: "green" }}>
-                                IN
-                            </Text>
-                        )}
+                        {
+                            filterAddress && <>
+                            {
+                                from === filterAddress ? (
+                                    <Text code strong style={{ color: "orange" }}>
+                                        OUT
+                                    </Text>
+                                ) : (
+                                    <Text code strong style={{ color: "green" }}>
+                                        IN
+                                    </Text>
+                                )
+                            }
+                            </>
+                        }
                     </Col>
                 </Row>
             )
@@ -140,21 +146,24 @@ export default function ERC20TransferTable({
                         : undefined;
 
                 return (
-                    <ERC20TokenAmount
+                    <div style={{float:"right"}}>
+                       <ERC20TokenAmount
                         address={tokenPropVO.address}
                         name={erc20?.name}
                         symbol={erc20?.symbol}
                         decimals={erc20?.decimals}
                         raw={value}
                         fixed={4}
-                    />
+                       />
+                    </div>
+                   
                 );
             }
         },
         {
             title: "Token",
             dataIndex: "token",
-            width: 220,
+            width: 180,
             render: (_, vo) => {
                 const tokenPropVO = vo.tokenPropVO;
                 if (!tokenPropVO) return null;

@@ -67,8 +67,8 @@ export default ({ address }: { address: string }) => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Block</Text>,
             dataIndex: "blockNumber",
-            width: 100,
-            fixed: true,
+            width: 120,
+            fixed: "left",
             render: (blockNumber, txVO) => (
                 <BlockNumber blockNumber={blockNumber} confirmed={txVO.confirmed} />
             ),
@@ -82,7 +82,7 @@ export default ({ address }: { address: string }) => {
         {
             title: <Text strong style={{ color: "#6c757e" }}>Parent Txn Hash</Text>,
             dataIndex: "transactionHash",
-            width: 240,
+            width: 200,
             render: (val, txVO) => (
                 <TransactionHash txhash={val} status={txVO.status} />
             ),

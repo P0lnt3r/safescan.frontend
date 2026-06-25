@@ -34,31 +34,30 @@ const DEFAULT_PAGESIZE = 10;
 const EMPTY_ADDRESS = "0x0000000000000000000000000000000000000000";
 
 export function RenderAccountRecordAmount(accountRecord: AccountRecordVO, blockNumber: number) {
-    const { amount, lockDay, unlockTimestamp, unfreezeHeight, releaseHeight, withdrawHeight, withdrawTimestamp, withdrawTxHash } = accountRecord;
-    const hasLock = lockDay > 0;
-    const isLocked = hasLock && !unlockTimestamp;
+    const { amount, lockDay, unlockHeight, unlockTimestamp, unfreezeHeight, releaseHeight, withdrawHeight, withdrawTimestamp, withdrawTxHash } = accountRecord;
+    const isLocked = unlockHeight > 0 && unlockHeight > blockNumber;
     const isFreezed = (blockNumber < unfreezeHeight || blockNumber < releaseHeight);
     const isWithdrawed = withdrawHeight && withdrawHeight > 0;
     return <>
         {
             isFreezed && <Text strong style={{ color: "rgb(6, 58, 156)" }}>
-                <EtherAmount raw={amount} />
+                <EtherAmount raw={amount} fix={6} />
             </Text>
         }
         {
             !isFreezed && isLocked && <Text strong type="secondary" >
-                <EtherAmount raw={amount} />
+                <EtherAmount raw={amount} fix={6} />
             </Text>
         }
         {
             !isFreezed && !isLocked && !isWithdrawed && <Text strong type="success" >
-                <EtherAmount raw={amount} />
+                <EtherAmount raw={amount} fix={6} />
             </Text>
         }
         {
             isWithdrawed && <>
-                <Text delete style={{color:"#dfdfdf"}}>
-                    <EtherAmount raw={amount} />
+                <Text delete style={{ color: "#dfdfdf" }}>
+                    <EtherAmount raw={amount} fix={6} />
                 </Text>
             </>
         }
@@ -69,17 +68,13 @@ export function RenderAccountRecordId(accountRecord: AccountRecordVO, blockNumbe
     showID?: boolean,
     hasLink?: boolean
 }) {
-    const { lockId, unlockTimestamp, lockDay, unfreezeHeight, releaseHeight , withdrawHeight } = accountRecord;
+    const { lockId, unlockHeight, unfreezeHeight, releaseHeight, withdrawHeight } = accountRecord;
     return <>
         {
-            (!unlockTimestamp && lockDay > 0) && <LockOutlined />
+            (unlockHeight > 0 && unlockHeight > blockNumber) && <LockOutlined />
         }
         {
-            unlockTimestamp && !withdrawHeight && <UnlockOutlined />
-        }
-        {
-            (blockNumber < unfreezeHeight || blockNumber < releaseHeight) &&
-            <HourglassTwoTone />
+            (blockNumber < unfreezeHeight || blockNumber < releaseHeight) && <HourglassTwoTone />
         }
         {
             !options && <>
@@ -183,7 +178,7 @@ function RenderVoteForNode(accountRecord: AccountRecordVO) {
         voteHeight, voteTimestamp, releaseHeight, releaseTimestamp,
         withdrawTxHash
     } = accountRecord;
-    const isEmpty = !votedAddress || EMPTY_ADDRESS == votedAddress || withdrawTxHash != null ;
+    const isEmpty = !votedAddress || EMPTY_ADDRESS == votedAddress || withdrawTxHash != null;
     return <>
         <Row>
             <Col span={6}>
