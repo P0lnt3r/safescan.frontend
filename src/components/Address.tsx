@@ -33,6 +33,7 @@ export default ({ address, propVO, style, to }: {
         forceTag?: boolean,
         noTip?: boolean,
         color?: string,
+        noQRCode?: boolean,
         ellipsis?: boolean
     }
 }) => {
@@ -99,6 +100,22 @@ export default ({ address, propVO, style, to }: {
         </>
     }
 
+    const RenderQRCode = () => {
+        if (style && style.noQRCode) {
+            return <></>
+        }
+        return <>
+            <Tooltip title="View QR Code">
+                <Link style={{ marginLeft: "5px" }} onClick={() => {
+                    setOpenAddress(address);
+                    setOpenQRCode(true);
+                }}>
+                    <QrcodeOutlined />
+                </Link>
+            </Tooltip>
+        </>
+    }
+
     return <>
         <Text>
             {(!style || style.forceTag) && RenderIcon()}
@@ -135,14 +152,8 @@ export default ({ address, propVO, style, to }: {
                 }
             </Tooltip>
             <Paragraph style={{ height: "0px", display: "inline-block" }} copyable={{ text: checksumAddress }} />
-            <Tooltip title="View QR Code">
-                <Link style={{ marginLeft: "5px" }} onClick={() => {
-                    setOpenAddress(address);
-                    setOpenQRCode(true);
-                }}>
-                    <QrcodeOutlined />
-                </Link>
-            </Tooltip>
+
+            {RenderQRCode()}
         </Text>
 
         {
