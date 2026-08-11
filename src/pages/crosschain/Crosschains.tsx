@@ -8,7 +8,7 @@ export default () => {
 
     return (<>
         <Row>
-            <Col xl={0} xs={0}>
+            <Col span={24}>
                 <CrosschainStatistic />
                 <Divider />
             </Col>
