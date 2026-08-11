@@ -13,7 +13,7 @@ import Address from '../../components/Address';
 
 const { Title, Text } = Typography;
 
-const DEFAULT_PAGESIZE = 20;
+const DEFAULT_PAGESIZE = 10;
 
 export default function ContractsPage() {
     const [searchParams, setSearchParams] = useSearchParams();

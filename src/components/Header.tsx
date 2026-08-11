@@ -155,15 +155,15 @@ const Header: React.FC = () => {
                     <div className="site-container app-header-top-inner">
                         {!isMobile && (
                             <div className="app-header-top-left">
-                                <span className="app-header-top-item">
+                                {/* <span className="app-header-top-item">
                                     <span className="app-header-top-label">{NATIVE_LABEL} Price:</span>
                                     <span className="app-header-top-value">—</span>
-                                </span>
+                                </span> */}
                                 <span className="app-header-top-item">
                                     <FireOutlined className="app-header-top-gas-icon" />
                                     <span className="app-header-top-label">Gas:</span>
                                     <span className="app-header-top-value">
-                                        {gasGwei !== null ? `${gasGwei} Gwei` : '—'}
+                                        {gasGwei !== null ? `${gasGwei} Gwei` : '0.01 Gwei'}
                                     </span>
                                 </span>
                             </div>

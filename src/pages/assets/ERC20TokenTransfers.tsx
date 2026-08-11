@@ -77,7 +77,7 @@ export default function ERC20TransferTable({
         {
             title: "Tx Hash",
             dataIndex: "transactionHash",
-            width: 120,
+            width: 110,
             fixed: "left",
             render: (val, txVO) => (
                 <TransactionHash
@@ -90,7 +90,7 @@ export default function ERC20TransferTable({
         {
             title: "Date Time",
             dataIndex: "timestamp",
-            width: 120,
+            width: 140,
             render: (val) => DateFormat(val * 1000)
         },
         {
@@ -133,7 +133,7 @@ export default function ERC20TransferTable({
         {
             title: "Value",
             dataIndex: "value",
-            width: 120,
+            width: 100,
             render: (value, vo) => {
                 const tokenPropVO = vo.tokenPropVO;
 
@@ -146,16 +146,17 @@ export default function ERC20TransferTable({
                         : undefined;
 
                 return (
-                    <div style={{float:"right"}}>
-                       <ERC20TokenAmount
+                    <Text style={{float:"right"}} strong>
+  <ERC20TokenAmount
                         address={tokenPropVO.address}
                         name={erc20?.name}
                         symbol={erc20?.symbol}
                         decimals={erc20?.decimals}
                         raw={value}
-                        fixed={4}
+                        fixed={2}
                        />
-                    </div>
+                    </Text>
+                 
                    
                 );
             }
@@ -163,7 +164,7 @@ export default function ERC20TransferTable({
         {
             title: "Token",
             dataIndex: "token",
-            width: 180,
+            width: 160,
             render: (_, vo) => {
                 const tokenPropVO = vo.tokenPropVO;
                 if (!tokenPropVO) return null;
@@ -214,9 +215,13 @@ export default function ERC20TransferTable({
                     position: ["topRight", "bottomRight"]
                 }}
                 onChange={(pagination) => {
-                    setSearchParams({
-                        page: String(pagination.current),
-                        pageSize: String(pagination.pageSize)
+                    setSearchParams((prev) => {
+                        const next = new URLSearchParams(prev);
+                        next.set("page", String(pagination.current));
+                        if (pagination.pageSize) {
+                            next.set("pageSize", String(pagination.pageSize));
+                        }
+                        return next;
                     });
                 }}
             />

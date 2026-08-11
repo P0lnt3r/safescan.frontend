@@ -100,7 +100,7 @@ export default ({ token }: { token: string }) => {
                             symbol={erc20?.symbol}
                             decimals={erc20?.decimals}
                             raw={balance}
-                            fixed={erc20?.decimals}
+                            fixed={2}
                         />
                         <span style={{ marginLeft: 5 }}>
                             {erc20?.symbol}
@@ -146,9 +146,11 @@ export default ({ token }: { token: string }) => {
                 total: total,
                 position: ["topRight", "bottomRight"],
                 onChange: (p, ps) => {
-                    setSearchParams({
-                        page: String(p),
-                        pageSize: String(ps)
+                    setSearchParams((prev) => {
+                        const next = new URLSearchParams(prev);
+                        next.set("page", String(p));
+                        if (ps) next.set("pageSize", String(ps));
+                        return next;
                     });
                 }
             }}

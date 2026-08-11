@@ -19,8 +19,10 @@ export default () => {
     const asyncFetch = () => {
         fetch(`${API_HOST}/charts/masterNodesHistory`)
             .then((response) => response.json())
-            .then((json) => setData(json))
-            .catch((error) => {
+            .then((json) => {
+                console.log("masterNodeHistry :: ", json);
+                setData(json);
+            }).catch((error) => {
                 console.log('fetch data failed', error);
             });
     };

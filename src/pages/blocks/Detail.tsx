@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Card, Typography, Input, Button, Tooltip, Row, Col, Divider } from "antd";
+import { Card, Typography, Input, Button, Tooltip, Row, Col, Divider, Spin } from "antd";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import {
     QuestionCircleOutlined,
@@ -58,31 +58,53 @@ function GroupDivider() {
     return <Divider className="block-detail-group-divider" />;
 }
 
+function isBlockHeightNumber(param: string | undefined): boolean {
+    return !!param && /^\d+$/.test(param);
+}
+
 export default function BlockDetailPage() {
     const { height } = useParams();
     const navigate = useNavigate();
     const [blockVO, setBlockVO] = useState<BlockVO>();
+    const [loading, setLoading] = useState(true);
     const blockNumber = useBlockNumber();
 
     useEffect(() => {
-        if (!blockVO) {
-            fetchBlock(Number(height), undefined).then((data: BlockVO) => {
+        if (!height) return;
+
+        const byNumber = isBlockHeightNumber(height);
+        const number = byNumber ? Number(height) : undefined;
+        const hash = byNumber ? undefined : height;
+
+        const isSameBlock =
+            !!blockVO &&
+            (byNumber
+                ? blockVO.number === number
+                : blockVO.hash?.toLowerCase() === height.toLowerCase());
+
+        if (!isSameBlock) {
+            let cancelled = false;
+            setLoading(true);
+            setBlockVO(undefined);
+            fetchBlock(number, hash).then((data: BlockVO) => {
+                if (cancelled) return;
+                setBlockVO(data);
+                setLoading(false);
+            }).catch(() => {
+                if (!cancelled) setLoading(false);
+            });
+            return () => {
+                cancelled = true;
+            };
+        }
+
+        if (
+            blockVO.confirmed == 0 &&
+            blockNumber - blockVO.number >= config.block_confirmed
+        ) {
+            fetchBlock(blockVO.number, undefined).then((data: BlockVO) => {
                 setBlockVO(data);
             });
-        } else {
-            if (blockVO.number + "" != height) {
-                fetchBlock(Number(height), undefined).then((data: BlockVO) => {
-                    setBlockVO(data);
-                });
-            }
-            if (
-                blockVO.confirmed == 0 &&
-                blockNumber - blockVO.number >= config.block_confirmed
-            ) {
-                fetchBlock(Number(height), undefined).then((data: BlockVO) => {
-                    setBlockVO(data);
-                });
-            }
         }
     }, [height, blockNumber]);
 
@@ -100,38 +122,55 @@ export default function BlockDetailPage() {
         <div className="block-detail-page">
             <Row align="middle" className="block-detail-title-row">
                 <Title level={3} style={{ marginBottom: 0 }}>Block</Title>
-                <Text type="secondary" className="block-detail-number">#{height}</Text>
+                <Text type="secondary" className="block-detail-number">
+                    #{blockVO?.number ?? height}
+                </Text>
             </Row>
             <Text type="secondary">{BLOCKS_DESCRIPTION}</Text>
             <Divider className="block-detail-page-divider" />
 
             <Card className="block-detail-card">
+                <Spin spinning={loading} tip="Loading..." className="block-detail-spin">
+                <div className="block-detail-spin">
                 <DetailField label="Block Height:">
-                    <Tooltip title="View previous block">
-                        <Button
-                            onClick={() => navigate(`/block/${Number(height) - 1}`)}
-                            size="small"
-                            type="primary"
-                            shape="circle"
-                            icon={<LeftOutlined />}
-                        />
-                    </Tooltip>
+
+                    {
+                        blockVO && <>
+                            <Tooltip title="View next block">
+                                <Button
+                                    onClick={() => navigate(`/block/${Number(blockVO.number) - 1}`)}
+                                    size="small"
+                                    type="primary"
+                                    shape="circle"
+                                    icon={<LeftOutlined />}
+                                />
+                            </Tooltip>
+                        </>
+                    }
+
                     {blockVO?.confirmed == 1 && (
-                        <Text strong className="block-detail-height-value">{height}</Text>
+                        <Text strong className="block-detail-height-value">{blockVO.number}</Text>
                     )}
                     {blockVO?.confirmed == 0 && (
-                        <Text italic underline className="block-detail-height-value">{height}</Text>
+                        <Text italic underline className="block-detail-height-value">{blockVO.number}</Text>
                     )}
-                    <Tooltip title="View next block">
-                        <Button
-                            disabled={Number(height) + 1 > blockNumber}
-                            onClick={() => navigate(`/block/${Number(height) + 1}`)}
-                            size="small"
-                            type="primary"
-                            shape="circle"
-                            icon={<RightOutlined />}
-                        />
-                    </Tooltip>
+
+                    {
+                        blockVO && <>
+                            <Tooltip title="View next block">
+                                <Button
+                                    disabled={Number(blockVO.number) + 1 > blockNumber}
+                                    onClick={() => navigate(`/block/${Number(blockVO.number) + 1}`)}
+                                    size="small"
+                                    type="primary"
+                                    shape="circle"
+                                    icon={<RightOutlined />}
+                                />
+                            </Tooltip>
+                        </>
+                    }
+
+
                 </DetailField>
 
                 <DetailField label="Date Time:">
@@ -202,7 +241,9 @@ export default function BlockDetailPage() {
                 </DetailField>
 
                 <DetailField label="Parent Hash:" labelCol={{ xl: 8, xs: 24 }} valueCol={{ xl: 16, xs: 24 }}>
-                    <Text>{blockVO?.parentHash}</Text>
+                    <NavigateLink path={`/block/${blockVO?.parentHash}`}>
+                        {blockVO?.parentHash}
+                    </NavigateLink>
                 </DetailField>
 
                 <DetailField label="Sha3Uncles:" labelCol={{ xl: 8, xs: 24 }} valueCol={{ xl: 16, xs: 24 }}>
@@ -219,6 +260,8 @@ export default function BlockDetailPage() {
                         value={blockVO?.extraData}
                     />
                 </DetailField>
+                </div>
+                </Spin>
             </Card>
         </div>
     );

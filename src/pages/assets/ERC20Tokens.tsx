@@ -1,124 +1,98 @@
-
-
-import { Card, Table, Typography, Row, Col, Tooltip, PaginationProps } from 'antd';
-import { useEffect, useState } from 'react';
-import { fetchAddressBalanceRank } from '../../services/address';
-import { AddressBalanceRankVO, ERC20TokenVO } from '../../services';
-import type { ColumnsType } from 'antd/es/table';
-import EtherAmount from '../../components/EtherAmount';
-import { Link as RouterLink } from 'react-router-dom';
-import {
-    UserOutlined,
-    FileTextOutlined,
-    SafetyOutlined,
-    ApartmentOutlined
-} from '@ant-design/icons';
-import { format } from '../../utils/NumberFormat';
-import { fetchERC20Tokens } from '../../services/assets';
-import ERC20Logo from '../../components/ERC20Logo';
-import ERC20TokenAmount from '../../components/ERC20TokenAmount';
+import { Card, Table, Typography, TablePaginationConfig } from "antd";
+import { useEffect, useState } from "react";
+import { ERC20TokenVO } from "../../services";
+import type { ColumnsType } from "antd/es/table";
+import { Link as RouterLink, useSearchParams } from "react-router-dom";
+import { fetchERC20Tokens } from "../../services/assets";
+import ERC20Logo from "../../components/ERC20Logo";
 
 const { Title, Text, Link } = Typography;
+const DEFAULT_PAGESIZE = 10;
 
-export default () => {
+export default function ERC20TokensPage() {
+    const [searchParams, setSearchParams] = useSearchParams();
 
-    function paginationOnChange(page: number, pageSize: number) {
-        pagination.current = page;
-        doFetchERC20Tokens();
-    }
-    const [pagination, setPagination] = useState<PaginationProps>({
-        current: 1,
-        pageSize: 10,
-        showTotal: (total) => <>Total : {total}</>,
-        onChange: paginationOnChange
-    });
-    async function doFetchERC20Tokens() {
-        fetchERC20Tokens({
-            current: pagination.current,
-            pageSize: pagination.pageSize,
-        }).then(data => {
-            setPagination({
-                ...pagination,
-                current: data.current,
-                pageSize: data.pageSize,
-                total: data.total,
-                onChange: paginationOnChange,
-            })
-            setTableData(data.records);
-        })
-    }
+    const current = Number(searchParams.get("page") || 1);
+    const pageSize = Number(searchParams.get("pageSize") || DEFAULT_PAGESIZE);
+
     const [tableData, setTableData] = useState<ERC20TokenVO[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [total, setTotal] = useState(0);
 
     useEffect(() => {
-        pagination.current = 1;
-        doFetchERC20Tokens();
-    }, []);
+        setLoading(true);
+        fetchERC20Tokens({ current, pageSize }).then((data) => {
+            setLoading(false);
+            setTableData(data.records);
+            setTotal(data.total);
+        });
+    }, [current, pageSize]);
+
+    const handlePageChange = (page: number, size?: number) => {
+        setSearchParams((prev) => {
+            const next = new URLSearchParams(prev);
+            next.set("page", String(page));
+            if (size) next.set("pageSize", String(size));
+            return next;
+        });
+    };
+
+    const pagination: TablePaginationConfig = {
+        current,
+        pageSize,
+        total,
+        showSizeChanger: true,
+        showTotal: (t) => <>Total : {t}</>,
+        position: ["bottomRight"],
+    };
 
     const columns: ColumnsType<ERC20TokenVO> = [
         {
             title: <Text strong style={{ color: "#6c757e" }}>Token</Text>,
-            dataIndex: 'address',
-            render: (address, vo) => {
-                return <>
-                    <RouterLink to={`/token/${address}`}>
-                        <ERC20Logo address={address} />
-                        <Link ellipsis style={{ width: '80%', marginLeft: "5px" }}>
-                            {vo.name}({vo.symbol})
-                        </Link>
-                    </RouterLink>
-                </>
-            },
+            dataIndex: "address",
+            render: (address, vo) => (
+                <RouterLink to={`/token/${address}`}>
+                    <ERC20Logo address={address} />
+                    <Link ellipsis style={{ width: "80%", marginLeft: "5px" }}>
+                        {vo.name}({vo.symbol})
+                    </Link>
+                </RouterLink>
+            ),
             width: 40,
-            fixed: 'left',
+            fixed: "left",
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Holders</Text>,
-            dataIndex: 'holders',
-            render: (holders, vo) => {
-                return <>
-                    {holders}
-                </>
-            },
+            dataIndex: "holders",
+            render: (holders) => <>{holders}</>,
             width: 40,
-            fixed: 'left',
+            fixed: "left",
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Transfer Txns</Text>,
-            dataIndex: 'totalTransfers',
-            render: (totalTransfers, vo) => {
-                return <>
-                    {totalTransfers}
-                </>
-            },
+            dataIndex: "totalTransfers",
+            render: (totalTransfers) => <>{totalTransfers}</>,
             width: 40,
-            fixed: 'left',
-        },
-        {
-            title: <Text strong style={{ color: "#6c757e" }}>Transfer Amount</Text>,
-            dataIndex: 'totalTransferAmount',
-            render: (totalTransferAmount, vo) => {
-                return <>
-                    {
-                        totalTransferAmount &&
-                        <>
-                            <ERC20TokenAmount address={vo.address} name={vo.name} symbol={vo.symbol}
-                                raw={totalTransferAmount} fixed={vo.decimals} decimals={vo.decimals} />
-                            <Text style={{marginLeft:"5px"}}>{vo.symbol}</Text>
-                        </>
-                    }
-                </>
-            },
-            width: 40,
-            fixed: 'left',
+            fixed: "left",
         },
     ];
 
-    return (<>
-        <Title level={3}>SRC20 Tokens</Title>
-        <Card>
-            <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
-                pagination={pagination}
-            />
-        </Card>
-    </>)
+    return (
+        <>
+            <Title level={3}>SRC20 Tokens</Title>
+            <Card>
+                <Table
+                    columns={columns}
+                    dataSource={tableData}
+                    scroll={{ x: 800 }}
+                    loading={loading}
+                    rowKey={(vo) => vo.address}
+                    pagination={{
+                        ...pagination,
+                        onChange: handlePageChange,
+                    }}
+                />
+            </Card>
+        </>
+    );
 }

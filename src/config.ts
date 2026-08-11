@@ -1,5 +1,5 @@
 
-const LocalHostPort = "127.0.0.1:9003";
+const LocalHostPort = "10.0.0.172:9003";
 const InnetHostPort = "10.0.0.172:5005";
 const DEV = "47.119.151.64:5005";
 
@@ -31,13 +31,15 @@ const config = {
         native_label: "SAFE",
         block_confirmed: 6,
         api_host: `http://${LocalHostPort}`,
-        crosschain: `https://safe4.anwang.com/crosschain`,
         ws_host: `ws://${LocalHostPort}/socket.io`,
+        crosschain: `https://safe4.anwang.com/crosschain`,
+        // api_host: `http://safe4testnet.anwang.com:9003`,
+        // ws_host: `ws://safe4testnet.anwang.com:9003/socket.io`
     },
     "test": {
         native_label: "SAFE",
         block_confirmed: 6,
-        api_host: `https://safe4testnet.anwang.com/5005`,
+        api_host: `https://safe4testnet.anwang.com/9003`,
         crosschain: `https://safe4testnet.anwang.com/crosschain`,
         ws_host: `wss://safe4testnet.anwang.com/ws/socket.io`
     },

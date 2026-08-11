@@ -494,7 +494,7 @@ export interface NftTransferVO {
     to: string
     toPropVO: AddressPropVo,
     toContract: string,
-    toContractPropVO: AddressPropVO
+    toContractPropVO: AddressPropVO | null,
     token: string
     tokenPropVO: AddressPropVO | null
     transactionHash: string

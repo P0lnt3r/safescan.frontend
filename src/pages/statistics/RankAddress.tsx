@@ -72,7 +72,7 @@ export default () => {
             title: <Text strong style={{ color: "#6c757e" }}>Rank</Text>,
             dataIndex: 'rank',
             render: (rank) => <Text strong>{rank}</Text >,
-            width: 50,
+            width: 30,
             fixed: 'left',
         },
         {
@@ -96,13 +96,13 @@ export default () => {
                     vo.addressPropVO && <Address address={vo.address} propVO={vo.addressPropVO} style={{ hasLink: false , forceTag:true }}></Address>
                 }
             </>,
-            width: 100,
+            width: 80,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Total Balance</Text>,
             dataIndex: 'totalBalance',
             sorter: true,
-            defaultSortOrder: "descend",
+            // defaultSortOrder: "descend",
             sortDirections: ['descend'],
             render: (totalBalance) => {
                 return <>
@@ -115,7 +115,7 @@ export default () => {
             title: <Text strong style={{ color: "#6c757e" }}>Locked Amount</Text>,
             dataIndex: 'lockAmount',
             sorter: true,
-            sortDirections: ['descend'],
+            // sortDirections: ['descend'],
             render: (lockAmount) => {
                 return <>
                     <Text strong type="secondary">

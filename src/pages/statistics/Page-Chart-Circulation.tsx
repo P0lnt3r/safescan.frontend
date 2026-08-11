@@ -30,8 +30,8 @@ export default () => {
             setLoading(false);
             const _circulationChartData: CirculationChartType[] = [];
             data.forEach(timestampStatistic => {
-                const { supply, lock, freeze } = parseCirculationChartData(timestampStatistic)
-                _circulationChartData.push(supply, lock, freeze);
+                const { supply, lock } = parseCirculationChartData(timestampStatistic)
+                _circulationChartData.push(supply, lock);
             });
             setCirculationChartData(_circulationChartData);
         });
@@ -104,12 +104,12 @@ export default () => {
                                     <EtherAmount raw={circulationData.locked} fix={2} forceFix />
                                 </Text>
                             </Col>
-                            <Col span={24} style={{ marginTop: "5px" }}>
+                            {/* <Col span={24} style={{ marginTop: "5px" }}>
                                 <Text>Stake</Text>
                                 <Text style={{ float: "right" }} strong>
                                     <EtherAmount raw={circulationData.freeze} fix={2} forceFix />
                                 </Text>
-                            </Col>
+                            </Col> */}
                         </Row>
                     </>
                 }

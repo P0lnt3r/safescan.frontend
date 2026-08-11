@@ -63,8 +63,8 @@ export default () => {
 
                 // 解析代币流动性图表数据
                 const { totalTxns, totalAddress } = timestampStatistic;
-                const { supply, lock, freeze } = parseCirculationChartData(timestampStatistic)
-                _circulationChartData.push(supply, lock, freeze);
+                const { supply, lock } = parseCirculationChartData(timestampStatistic)
+                _circulationChartData.push(supply, lock);
 
                 // 解析交易量图表数据.
                 const txns = totalTxns - (_txnsChartData.length > 0 ? data[_txnsChartData.length - 1].totalTxns : 0);

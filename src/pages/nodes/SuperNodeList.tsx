@@ -103,7 +103,7 @@ export default () => {
                         ellipsis: false
                     }} to={`/node/${address}`} />
                     <Row>
-                        <Col span={2}>
+                        <Col span={3}>
                             <Text strong>ID:{id}</Text>
                         </Col>
                         <Col span={16}>

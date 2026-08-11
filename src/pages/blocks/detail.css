@@ -41,3 +41,8 @@
   cursor: default;
   color: #000;
 }
+
+.block-detail-spin {
+  min-height: 320px;
+  width: 100%;
+}

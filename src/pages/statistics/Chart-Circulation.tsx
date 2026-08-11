@@ -20,11 +20,6 @@ export function parseCirculationChartData(timestampStatistic: TimestampStatistic
             date,
             value: Number(ETHER(totalLockAmount, 0)),
             category: "Locked"
-        },
-        freeze: {
-            date,
-            value: Number(ETHER(totalFreezeAmount, 0)),
-            category: "Stake"
         }
     }
 }

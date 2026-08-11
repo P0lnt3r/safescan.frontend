@@ -1,4 +1,4 @@
-import { useLocation, useParams } from "react-router"
+import { useParams, useSearchParams } from "react-router-dom"
 import { Row, Col, Card, Typography, Divider, Tabs } from "antd"
 import ERC20Logo from "../../components/ERC20Logo";
 import Address from "../../components/Address";
@@ -20,12 +20,23 @@ import NftTokenInvetory from "./NftTokenInvetory";
 import ERC20TokenAmount from "../../components/ERC20TokenAmount";
 import { fetchAddressERC20Balance, fetchAddressERC20TokenBalance } from "../../services/address";
 const { Title, Text, Paragraph, Link } = Typography;
+const DEFAULT_PAGESIZE = 20;
 
-export default () => {
+export default function TokenPage() {
     const { address } = useParams();
-    const location = useLocation();
-    const searchParams = new URLSearchParams(location.search);
-    const filterAddress = searchParams.get('a');
+    const [searchParams, setSearchParams] = useSearchParams();
+    const filterAddress = searchParams.get("a") || undefined;
+    const activeTab = filterAddress && searchParams.get("tab") === "holders"
+        ? "transfers"
+        : (searchParams.get("tab") || "transfers");
+
+    const setActiveTab = (key: string) => {
+        const next = new URLSearchParams(searchParams);
+        next.set("tab", key);
+        next.set("page", "1");
+        next.set("pageSize", String(DEFAULT_PAGESIZE));
+        setSearchParams(next);
+    };
     const [tokenInfo, setTokenInfo] = useState<TokenInfoVO>();
     const [filterAddressERC20TokenBalance , setFilterAddressERC20TokenBalance] = useState<string>();
 
@@ -86,7 +97,7 @@ export default () => {
             };
             return items;
         }
-    }, [address, tokenInfo]);
+    }, [address, tokenInfo, filterAddress]);
 
     return <>
         <Divider style={{ margin: '0px 0px' }} />
@@ -124,7 +135,12 @@ export default () => {
             </Card>
         }
         <Card>
-            <Tabs defaultActiveKey="1" items={items} />
+            <Tabs
+                activeKey={activeTab}
+                onChange={setActiveTab}
+                destroyInactiveTabPane
+                items={items}
+            />
         </Card>
 
     </>
