@@ -117,21 +117,21 @@ export default () => {
                 <Text type='secondary' style={{ fontSize: "20px" }}>Supply</Text>
                 <Row style={{ marginTop: "5px" }}>
                     <Col span={24}>
-                        <Text>Number of blocks and coins per day</Text>
+                        <Text>Number of blocks & coins per day</Text>
                         <Text style={{ float: "right" }} strong>2880 <Divider type='vertical' />
-                            1,372.61 SAFE
+                            1,274.56 SAFE
                         </Text>
                     </Col>
                     <Col span={24} style={{ marginTop: "5px" }}>
-                        <Text>Number of blocks and coins per month</Text>
+                        <Text>Number of blocks & coins per month</Text>
                         <Text style={{ float: "right" }} strong>86400 <Divider type='vertical' />
-                            41,178.16 SAFE
+                            38,236.86 SAFE
                         </Text>
                     </Col>
                     <Col span={24} style={{ marginTop: "5px" }}>
-                        <Text>Number of blocks and coins per year</Text>
+                        <Text>Number of blocks & coins per year</Text>
                         <Text style={{ float: "right" }} strong>1036800 <Divider type='vertical' />
-                            501,002.65 SAFE
+                            465,214.4 SAFE
                         </Text>
                     </Col>
                 </Row>

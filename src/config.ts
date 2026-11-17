@@ -1,8 +1,3 @@
-
-const LocalHostPort = "10.0.0.172:9003";
-const InnetHostPort = "10.0.0.172:5005";
-const DEV = "47.119.151.64:5005";
-
 // Safe4 测试网|主网 网络ID
 export enum Safe4NetworkChainId {
     Testnet = 6666666,
@@ -25,31 +20,38 @@ export const Application_Crosschain_Pool_MATIC: { [chainId in Safe4NetworkChainI
     [Safe4NetworkChainId.Mainnet]: "0x960Bb626aba915c242301EC47948Ba475CDeC090",
 };
 
-
 const config = {
     "dev": {
         native_label: "SAFE",
         block_confirmed: 6,
-        api_host: `http://${LocalHostPort}`,
-        ws_host: `ws://${LocalHostPort}/socket.io`,
         crosschain: `https://safe4.anwang.com/crosschain`,
-        // api_host: `http://safe4testnet.anwang.com:9003`,
-        // ws_host: `ws://safe4testnet.anwang.com:9003/socket.io`
+
+        // Localhost
+        // api_host: `http://${LocalHostPort}`,
+        // ws_host: `ws://${LocalHostPort}/socket.io`,
+
+        // Local_Testnet
+        // api_host: "http://10.0.0.178:9003",
+        // ws_host: "ws://10.0.0.178:9003/socket.io",
+
+        // Local_Mainnet
+        api_host: "http://10.0.0.197/9003",
+        ws_host: "ws://10.0.0.197/ws/socket.io",
     },
-    "test": {
+    "testnet": {
         native_label: "SAFE",
         block_confirmed: 6,
         api_host: `https://safe4testnet.anwang.com/9003`,
-        crosschain: `https://safe4testnet.anwang.com/crosschain`,
-        ws_host: `wss://safe4testnet.anwang.com/ws/socket.io`
+        ws_host: `wss://safe4testnet.anwang.com/ws/socket.io`,
+        crosschain: `https://safe4.anwang.com/crosschain`
     },
-    "prod": {
+    "mainnet": {
         native_label: "SAFE",
         block_confirmed: 6,
-        api_host: `https://safe4.anwang.com/5005`,
+        api_host: `https://safe4.anwang.com/9003`,
         crosschain: `https://safe4.anwang.com/crosschain`,
         ws_host: `wss://safe4.anwang.com/ws/socket.io`
     },
 }
 
-export default config['dev'];
+export default config['mainnet'];

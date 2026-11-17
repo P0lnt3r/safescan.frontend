@@ -173,13 +173,13 @@ export default function () {
                                                         <Address address={transaction.from} propVO={transaction.fromPropVO} />
                                                     </Text>
                                                 </Col>
-                                                <Col xl={14}>
+                                                <Col xl={18}>
                                                     <Text>
                                                         <span>To:</span>
                                                         <Address address={transaction.to} propVO={transaction.toPropVO} />
                                                     </Text>
                                                 </Col>
-                                                <Col xl={10}>
+                                                <Col xl={6}>
                                                     <div style={{ textAlign: 'right' }}>
                                                         <Tooltip title="Amount">
                                                             <Text code>

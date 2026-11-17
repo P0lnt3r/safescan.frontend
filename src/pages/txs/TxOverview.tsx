@@ -95,7 +95,7 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
         }
     }, [gasPrice, gasUsed, gas]);
     const functionFragment = useAddressFunctionFragment(to, methodId, useDispatch(), toPropVO?.subType);
-    const isCrosschainPoolTx = isCrosschainPoolTransaction( ethers.utils.getAddress(to) , ethers.utils.getAddress(from) , input );
+    const isCrosschainPoolTx = to && isCrosschainPoolTransaction(ethers.utils.getAddress(to), ethers.utils.getAddress(from), input);
 
     return <>
         <Row>
@@ -273,15 +273,17 @@ export default ({ txVO, contractInternalTransactions, erc20Transfers, nodeReward
                 <Text strong style={{ marginLeft: "5px" }}>To</Text>
             </Col>
             <Col xl={16} xs={24} style={{ marginTop: '14px' }}>
-                <RouterLink to={`/address/${ChecksumAddress(to)}`}>
-                    <Paragraph copyable
-                        style={isMobile ? {
-                            lineHeight: "26px", fontSize: "13.5px", letterSpacing: "-1px",
-                            color: "rgba(52, 104, 171, 0.85)"
-                        } : { color: "rgba(52, 104, 171, 0.85)" }}>
-                        {ChecksumAddress(to)}
-                    </Paragraph>
-                </RouterLink>
+                {
+                    to && <RouterLink to={`/address/${ChecksumAddress(to)}`}>
+                        <Paragraph copyable
+                            style={isMobile ? {
+                                lineHeight: "26px", fontSize: "13.5px", letterSpacing: "-1px",
+                                color: "rgba(52, 104, 171, 0.85)"
+                            } : { color: "rgba(52, 104, 171, 0.85)" }}>
+                            {ChecksumAddress(to)}
+                        </Paragraph>
+                    </RouterLink>
+                }
                 {
                     toPropVO && <>
                         [ <Text style={{ marginBottom: "5px" }}>

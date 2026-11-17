@@ -87,13 +87,13 @@ export default function NftTokenTransfers({
         {
             title: <Text strong style={{ color: "#6c757e" }}>Date Time</Text>,
             dataIndex: "timestamp",
-            width: 110,
+            width: 120,
             render: (val) => <>{DateFormat(val * 1000)}</>,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>From</Text>,
             dataIndex: "from",
-            width: 160,
+            width: 180,
             render: (from, txVO) => (
                 <Row>
                     <Col span={20}>
@@ -114,13 +114,13 @@ export default function NftTokenTransfers({
         {
             title: <Text strong style={{ color: "#6c757e" }}>To</Text>,
             dataIndex: "to",
-            width: 150,
+            width: 180,
             render: (to, vo) => <Address address={to} propVO={vo.toPropVO} />,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Type</Text>,
             dataIndex: "tokenType",
-            width: 100,
+            width: 60,
             render: (tokenType, vo) => {
                 let showText = tokenType;
                 if (tokenType === "erc721") showText = "ERC-721";
@@ -149,7 +149,7 @@ export default function NftTokenTransfers({
         {
             title: <Text strong style={{ color: "#6c757e" }}>Item</Text>,
             dataIndex: "tokenImage",
-            width: 150,
+            width: 120,
             render: (tokenImage, nftTransferVO) => {
                 const { tokenId, tokenPropVO, token: nftToken } = nftTransferVO;
                 const nftProp =

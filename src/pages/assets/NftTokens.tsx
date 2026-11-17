@@ -1,137 +1,153 @@
-
-
-import { Card, Table, Typography, Row, Col, Tooltip, PaginationProps, Tag } from 'antd';
-import { useEffect, useState } from 'react';
-import { fetchAddressBalanceRank } from '../../services/address';
-import { AddressBalanceRankVO, ERC20TokenVO, NftTokenVO } from '../../services';
-import type { ColumnsType } from 'antd/es/table';
-import EtherAmount from '../../components/EtherAmount';
-import { Link as RouterLink } from 'react-router-dom';
+import { Card, Table, Typography, Tag, TablePaginationConfig } from "antd";
+import { useEffect, useMemo, useState } from "react";
+import type { ColumnsType } from "antd/es/table";
+import { Link as RouterLink, useSearchParams } from "react-router-dom";
 import {
-    UserOutlined,
-    FileTextOutlined,
-    SafetyOutlined,
-    ApartmentOutlined
-} from '@ant-design/icons';
-import { format } from '../../utils/NumberFormat';
-import { fetchERC20Tokens, fetchNftTokens } from '../../services/assets';
-import ERC20Logo from '../../components/ERC20Logo';
-import ERC20TokenAmount from '../../components/ERC20TokenAmount';
+    fetchInsightNftTokens,
+    InsightNftTokenVO,
+} from "../../services/insight/nft";
+import NFT_PLACEHOLDER from "../../images/nft-placeholder.svg";
+import { format } from "../../utils/NumberFormat";
 
 const { Title, Text, Link } = Typography;
+const DEFAULT_PAGESIZE = 10;
 
-export default () => {
+function TokenLogo({ logoURI }: { logoURI: string | null }) {
+    const [src, setSrc] = useState(logoURI || NFT_PLACEHOLDER);
+    return (
+        <img
+            src={src}
+            alt=""
+            width={32}
+            height={32}
+            onError={() => setSrc(NFT_PLACEHOLDER)}
+            style={{
+                borderRadius: 8,
+                objectFit: "cover",
+                flexShrink: 0,
+                display: "block",
+            }}
+        />
+    );
+}
 
-    function paginationOnChange(page: number, pageSize: number) {
-        pagination.current = page;
-        doFetchNftTokens();
-    }
-    const [pagination, setPagination] = useState<PaginationProps>({
-        current: 1,
-        pageSize: 10,
-        showTotal: (total) => <>Total : {total}</>,
-        onChange: paginationOnChange
-    });
-    async function doFetchNftTokens() {
-        fetchNftTokens({
-            current: pagination.current,
-            pageSize: pagination.pageSize,
-        }).then(data => {
-            setPagination({
-                ...pagination,
-                current: data.current,
-                pageSize: data.pageSize,
-                total: data.total,
-                onChange: paginationOnChange,
-            })
-            setTableData(data.records);
-        })
-    }
-    const [tableData, setTableData] = useState<NftTokenVO[]>([]);
+export default function NftTokensPage() {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const current = Number(searchParams.get("page") || 1);
+    const pageSize = Number(searchParams.get("pageSize") || DEFAULT_PAGESIZE);
+
+    const [allData, setAllData] = useState<InsightNftTokenVO[]>([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        pagination.current = 1;
-        doFetchNftTokens();
+        setLoading(true);
+        fetchInsightNftTokens()
+            .then((tokens) => setAllData(tokens))
+            .finally(() => setLoading(false));
     }, []);
 
-    const columns: ColumnsType<NftTokenVO> = [
+    const tableData = useMemo(() => {
+        const start = (current - 1) * pageSize;
+        return allData.slice(start, start + pageSize);
+    }, [allData, current, pageSize]);
+
+    const handlePageChange = (page: number, size?: number) => {
+        setSearchParams((prev) => {
+            const next = new URLSearchParams(prev);
+            next.set("page", String(page));
+            if (size) next.set("pageSize", String(size));
+            return next;
+        });
+    };
+
+    const pagination: TablePaginationConfig = {
+        current,
+        pageSize,
+        total: allData.length,
+        showSizeChanger: true,
+        showTotal: (t) => <>Total : {t}</>,
+        position: ["bottomRight"],
+    };
+
+    const columns: ColumnsType<InsightNftTokenVO> = [
         {
             title: <Text strong style={{ color: "#6c757e" }}>Token</Text>,
-            dataIndex: 'address',
-            render: (address, vo) => {
-                return <>
-                    <RouterLink to={`/token/${address}`}>
-                        <ERC20Logo address={address} />
-                        <Link ellipsis style={{ width: '80%', marginLeft: "5px" }}>
-                            {vo.name}({vo.symbol})
-                        </Link>
-                    </RouterLink>
-                </>
-            },
-            width: 40,
-            fixed: 'left',
+            dataIndex: "address",
+            render: (address, vo) => (
+                <RouterLink
+                    to={`/token/${String(address).toLowerCase()}`}
+                    style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 8,
+                        maxWidth: "100%",
+                    }}
+                >
+                    <TokenLogo key={vo.address} logoURI={vo.logoURI} />
+                    <Link ellipsis style={{ lineHeight: "32px", marginBottom: 0 }}>
+                        {vo.name}({vo.symbol})
+                    </Link>
+                </RouterLink>
+            ),
+            width: 220,
+            fixed: "left",
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Type</Text>,
-            dataIndex: 'type',
-            render: (tokenType, vo) => {
+            dataIndex: "type",
+            render: (tokenType) => {
                 let showText = tokenType;
-                if (tokenType == "erc721") {
-                    showText = "ERC-721"
-                }
-                if (tokenType == "erc1155") {
-                    showText = "ERC-1155"
-                }
-                return <>
-                    <Tag style={{
-                        height: "30px", lineHeight: "28px", borderRadius: "10px"
-                    }}>{showText}</Tag>
-                </>
+                if (tokenType === "erc721") showText = "ERC-721";
+                if (tokenType === "erc1155") showText = "ERC-1155";
+                return (
+                    <Tag style={{ height: "30px", lineHeight: "28px", borderRadius: "10px" }}>
+                        {showText}
+                    </Tag>
+                );
             },
-            width: 40,
-            fixed: 'left',
+            width: 100,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Holders</Text>,
-            dataIndex: 'holders',
-            render: (holders, vo) => {
-                return <>
-                    {holders}
-                </>
-            },
-            width: 40,
-            fixed: 'left',
+            dataIndex: "holders",
+            render: (holders) => <>{format(String(holders))}</>,
+            width: 100,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Transfer Txns</Text>,
-            dataIndex: 'totalTransfers',
-            render: (totalTransfers, vo) => {
-                return <>
-                    {totalTransfers}
-                </>
-            },
-            width: 40,
-            fixed: 'left',
+            dataIndex: "totalTransfers",
+            render: (totalTransfers) => <>{format(String(totalTransfers))}</>,
+            width: 120,
         },
         {
             title: <Text strong style={{ color: "#6c757e" }}>Total Assets</Text>,
-            dataIndex: 'totalAssets',
-            render: (totalAssets, vo) => {
-                return <>
-                    {totalAssets}
-                </>
-            },
-            width: 40,
-            fixed: 'left',
+            dataIndex: "totalAssets",
+            render: (totalAssets) => <>{format(String(totalAssets))}</>,
+            width: 120,
         },
     ];
 
-    return (<>
-        <Title level={3}>NFT Tokens</Title>
-        <Card>
-            <Table columns={columns} dataSource={tableData} scroll={{ x: 800 }}
-                pagination={pagination}
-            />
-        </Card>
-    </>)
+    return (
+        <>
+            <Title level={3}>NFT Tokens</Title>
+            <Card>
+                {allData.length > 0 && (
+                    <Text strong style={{ color: "#6c757e" }}>
+                        Total of {format(String(allData.length))} NFT Tokens
+                    </Text>
+                )}
+                <Table
+                    columns={columns}
+                    dataSource={tableData}
+                    scroll={{ x: 800 }}
+                    loading={loading}
+                    rowKey={(vo) => vo.address}
+                    pagination={{
+                        ...pagination,
+                        onChange: handlePageChange,
+                    }}
+                />
+            </Card>
+        </>
+    );
 }

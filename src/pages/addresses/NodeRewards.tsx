@@ -119,11 +119,14 @@ export default function NodeRewards({ address }: { address: string }) {
 
     return (
         <>
-            {total && (
-                <Text strong style={{ color: "#6c757e" }}>
-                    Total of {format(String(total))} Node Rewards
-                 </Text>
-            )}
+
+            {total > 0 &&
+                <>
+                    <Text strong style={{ color: "#6c757e" }}>
+                        Total of {format(String(total))} Node Rewards
+                    </Text>
+                </>
+            }
             <Table
                 loading={loading}
                 columns={columns}

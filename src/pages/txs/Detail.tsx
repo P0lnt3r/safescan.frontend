@@ -51,7 +51,9 @@ export default function () {
     }, [txHash, blockNumber]);
 
     const fetchTransactionData = async (txHash: string) => {
-        fetchTransaction(txHash).then(setTxVO);
+        fetchTransaction(txHash).then( txVO => {
+            setTxVO(txVO)
+        });
         fetchEventLogs(txHash).then((eventLogs) => {
             setEventLogs(eventLogs);
         });

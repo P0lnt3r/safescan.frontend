@@ -9,6 +9,7 @@ import { set } from 'date-fns';
 import { fetchNftTokenInventory } from '../../services/assets';
 import { NftTokenAssetVO } from '../../services';
 import NFT_URI_IMG, { NFT_URI_IMG_SIZE } from '../../components/NFT_URI_IMG';
+import Address from '../../components/Address';
 
 const { Text, Link, Paragraph } = Typography;
 const DEFAULT_PAGESIZE = 30;
@@ -81,32 +82,7 @@ export default ({ token }: { token: string }) => {
                                 </Tooltip>
                             </Col>
                             {
-                                tokenAsset.owner &&
-                                <Col span={24}>
-                                    <Row>
-                                        <Col span={6}>
-                                            <Text strong type='secondary' style={{ marginRight: "5px" }}>Owner:</Text>
-                                        </Col>
-                                        <Col span={18}>
-                                            <Tooltip title={tokenAsset.owner}>
-                                                <Paragraph style={{
-                                                    width: "95%",
-                                                    whiteSpace: "nowrap",
-                                                    overflow: "hidden",
-                                                    textOverflow: "ellipsis",
-                                                    cursor: "pointer",
-                                                    color: "#1890ff",
-                                                    transition: "color 0.3s"
-                                                }} copyable ellipsis onClick={() => {
-                                                    console.log("click!!!")
-                                                }}>
-                                                    {tokenAsset.owner}
-                                                </Paragraph>
-                                            </Tooltip>
-
-                                        </Col>
-                                    </Row>
-                                </Col>
+                                tokenAsset.owner && <Address address={tokenAsset.owner} style={{noQRCode:true,hasLink:true}} />
                             }
                         </Row>
 
